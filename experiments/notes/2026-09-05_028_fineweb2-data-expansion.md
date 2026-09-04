@@ -77,10 +77,34 @@ test parquetは9,843,060 bytes、SHA-256は`2dbc0824036cc083b4e52f249006c66d99b7
 
 学習開始前の確認として、`scripts/inspect_model.py`はvocab size 4,096、dim 240、6層、6 heads、context 256、absolute position embedding、概算5,197,920 parametersを返しました。ここまでのデータ混合・Token化・形状確認は成功し、次にこのconfigで500 stepのpretrainingを実行します。
 
+2026-09-05に、`configs/fineweb2-mixed-ja-5m-smoke.toml`を使い、次のコマンドで学習しました。
+
+```bash
+.venv/bin/python scripts/train.py --config configs/fineweb2-mixed-ja-5m-smoke.toml
+```
+
+step 1のtrain lossは8.7215、general validation lossは8.8016でした。step 100ではtrain 6.5412、validation 6.9820、step 200ではtrain 5.8710、validation 6.5739、step 300ではtrain 5.4942、validation 6.3068、step 400ではtrain 5.4781、validation 6.0811、step 500ではtrain 5.3547、validation 6.0042となりました。NaN、shape error、データ長エラー、途中停止は発生せず、500 stepを完走しました。学習時間はsummary上65.42秒、最良checkpointは`artifacts/checkpoints/fineweb2-mixed-ja-5m-smoke/step_000500.npz`です。最大メモリと温度は今回も専用計測をしていないため、未計測とします。
+
+metrics、checkpoint metadata、summary、stepごとの生成文は`artifacts/checkpoints/fineweb2-mixed-ja-5m-smoke/`と`artifacts/samples/fineweb2-mixed-ja-5m-smoke/`へ保存しました。固定prompt `今日は`に対して、step 500では日本語の助詞らしい断片や数字を含む文が出ましたが、英字・記号・数字が連続し、自然な文章にはなっていません。学習中の出力を省略せず、step 0から500までのTXTを追跡対象にします。
+
 ## 結果と解釈
 
-未実施です。
+追加データ条件の既存general validation lossは6.004154、perplexityは405.108でした。対照である実験017のtoken-budget 1M条件はgeneral loss 5.606362、perplexity 272.152だったため、追加条件はlossが0.397793高く、今回の500 step比較では改善しませんでした。会話validation lossは3.966163（perplexity 52.782）、医療validation lossは5.217864（perplexity 184.540）で、対照の会話3.852320・医療4.909000よりそれぞれ0.113842、0.308864悪化しました。
+
+追加source自身のtestを使ったFineWeb validation lossは5.281133、perplexityは196.592でした。これは追加データを学習したモデルがFineWeb文書を有限の損失で予測できることを示しますが、比較対象のFineWeb未学習モデルについて同じ条件のlossをまだ計算していないため、FineWebへの適応効果の差までは判断できません。FineWeb test Token列は学習へ混ぜず、2,061,459 Tokenをそのまま評価へ使っています。
+
+固定chat-test-v1の48例では、EOS到達が47/48、平均生成長が8.79 Token、precision・recall・F1が0.0776、0.0391、0.0421でした。実験017のベース条件はEOS 48/48、平均4.94 Token、F1 0.0505でしたので、FineWeb追加条件は生成長こそ伸びましたが、overlap F1は0.0085低下しました。short・medium・longのF1はそれぞれ0.0493、0.0424、0.0345で、対照の0.0460、0.0646、0.0410と比べてshortだけがわずかに上がり、mediumとlongは下がりました。生成TXTには会話相手や話題に対応しない記号列、メンション、文法の崩れが残っており、会話能力が改善したとは言えません。
+
+今回の結果は、「一般日本語データを増やせば同じ500 stepでも直ちに良くなる」という予想を支持しませんでした。最も重要な理由は、batch size 8・context 256・500 stepでは約1,024,000 Token分しか勾配更新に使わないため、学習Token列を約1Mから約5Mへ増やすと、各データへ触れる頻度が約5分の1になることです。1M条件では小さなコーパス全体を何度も参照できたのに対し、5M条件では同じstep数で広い候補プールからランダムに一部だけを参照します。したがって今回は、データの質だけでなく、データ量に対する学習step不足も同時に表れた結果です。
+
+さらに、現行Tokenizerでunknown Token ID（ID 1）の割合を確認すると、対照1M学習Token列は0.0980%、FineWeb追加後の5M学習Token列は0.3253%、FineWeb testは0.4604%でした。FineWeb本文には既存コーパスより英字・数字・Web由来表記が多く、現在の4,096語彙Tokenizerとの分布差もあります。ただしunknown率の差だけでloss悪化の原因を断定せず、次の実験ではTokenizerを固定したまま学習stepを増やす比較と、別途Tokenizerを学習し直す比較を分けます。
+
+今回のデータ追加実験は、データ取得からparquet抽出、重複処理、source混合、Token化、pretraining、FineWeb validation、固定会話testまで正常に一周できた点では成功です。一方、500 stepの既存general・conversation・medical loss、固定会話F1、生成文の自然さを改善するという性能面の成功基準は満たしませんでした。失敗条件を削除せず、学習step不足とTokenizer分布差を次の仮説として残します。
 
 ## 次に試すこと
 
-データ追加の効果を確認した後、同じ5M Token前後の学習データとTokenizerを固定し、dim 384・8層程度の20M級モデルへ拡張します。モデル容量を変える実験ではデータ追加の処置を重ねず、今回の処置条件を基準にした別実験として記録します。
+まず、同じFineWeb混合Token列とTokenizerを固定し、学習stepだけを500から2,500程度へ増やす追試を行います。これで、今回の悪化が単なる学習step不足で説明できるかを確認します。その後、同じToken列・同じ学習stepを使い、`dim=384・layers=10・heads=6・context=256`の約19.4M parameterモデルへ拡張します。モデル容量を変える実験では学習stepやTokenizerを同時に変えず、今回の処置条件を基準にした別実験として記録します。
+
+## 成果物のハッシュ
+
+学習metricsのSHA-256は`d031860adca7e54998e3ed6102e0ae2b513e36497e3146da62ec3d4cfbaef5cb`、summaryは`e1681e90b18986cf60f009d8de3ac4d47cb09be71c2296001e7b717e0ec1b043`、step 500 metadataは`0543df00086b8b6b34184d5c6ee7c2fc554462dd65efb3fea062c253cf783501`です。step 500生成文は`ddd820bbee5555ff999e6d5b8504a8116e4c0efacd42ef948d31474c9deb55af`、固定chat-test TXTは`2c4cde6d4bbbb275b2f2ce62520ff6dca438f06f27ba67157ff7457db8903c02`、domain評価JSONは`dcb4e75604920e96033f130c9aad2f74e830fad0ed596428117e367549e87f6d`、固定chat評価JSONは`7e4f30c65886876c3232327c8396d273bf10dff4873a173bfd502effe225c52e`です。
