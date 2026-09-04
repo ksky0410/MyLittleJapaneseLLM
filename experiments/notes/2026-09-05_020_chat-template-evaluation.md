@@ -8,7 +8,7 @@
 
 テンプレート版では、文字列をそのままencodeするのではなく、学習データ整形と同じ単位で開始marker、話者A marker、prompt本文、EOS、話者B markerをToken列へ連結します。EOSはTokenizerのID 3を使用します。JSONには元のpromptとレンダリング表現、completion、Token数を保存し、TXTには全出力を保存します。
 
-実験前のGitコミットは設定・評価器・prompt set・README・テストを追加後に記録します。使用コマンドは次のとおりです。
+実験前のGitコミットは`b16790e`（`eval: support structured chat prompts`）です。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/evaluate_chat_prompts.py \
