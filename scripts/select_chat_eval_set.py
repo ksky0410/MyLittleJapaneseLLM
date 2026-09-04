@@ -100,16 +100,40 @@ def select_stratified_examples(
     used_conversations: set[str] = set()
     for offset, stratum in enumerate(STRATA):
         pool = list(candidates[stratum])
-        random.Random(seed + offset).shuffle(pool)
+        sources = sorted({str(item["source"]) for item in pool})
+        source_pools: dict[str, list[dict[str, Any]]] = {}
+        for source_index, source in enumerate(sources):
+            source_pool = [item for item in pool if item["source"] == source]
+            random.Random(seed + offset * 100 + source_index).shuffle(source_pool)
+            source_pools[source] = source_pool
+        base_quota, remainder = divmod(per_stratum, len(sources))
+        quotas = {
+            source: base_quota + int(index < remainder)
+            for index, source in enumerate(sources)
+        }
+        chosen: list[dict[str, Any]] = []
+        for source in sources:
+            for candidate in source_pools[source]:
+                if candidate["conversation_id"] in used_conversations:
+                    continue
+                chosen.append(candidate)
+                used_conversations.add(candidate["conversation_id"])
+                if sum(item["source"] == source for item in chosen) == quotas[source]:
+                    break
+        if len(chosen) < per_stratum:
+            remaining = list(pool)
+            random.Random(seed + offset * 1000).shuffle(remaining)
+            for candidate in remaining:
+                if candidate["conversation_id"] in used_conversations:
+                    continue
+                chosen.append(candidate)
+                used_conversations.add(candidate["conversation_id"])
+                if len(chosen) == per_stratum:
+                    break
         picked = 0
-        for candidate in pool:
-            if candidate["conversation_id"] in used_conversations:
-                continue
+        for candidate in chosen:
             selected.append(candidate)
-            used_conversations.add(candidate["conversation_id"])
             picked += 1
-            if picked == per_stratum:
-                break
         if picked != per_stratum:
             raise ValueError(
                 f"{stratum}層の選択数が不足しています: {picked}/{per_stratum}"
@@ -158,6 +182,16 @@ def build_selection_manifest(
         stratum: sum(item["stratum"] == stratum for item in examples)
         for stratum in STRATA
     }
+    source_counts = {
+        stratum: {
+            source: sum(
+                item["stratum"] == stratum and item["source"] == source
+                for item in examples
+            )
+            for source in sorted({str(item["source"]) for item in examples})
+        }
+        for stratum in STRATA
+    }
     manifest: dict[str, Any] = {
         "format": "chat-eval-selection-v1",
         "config": str(config_file),
@@ -174,6 +208,7 @@ def build_selection_manifest(
         "per_stratum": per_stratum,
         "selected_example_count": len(examples),
         "stratum_counts": counts,
+        "source_counts": source_counts,
         "unique_conversation_count": len(
             {item["conversation_id"] for item in examples}
         ),
