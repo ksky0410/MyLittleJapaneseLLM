@@ -208,6 +208,18 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 
 manifestには各sourceの入力SHA-256、行数、文字数、重み、希望比率、採用単位数・文字数、重複除去数と、混合出力のSHA-256を記録します。異なるsourceに同じ本文が元からある場合は、source指定順で最初の一つだけを採用します。
 
+混合学習後にsourceごとの差を確認する場合は、同じcheckpointを複数のvalidation Token列へ通します。評価結果は軽量なJSONとして保存し、GitHubから確認できます。
+
+```bash
+.venv/bin/python scripts/evaluate_domains.py \
+  --config configs/mixed-ja-5m-smoke.toml \
+  --checkpoint artifacts/checkpoints/mixed-ja-5m-smoke/step_000500.npz \
+  --domain general=artifacts/tokens/aozora-neko-formal-v2-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-medical-val.bin \
+  --output artifacts/evaluations/mixed-ja-5m-smoke-domains.json
+```
+
 ## テストと入口の確認
 
 プロジェクトの仮想環境を使い、軽量なテストを実行できます。MLXまたはSentencePieceがない環境では、それらを必要とするテストだけがskipされます。
@@ -215,7 +227,7 @@ manifestには各sourceの入力SHA-256、行数、文字数、重み、希望�
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```
