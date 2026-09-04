@@ -161,7 +161,7 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 
 ## 医師国家試験SQLiteを取り込む
 
-`/Users/koseki/projects/medilink_analysis/data/qb.sqlite`を読み取り専用で開き、`questions`と`descriptions`から医師国家試験データセットを作成できます。元のSQLiteへ書き込まず、出力はsmall_llm側の`artifacts/corpus/medical-qb-v1/`だけに保存します。119回をvalidation、120回をtest、その他をtrainへ分け、説明JSONがない問題も説明欄を空にして処理を続けます。
+`/Users/koseki/projects/medilink_analysis/data/qb.sqlite`を読み取り専用で開き、`questions`と`descriptions`から医師国家試験データセットを作成できます。元のSQLiteへ書き込まず、出力はsmall_llm側の`artifacts/corpus/medical-qb-v1/`だけに保存します。119回をvalidation、120回をtest、700回をchallenge、その他をtrainへ分け、説明JSONがない問題も説明欄を空にして処理を続けます。
 
 ```bash
 .venv/bin/python scripts/import_medical_qb.py \
@@ -169,7 +169,44 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
   --output-dir artifacts/corpus/medical-qb-v1
 ```
 
-分割回を変更する場合は、`--validation-version 118 --test-version 119`のように指定します。複数回を同じsplitへ入れる場合はオプションを繰り返してください。出力には構造化された`train.jsonl`・`validation.jsonl`・`test.jsonl`と、問題・選択肢・正解・ポイント・選択肢解説を自然なラベルで連結した1問1行の`train.txt`・`validation.txt`・`test.txt`が含まれます。画像URLは保存せず、`[図表あり]`へ置き換えます。件数、exam_version別件数、欠損件数、画像件数、入力・出力SHA-256はmanifestへ記録します。
+分割回を変更する場合は、`--validation-version 118 --test-version 119 --challenge-version 701`のように指定します。各オプションは複数回指定でき、同じexam_versionをvalidation・test・challengeへ重複指定するとエラーになります。出力には構造化された`train.jsonl`・`validation.jsonl`・`test.jsonl`・`challenge.jsonl`と、問題・選択肢・正解・ポイント・選択肢解説を自然なラベルで連結した1問1行の`train.txt`・`validation.txt`・`test.txt`・`challenge.txt`が含まれます。画像URLは保存せず、`[図表あり]`へ置き換えます。件数、exam_version別件数、欠損件数、画像件数、入力・出力SHA-256はmanifestへ記録します。
+
+## 会話コーパスを安全に取り込む
+
+公開元のREADME・LICENSE・利用条件を確認したうえで、`/tmp`へ取得したRealPersonaChatとMRMPを会話単位で取り込めます。既定のライセンス表記はCC BY-SA 4.0です。会話から個人を特定しようとせず、実在の話者になりすます用途にも使わないでください。出力には公開元の利用条件と、この安全上の注意をmanifestへ残します。
+
+```bash
+.venv/bin/python scripts/import_conversations.py \
+  --input /tmp/real-persona-chat \
+  --input /tmp/multi-relational-multi-party-chat-corpus \
+  --source-name real-persona-chat \
+  --source-name mrmp \
+  --source-url https://github.com/nu-dialogue/real-persona-chat \
+  --source-url https://github.com/nu-dialogue/multi-relational-multi-party-chat-corpus \
+  --license 'CC BY-SA 4.0' \
+  --output-dir artifacts/corpus/conversation-v1 \
+  --seed 42
+```
+
+## 一般日本語・医療・会話を混ぜる
+
+各入力はUTF-8の1行1文、1問題、または1会話テキストとして扱います。`mix_corpora.py`は各sourceをseed付きでshuffleし、`--target-units`で指定した総単位数を重みの比率で抽出します。たとえば重みを8・1・1、targetを10,000とすれば、一般日本語・会話・医療をおおむね80%・10%・10%で混ぜられます。sourceが先に尽きた場合は、残りを他のsourceへ再配分します。単位の複製は行わず、会話・問題・段落の途中でも分割しません。
+
+```bash
+.venv/bin/python scripts/mix_corpora.py \
+  --source general=artifacts/corpus/aozora-neko-formal-v2/train.txt \
+  --source medical=artifacts/corpus/medical-qb-v2/train.txt \
+  --source conversation=artifacts/corpus/conversation-v1/train.txt \
+  --weight general=8.0 \
+  --weight medical=1.0 \
+  --weight conversation=1.0 \
+  --target-units 10000 \
+  --seed 42 \
+  --output artifacts/corpus/mixed-ja-pretraining.txt \
+  --manifest artifacts/corpus/mixed-ja-pretraining.manifest.json
+```
+
+manifestには各sourceの入力SHA-256、行数、文字数、重み、希望比率、採用単位数・文字数、重複除去数と、混合出力のSHA-256を記録します。異なるsourceに同じ本文が元からある場合は、source指定順で最初の一つだけを採用します。
 
 ## テストと入口の確認
 
@@ -178,7 +215,7 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```

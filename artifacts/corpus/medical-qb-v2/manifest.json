@@ -1,0 +1,90 @@
+{
+  "format": "medical-qb-v1",
+  "source": "/Users/koseki/projects/medilink_analysis/data/qb.sqlite",
+  "input_sha256": "5499dff6f181a845b7a087a55b78606869aa5664e0c351c8f8889b719df1ec14",
+  "read_only": true,
+  "questions_count": 6986,
+  "adopted_count": 6986,
+  "skipped_count": 0,
+  "missing_count": 0,
+  "missing_description_count": 0,
+  "malformed_description_count": 0,
+  "missing_explanation_count": 37,
+  "image_count": 1808,
+  "image_question_count": 1808,
+  "image_occurrence_count": 2925,
+  "exam_version_counts": {
+    "101": 202,
+    "102": 234,
+    "103": 297,
+    "104": 304,
+    "105": 322,
+    "106": 324,
+    "107": 329,
+    "108": 352,
+    "109": 381,
+    "110": 398,
+    "111": 408,
+    "112": 334,
+    "113": 343,
+    "114": 357,
+    "115": 375,
+    "116": 387,
+    "117": 395,
+    "118": 400,
+    "119": 400,
+    "120": 400,
+    "700": 44
+  },
+  "validation_versions": [
+    119
+  ],
+  "test_versions": [
+    120
+  ],
+  "challenge_versions": [
+    700
+  ],
+  "splits": {
+    "train": {
+      "count": 6142,
+      "characters": 3674479,
+      "jsonl_characters": 4468142,
+      "jsonl_sha256": "fc7e556c54c046661d0965bca2d2000ca1ab15a38df76721a76063de695375e3",
+      "txt_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "output_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "jsonl_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.jsonl",
+      "txt_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt"
+    },
+    "validation": {
+      "count": 400,
+      "characters": 258358,
+      "jsonl_characters": 309976,
+      "jsonl_sha256": "c107d293a40afba2929f6847d13b6255f61638bf796fbb2c75ed5c344f0ac397",
+      "txt_sha256": "2dda649a4db9a63bdc2dfc72e0aae250936bcea32643e74803c0f2e959f9c14b",
+      "output_sha256": "2dda649a4db9a63bdc2dfc72e0aae250936bcea32643e74803c0f2e959f9c14b",
+      "jsonl_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/validation.jsonl",
+      "txt_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/validation.txt"
+    },
+    "test": {
+      "count": 400,
+      "characters": 264919,
+      "jsonl_characters": 316544,
+      "jsonl_sha256": "4fb275b68ed3a0a90c60793cf6d756500905628dda1206886982f780c74c255e",
+      "txt_sha256": "d548020cfacec46106cb96a638e1f4fa8018fc00eb520de33159c35639b3fc10",
+      "output_sha256": "d548020cfacec46106cb96a638e1f4fa8018fc00eb520de33159c35639b3fc10",
+      "jsonl_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/test.jsonl",
+      "txt_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/test.txt"
+    },
+    "challenge": {
+      "count": 44,
+      "characters": 22616,
+      "jsonl_characters": 28338,
+      "jsonl_sha256": "b854ba149a5cf44b766b28f6fe673f91c0a864d763386e8dd0a8e065a181877c",
+      "txt_sha256": "5aa7dd7fe4ed198c35188ccf7466ede5d53a31042a97da4be0e2a439ea070c05",
+      "output_sha256": "5aa7dd7fe4ed198c35188ccf7466ede5d53a31042a97da4be0e2a439ea070c05",
+      "jsonl_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/challenge.jsonl",
+      "txt_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/challenge.txt"
+    }
+  }
+}

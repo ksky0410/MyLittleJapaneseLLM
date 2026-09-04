@@ -69,6 +69,15 @@ class MedicalQBImportTests(unittest.TestCase):
                         '["a"]',
                         0,
                     ),
+                    (
+                        "700A1",
+                        700,
+                        "",
+                        "チャレンジ問題です。",
+                        json.dumps({"a": "ａ　正しい"}),
+                        '["a"]',
+                        0,
+                    ),
                 ],
             )
             connection.executemany(
@@ -92,6 +101,15 @@ class MedicalQBImportTests(unittest.TestCase):
                             {
                                 "point": "",
                                 "explanations": {"a": "<b>説明</b>"},
+                            }
+                        ),
+                    ),
+                    (
+                        "700A1",
+                        json.dumps(
+                            {
+                                "point": "チャレンジポイント",
+                                "explanations": {"a": "正しい説明"},
                             }
                         ),
                     ),
@@ -120,20 +138,24 @@ class MedicalQBImportTests(unittest.TestCase):
             self.assertEqual(loaded, manifest)
             self.assertEqual(manifest["input_sha256"], input_hash)
             self.assertTrue(manifest["read_only"])
-            self.assertEqual(manifest["questions_count"], 3)
-            self.assertEqual(manifest["adopted_count"], 3)
+            self.assertEqual(manifest["questions_count"], 4)
+            self.assertEqual(manifest["adopted_count"], 4)
             self.assertEqual(manifest["missing_count"], 1)
             self.assertEqual(manifest["image_count"], 1)
             self.assertEqual(
-                manifest["exam_version_counts"], {"118": 1, "119": 1, "120": 1}
+                manifest["exam_version_counts"],
+                {"118": 1, "119": 1, "120": 1, "700": 1},
             )
             self.assertEqual(
                 {
                     split: values["count"]
                     for split, values in manifest["splits"].items()
                 },
-                {"train": 1, "validation": 1, "test": 1},
+                {"train": 1, "validation": 1, "test": 1, "challenge": 1},
             )
+            self.assertEqual(manifest["challenge_versions"], [700])
+            challenge_text = (output_dir / "challenge.txt").read_text(encoding="utf-8")
+            self.assertIn("チャレンジ問題です。", challenge_text)
 
             jsonl = (output_dir / "train.jsonl").read_text(encoding="utf-8")
             text = (output_dir / "train.txt").read_text(encoding="utf-8")
@@ -163,12 +185,33 @@ class MedicalQBImportTests(unittest.TestCase):
                 root / "custom",
                 validation_versions=(118,),
                 test_versions=(119,),
+                challenge_versions=(700,),
             )
             self.assertEqual(manifest["validation_versions"], [118])
             self.assertEqual(manifest["test_versions"], [119])
+            self.assertEqual(manifest["challenge_versions"], [700])
             self.assertEqual(manifest["splits"]["validation"]["count"], 1)
             self.assertEqual(manifest["splits"]["test"]["count"], 1)
+            self.assertEqual(manifest["splits"]["challenge"]["count"], 1)
             self.assertEqual(manifest["splits"]["train"]["count"], 1)
+
+    def test_split_version_overlap_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            database = root / "qb.sqlite"
+            self._make_database(database)
+            with self.assertRaises(ValueError):
+                import_medical_qb(
+                    database,
+                    root / "validation-overlap",
+                    validation_versions=(700,),
+                )
+            with self.assertRaises(ValueError):
+                import_medical_qb(
+                    database,
+                    root / "challenge-overlap",
+                    test_versions=(700,),
+                )
 
 
 if __name__ == "__main__":

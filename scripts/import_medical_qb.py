@@ -17,6 +17,7 @@ from _common import repo_path
 
 DEFAULT_VALIDATION_VERSIONS = (119,)
 DEFAULT_TEST_VERSIONS = (120,)
+DEFAULT_CHALLENGE_VERSIONS = (700,)
 BLOCK_TAGS = {
     "address",
     "article",
@@ -189,11 +190,14 @@ def _split_for_version(
     exam_version: int,
     validation_versions: tuple[int, ...],
     test_versions: tuple[int, ...],
+    challenge_versions: tuple[int, ...],
 ) -> str:
     if exam_version in validation_versions:
         return "validation"
     if exam_version in test_versions:
         return "test"
+    if exam_version in challenge_versions:
+        return "challenge"
     return "train"
 
 
@@ -231,6 +235,7 @@ def import_medical_qb(
     *,
     validation_versions: Iterable[int] = DEFAULT_VALIDATION_VERSIONS,
     test_versions: Iterable[int] = DEFAULT_TEST_VERSIONS,
+    challenge_versions: Iterable[int] = DEFAULT_CHALLENGE_VERSIONS,
 ) -> dict[str, object]:
     """questions/descriptionsを分割して出力し、manifestを返す。"""
 
@@ -238,13 +243,24 @@ def import_medical_qb(
     output_root = Path(output_dir)
     validation = _normalise_versions(validation_versions, "validation_versions")
     test = _normalise_versions(test_versions, "test_versions")
-    if set(validation) & set(test):
-        raise ValueError("validation_versionsとtest_versionsは重複できません")
+    challenge = _normalise_versions(challenge_versions, "challenge_versions")
+    split_version_sets = {
+        "validation_versions": set(validation),
+        "test_versions": set(test),
+        "challenge_versions": set(challenge),
+    }
+    for first_name, first_versions in split_version_sets.items():
+        for second_name, second_versions in split_version_sets.items():
+            if first_name >= second_name:
+                continue
+            if first_versions & second_versions:
+                raise ValueError(f"{first_name}と{second_name}は重複できません")
 
     split_records: dict[str, list[dict[str, object]]] = {
         "train": [],
         "validation": [],
         "test": [],
+        "challenge": [],
     }
     descriptions: dict[str, tuple[dict[str, object] | None, bool]] = {}
 
@@ -350,7 +366,7 @@ def import_medical_qb(
             "explanations": explanations,
             "has_images": has_any_images,
         }
-        split = _split_for_version(int(exam_version), validation, test)
+        split = _split_for_version(int(exam_version), validation, test, challenge)
         split_records[split].append(record)
         adopted_count += 1
         version_key = str(int(exam_version))
@@ -397,6 +413,7 @@ def import_medical_qb(
         "exam_version_counts": exam_version_counts,
         "validation_versions": list(validation),
         "test_versions": list(test),
+        "challenge_versions": list(challenge),
         "splits": split_manifest,
     }
     manifest_path = output_root / "manifest.json"
@@ -433,6 +450,12 @@ def main() -> None:
         action="append",
         help="testへ分けるexam_version。複数指定可。既定120",
     )
+    parser.add_argument(
+        "--challenge-version",
+        type=_nonnegative_int,
+        action="append",
+        help="challengeへ分けるexam_version。複数指定可。既定700",
+    )
     args = parser.parse_args()
     manifest = import_medical_qb(
         repo_path(args.input),
@@ -446,6 +469,11 @@ def main() -> None:
             args.test_version
             if args.test_version is not None
             else DEFAULT_TEST_VERSIONS
+        ),
+        challenge_versions=(
+            args.challenge_version
+            if args.challenge_version is not None
+            else DEFAULT_CHALLENGE_VERSIONS
         ),
     )
     print(json.dumps(manifest, ensure_ascii=False, indent=2))

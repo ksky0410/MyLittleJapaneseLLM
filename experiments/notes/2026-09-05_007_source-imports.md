@@ -53,4 +53,18 @@ Issue #1で候補になっていた次の2つの公開リポジトリを、深�
 
 ## 次に試すこと
 
-まず医療の700回44問をchallengeへ分け、会話と医療のImporterの結果をcommit・pushする。その後、一般文書・会話・医療のtrain splitだけを決定的に混ぜる。Tokenizerは混合trainだけで学習し、validation・testはTokenizer学習にも混合にも使わない。5Mモデルのsmoke学習を100万token程度で行い、一般・会話・医療の評価を別々に記録してから、5,000 step級の比較へ進む。
+まず医療の700回44問をchallengeへ分けた改訂版を`medical-qb-v2`として作成する。旧`medical-qb-v1`は、challenge分離前の処理結果として上書きせずに残す。実行前の仮説は、予想問題を学習から外しておくことで、医療評価の未学習データとして扱えるようになり、trainへの意図しない混入を防げるというものである。実行コマンドは次のとおりである。
+
+```bash
+.venv/bin/python scripts/import_medical_qb.py \
+  --input /Users/koseki/projects/medilink_analysis/data/qb.sqlite \
+  --output-dir artifacts/corpus/medical-qb-v2
+```
+
+実行後は、`challenge`が44問、trainが6,142問となること、元SQLiteのSHA-256が変わらないこと、元ディレクトリに変更がないことを確認する。その後、一般文書・会話・医療のtrain splitだけを決定的に混ぜる。Tokenizerは混合trainだけで学習し、validation・test・challengeはTokenizer学習にも混合にも使わない。5Mモデルのsmoke学習を100万token程度で行い、一般・会話・医療の評価を別々に記録してから、5,000 step級の比較へ進む。
+
+## 追加処理の結果
+
+上記コマンドを実行し、旧`medical-qb-v1`を変更せずに`artifacts/corpus/medical-qb-v2/`へ改訂版を書き出した。manifestの`format`は既存Importerとの互換性を保つ`medical-qb-v1`であるが、出力ディレクトリは版を分けている。入力SQLiteのSHA-256は`5499dff6f181a845b7a087a55b78606869aa5664e0c351c8f8889b719df1ec14`で、以前の記録と一致した。元ディレクトリ`/Users/koseki/projects/medilink_analysis`のGit作業ツリーにも変更はなかった。
+
+改訂後の分割は、train 6,142問、validation 400問、test 400問、challenge 44問である。`challenge.txt`は44行となり、train本文には`試験回：700`が含まれないことを確認した。したがって、700回の予想問題が通常学習へ混入する問題は解消できた。出力manifestには各splitの件数、文字数、JSONL/TXTのSHA-256、入力SHA-256が残っている。次はこの`v2/train.txt`を混合学習の医療sourceに使用する。
