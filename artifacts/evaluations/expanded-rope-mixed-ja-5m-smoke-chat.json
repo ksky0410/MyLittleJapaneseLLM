@@ -1,0 +1,80 @@
+{
+  "format": "chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/expanded-rope-mixed-ja-5m-smoke/step_000500.npz",
+  "checkpoint_step": 500,
+  "config": "/Users/koseki/projects/small_llm/configs/expanded-rope-mixed-ja-5m-smoke.toml",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 160,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "completion": "みられる.;c:×c アマシシスが上昇性動脈は57A(293117B)を伴する. [図表あり] 選択肢:a:a 正解: 選択肢解説:a:a 肺骨 肝症;b:b 血清 - ポイント:b 正解:c ポイント: 選択肢解説:a:×a 正解: 選択肢解説:a:×a 急性腎症 a内性管症の治療を有定する. 正解:b ポイント: 選択肢解説:a:×a 中指 アコクルが,大気管療法で,本後に用したい.;b:×b 治療 頭内症の神経骨は,高"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "completion": "こきいです。"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "completion": ""
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "completion": "いかにやくがもらす。"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "completion": "う!"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "completion": "ありに知らないり、もうこのに大いののを出した。"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "completion": "します。"
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "completion": ""
+    }
+  ]
+}

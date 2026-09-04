@@ -1,0 +1,50 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/expanded-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/expanded-mixed-ja-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## casual-01 [short-reply]
+prompt: まじで
+completion:
+出たため,乳から大心不全と下性内症を出うまかる. 本分,白血球4週2/分にや.
+
+## casual-02 [backchannel]
+prompt: それな
+completion:
+さずである. 心の側にならないことで,肝の位では不分,整. この7回外内神経は,Ht45. 12%,児血 [図表あり] 選択肢:a:a 2(2 [図表あり] 本症例は,281mmHg. 選択肢:a:a ポイント:a 正解:a ポイント:a S 正解:ar:a 心痛 尿症 150457688.
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+completion:
+ないが、一のを、そと、おや、それに入のが、君もして、「その間に乗の君も。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+completion:
+」 その下と起する. 0%,白血球 [図表あり] 選択肢:at;b:b 児;c ポイント:c:a 肺症;e:e 低検査 正解: 選択肢解説:a 正解:a:×a 正解: 選択肢解説:a アルモン 子宮球 - 正解:a ポイント:a 正解:a ポイント:a:×a La 0-a 1Ega 心音が,心の胸は有大性は,心音の大,糖尿病膜の発の原因と,本性尿の前度 正解:b 0,好腫 5球のにの原因の大に発取
+
+## casual-06 [disagreement]
+prompt: いやそれは
+completion:
+それは今はそうでない。
+
+## casual-07 [parting]
+prompt: おつかれ
+completion:
+なか?
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+completion:
+

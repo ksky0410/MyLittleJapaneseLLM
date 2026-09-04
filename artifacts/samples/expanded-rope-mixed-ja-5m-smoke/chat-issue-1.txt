@@ -1,0 +1,50 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/expanded-rope-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/expanded-rope-mixed-ja-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## casual-01 [short-reply]
+prompt: まじで
+completion:
+みられる.;c:×c アマシシスが上昇性動脈は57A(293117B)を伴する. [図表あり] 選択肢:a:a 正解: 選択肢解説:a:a 肺骨 肝症;b:b 血清 - ポイント:b 正解:c ポイント: 選択肢解説:a:×a 正解: 選択肢解説:a:×a 急性腎症 a内性管症の治療を有定する. 正解:b ポイント: 選択肢解説:a:×a 中指 アコクルが,大気管療法で,本後に用したい.;b:×b 治療 頭内症の神経骨は,高
+
+## casual-02 [backchannel]
+prompt: それな
+completion:
+こきいです。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+completion:
+いかにやくがもらす。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+completion:
+う!
+
+## casual-06 [disagreement]
+prompt: いやそれは
+completion:
+ありに知らないり、もうこのに大いののを出した。
+
+## casual-07 [parting]
+prompt: おつかれ
+completion:
+します。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+completion:
+
