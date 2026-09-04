@@ -8,7 +8,7 @@
 
 比較対象は実験022と同じpretraining、SFT-only、rehearsal 0.25の3 checkpointです。validation JSONLの同じ24例、seed 42、temperature 0.8、top-k 40、max 64 tokenを使います。指標は表面的なToken一致に過ぎず、意味的な正しさや自然さの証明ではありません。数値は目視確認と併用します。
 
-実験前のGitコミットは、指標実装後に記録します。各評価は次の既存コマンドを再実行し、出力JSONとTXTを更新します。
+実験前のGitコミットは`29d5641`（`eval: add heldout overlap metrics`）です。各評価は次の既存コマンドを再実行し、出力JSONとTXTを更新します。
 
 ```bash
 .venv/bin/python scripts/evaluate_chat_dataset.py \
