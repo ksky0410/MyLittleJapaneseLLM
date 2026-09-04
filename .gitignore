@@ -55,6 +55,8 @@ data/cache/
 !artifacts/tokenizer/**/*report*.json
 !artifacts/evaluations/
 !artifacts/evaluations/**/*.json
+!artifacts/sft/
+!artifacts/sft/*.manifest.json
 
 # macOS
 .DS_Store
