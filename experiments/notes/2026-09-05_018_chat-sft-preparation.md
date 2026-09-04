@@ -22,11 +22,22 @@ NPZは学習に必要なローカル成果物ですが、サイズが大きい�
 
 ## 実験中の記録
 
-修正前の初回実行では、train 396,966例、validation 49,045例を作成しましたが、body token数の記録にEOSが混ざっていたため採用しませんでした。修正後に同じseed・入力・Tokenizer・context lengthで再実行し、split別の会話数、例数、応答Token数、切り詰め数、ファイルSHA-256を確定します。
+修正前の初回実行では、train 396,966例、validation 49,045例を作成しましたが、body token数の記録にEOSが混ざっていたため採用しませんでした。修正版を同じseed・入力・Tokenizer・context lengthで再実行し、次の結果を確定しました。処理時間は約122.09秒で、エラーはありませんでした。
+
+- train：11,635会話、396,966例、応答本文5,506,080 token、EOS込み応答5,903,046 token、切り詰め276,668例
+- validation：1,454会話、49,045例、応答本文689,615 token、EOS込み応答738,660 token、切り詰め34,090例
+- train NPZ SHA-256：`400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609`
+- validation NPZ SHA-256：`5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4`
+
+各NPZは`[例数, 256]`のinput、target、loss maskを持ち、maskが0件ではないことを確認しました。NPZ本体はGitへ追加せず、次のmanifestに入力・Tokenizer・NPZのSHA-256と集計を保存します。
 
 ## 結果と解釈
 
-未実施です。
+全会話の2発話目以降をSFT例へ展開できました。trainとvalidationの会話数は元のsplitと一致し、短すぎて除外された会話はありませんでした。context length 256に収まらない履歴は左側から切り詰めていますが、応答部分を可能な限り残す設計です。trainの約69.7%、validationの約69.6%が切り詰め対象であり、現在の会話例では長い履歴を常に保持できません。この点はSFT結果の解釈に残る制約です。
+
+EOSは応答終了を学習するためmask対象ですが、body token数とは分けて記録できました。これにより、学習する応答本文量と応答終了記号の量を区別して後から確認できます。
+
+- [SFT整形manifest](../../artifacts/sft/chat-v1-context256.manifest.json)
 
 ## 次に試すこと
 
