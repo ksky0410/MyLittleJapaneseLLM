@@ -1,0 +1,180 @@
+"""MLXで動く最小のdecoder-only Transformer。"""
+
+from __future__ import annotations
+
+import math
+from typing import Any
+
+try:
+    import mlx.core as mx
+    from mlx import nn
+except ImportError as error:  # pragma: no cover - MLXなし環境用の分岐
+    mx = None
+    nn = None
+    _MLX_IMPORT_ERROR = error
+else:
+    _MLX_IMPORT_ERROR = None
+
+
+def require_mlx() -> Any:
+    """MLXを遅延要求し、学習系だけを明確なエラーで止める。"""
+
+    if mx is None or nn is None:
+        raise RuntimeError(
+            "MLXが見つかりません。この学習コードはApple Silicon Mac向けです。"
+            ".venv/bin/python -m pip install -e '.[apple,dev]' を実行してください。"
+        ) from _MLX_IMPORT_ERROR
+    return mx
+
+
+_ModuleBase = nn.Module if nn is not None else object
+
+
+class CausalSelfAttention(_ModuleBase):
+    def __init__(self, dim: int, heads: int) -> None:
+        require_mlx()
+        super().__init__()
+        if dim % heads != 0:
+            raise ValueError("attentionのdimはheadsで割り切れる必要があります")
+        self.heads = heads
+        self.head_dim = dim // heads
+        self.qkv = nn.Linear(dim, dim * 3, bias=False)
+        self.out_proj = nn.Linear(dim, dim, bias=False)
+
+    def __call__(self, x: Any) -> Any:
+        batch, sequence, _ = x.shape
+        q, k, v = mx.split(self.qkv(x), 3, axis=-1)
+        q = q.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
+        k = k.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
+        v = v.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
+        scores = (q @ k.transpose(0, 1, 3, 2)) / math.sqrt(self.head_dim)
+        # 上三角だけを十分小さい値にし、未来tokenを参照できないようにする。
+        mask = mx.triu(mx.full((sequence, sequence), -1e9, dtype=scores.dtype), k=1)
+        weights = mx.softmax(scores + mask, axis=-1)
+        attended = (weights @ v).transpose(0, 2, 1, 3).reshape(batch, sequence, -1)
+        return self.out_proj(attended)
+
+
+class FeedForward(_ModuleBase):
+    def __init__(self, dim: int, mlp_ratio: int) -> None:
+        require_mlx()
+        super().__init__()
+        hidden_dim = dim * mlp_ratio
+        self.up = nn.Linear(dim, hidden_dim)
+        self.down = nn.Linear(hidden_dim, dim)
+
+    def __call__(self, x: Any) -> Any:
+        return self.down(nn.gelu(self.up(x)))
+
+
+class TransformerBlock(_ModuleBase):
+    def __init__(self, dim: int, heads: int, mlp_ratio: int) -> None:
+        require_mlx()
+        super().__init__()
+        self.norm_1 = nn.LayerNorm(dim)
+        self.attention = CausalSelfAttention(dim, heads)
+        self.norm_2 = nn.LayerNorm(dim)
+        self.mlp = FeedForward(dim, mlp_ratio)
+
+    def __call__(self, x: Any) -> Any:
+        x = x + self.attention(self.norm_1(x))
+        return x + self.mlp(self.norm_2(x))
+
+
+class TinyJapaneseGPT(_ModuleBase):
+    """学習教材として読みやすさを優先した、重み共有付きの小型GPT。"""
+
+    def __init__(
+        self,
+        vocab_size: int,
+        dim: int,
+        layers: int,
+        heads: int,
+        context_length: int,
+        mlp_ratio: int = 4,
+    ) -> None:
+        require_mlx()
+        super().__init__()
+        if vocab_size <= 0:
+            raise ValueError("vocab_size は正の整数で指定してください")
+        if dim <= 0 or layers <= 0 or heads <= 0 or context_length < 2:
+            raise ValueError(
+                "dim、layers、headsは正数、context_lengthは2以上で指定してください"
+            )
+        if dim % heads != 0:
+            raise ValueError("dimはheadsで割り切れる必要があります")
+        if mlp_ratio <= 0:
+            raise ValueError("mlp_ratioは正の整数で指定してください")
+        self.vocab_size = vocab_size
+        self.dim = dim
+        self.layers_count = layers
+        self.heads = heads
+        self.context_length = context_length
+        self.mlp_ratio = mlp_ratio
+        self.token_embedding = nn.Embedding(vocab_size, dim)
+        self.position_embedding = nn.Embedding(context_length, dim)
+        self.blocks = [TransformerBlock(dim, heads, mlp_ratio) for _ in range(layers)]
+        self.final_norm = nn.LayerNorm(dim)
+
+    def __call__(self, tokens: Any) -> Any:
+        if len(tokens.shape) != 2:
+            raise ValueError(
+                f"tokensは[batch, sequence]が必要ですが、shape={tokens.shape}です"
+            )
+        _, sequence = tokens.shape
+        if sequence > self.context_length:
+            raise ValueError(
+                f"入力長{sequence}がcontext_length={self.context_length}を超えています"
+            )
+        positions = mx.arange(sequence)
+        x = self.token_embedding(tokens) + self.position_embedding(positions)
+        for block in self.blocks:
+            x = block(x)
+        x = self.final_norm(x)
+        # lm_headを別に持たず、入力Embeddingのweightを転置して出力にも使う。
+        return x @ self.token_embedding.weight.T
+
+
+def model_signature(
+    vocab_size: int,
+    dim: int,
+    layers: int,
+    heads: int,
+    context_length: int,
+    mlp_ratio: int,
+) -> dict[str, int]:
+    return {
+        "vocab_size": int(vocab_size),
+        "dim": int(dim),
+        "layers": int(layers),
+        "heads": int(heads),
+        "context_length": int(context_length),
+        "mlp_ratio": int(mlp_ratio),
+    }
+
+
+def estimate_parameter_count(
+    vocab_size: int,
+    dim: int,
+    layers: int,
+    heads: int,
+    context_length: int,
+    mlp_ratio: int = 4,
+) -> int:
+    """重み共有を反映した概算。MLXなしのinspectでも利用できる。"""
+
+    if dim % heads != 0:
+        raise ValueError("dimはheadsで割り切れる必要があります")
+    token_embedding = vocab_size * dim
+    position_embedding = context_length * dim
+    attention = dim * dim * 3 + dim * dim
+    mlp = dim * (dim * mlp_ratio) + (dim * mlp_ratio) * dim
+    # LayerNormはscaleとbiasを持つため、各blockで4*dim。
+    block_norms = 4 * dim
+    final_norm = 2 * dim
+    return (
+        token_embedding
+        + position_embedding
+        + layers * (attention + mlp + block_norms)
+        + final_norm
+    )

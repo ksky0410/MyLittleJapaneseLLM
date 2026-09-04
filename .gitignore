@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Local data and experiment outputs
+artifacts/
+checkpoints/
+samples/
+logs/
+data/raw/
+data/downloads/
+data/cache/
+*.jsonl
+*.jsonl.zst
+*.jsonl.gz
+*.parquet
+*.arrow
+*.tar
+*.tar.gz
+*.zip
+*.bin
+*.npz
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.model
+*.vocab
+
+# macOS
+.DS_Store

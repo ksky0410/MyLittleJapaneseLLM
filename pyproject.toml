@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "my-little-japanese-llm"
+version = "0.1.0"
+description = "MacBook上で日本語の小型LLMをゼロから学ぶための最小実装"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "sentencepiece>=0.2.0",
+]
+
+[project.optional-dependencies]
+apple = [
+    "mlx>=0.22.0",
+]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
