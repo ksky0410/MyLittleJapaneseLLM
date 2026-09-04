@@ -272,6 +272,18 @@ Issue #1の会話らしさを比較するため、短い返答・相づち・く
 
 SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、通常のdomain評価のlossとは直接比較しません。SFT前後の一般日本語・会話・医療の全Token lossも別に測定し、会話応答の改善と引き換えに忘却が起きていないかを確認します。
 
+固定短文だけでなく、held-out会話の履歴から次の発話を生成する評価も実行できます。validation JSONLから評価対象のturnをseed付きで選び、target本文をpromptへ含めず、履歴とtarget話者markerの続きを生成します。参照本文、completion、生成長、EOS到達をJSONとTXTへ保存するため、学習データを全量コピーせずに実際の会話形式を確認できます。
+
+```bash
+.venv/bin/python scripts/evaluate_chat_dataset.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --checkpoint artifacts/checkpoints/token-budget-chat-sft-5m-smoke/step_000500.npz \
+  --input artifacts/corpus/conversation-v1/validation.jsonl \
+  --output artifacts/evaluations/heldout-chat.json \
+  --text-output artifacts/samples/token-budget-chat-sft-5m-smoke/heldout-chat.txt \
+  --examples 24 --max-new-tokens 64 --seed 42
+```
+
 会話SFTだけで一般文体を忘れる場合は、`--rehearsal-tokens`と`--rehearsal-ratio`を指定します。rehearsal側は通常のpretraining loss、会話側は応答mask lossとして別々に平均し、最後に指定比率で結合します。たとえば`0.25`なら、SFT目的を75%、pretraining目的を25%として学習します。Token数の多い通常batchが短い応答maskを圧倒しないよう、単純なToken列連結ではなくloss単位で重み付けします。
 
 ```bash
@@ -304,7 +316,7 @@ SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、�
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/evaluate_chat_dataset.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```
