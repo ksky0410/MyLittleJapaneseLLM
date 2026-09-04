@@ -46,6 +46,8 @@
 
 未実施です。開始前に選択manifestとそのハッシュをGitHubへ保存し、評価中はcheckpointごとのJSON・TXTを確認します。
 
+2026-09-05の再実行前に、固定manifest使用時のメタデータを補正しました。CLIの`--examples`既定値は24ですが、manifestには48例が固定されており、この場合は既定値を評価例数として記録するとJSONの説明が実際の評価と食い違います。そこで`selection_file`を使ったときの`max_examples`を`null`として保存するように変更しました。変更後に53件のテスト、`ruff check .`、`ruff format --check .`が成功しています。この補正を含むコミットを評価再実行前に作成し、3条件のJSONとTXTを再生成します。
+
 ## 結果と解釈
 
 未実施です。

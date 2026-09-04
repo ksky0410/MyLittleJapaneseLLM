@@ -399,7 +399,9 @@ def evaluate_chat_dataset(
         "checkpoint_step": metadata.get("metrics", {}).get("step"),
         "config": str(config_file),
         "seed": seed,
-        "max_examples": max_examples,
+        # 固定manifestを使った場合は、CLIの上限値ではなくmanifestの全例を
+        # 評価するため、max_examplesをそのまま記録すると実例数と食い違う。
+        "max_examples": max_examples if selection_file is None else None,
         "selected_example_count": len(results),
         "generation": {
             "max_new_tokens": max_new_tokens,
