@@ -28,11 +28,17 @@ base checkpointは実験017の`artifacts/checkpoints/token-budget-mixed-ja-5m-sm
 
 ## 実験中の記録
 
-未実施です。100 step以内の間隔でSFT loss、rehearsal loss、結合loss、validation loss、生成を確認します。
+2026-09-05に500 stepまで完了しました。エラーやメモリ不足はありませんでした。mask付きvalidation lossはstep 1が5.400670、step 100が4.812702、step 200が4.739223、step 300が4.687804、step 400が4.644852、step 500が4.635125でした。step 500のperplexityは103.0408、結合train lossは4.667452、学習時間は90.98秒です。最良checkpointはstep 500でした。
+
+step 500の内訳はSFT train loss 4.402709、rehearsal full train loss 5.446867、batch sizeはSFT 6・rehearsal 2でした。結合lossは、両方をToken数で直接平均せず、SFT 75%・rehearsal 25%で計算しています。通常の「今日は」生成はstep 0の文語的長文からstep 300の崩れた長文、step 500の「今日は今日から覚らない。」へ変化しました。SFT-onlyと同様に短くなる傾向はありますが、自然な文章とは言えません。全stepの生成とmetricsを保存しています。
+
+- `artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-smoke/metrics.jsonl`
+- `artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-smoke/summary.json`
+- `artifacts/samples/token-budget-chat-rehearsal-sft-5m-smoke/`
 
 ## 結果と解釈
 
-未実施です。
+rehearsalありのmask付きvalidation loss 4.635125は、SFT-onlyの4.623544より0.011581高く、会話SFT目的の最適化はわずかに弱くなりました。これはSFT側の学習を完全に犠牲にせず、別目的を同時に最適化した結果として予想どおりです。ただし、忘却抑制と会話応答の改善は通常domain評価と構造化promptで確認する必要があります。
 
 ## 次に試すこと
 
