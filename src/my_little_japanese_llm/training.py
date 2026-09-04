@@ -98,7 +98,10 @@ def generate_ids(
 
 
 def save_checkpoint(
-    model: Any, path: str | Path, signature: dict[str, int], metrics: dict[str, Any]
+    model: Any,
+    path: str | Path,
+    signature: dict[str, int | str],
+    metrics: dict[str, Any],
 ) -> Path:
     """重みとJSON metadataを別々に保存する。pickleを使わず、ロード前に形状を検証する。"""
 
@@ -121,7 +124,7 @@ def save_checkpoint(
 
 
 def load_checkpoint(
-    model: Any, path: str | Path, expected_signature: dict[str, int]
+    model: Any, path: str | Path, expected_signature: dict[str, int | str]
 ) -> dict[str, Any]:
     """metadataを先に検証してからMLX weightをロードする。"""
 
@@ -138,6 +141,11 @@ def load_checkpoint(
     ):
         raise ValueError(f"checkpoint metadataの形式が不正です: {metadata_path}")
     actual_signature = metadata.get("model")
+    if (
+        isinstance(actual_signature, dict)
+        and "position_embedding" not in actual_signature
+    ):
+        actual_signature = {**actual_signature, "position_embedding": "absolute"}
     if actual_signature != expected_signature:
         raise ValueError(
             "checkpointと現在の設定が一致しません。"
@@ -148,7 +156,7 @@ def load_checkpoint(
     return metadata
 
 
-def signature_from_config(config: Any, vocab_size: int) -> dict[str, int]:
+def signature_from_config(config: Any, vocab_size: int) -> dict[str, int | str]:
     return model_signature(
         vocab_size,
         config.model.dim,
@@ -156,4 +164,5 @@ def signature_from_config(config: Any, vocab_size: int) -> dict[str, int]:
         config.model.heads,
         config.model.context_length,
         config.model.mlp_ratio,
+        config.model.position_embedding,
     )

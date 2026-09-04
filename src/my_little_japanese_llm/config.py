@@ -24,6 +24,7 @@ class ModelConfig:
     heads: int
     context_length: int
     mlp_ratio: int
+    position_embedding: str
 
     def validate(self) -> None:
         if self.dim <= 0 or self.layers <= 0 or self.heads <= 0:
@@ -36,6 +37,10 @@ class ModelConfig:
             raise ValueError("model.context_length は2以上で指定してください")
         if self.mlp_ratio <= 0:
             raise ValueError("model.mlp_ratio は正の整数で指定してください")
+        if self.position_embedding not in {"absolute", "rope"}:
+            raise ValueError(
+                "model.position_embedding はabsoluteまたはropeで指定してください"
+            )
 
 
 @dataclass(frozen=True)
@@ -130,6 +135,7 @@ def load_config(path: str | Path) -> ExperimentConfig:
             heads=int(model_raw["heads"]),
             context_length=int(model_raw["context_length"]),
             mlp_ratio=int(model_raw.get("mlp_ratio", 4)),
+            position_embedding=str(model_raw.get("position_embedding", "absolute")),
         ),
         training=TrainingConfig(
             batch_size=int(training_raw["batch_size"]),

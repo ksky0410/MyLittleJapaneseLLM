@@ -73,6 +73,17 @@ class PipelineTests(unittest.TestCase):
         self.assertGreaterEqual(parameters, 4_500_000)
         self.assertLessEqual(parameters, 5_500_000)
 
+    def test_position_embedding_defaults_to_absolute_and_rope_config_is_valid(
+        self,
+    ) -> None:
+        debug = load_config(ROOT / "configs/debug.toml")
+        rope = load_config(ROOT / "configs/rope-mixed-ja-5m-smoke.toml")
+        self.assertEqual(debug.model.position_embedding, "absolute")
+        self.assertEqual(rope.model.position_embedding, "rope")
+        absolute = estimate_parameter_count(4096, 240, 6, 6, 256, 4, "absolute")
+        rope_parameters = estimate_parameter_count(4096, 240, 6, 6, 256, 4, "rope")
+        self.assertEqual(absolute - rope_parameters, 256 * 240)
+
     def test_corpus_normalization_and_deterministic_split(self) -> None:
         self.assertEqual(normalize_line("  ＡＩ\tの  実験  "), "AI の 実験")
         documents = [f"文書{i}" for i in range(10)]
@@ -169,6 +180,15 @@ class PipelineTests(unittest.TestCase):
         import mlx.core as mx
 
         model = TinyJapaneseGPT(32, 16, 2, 4, 8, 2)
+        logits = model(mx.array([[1, 2, 3, 4], [4, 3, 2, 1]]))
+        mx.eval(logits)
+        self.assertEqual(tuple(logits.shape), (2, 4, 32))
+
+    @unittest.skipUnless(HAS_MLX, "MLX未導入")
+    def test_mlx_rope_forward_shape(self) -> None:
+        import mlx.core as mx
+
+        model = TinyJapaneseGPT(32, 16, 2, 4, 8, 2, "rope")
         logits = model(mx.array([[1, 2, 3, 4], [4, 3, 2, 1]]))
         mx.eval(logits)
         self.assertEqual(tuple(logits.shape), (2, 4, 32))

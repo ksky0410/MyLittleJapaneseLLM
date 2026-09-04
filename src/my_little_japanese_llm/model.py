@@ -31,13 +31,26 @@ _ModuleBase = nn.Module if nn is not None else object
 
 
 class CausalSelfAttention(_ModuleBase):
-    def __init__(self, dim: int, heads: int) -> None:
+    def __init__(
+        self, dim: int, heads: int, position_embedding: str = "absolute"
+    ) -> None:
         require_mlx()
         super().__init__()
         if dim % heads != 0:
             raise ValueError("attentionのdimはheadsで割り切れる必要があります")
+        if position_embedding not in {"absolute", "rope"}:
+            raise ValueError(
+                "position_embedding は absolute または rope で指定してください"
+            )
         self.heads = heads
         self.head_dim = dim // heads
+        self.use_rope = position_embedding == "rope"
+        if self.use_rope:
+            if self.head_dim % 2 != 0:
+                raise ValueError(
+                    "RoPEではattentionのhead_dimが偶数である必要があります"
+                )
+            self.rope = nn.RoPE(self.head_dim, traditional=True, base=10000)
         self.qkv = nn.Linear(dim, dim * 3, bias=False)
         self.out_proj = nn.Linear(dim, dim, bias=False)
 
@@ -47,6 +60,9 @@ class CausalSelfAttention(_ModuleBase):
         q = q.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
         k = k.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
         v = v.reshape(batch, sequence, self.heads, self.head_dim).transpose(0, 2, 1, 3)
+        if self.use_rope:
+            q = self.rope(q)
+            k = self.rope(k)
         scores = (q @ k.transpose(0, 1, 3, 2)) / math.sqrt(self.head_dim)
         # 上三角だけを十分小さい値にし、未来tokenを参照できないようにする。
         mask = mx.triu(mx.full((sequence, sequence), -1e9, dtype=scores.dtype), k=1)
@@ -68,11 +84,17 @@ class FeedForward(_ModuleBase):
 
 
 class TransformerBlock(_ModuleBase):
-    def __init__(self, dim: int, heads: int, mlp_ratio: int) -> None:
+    def __init__(
+        self,
+        dim: int,
+        heads: int,
+        mlp_ratio: int,
+        position_embedding: str = "absolute",
+    ) -> None:
         require_mlx()
         super().__init__()
         self.norm_1 = nn.LayerNorm(dim)
-        self.attention = CausalSelfAttention(dim, heads)
+        self.attention = CausalSelfAttention(dim, heads, position_embedding)
         self.norm_2 = nn.LayerNorm(dim)
         self.mlp = FeedForward(dim, mlp_ratio)
 
@@ -92,6 +114,7 @@ class TinyJapaneseGPT(_ModuleBase):
         heads: int,
         context_length: int,
         mlp_ratio: int = 4,
+        position_embedding: str = "absolute",
     ) -> None:
         require_mlx()
         super().__init__()
@@ -105,15 +128,26 @@ class TinyJapaneseGPT(_ModuleBase):
             raise ValueError("dimはheadsで割り切れる必要があります")
         if mlp_ratio <= 0:
             raise ValueError("mlp_ratioは正の整数で指定してください")
+        if position_embedding not in {"absolute", "rope"}:
+            raise ValueError(
+                "position_embedding は absolute または rope で指定してください"
+            )
+        if position_embedding == "rope" and (dim // heads) % 2 != 0:
+            raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
         self.vocab_size = vocab_size
         self.dim = dim
         self.layers_count = layers
         self.heads = heads
         self.context_length = context_length
         self.mlp_ratio = mlp_ratio
+        self.position_embedding_type = position_embedding
         self.token_embedding = nn.Embedding(vocab_size, dim)
-        self.position_embedding = nn.Embedding(context_length, dim)
-        self.blocks = [TransformerBlock(dim, heads, mlp_ratio) for _ in range(layers)]
+        if position_embedding == "absolute":
+            self.position_embedding = nn.Embedding(context_length, dim)
+        self.blocks = [
+            TransformerBlock(dim, heads, mlp_ratio, position_embedding)
+            for _ in range(layers)
+        ]
         self.final_norm = nn.LayerNorm(dim)
 
     def __call__(self, tokens: Any) -> Any:
@@ -126,8 +160,10 @@ class TinyJapaneseGPT(_ModuleBase):
             raise ValueError(
                 f"入力長{sequence}がcontext_length={self.context_length}を超えています"
             )
-        positions = mx.arange(sequence)
-        x = self.token_embedding(tokens) + self.position_embedding(positions)
+        x = self.token_embedding(tokens)
+        if self.position_embedding_type == "absolute":
+            positions = mx.arange(sequence)
+            x = x + self.position_embedding(positions)
         for block in self.blocks:
             x = block(x)
         x = self.final_norm(x)
@@ -142,7 +178,14 @@ def model_signature(
     heads: int,
     context_length: int,
     mlp_ratio: int,
-) -> dict[str, int]:
+    position_embedding: str = "absolute",
+) -> dict[str, int | str]:
+    if position_embedding not in {"absolute", "rope"}:
+        raise ValueError(
+            "position_embedding は absolute または rope で指定してください"
+        )
+    if position_embedding == "rope" and (dim // heads) % 2 != 0:
+        raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
     return {
         "vocab_size": int(vocab_size),
         "dim": int(dim),
@@ -150,6 +193,7 @@ def model_signature(
         "heads": int(heads),
         "context_length": int(context_length),
         "mlp_ratio": int(mlp_ratio),
+        "position_embedding": position_embedding,
     }
 
 
@@ -160,13 +204,22 @@ def estimate_parameter_count(
     heads: int,
     context_length: int,
     mlp_ratio: int = 4,
+    position_embedding: str = "absolute",
 ) -> int:
     """重み共有を反映した概算。MLXなしのinspectでも利用できる。"""
 
     if dim % heads != 0:
         raise ValueError("dimはheadsで割り切れる必要があります")
+    if position_embedding not in {"absolute", "rope"}:
+        raise ValueError(
+            "position_embedding は absolute または rope で指定してください"
+        )
+    if position_embedding == "rope" and (dim // heads) % 2 != 0:
+        raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
     token_embedding = vocab_size * dim
-    position_embedding = context_length * dim
+    position_embedding_parameters = (
+        context_length * dim if position_embedding == "absolute" else 0
+    )
     attention = dim * dim * 3 + dim * dim
     mlp = dim * (dim * mlp_ratio) + (dim * mlp_ratio) * dim
     # LayerNormはscaleとbiasを持つため、各blockで4*dim。
@@ -174,7 +227,7 @@ def estimate_parameter_count(
     final_norm = 2 * dim
     return (
         token_embedding
-        + position_embedding
+        + position_embedding_parameters
         + layers * (attention + mlp + block_norms)
         + final_norm
     )

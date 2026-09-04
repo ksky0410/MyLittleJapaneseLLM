@@ -36,6 +36,7 @@ def main() -> None:
         config.model.heads,
         config.model.context_length,
         config.model.mlp_ratio,
+        config.model.position_embedding,
     )
     metadata = load_checkpoint(
         model, repo_path(args.checkpoint), signature_from_config(config, vocab_size)

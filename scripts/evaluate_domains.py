@@ -81,6 +81,7 @@ def evaluate_domains(
         config.model.heads,
         config.model.context_length,
         config.model.mlp_ratio,
+        config.model.position_embedding,
     )
     metadata = load_checkpoint(
         model,

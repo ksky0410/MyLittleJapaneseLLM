@@ -220,6 +220,17 @@ manifestには各sourceの入力SHA-256、行数、文字数、重み、希望�
   --output artifacts/evaluations/mixed-ja-5m-smoke-domains.json
 ```
 
+## 現代的な位置表現を比較する
+
+現在のbaselineは、学習可能なabsolute position embedding、LayerNorm、通常のmulti-head attentionです。RoPEを一度に他の変更と組み合わせず、`configs/rope-mixed-ja-5m-smoke.toml`で位置表現だけをRoPEへ切り替えられます。RoPEでは学習可能な位置embeddingを持たないため、同じ語彙・層数・次元数ならパラメータ数が少し減ります。checkpoint metadataにも位置表現を残し、absoluteとRoPEの取り違えを拒否します。
+
+```bash
+.venv/bin/python scripts/train.py \
+  --config configs/rope-mixed-ja-5m-smoke.toml
+```
+
+比較時は同じtrain Token列、validation Token列、seed、学習step、生成promptを使い、validation lossだけでなく、stepごとの生成文とdomain別評価を確認します。RoPE、RMSNorm、GQAなどを同時に導入せず、一つずつ差分を記録します。
+
 ## テストと入口の確認
 
 プロジェクトの仮想環境を使い、軽量なテストを実行できます。MLXまたはSentencePieceがない環境では、それらを必要とするテストだけがskipされます。
