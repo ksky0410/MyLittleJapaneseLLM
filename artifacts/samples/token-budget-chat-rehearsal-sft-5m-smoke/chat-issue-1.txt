@@ -1,0 +1,58 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/token-budget-chat-rehearsal-sft-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+一日から、私は大人で、一生人を起こした事して、此度を見たから、さき上げて、と聞いたらつんだりるの頭は、一日を、
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+」と同じ奴を大方へ、 ⁇ いたの真下から見たんだ、その事へ、私の極り合いっくた。あの気いにおくと、君はちょっと一足を ⁇ れている。それでも、それが少し此方のに入って、少しこの四のかく、一方のと思いました。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+笑
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+ないるの前はやしに乗くりに向つつまわと、今日のかと、私の顔をてってとな」と御方をかやくさす」といった。彼はこの日は、一口の前から、代助は、僕に取え、
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+今の原因へ愛している。「、一種を取っても、それと、其のものでした。代助は自分はは、この時、おれのかつた。私はは、どうを付けれるから、、 ⁇ が、私の間へかって、そこをか、それ、私はもしたと、もう僕が、、あ、一寸入りああ、私の心が、此のも、私はその顔のをしてうの方に、今、自分の家のかるなに見たっては、どうして、この事をかろう。ただ、今の前に逢いに、私はこのこの三のが、
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+ているが、この日を知きは、此言葉の中に行った。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+
