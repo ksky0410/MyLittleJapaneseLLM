@@ -1,0 +1,6 @@
+{
+  "final_step": 100,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-mixed-ja-20m-smoke/step_000100.npz",
+  "best_validation_loss": 6.980376402537028,
+  "elapsed_seconds": 31.074038583086804
+}
