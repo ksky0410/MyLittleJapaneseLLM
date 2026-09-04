@@ -73,6 +73,14 @@
 
 Tokenizerが混合train全行を読み、Token列の件数とSHA-256をmetadataへ残すこと。500 stepをNaN、OOM、途中停止なく完走し、checkpointをreloadできること。general・conversation・medicalのdomain別評価JSONと、stepごとの生成文が保存されること。悪い生成や反復があっても削除しない。
 
+## Tokenizerとencodeの結果
+
+Tokenizerは混合train 32,281行をすべて読み込み、skipなく完了した。実際の語彙数は4,096で、modelのSHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`、vocabのSHA-256は`bafd084943d817d27a1b873192471c5e5f6073c6768daee36e5d334eb3c4e180`である。
+
+混合trainは1,336,619 token、一般validationは11,780 token、会話validationは1,104,647 token、医療validationは197,674 tokenへ符号化された。各binのSHA-256は、trainが`d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`、一般validationが`c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4`、会話validationが`e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8`、医療validationが`649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c`である。
+
+混合出力の各単位を元sourceへ照合し、同じTokenizerとEOS挿入規則で数えたsource別token寄与は、一般488,856 token（36.57%）、会話530,471 token（39.69%）、医療317,292 token（23.74%）だった。単位数は80/10/10でも、token数は大きく異なる。原因は会話ブロックと医療1問の平均長であり、今後の比率実験では単位比率とtoken比率を別々の条件として扱う。
+
 ## 結果
 
-Tokenizer・encode・学習・domain別評価の各結果を、実行直後に追記する。最良checkpoint、loss、perplexity、所要時間、生成文へのリンク、実験009との差、source別token寄与を記録する。軽量artifactとノートはGitHubへpushし、巨大なToken・Tokenizer・checkpoint本体はGit管理対象外とする。
+Tokenizer・encodeまで完了した。学習・domain別評価の各結果を実行直後に追記する。最良checkpoint、loss、perplexity、所要時間、生成文へのリンク、実験009との差を記録する。軽量artifactとノートはGitHubへpushし、巨大なToken・Tokenizer・checkpoint本体はGit管理対象外とする。
