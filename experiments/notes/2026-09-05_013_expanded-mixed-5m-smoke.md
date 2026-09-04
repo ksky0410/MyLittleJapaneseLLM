@@ -83,4 +83,29 @@ Tokenizerは混合train 32,281行をすべて読み込み、skipなく完了し�
 
 ## 結果
 
-Tokenizer・encodeまで完了した。学習・domain別評価の各結果を実行直後に追記する。最良checkpoint、loss、perplexity、所要時間、生成文へのリンク、実験009との差を記録する。軽量artifactとノートはGitHubへpushし、巨大なToken・Tokenizer・checkpoint本体はGit管理対象外とする。
+学習は500 stepまでエラー、NaN、OOM、途中停止なく完走し、所要時間は94.19秒であった。stepごとの主要値は次のとおりである。
+
+| step | train loss | validation loss | validation perplexity |
+|---:|---:|---:|---:|
+| 1 | 8.7928 | 8.8004 | 6,636.73 |
+| 100 | 5.2139 | 6.6892 | 803.69 |
+| 200 | 5.6807 | 6.3517 | 573.44 |
+| 300 | 4.4124 | 6.0763 | 435.40 |
+| 400 | 4.8887 | 5.8463 | 345.97 |
+| 500 | 4.9487 | 5.7359 | 309.81 |
+
+最良checkpointは`artifacts/checkpoints/expanded-mixed-ja-5m-smoke/step_000500.npz`で、validation loss 5.7359479268、perplexity 309.8065055140である。domain別評価は次のとおりで、詳細は`artifacts/evaluations/expanded-mixed-ja-5m-smoke-domains.json`に保存した。
+
+| domain | token数 | validation loss | perplexity |
+|---|---:|---:|---:|
+| 一般 | 11,780 | 5.7359 | 309.81 |
+| 会話 | 1,104,647 | 3.7156 | 41.08 |
+| 医療 | 197,674 | 4.9252 | 137.71 |
+
+実験009のabsolute基準と比べると、一般lossは5.7469から5.7359へ0.0110改善した。一方、会話は3.5532から3.7156へ、医療は4.9087から4.9252へ悪化した。Tokenizerが異なること、会話・医療のvalidationも異なるTokenizerで再符号化されていることから、この差を一般source追加の効果だけとは解釈しない。学習データが増えたことで、500 stepでの見かけの過学習が弱まった可能性はあるが、より長いstepと同一Tokenizerの対照実験が必要である。
+
+source別に数えたtrain token寄与は、一般488,856 token（36.57%）、会話530,471 token（39.69%）、医療317,292 token（23.74%）だった。単位数は80/10/10でも、会話が長いためtoken比率は大きく異なる。この実験で、今後は単位quotaではなくTokenizer後のtoken budgetを基準にする必要性がさらに明確になった。token比率80/10/10を目標にするなら、会話・医療の採用単位を減らすか、source別のtoken budget抽出を追加する。
+
+stepごとの生成文とreload後の生成文は`artifacts/samples/expanded-mixed-ja-5m-smoke/`へ保存した。`今日は`に対してstep 500では短い日本語文が出たが、reload後にすぐEOSとなる出力もあり、安定した生成には至っていない。`吾輩は`では複数作品由来と思われる文体が混ざった長い出力になった。会話promptは短い応答を返したが、医療promptは問題形式をほぼ維持せず、医療知識の正確性は確認できなかった。代表例は[reloaded-today.txt](../../artifacts/samples/expanded-mixed-ja-5m-smoke/reloaded-today.txt)、[reloaded-story.txt](../../artifacts/samples/expanded-mixed-ja-5m-smoke/reloaded-story.txt)、[reloaded-conversation.txt](../../artifacts/samples/expanded-mixed-ja-5m-smoke/reloaded-conversation.txt)、[reloaded-medical.txt](../../artifacts/samples/expanded-mixed-ja-5m-smoke/reloaded-medical.txt)である。
+
+学習、reload、domain別評価は成功した。軽量artifactとノートはGitHubへpushし、巨大なToken・Tokenizer・checkpoint本体はGit管理対象外とする。次は、token budgetを指定できる混合処理を追加するか、同じ拡張データでRoPEを再比較するかを、今回のsource別token比率を踏まえて決める。
