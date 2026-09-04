@@ -42,10 +42,43 @@
 
 1,000 stepまでのログは各モデルの`metrics.jsonl`に保存されています。学習中の固定prompt生成も各stepのTXTとして保存される設定です。
 
+両モデルとも2,000 stepを完走しました。SFT-onlyは約771.6秒、rehearsal 0.25は約816.6秒でした。両方ともstep 1、100、200から2,000まで100 step間隔のmetricsとcheckpoint metadata、stepごとの固定prompt生成を保存できました。最終かつ最良のSFT validation lossは、SFT-onlyが4.4015（perplexity 81.57）、rehearsalが4.4089（perplexity 82.18）でした。SFT validationだけではSFT-onlyが0.0074良好ですが、これは会話応答mask上の指標であり、通常コーパスの保持を表しません。
+
+domain評価は、最初にREADMEの標準例にあるAozora・会話・医療validationで実行してしまいました。その結果は比較条件を混ぜないよう、`artifacts/evaluations/token-budget-chat-sft-5m-2k-domains-aozora-neko.json`と`artifacts/evaluations/token-budget-chat-rehearsal-sft-5m-2k-domains-aozora-neko.json`へそのまま保存しています。その後、過去の500 step評価と同じ`mixed-ja-80-10-10-v2-*` validationへ揃えて再評価しました。以降の比較には後者だけを使います。
+
 ## 結果と解釈
 
-未実施です。
+同じmixed validationで測ったbase（token-budget pretrainingのstep 500）、今回のSFT-only、rehearsal 0.25のlossは次のとおりです。
+
+| 条件 | general | conversation | medical |
+| --- | ---: | ---: | ---: |
+| base pretraining step 500 | 5.6064 | 3.8523 | 4.9090 |
+| SFT-only step 2,000 | 6.0144 | 4.2655 | 5.5052 |
+| rehearsal 0.25 step 2,000 | 5.5742 | 3.6211 | 4.8147 |
+
+SFT-onlyはbaseと比べてgeneralが0.4080、conversationが0.4132、medicalが0.5962悪化しました。会話SFT validation lossが下がっていても、通常のToken列に対する予測能力を失っており、2,000 stepまで同じ学習率スケジュールで続けたことによる忘却が明確です。rehearsal 0.25はbaseよりgeneralが0.0321、conversationが0.2313、medicalが0.0943改善しました。少なくとも今回の評価範囲では、rehearsalは忘却を抑えるだけでなく、pretraining dataとの混合学習として通常domainのlossも改善しています。
+
+held-out validation会話24例では、SFT-onlyがEOS停止11/24、平均生成43.83 token、Token overlap precision 0.1177、recall 0.2738、F1 0.1264でした。rehearsalはEOS停止15/24、平均生成32.75 token、precision 0.1833、recall 0.2692、F1 0.1473でした。rehearsalはSFT-onlyより生成を短くし、停止率・precision・F1を改善しましたが、recallはほぼ同程度でわずかに下がりました。F1の差は0.0208で、500 stepの複数seed評価で見えた傾向と同じ方向です。ただし、Token overlapは意味や自然さを直接測らない補助指標です。
+
+Issue #1の構造化固定promptでは、2,000 stepへ延長しても両モデルとも「こんにちは」「こんばんは」「そうなんですね」などの定型挨拶へ強く偏りました。raw promptではSFT-onlyが長く生成し、rehearsalは比較的短く停止しましたが、どちらも入力の「まじで」「今日なにしてた？」「明日ひま？」へ内容に応じた返答はできず、古風な文体・医療問題・数字・話者markerの混在も観察されました。したがって、学習stepを増やすだけではIssue #1の短い現代会話応答は得られませんでした。
+
+代表的な最終固定prompt生成として、SFT-onlyは`今日はおかるいからしうときに行っていました!...`のように長く崩れた文を生成し、rehearsalは`今日は今日と聞いたことが多い。「其事を不立物を付けて...`のように短めでも古典的な文体を残しました。これらの崩れた生成も削除せず、stepごとのTXTと評価TXTへ保存しています。
+
+今回の仮説は二つに分かれました。学習stepを増やせばSFT-onlyの会話応答指標が改善するという予想は、held-out F1が500 stepの0.1659から0.1264へ下がり、支持されませんでした。rehearsalが通常domainの悪化を抑えるという予想は、3 domainすべてでbaseを下回ったため支持されました。なお、2,000 step runのSFT-onlyとrehearsalは学習率スケジュールも同じであり、差分はrehearsal objectiveの有無です。
+
+成果物は次の場所に保存しています。
+
+- [SFT-only summary](../../artifacts/checkpoints/token-budget-chat-sft-5m-2k/summary.json)
+- [rehearsal summary](../../artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/summary.json)
+- [SFT-only metrics](../../artifacts/checkpoints/token-budget-chat-sft-5m-2k/metrics.jsonl)
+- [rehearsal metrics](../../artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/metrics.jsonl)
+- [SFT-only domain evaluation](../../artifacts/evaluations/token-budget-chat-sft-5m-2k-domains.json)
+- [rehearsal domain evaluation](../../artifacts/evaluations/token-budget-chat-rehearsal-sft-5m-2k-domains.json)
+- [SFT-only held-out JSON](../../artifacts/evaluations/token-budget-chat-sft-5m-2k-heldout-chat.json)
+- [rehearsal held-out JSON](../../artifacts/evaluations/token-budget-chat-rehearsal-sft-5m-2k-heldout-chat.json)
+- [SFT-only generated samples](../../artifacts/samples/token-budget-chat-sft-5m-2k)
+- [rehearsal generated samples](../../artifacts/samples/token-budget-chat-rehearsal-sft-5m-2k)
 
 ## 次に試すこと
 
-2,000 stepで改善が見えた場合は、学習量を増やす前に短い会話・質問・相づちの層別評価を追加します。改善しなければ、次は学習データのtarget turn選択または教師モデル蒸留へ進みます。
+2,000 stepまで増やしても短い固定promptが改善しなかったため、さらに同じSFTを長く回す前に、Issue #1の評価promptを相づち・質問・同意/不同意・誘い・別れに層別化し、各カテゴリへ適合した返答の割合を数える評価を追加します。そのうえで、短い応答を含むSFT例を適切に再サンプリングする実験を一つだけ行い、rehearsal 0.25を基準条件として比較します。モデルやTokenizerを同時に変更せず、データ構成の効果を切り分けます。

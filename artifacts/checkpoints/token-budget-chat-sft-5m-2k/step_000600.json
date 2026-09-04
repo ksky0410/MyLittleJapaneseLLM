@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "weights_file": "step_000600.npz",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 240,
+    "layers": 6,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute"
+  },
+  "metrics": {
+    "step": 600,
+    "train_loss": 4.3089919090271,
+    "validation_loss": 4.545555901527405,
+    "validation_perplexity": 94.21278568644395,
+    "learning_rate": 4.1758081239696017e-05,
+    "elapsed_seconds": 237.6384163328912,
+    "rehearsal_tokens": null,
+    "rehearsal_ratio": 0.0,
+    "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz"
+  }
+}

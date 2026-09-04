@@ -1,0 +1,88 @@
+{
+  "format": "chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/step_002000.npz",
+  "checkpoint_step": 2000,
+  "config": "/Users/koseki/projects/small_llm/configs/token-budget-chat-rehearsal-sft-5m-smoke.toml",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 160,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "rendered_prompt": "まじで",
+      "completion": "生動がないよのようなような大に向に知りに入りしてやし。"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "rendered_prompt": "それな",
+      "completion": "おなかった、今のものも、それのが、その言葉はさなに、、大人は何にくしてみも、 ⁇ に相いくようと、そう、一言葉を待かしにするの時から、こののところが、さないと御、御言葉をか、其から、 ⁇ が、この前から、君が、いとくん、おれのを、 ⁇ の顔をして、その顔を取つた。何してから、何に逢うらし、これは、大にかれて、それのない。"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "rendered_prompt": "今日なにしてた？",
+      "completion": "大生で、私の方から来る、"
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "rendered_prompt": "やば",
+      "completion": "さが、どうしていたが、自分のへ出に、大きがと云つただろうと云つたが、い。私は今日へかすりなに、一杯の大はどうして、すぐ上に、、どうして、少しもは、と、大人かっていた。"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "rendered_prompt": "なんかさ",
+      "completion": "と下で,整である.  2歳と,117 問題:1.. 患者の内;d:a 尿 ポイント:a 子宮;b ポイント:a 正解:a P 血;d 急性;d 患者;c 尿 正解: 選択肢解説:a:×b:×b 血 ポイント:a 血;e ポイント: 選択肢解説:a:×a 脳腫 腎視 糖尿病;c 視 尿 ポイント:a:×b 腹部の骨の低下 尿尿 Ig/dL,心の治療は低下 急性 アマは,圧の診断;e 病造影 a:×b 血清IT [図表"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "rendered_prompt": "いやそれは",
+      "completion": "もう、其か、どうして、、お金を付けら、御金を呼りと、平岡の方のを一方へ付けんから、どうしく、おれに見かない方が、あの手に、、それも、と、今の学を得べて、、どうして行くのを出て、うんと、今の金した。"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "rendered_prompt": "おつかれ",
+      "completion": "ませんから、大まで、、あ、どうだと ⁇ が、君、少し話して、不覚くと、何が、あ、今は、もうすぐ日をなと、、少し御手紙からないに乗りかれた。私の家の下から、一日に、今の御顔がって、此回れているのが、もう、話を、おかすりを、其所が、私の ⁇ に、この代なの方のなかやくさのを取りと、、此話を取ったので、あの前後から、その前にあるようにすが、あ。おれがわから、それも何を置か、どうして、一木に、何をして、私の頭"
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "rendered_prompt": "明日ひま？",
+      "completion": ""
+    }
+  ]
+}

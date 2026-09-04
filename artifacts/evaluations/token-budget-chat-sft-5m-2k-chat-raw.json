@@ -1,0 +1,88 @@
+{
+  "format": "chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-sft-5m-2k/step_002000.npz",
+  "checkpoint_step": 2000,
+  "config": "/Users/koseki/projects/small_llm/configs/token-budget-chat-sft-5m-smoke.toml",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 160,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "rendered_prompt": "まじで",
+      "completion": "しまがおいてると、、私をか、その日をみに出がって、そこがいらがらやばいっぱをとき、どう、この日ときが、そうのと、もうなって何をおりしてし、私のおかうっており、一がるのもあればいよ そうなんですね。"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "rendered_prompt": "それな",
+      "completion": "らも無はお物の頭が、"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "rendered_prompt": "今日なにしてた？",
+      "completion": ":a 140がなくきに入るの動いに覚ときがになと、大日は小さいらなきにやまってくとここそつまをつけないときはあっかるにせたらし、、またもお子さん。"
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "rendered_prompt": "やば",
+      "completion": "こ、一も、どうと、、、、もう、あこして、うのくらいにはお方までつら、私いものと、、。"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "rendered_prompt": "なんかさ",
+      "completion": "長こ こ @こ @してき 7回 進れてみにやこ分分からなってくの子がにか、今に参し、、おきを張りで大き お気うらはに、もう一時からわるからんときにお人は平もまくらした。"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "rendered_prompt": "いやそれは",
+      "completion": "一日の子の人年の間と一産はこの日はときに気をこそはは、一日はあ、お菓子なのにしたからない。そだってよく開みつと大地にとくかんかかというのをおしゃくりが入のくらいのに来はお酒もいします。私はそれを持ってみて、どうして、一緒があるので、一緒には、おもしと、一緒を持ってるい時からな、私の花場が。私ははもう少し見はもう、それはおしゃるかにいえばいで、何を持ってるがいっても、も、そさいわね。しかし、でも、お金でも"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "rendered_prompt": "おつかれ",
+      "completion": "@ @ @ N 56から覚に限こ @ :, @ @ @ 5回45年3 @ @ @～ 5年素.84560. A:人機がお酒に行かい ま @に入れるとスとき @m15日も,4回:845万07日がにかに動 56,501年2294日に一分と考えに行っていけ カリカレスのお応とん @い 5080回が,このstart回図表/dL,7,K2万. @ :A"
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "rendered_prompt": "明日ひま？",
+      "completion": "@くりがはは取きやからつら 分のところで,表がこっかけてくとこ へかかうらなが、小に行かって、その日、何にも、今日は今のが、ちょっと日が大足が、私は一人もなく、今間のと見して、お金を落ちる時にと、もう大不に、昔もんも、、小回にかけい方にして、もう一回にかのが、どじゃなとにしてた。"
+    }
+  ]
+}

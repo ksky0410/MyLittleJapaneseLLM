@@ -1,0 +1,12 @@
+{
+  "format": "chat-sft-training-v1",
+  "final_step": 2000,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-sft-5m-2k/step_002000.npz",
+  "best_validation_loss": 4.401461291313171,
+  "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz",
+  "train_examples": 396966,
+  "validation_examples": 49045,
+  "rehearsal_tokens": null,
+  "rehearsal_ratio": 0.0,
+  "elapsed_seconds": 771.6027477078605
+}

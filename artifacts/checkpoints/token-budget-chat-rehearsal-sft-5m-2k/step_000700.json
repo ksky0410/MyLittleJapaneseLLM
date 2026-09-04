@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "weights_file": "step_000700.npz",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 240,
+    "layers": 6,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute"
+  },
+  "metrics": {
+    "step": 700,
+    "train_loss": 4.3623456954956055,
+    "validation_loss": 4.547749328613281,
+    "validation_perplexity": 94.41966136281842,
+    "learning_rate": 3.8781378067720454e-05,
+    "elapsed_seconds": 295.6329672909342,
+    "rehearsal_tokens": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-token-budget-1m-train.bin",
+    "rehearsal_ratio": 0.25,
+    "sft_train_loss": 4.483763694763184,
+    "rehearsal_train_loss": 3.8894667625427246,
+    "sft_batch_size": 6,
+    "rehearsal_batch_size": 2,
+    "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz"
+  }
+}
