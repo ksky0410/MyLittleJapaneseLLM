@@ -10,7 +10,7 @@
 
 追加データは、Hugging Face上の`hotchpotch/fineweb-2-edu-japanese`にある`small_tokens_cleaned`のtrain shard一つです。取得対象のdataset commitは`180ca004c6a89b590daaad86cb062a07a5353c69`（2025-05-09）に固定します。dataset cardによれば、これはFineWeb2から教育的スコア2.5以上の日本語文書を抽出したデータで、`small_tokens_cleaned`は512 Token以下の文書からWeb特有のノイズを除去したsubsetです。ライセンスはODC-By 1.0で、元データ由来のCommon Crawl Terms of Useも適用されます。
 
-dataset cardには、`small_tokens`と`small_tokens_cleaned`の先頭範囲に重複があるため、最初の20,000件を飛ばすよう注意書きがあります。したがってtrain shardの先頭20,000行を採用せず、その後から現在のTokenizerで約5M Token分を決定的に抽出します。test parquetは学習へ混ぜず、同じTokenizerで別のvalidation Token列を作成して、追加データ側のlossを確認します。元のparquetは`data/downloads/`へ保存し、Gitへ追加しません。元データや`medilink_analysis`内のSQLiteは変更しません。
+dataset cardには、`small_tokens`と`small_tokens_cleaned`の先頭範囲に重複があるため、最初の10,000件を飛ばす例が示されています。説明には0〜9,999件と10,000〜19,999件の重複範囲にも触れられているため、今回はより保守的にtrain shardの先頭20,000行を採用せず、その後から現在のTokenizerで約5M Token分を決定的に抽出します。これは配布元の例より2倍多く除外する実験上の選択であり、manifestにも記録します。test parquetは学習へ混ぜず、同じTokenizerで別のvalidation Token列を作成して、追加データ側のlossを確認します。元のparquetは`data/downloads/`へ保存し、Gitへ追加しません。元データや`medilink_analysis`内のSQLiteは変更しません。
 
 取得URLは次のとおりです。
 
