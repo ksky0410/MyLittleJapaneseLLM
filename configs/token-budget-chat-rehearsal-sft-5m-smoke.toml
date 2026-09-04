@@ -1,0 +1,33 @@
+[paths]
+prepared_dir = "artifacts/corpus/conversation-v1"
+tokenizer_model = "artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model"
+train_tokens = "artifacts/tokens/mixed-ja-token-budget-1m-train.bin"
+val_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin"
+checkpoint_dir = "artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-smoke"
+samples_dir = "artifacts/samples/token-budget-chat-rehearsal-sft-5m-smoke"
+
+[model]
+dim = 240
+layers = 6
+heads = 6
+context_length = 256
+mlp_ratio = 4
+position_embedding = "absolute"
+
+[training]
+batch_size = 8
+max_steps = 500
+eval_interval = 100
+sample_interval = 100
+eval_batches = 20
+learning_rate = 0.00005
+min_learning_rate = 0.000005
+warmup_steps = 50
+weight_decay = 0.01
+seed = 42
+
+[generation]
+prompt = "今日は"
+max_new_tokens = 160
+temperature = 0.8
+top_k = 40
