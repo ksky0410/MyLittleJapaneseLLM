@@ -45,6 +45,19 @@ SentencePieceやMLXがない場合、Tokenizerまたは学習系の実行時に�
   --model-type unigram
 ```
 
+SentencePieceの`max_sentence_length`は既定値を4,192のまま維持していますが、日本語では1文字がUTF-8で複数バイトになるため、文字数が4,192未満でも長い文が除外されることがあります。実データでは、必要な最大バイト長を見積もって`--max-sentence-length`を指定してください。例えば、正式な青空文庫コーパスでは次のように20,000を指定できます。
+
+```bash
+.venv/bin/python scripts/train_tokenizer.py \
+  --input artifacts/corpus/aozora-neko-formal-v2/train.txt \
+  --model-prefix artifacts/tokenizer/aozora-neko-formal-v2-unigram \
+  --vocab-size 4096 \
+  --model-type unigram \
+  --max-sentence-length 20000
+```
+
+`--max-sentence-length`は1以上の整数で指定します。値はSentencePieceへ渡すUTF-8バイト長の上限です。APIからは`train_sentencepiece(..., max_sentence_length=20000)`として指定できます。
+
 学習splitと検証splitは別々にToken化します。splitを一つのファイルへ連結しないため、train/validationの境界が混ざりません。各binaryには、Token数、語彙数、EOS ID、SHA-256を記録したJSONも保存されます。
 
 ```bash
@@ -130,6 +143,20 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 
 その後、Tokenizerとencodeの `--input` を `artifacts/my-corpus/train.txt` と `artifacts/my-corpus/val.txt` に変更します。データの出所、ライセンス、前処理、ハッシュ、Token数は実験ノートへ記録してください。
 
+## 青空文庫のShift_JIS作品を取り込む
+
+青空文庫のzipまたはtxtは、作品ヘッダーとフッター、`［＃注記］`形式の注記を取り除き、`｜親文字《ルビ》`および親文字に直接付いた`《ルビ》`を親文字だけの本文へ変換できます。フッターは、本文開始後の末尾256行から、行頭が`底本：`・`入力：`・`校正：`・`青空文庫作成ファイル：`などに一致する後方の候補まとまりを探し、その先頭を本文の終端とします。本文直後に区切り線がある形式では、その区切り線も除去します。長い本文行は、SentencePieceが捨てないように既定の4,000文字ごとへ分割します。入力ファイル自体はGitへ追加せず、出所URLとmanifestのハッシュを実験ノートへ残してください。
+
+```bash
+.venv/bin/python scripts/import_aozora.py \
+  --input /path/to/aozora作品.zip \
+  --output artifacts/corpus/aozora-neko.txt \
+  --manifest artifacts/corpus/aozora-neko.manifest.json \
+  --source https://www.aozora.gr.jp/cards/000148/files/789_ruby_5639.zip
+```
+
+入力の既定文字コードは`shift_jis`です。作品によって異なる場合は`--encoding`で変更できます。manifestには入力・出力のSHA-256、文字数、行数、除去した行と注記の件数、ルビ件数、長文の分割件数、入力zip内のtxt名を保存します。変換後は`prepare_data.py`へUTF-8の出力を渡してください。
+
 ## テストと入口の確認
 
 プロジェクトの仮想環境を使い、軽量なテストを実行できます。MLXまたはSentencePieceがない環境では、それらを必要とするテストだけがskipされます。
@@ -137,7 +164,7 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```

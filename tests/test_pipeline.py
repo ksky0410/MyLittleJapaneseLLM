@@ -5,6 +5,9 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from typing import ClassVar
+from unittest.mock import patch
 
 import numpy as np
 
@@ -18,6 +21,7 @@ from my_little_japanese_llm.corpus import (
 from my_little_japanese_llm.data import evaluation_batches, make_batch
 from my_little_japanese_llm.model import TinyJapaneseGPT, estimate_parameter_count
 from my_little_japanese_llm.tokenizer import (
+    DEFAULT_MAX_SENTENCE_LENGTH,
     encode_text_file,
     load_processor,
     train_sentencepiece,
@@ -46,6 +50,28 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(config.model.dim, 64)
         self.assertEqual(config.training.max_steps, 100)
         self.assertEqual(config.paths.train_tokens, ROOT / "artifacts/tokens/train.bin")
+
+    def test_aozora_5m_config_targets_formal_corpus_and_model_size(self) -> None:
+        config = load_config(ROOT / "configs/aozora-5m.toml")
+        self.assertEqual(
+            config.paths.prepared_dir,
+            ROOT / "artifacts/corpus/aozora-neko-formal-v2",
+        )
+        self.assertEqual(
+            config.paths.tokenizer_model,
+            ROOT / "artifacts/tokenizer/aozora-neko-formal-v2-unigram.model",
+        )
+        self.assertEqual(config.model.context_length, 256)
+        parameters = estimate_parameter_count(
+            4096,
+            config.model.dim,
+            config.model.layers,
+            config.model.heads,
+            config.model.context_length,
+            config.model.mlp_ratio,
+        )
+        self.assertGreaterEqual(parameters, 4_500_000)
+        self.assertLessEqual(parameters, 5_500_000)
 
     def test_corpus_normalization_and_deterministic_split(self) -> None:
         self.assertEqual(normalize_line("  ＡＩ\tの  実験  "), "AI の 実験")
@@ -100,6 +126,40 @@ class PipelineTests(unittest.TestCase):
             self.assertGreaterEqual(effective, 16)
             self.assertGreaterEqual(processor.vocab_size(), 4)
             self.assertEqual(ids.count(processor.eos_id()), 3)
+
+    def test_sentencepiece_accepts_utf8_byte_length_override(self) -> None:
+        class RecordingTrainer:
+            call: ClassVar[dict] = {}
+
+            @classmethod
+            def train(cls, **kwargs):
+                cls.call = kwargs
+
+        fake_sentencepiece = SimpleNamespace(SentencePieceTrainer=RecordingTrainer)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "train.txt"
+            source.write_text("日本語の長い文です。\n", encoding="utf-8")
+            with patch(
+                "my_little_japanese_llm.tokenizer.require_sentencepiece",
+                return_value=fake_sentencepiece,
+            ):
+                train_sentencepiece(
+                    source,
+                    root / "ja",
+                    32,
+                    max_sentence_length=20_000,
+                )
+
+            self.assertEqual(RecordingTrainer.call["max_sentence_length"], 20_000)
+            self.assertEqual(DEFAULT_MAX_SENTENCE_LENGTH, 4192)
+            with self.assertRaisesRegex(ValueError, "max_sentence_length"):
+                train_sentencepiece(
+                    source,
+                    root / "invalid",
+                    32,
+                    max_sentence_length=0,
+                )
 
     def test_model_parameter_estimate_is_positive(self) -> None:
         self.assertGreater(estimate_parameter_count(128, 64, 2, 4, 64), 100_000)

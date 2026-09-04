@@ -1,0 +1,32 @@
+[paths]
+prepared_dir = "artifacts/corpus/aozora-neko-formal-v2"
+tokenizer_model = "artifacts/tokenizer/aozora-neko-formal-v2-unigram.model"
+train_tokens = "artifacts/tokens/aozora-neko-formal-v2-train.bin"
+val_tokens = "artifacts/tokens/aozora-neko-formal-v2-val.bin"
+checkpoint_dir = "artifacts/checkpoints/aozora-5m"
+samples_dir = "artifacts/samples/aozora-5m"
+
+[model]
+dim = 240
+layers = 6
+heads = 6
+context_length = 256
+mlp_ratio = 4
+
+[training]
+batch_size = 8
+max_steps = 5000
+eval_interval = 100
+sample_interval = 100
+eval_batches = 20
+learning_rate = 0.0003
+min_learning_rate = 0.00003
+warmup_steps = 300
+weight_decay = 0.1
+seed = 42
+
+[generation]
+prompt = "吾輩は猫である。"
+max_new_tokens = 160
+temperature = 0.8
+top_k = 40

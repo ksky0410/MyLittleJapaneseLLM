@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+DEFAULT_MAX_SENTENCE_LENGTH = 4192
+
 
 def require_sentencepiece() -> Any:
     try:
@@ -28,6 +30,7 @@ def train_sentencepiece(
     model_prefix: str | Path,
     vocab_size: int,
     model_type: str = "unigram",
+    max_sentence_length: int = DEFAULT_MAX_SENTENCE_LENGTH,
 ) -> tuple[Path, Path, int]:
     """SentencePieceを学習し、model/vocabのパスと実効語彙目標を返す。
 
@@ -40,6 +43,8 @@ def train_sentencepiece(
         raise ValueError("vocab_size は16以上で指定してください")
     if model_type not in {"unigram", "bpe"}:
         raise ValueError("model_type は unigram または bpe で指定してください")
+    if max_sentence_length < 1:
+        raise ValueError("max_sentence_length は1以上で指定してください")
     source = Path(input_path)
     if not source.is_file():
         raise FileNotFoundError(f"Tokenizer入力が見つかりません: {source}")
@@ -60,6 +65,7 @@ def train_sentencepiece(
         character_coverage=0.9995,
         input_sentence_size=0,
         shuffle_input_sentence=False,
+        max_sentence_length=max_sentence_length,
         hard_vocab_limit=False,
         unk_id=1,
         bos_id=2,

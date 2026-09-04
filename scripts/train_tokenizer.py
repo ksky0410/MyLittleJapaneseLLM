@@ -6,7 +6,11 @@ import argparse
 
 from _common import repo_path
 
-from my_little_japanese_llm.tokenizer import load_processor, train_sentencepiece
+from my_little_japanese_llm.tokenizer import (
+    DEFAULT_MAX_SENTENCE_LENGTH,
+    load_processor,
+    train_sentencepiece,
+)
 
 
 def main() -> None:
@@ -19,6 +23,12 @@ def main() -> None:
     )
     parser.add_argument("--vocab-size", type=int, default=128)
     parser.add_argument("--model-type", choices=("unigram", "bpe"), default="unigram")
+    parser.add_argument(
+        "--max-sentence-length",
+        type=int,
+        default=DEFAULT_MAX_SENTENCE_LENGTH,
+        help="SentencePieceへ渡す1文の最大長（UTF-8バイト数）",
+    )
     args = parser.parse_args()
 
     model_path, vocab_path, effective_size = train_sentencepiece(
@@ -26,6 +36,7 @@ def main() -> None:
         repo_path(args.model_prefix),
         args.vocab_size,
         args.model_type,
+        args.max_sentence_length,
     )
     actual_size = int(load_processor(model_path).vocab_size())
     print(f"要求語彙数: {args.vocab_size}")
