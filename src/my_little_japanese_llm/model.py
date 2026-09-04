@@ -15,13 +15,16 @@ except ImportError as error:  # pragma: no cover - MLXなし環境用の分岐
 else:
     _MLX_IMPORT_ERROR = None
 
+MLX_AVAILABLE = mx is not None and nn is not None
+
 
 def require_mlx() -> Any:
     """MLXを遅延要求し、学習系だけを明確なエラーで止める。"""
 
-    if mx is None or nn is None:
+    if not MLX_AVAILABLE:
         raise RuntimeError(
-            "MLXが見つかりません。この学習コードはApple Silicon Mac向けです。"
+            "MLXまたはMetalデバイスを利用できません。この学習コードは"
+            "Apple Silicon Mac向けです。Metalが使える環境で、"
             ".venv/bin/python -m pip install -e '.[apple,dev]' を実行してください。"
         ) from _MLX_IMPORT_ERROR
     return mx

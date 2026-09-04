@@ -19,7 +19,11 @@ from my_little_japanese_llm.corpus import (
     write_split,
 )
 from my_little_japanese_llm.data import evaluation_batches, make_batch
-from my_little_japanese_llm.model import TinyJapaneseGPT, estimate_parameter_count
+from my_little_japanese_llm.model import (
+    MLX_AVAILABLE,
+    TinyJapaneseGPT,
+    estimate_parameter_count,
+)
 from my_little_japanese_llm.tokenizer import (
     DEFAULT_MAX_SENTENCE_LENGTH,
     encode_text_file,
@@ -33,7 +37,7 @@ from my_little_japanese_llm.training import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-HAS_MLX = importlib.util.find_spec("mlx") is not None
+HAS_MLX = MLX_AVAILABLE
 
 
 class NumpyMX:

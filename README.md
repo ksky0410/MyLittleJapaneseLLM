@@ -306,6 +306,14 @@ JSONにはEOSを除いたmultiset Token overlapのprecision・recall・F1も保�
   --max-new-tokens 64 --seed 42
 ```
 
+生成結果を意味面でも確認する場合は、評価JSONから人手レビュー用テンプレートを作成します。`context_fit`、`role_fit`、`not_collapsed`は自動判定せず空欄のまま残すため、Token overlapを意味評価と混同しません。評価時のprompt、参照本文、生成文、source、応答長、EOS、履歴切り詰め、train本文重複候補も一緒に保存されます。
+
+```bash
+.venv/bin/python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/test-chat.json \
+  --output experiments/evaluation/test-chat-review-template.json
+```
+
 会話SFTだけで一般文体を忘れる場合は、`--rehearsal-tokens`と`--rehearsal-ratio`を指定します。rehearsal側は通常のpretraining loss、会話側は応答mask lossとして別々に平均し、最後に指定比率で結合します。たとえば`0.25`なら、SFT目的を75%、pretraining目的を25%として学習します。Token数の多い通常batchが短い応答maskを圧倒しないよう、単純なToken列連結ではなくloss単位で重み付けします。
 
 ```bash
@@ -338,7 +346,7 @@ JSONにはEOSを除いたmultiset Token overlapのprecision・recall・F1も保�
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/evaluate_chat_dataset.py scripts/select_chat_eval_set.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/import_fineweb2_edu_japanese.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/evaluate_chat_dataset.py scripts/create_chat_review_template.py scripts/select_chat_eval_set.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```
