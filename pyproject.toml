@@ -20,6 +20,9 @@ apple = [
 dev = [
     "pytest>=8.0",
 ]
+data = [
+    "pyarrow>=14.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -27,4 +30,3 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-
