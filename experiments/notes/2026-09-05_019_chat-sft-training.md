@@ -8,7 +8,7 @@ base checkpointは`artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000
 
 SFT前後で、SFT validation lossだけでなく、通常のgeneral・conversation・medical validation lossも評価します。Issue #1の8固定promptも同じtemperature 0.8、top-k 40、各promptのseed 42〜49で再生成します。SFTで会話以外のlossが悪化する可能性も結果として記録します。自然な返答が一つでも出れば成功と決めつけず、空出力・文語・医療形式への漏れも含めて保存します。
 
-実験前のGitコミットは`1d24563`（`exp: plan masked chat sft training`）です。使用コマンドは次のとおりです。
+実験前のGitコミットは`db6de7c`（`docs: pin chat sft training commit`）です。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/train_sft.py \
@@ -36,6 +36,16 @@ SFT前後で、SFT validation lossだけでなく、通常のgeneral・conversat
 
 会話SFT validation lossは学習中一貫して下がり、応答本文とEOSへ限定した目的関数は正常に最適化されました。これは「会話SFTデータの応答tokenを予測する」学習が進んだことを示しますが、自然な会話能力の獲得を意味しません。特に通常の生成promptはSFTデータの入力形式と異なるため、次の固定会話prompt評価で本来の仮説を確認します。
 
+## 追加結果：domain評価とraw固定prompt
+
+step 500のSFT checkpointを通常のnext-token validationでも評価しました。generalはvalidation loss 5.887893、perplexity 360.6447、conversationは4.224560、perplexity 68.3445、medicalは5.316167、perplexity 203.6020でした。SFT前のToken予算pretraining checkpoint（general 5.606362、conversation 3.852320、medical 4.909000）から、3 domainすべてで悪化しました。これはSFTのmask付きlossと通常の全Token lossが異なるためで、会話応答を学習する代わりに一般・医療・会話の全体分布を保てたとは言えません。
+
+rawなIssue #1固定promptでは、「今日なにしてた？」「明日ひま？」が空completionのままでした。ほかの入力でも短い日本語断片は出ましたが、自然な会話の返答にはならず、長い崩れた文が多く残りました。SFT前と比べて「今日は」サンプルは短くなったものの、raw prompt評価だけではSFTの入力形式と一致しないため、今回の仮説を十分に検証できません。この制約を明記したうえで、生成結果は次のファイルへ保存しました。
+
+- [SFT domain評価JSON](../../artifacts/evaluations/token-budget-chat-sft-5m-smoke-domains.json)
+- [SFT raw固定prompt JSON](../../artifacts/evaluations/token-budget-chat-sft-5m-smoke-chat.json)
+- [SFT raw固定promptテキスト](../../artifacts/samples/token-budget-chat-sft-5m-smoke/chat-issue-1.txt)
+
 ## 次に試すこと
 
-SFT後に同じcheckpointを固定promptとdomain評価へ通します。改善しない場合は、履歴の切り詰め方、学習率、会話のturn選択、短い応答を重視するサンプリングのいずれか一つを変更します。
+次は、学習時と同じ`<|startofconversation|>`・話者marker・EOSを含む会話テンプレートでIssue #1のpromptを再評価します。raw評価との差を保存した後、一般データを少量混ぜるSFTまたは学習率を下げる設定を一つずつ比較します。

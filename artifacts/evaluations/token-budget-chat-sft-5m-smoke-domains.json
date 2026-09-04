@@ -1,0 +1,34 @@
+{
+  "format": "domain-evaluation-v1",
+  "config": "/Users/koseki/projects/small_llm/configs/token-budget-chat-sft-5m-smoke.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-sft-5m-smoke/step_000500.npz",
+  "checkpoint_step": 500,
+  "seed": 42,
+  "eval_batches": 20,
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 5.887893199920654,
+      "perplexity": 360.6446771954611
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 4.224560419718425,
+      "perplexity": 68.34445407009865
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 5.3161671956380205,
+      "perplexity": 203.60201788179208
+    }
+  ]
+}

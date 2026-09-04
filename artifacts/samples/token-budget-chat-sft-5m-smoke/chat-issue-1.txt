@@ -1,0 +1,50 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-sft-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/token-budget-chat-sft-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## casual-01 [short-reply]
+prompt: まじで
+completion:
+かわるのスとお温合いなようかれは、
+
+## casual-02 [backchannel]
+prompt: それな
+completion:
+いくてして、もう何をこあうにおえ。一してってくのものらるのもかうに、すぐおりは笑いかを上げきに行かまさっかわくかれしておっています。もおかくから、あとがすべるのがくから、と、ちょっとおいです、それと、いのかっていたらいませんかから、今のかれんと、おかんと一時には、自分の頭のもおくなととうっても、大なら、大なとあ、大には、一からよ、小ささって、いはおかってはあはまだ何ですねがんなことで、ちょっと、
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+completion:
+いいからは、、今の方のと、その学も、もう私をさる事のだから、私もときったものだんの方をさいません。大上は、お昔ですが、、おか、あばば、でも、少しえなが、いのかもしから、おつつまるらもかに、またでもなももなのかと、もう今も、さらあが、いよさだとうと、いい。どうなかくなの方で、そうさしまった。でも、それのかかかとって、それら、とか、もう大きにかけ、いっちといと同じだんど、お子
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+completion:
+い、こそう、僕のにいがいいのも、一話の中を使ったがき、何をかのごも、今の前までと御父しと、私は何は、私はすぐおくまれていいなさって、あいて、何のときたりと、私の所のを付けれとおかからと、その所だくり、と、それでもしで、おかりますねね。おっちとおしすよいです。あとだと一文がいらいかるのような感じと、今です。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+completion:
+それは、うろかってないから、そのを思かっててもなきを取るのなのとか?と、どうで、私も一のもまたちらなくだけはよくごの方な人もそろまりもあ、そと、それの日のにの方は、何が、おかのごやから、私もあからないと同じだかかわっきと思いました。
+
+## casual-07 [parting]
+prompt: おつかれ
+completion:
+るが、あとこえいってもまれいわわと見っかか。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+completion:
+
