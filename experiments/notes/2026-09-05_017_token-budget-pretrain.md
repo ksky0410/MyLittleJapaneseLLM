@@ -27,12 +27,20 @@
 
 2026-09-05にToken化を実行し、エラーなく999,997 tokenを得ました。Token列のbinary SHA-256は`91423864b083009c6ed10cad7645263b5b8c60f7ea8e9d1c3af1f25474cad471`で、混合manifestの`selected_token_count`と一致しました。実効語彙数は4,096、EOS IDは3です。binary本体は大きいためGitへ追加せず、同名JSON metadataとこのノートへ保存条件を残します。
 
-学習はこのToken化記録をpushした後に開始します。学習中は100 step以内の間隔でmetricsと固定prompt生成を確認し、途中停止や出力崩れも削除せず残します。
+Token化記録をpushした後、同日中に学習を開始しました。100 stepごとにmetricsと固定prompt生成を保存し、途中停止はありませんでした。validation lossの推移は、step 1が8.799506、step 100が6.567255、step 200が6.266910、step 300が5.950939、step 400が5.710444、step 500が5.606362でした。validation perplexityはstep 500で272.1523です。train lossはstep 500で5.179236でした。
+
+stepごとのmetrics、checkpoint metadata、固定prompt生成は次のディレクトリへ保存しました。重み本体の`.npz`はGitへ追加せず、metadataと実験ノートから保存先を追跡できるようにします。
+
+- `artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/metrics.jsonl`
+- `artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/summary.json`
+- `artifacts/samples/token-budget-mixed-ja-5m-smoke/`
 
 ## 結果と解釈
 
-未実施です。
+500 stepまで完了し、最良checkpointはstep 500でした。学習時間は84.55秒です。既存expanded mixed v2 absoluteモデルのgeneral validation loss 5.735948に対して、今回のToken予算混合モデルは5.606362となり、general validationだけでは約0.129586低くなりました。ただし、データの並びとsource配分を変更した比較であり、1 seed・500 stepの探索結果です。これだけでToken予算方式の優位性や汎用性を結論づけません。
+
+学習中の固定promptはstep 0から500まで残しています。step 0の出力はほぼ崩れたToken列でしたが、step 500では日本語らしい断片が増えました。一方、会話らしさや医療内容の正確さをこの生成だけから主張できないため、同じcheckpointのdomain別lossとIssue #1固定promptを別途評価します。
 
 ## 次に試すこと
 
-学習が完了したら、既存expanded absoluteモデルと同じgeneral・conversation・medical評価、およびIssue #1固定promptを実行します。会話文体が改善しない場合は、次に会話SFTの応答側loss maskingへ進みます。
+次に、既存expanded absoluteモデルと同じgeneral・conversation・medical評価、およびIssue #1固定promptを実行します。Token予算混合モデルで会話文体が改善しない場合は、次に会話SFTの応答側loss maskingへ進みます。
