@@ -10,7 +10,7 @@ base checkpointは実験017の`artifacts/checkpoints/token-budget-mixed-ja-5m-sm
 
 評価では、SFT mask付きvalidation loss、通常のgeneral・conversation・medical validation loss、rawおよび構造化Issue #1固定promptをSFT-onlyと比較します。SFT側の出力が少し自然になっても、固定8件だけでは一般化と断定しません。忘却が減ったか、会話入力形式に対する条件付き応答が改善したかを別々に見ます。
 
-実験前のGitコミットは`5639aea`（`exp: plan chat rehearsal sft`）です。rehearsal実装が入った後にこの記録へ実装コミットを追記します。使用コマンドは次のとおりです。
+実験前の計画コミットは`5639aea`（`exp: plan chat rehearsal sft`）、rehearsal実装コミットは`6c06049`（`feat: add pretraining rehearsal to chat sft`）です。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/train_sft.py \
