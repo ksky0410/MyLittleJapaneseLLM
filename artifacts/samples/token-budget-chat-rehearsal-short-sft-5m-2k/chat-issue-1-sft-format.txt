@@ -1,7 +1,7 @@
 # Chat prompt evaluation
 format: chat-prompt-evaluation-v1
 prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-sft-v1.json
-checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/step_002000.npz
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/step_002000.npz
 checkpoint_step: 2000
 config: /Users/koseki/projects/small_llm/configs/token-budget-chat-rehearsal-sft-5m-smoke.toml
 seed: 42
@@ -28,13 +28,13 @@ completion:
 prompt: それな
 rendered_prompt: <|startofconversation|><|speaker:A|>それな<eos:3><|speaker:B|>
 completion:
-こんにちはー!
+こんばんは?
 
 ## casual-03 [short-turn]
 prompt: 今日なにしてた？
 rendered_prompt: <|startofconversation|><|speaker:A|>今日なにしてた？<eos:3><|speaker:B|>
 completion:
-こんばんは!
+こんにちは!
 
 ## casual-04 [short-reply]
 prompt: やば
@@ -46,22 +46,22 @@ completion:
 prompt: なんかさ
 rendered_prompt: <|startofconversation|><|speaker:A|>なんかさ<eos:3><|speaker:B|>
 completion:
-こんにちはー!
+よろしくお願いします!
 
 ## casual-06 [disagreement]
 prompt: いやそれは
 rendered_prompt: <|startofconversation|><|speaker:A|>いやそれは<eos:3><|speaker:B|>
 completion:
-こんにちは!
+こんばんは!!
 
 ## casual-07 [parting]
 prompt: おつかれ
 rendered_prompt: <|startofconversation|><|speaker:A|>おつかれ<eos:3><|speaker:B|>
 completion:
-そうなんですね!
+こんにちは!
 
 ## casual-08 [invitation]
 prompt: 明日ひま？
 rendered_prompt: <|startofconversation|><|speaker:A|>明日ひま？<eos:3><|speaker:B|>
 completion:
-こんばんは!
+こんにちは!

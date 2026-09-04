@@ -2,7 +2,7 @@
   "format": "chat-prompt-evaluation-v1",
   "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-sft-v1.json",
   "prompt_sha256": "99e3809c3bab0da9dc1dfdfc7e7d8435e688893910ef64c7b52fb4c5dd2f14f7",
-  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/step_002000.npz",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/step_002000.npz",
   "checkpoint_step": 2000,
   "config": "/Users/koseki/projects/small_llm/configs/token-budget-chat-rehearsal-sft-5m-smoke.toml",
   "seed": 42,
@@ -78,7 +78,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>それな<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "こんにちはー!"
+      "completion": "こんばんは?"
     },
     {
       "id": "casual-03",
@@ -90,7 +90,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>今日なにしてた？<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "こんばんは!"
+      "completion": "こんにちは!"
     },
     {
       "id": "casual-04",
@@ -114,7 +114,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>なんかさ<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "こんにちはー!"
+      "completion": "よろしくお願いします!"
     },
     {
       "id": "casual-06",
@@ -126,7 +126,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>いやそれは<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "こんにちは!"
+      "completion": "こんばんは!!"
     },
     {
       "id": "casual-07",
@@ -138,7 +138,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>おつかれ<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "そうなんですね!"
+      "completion": "こんにちは!"
     },
     {
       "id": "casual-08",
@@ -150,7 +150,7 @@
       "rendered_prompt": "<|startofconversation|><|speaker:A|>明日ひま？<eos:3><|speaker:B|>",
       "completion_token_count": 4,
       "eos_reached": true,
-      "completion": "こんばんは!"
+      "completion": "こんにちは!"
     }
   ]
 }

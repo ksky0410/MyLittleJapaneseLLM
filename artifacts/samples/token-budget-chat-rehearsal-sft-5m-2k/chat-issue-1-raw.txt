@@ -9,6 +9,15 @@ max_new_tokens: 160
 temperature: 0.8
 top_k: 40
 
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=43.50
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=124.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=10.00
+discourse-marker: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=81.00
+parting: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
 ## casual-01 [short-reply]
 prompt: まじで
 rendered_prompt: まじで

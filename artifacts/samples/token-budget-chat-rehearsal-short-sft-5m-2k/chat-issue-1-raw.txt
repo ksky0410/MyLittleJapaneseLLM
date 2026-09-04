@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/step_002000.npz
+checkpoint_step: 2000
+config: /Users/koseki/projects/small_llm/configs/token-budget-chat-rehearsal-sft-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=132.00
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=10.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=116.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=58.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=74.00
+parting: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+、御事に付けて、三足を出てた。私はまた分を御父なつて、私はは、さにあくから、御時も、御出しらくの方に出ていたにに来て、三日方へ付けて、私はそれのものから、平岡のに、何へ入ってい、一口へ、彼の眼のかいの御所にいを付けて、もう、一間を吹くなら一間なしようが、自分はは二の方は、いで、代助は、何を、此情に知の方で一所のに、御父びなさい、何のを知って、おれの人物を向れているから、それのが、
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+と知びなかったが、うだ。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+[図ムに入しを食に取りするの症状によるとの発してない. 肝線に触知って、その身の間の日は、今はは、私の方を有名を行かに行った。今のかに出ても一図表いの上の人も、ある必要になると、僕も、おれは、いつか」と聞いたものも思つて、自分が、平気をと、今のをか、これに相違く」といかる。
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+やは、その後に出ていたのと、、ちょっと、それはなと迷亭にして、自分の一緒と、また出けが、どうなか、先所を読すが、どうが大人から、此方にしたのもののに一体でも、そのうちと、ちょっとおやに、自分に相違って、、自分の腹をしたと、すぐも、私の余心の方の男と、不名を置いていにした。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+に取りのに行分か」と御極を引きくの方へ来て、僕は、いいた。其所所へ ⁇ を食力には、 ⁇ して、主人が、と、これと一人と、大くさして、君だ。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+今日が開立である。小気で、その方は、おれがなの前を食で、、一間所は、この父の方のを向めなかつた。私は今人の様子を見たので、一面様して、此男のに出合けて、御前のか、この奥さんのを吹つている。
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+ポイント:b 身長 正解:b 血小板 正解:b ポイント: 選択肢 肺 ポイント: 選択肢解説:a 尿では,気 脳 患者の大学食力は心の異常は,圧性が,脳は認めしやすい. 5素 血が伴う.;b 眼 小は,血小板111万,学 尿;b 心である.;b:×c 正解:c P 3素回:b 内に出生気 下と,心生後は,I 00;c 動脈 接部血の低下 後 尿下 腎所見 眼1人 2;d 尿の原因で腎00b 5
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+

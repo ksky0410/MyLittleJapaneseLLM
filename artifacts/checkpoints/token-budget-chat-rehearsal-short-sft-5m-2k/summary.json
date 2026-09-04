@@ -1,0 +1,14 @@
+{
+  "format": "chat-sft-training-v1",
+  "final_step": 2000,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/step_002000.npz",
+  "best_validation_loss": 4.461219096183777,
+  "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz",
+  "train_examples": 396966,
+  "validation_examples": 49045,
+  "rehearsal_tokens": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-token-budget-1m-train.bin",
+  "rehearsal_ratio": 0.25,
+  "short_response_ratio": 0.5,
+  "short_response_max_tokens": 8,
+  "elapsed_seconds": 566.6112907920033
+}

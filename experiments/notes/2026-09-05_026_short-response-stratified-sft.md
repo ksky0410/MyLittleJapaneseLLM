@@ -43,10 +43,36 @@ rehearsal ratio 0.25、batch size 8では、各stepのSFT部分は6例、rehears
 
 2,000 stepまで完走しました。最終validation lossは4.4612（perplexity 86.59）、SFT train lossは3.9445、rehearsal train lossは4.5395、学習時間は約566.6秒でした。step 1、100、200から2,000まで100 step間隔のmetrics、checkpoint metadata、固定prompt生成が保存され、短文条件は`short_response_ratio=0.5`、`short_response_max_tokens=8`として全metricsへ記録されています。最終SFT validation lossは、基準rehearsalの実験025における4.4089より高く、全応答分布への適合は遅れています。
 
+今回のheld-out生成には実験025と同じvalidation JSONL、seed 42、24例、最大64 Tokenを使いました。validationはSFT学習中の監視にも使われているため、これは探索的比較であり、最終的な一般化評価には未使用のtest splitを使う必要があります。また、過去のsplit間には完全一致本文が含まれる可能性があるため、次の評価では会話ID単位だけでなく本文重複も確認します。
+
 ## 結果と解釈
 
-未実施です。
+実験025の通常rehearsal 0.25をcontrol、今回の短文層化rehearsalをtreatmentとして比較しました。共通mixed validationのdomain lossは次のとおりです。
+
+| 条件 | general | conversation | medical |
+| --- | ---: | ---: | ---: |
+| control：rehearsal 0.25 | 5.5742 | 3.6211 | 4.8147 |
+| treatment：短文層化 + rehearsal 0.25 | 5.5781 | 3.6676 | 4.8211 |
+| treatment - control | +0.0039 | +0.0465 | +0.0063 |
+
+短文層化によるdomain lossの悪化は、事前に置いた各0.10以内という条件を満たしました。SFT validation lossはcontrolの4.4089に対してtreatmentが4.4612であり、全応答分布への平均的な適合はcontrolより悪化しています。しかし、general・conversation・medicalの通常Token列は大きく壊れておらず、rehearsalが忘却を抑えたまま短文samplingを受け止めたと解釈できます。
+
+held-out 24例では、controlがEOS停止15/24、平均生成32.75 Token、precision 0.1833、recall 0.2692、F1 0.1473でした。treatmentはEOS停止22/24、平均生成20.79 Token、precision 0.1690、recall 0.2272、F1 0.1582でした。treatmentは生成を11.96 Token短くし、EOS停止を7例増やし、F1を0.0109改善しましたが、precisionとrecallは下がっています。したがってF1の上昇は、参照内容を広く再現したというより、長すぎる崩れた出力を抑えた影響を含みます。24例かつvalidation再利用の結果なので、内容理解の改善とは断定しません。
+
+構造化Issue #1固定promptのカテゴリ集計は、controlとtreatmentで同じでした。short-replyは両方とも2例、平均3 Token、EOS 2/2、backchannel・short-turn・discourse-marker・disagreement・parting・invitationは両方とも平均4 Token、EOS 1/1でした。出力本文も「こんにちは」「こんばんは」「よろしくお願いします」などへ偏っており、入力の意味に応じた短い返答は現れませんでした。raw promptではtreatmentも古風な文体、医療問題、数字、話者markerの混入が残りましたが、controlより出力が短くなる傾向がありました。
+
+以上から、短文層化samplingは「短い生成を学習する」という挙動には寄与しましたが、Issue #1の目的である現代会話の短い入力への適切な応答は改善しませんでした。実験026は、domain保持と出力長の制御については有用な探索結果ですが、短文応答能力の改善としては未達と判定します。Token overlap F1の改善だけで採用せず、次は未使用test splitと人手判定を導入します。
+
+成果物は次のとおりです。
+
+- [training summary](../../artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/summary.json)
+- [training metrics](../../artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/metrics.jsonl)
+- [domain evaluation](../../artifacts/evaluations/token-budget-chat-rehearsal-short-sft-5m-2k-domains.json)
+- [structured prompt evaluation](../../artifacts/evaluations/token-budget-chat-rehearsal-short-sft-5m-2k-chat-sft-format.json)
+- [raw prompt evaluation](../../artifacts/evaluations/token-budget-chat-rehearsal-short-sft-5m-2k-chat-raw.json)
+- [held-out evaluation](../../artifacts/evaluations/token-budget-chat-rehearsal-short-sft-5m-2k-heldout-chat.json)
+- [all training and evaluation samples](../../artifacts/samples/token-budget-chat-rehearsal-short-sft-5m-2k)
 
 ## 次に試すこと
 
-未実施です。短文samplingの効果が確認できた場合は、短文以外のカテゴリへsamplingを広げず、まずrehearsal比率との組み合わせを検討します。効果がなければ、同じ条件でsamplingを長く回す前に、応答内容の重複・履歴長・話者markerの影響を調べます。
+次は学習済みvalidationを主評価に使わないよう、`conversation-v1/test.jsonl`から1会話1例・48例程度の固定評価セットを作成します。短文・相づち・質問・内容応答の主層を付け、履歴がcontext 256を超えたか、trainとの本文重複があるかを保存します。さらに「文脈に適している」「応答の役割が合っている」「明らかな崩壊がない」を人手で0/1判定できる記録形式を用意し、Token overlapと生成長だけでは短文samplingの成功を認定しない運用へ移行します。

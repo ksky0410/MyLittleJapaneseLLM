@@ -11,6 +11,50 @@
     "temperature": 0.8,
     "top_k": 40
   },
+  "category_summary": {
+    "short-reply": {
+      "count": 2,
+      "empty_count": 0,
+      "eos_count": 2,
+      "mean_completion_tokens": 43.5
+    },
+    "backchannel": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 124.0
+    },
+    "short-turn": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 10.0
+    },
+    "discourse-marker": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 160.0
+    },
+    "disagreement": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 81.0
+    },
+    "parting": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 160.0
+    },
+    "invitation": {
+      "count": 1,
+      "empty_count": 1,
+      "eos_count": 1,
+      "mean_completion_tokens": 1.0
+    }
+  },
   "results": [
     {
       "id": "casual-01",
@@ -19,6 +63,8 @@
       "seed": 42,
       "prompt_token_count": 4,
       "rendered_prompt": "まじで",
+      "completion_token_count": 22,
+      "eos_reached": true,
       "completion": "生動がないよのようなような大に向に知りに入りしてやし。"
     },
     {
@@ -28,6 +74,8 @@
       "seed": 43,
       "prompt_token_count": 3,
       "rendered_prompt": "それな",
+      "completion_token_count": 124,
+      "eos_reached": true,
       "completion": "おなかった、今のものも、それのが、その言葉はさなに、、大人は何にくしてみも、 ⁇ に相いくようと、そう、一言葉を待かしにするの時から、こののところが、さないと御、御言葉をか、其から、 ⁇ が、この前から、君が、いとくん、おれのを、 ⁇ の顔をして、その顔を取つた。何してから、何に逢うらし、これは、大にかれて、それのない。"
     },
     {
@@ -37,6 +85,8 @@
       "seed": 44,
       "prompt_token_count": 6,
       "rendered_prompt": "今日なにしてた？",
+      "completion_token_count": 10,
+      "eos_reached": true,
       "completion": "大生で、私の方から来る、"
     },
     {
@@ -46,6 +96,8 @@
       "seed": 45,
       "prompt_token_count": 3,
       "rendered_prompt": "やば",
+      "completion_token_count": 65,
+      "eos_reached": true,
       "completion": "さが、どうしていたが、自分のへ出に、大きがと云つただろうと云つたが、い。私は今日へかすりなに、一杯の大はどうして、すぐ上に、、どうして、少しもは、と、大人かっていた。"
     },
     {
@@ -55,6 +107,8 @@
       "seed": 46,
       "prompt_token_count": 3,
       "rendered_prompt": "なんかさ",
+      "completion_token_count": 160,
+      "eos_reached": false,
       "completion": "と下で,整である.  2歳と,117 問題:1.. 患者の内;d:a 尿 ポイント:a 子宮;b ポイント:a 正解:a P 血;d 急性;d 患者;c 尿 正解: 選択肢解説:a:×b:×b 血 ポイント:a 血;e ポイント: 選択肢解説:a:×a 脳腫 腎視 糖尿病;c 視 尿 ポイント:a:×b 腹部の骨の低下 尿尿 Ig/dL,心の治療は低下 急性 アマは,圧の診断;e 病造影 a:×b 血清IT [図表"
     },
     {
@@ -64,6 +118,8 @@
       "seed": 47,
       "prompt_token_count": 3,
       "rendered_prompt": "いやそれは",
+      "completion_token_count": 81,
+      "eos_reached": true,
       "completion": "もう、其か、どうして、、お金を付けら、御金を呼りと、平岡の方のを一方へ付けんから、どうしく、おれに見かない方が、あの手に、、それも、と、今の学を得べて、、どうして行くのを出て、うんと、今の金した。"
     },
     {
@@ -73,6 +129,8 @@
       "seed": 48,
       "prompt_token_count": 5,
       "rendered_prompt": "おつかれ",
+      "completion_token_count": 160,
+      "eos_reached": false,
       "completion": "ませんから、大まで、、あ、どうだと ⁇ が、君、少し話して、不覚くと、何が、あ、今は、もうすぐ日をなと、、少し御手紙からないに乗りかれた。私の家の下から、一日に、今の御顔がって、此回れているのが、もう、話を、おかすりを、其所が、私の ⁇ に、この代なの方のなかやくさのを取りと、、此話を取ったので、あの前後から、その前にあるようにすが、あ。おれがわから、それも何を置か、どうして、一木に、何をして、私の頭"
     },
     {
@@ -82,6 +140,8 @@
       "seed": 49,
       "prompt_token_count": 6,
       "rendered_prompt": "明日ひま？",
+      "completion_token_count": 1,
+      "eos_reached": true,
       "completion": ""
     }
   ]
