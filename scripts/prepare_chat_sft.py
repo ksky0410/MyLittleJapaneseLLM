@@ -79,6 +79,7 @@ def build_conversation_example(
     eos_id = int(processor.eos_id())
     ids = _encode(processor, CONVERSATION_START)
     mask = [0] * len(ids)
+    response_body_token_count = 0
     for index, turn in enumerate(validated_turns[: target_index + 1]):
         speaker_marker = f"<|speaker:{turn['speaker_id']}|>"
         speaker_ids = _encode(processor, speaker_marker)
@@ -89,6 +90,8 @@ def build_conversation_example(
         ids.extend(body_ids)
         is_target = index == target_index
         mask.extend([1 if is_target else 0] * len(body_ids))
+        if is_target:
+            response_body_token_count += len(body_ids)
 
         ids.append(eos_id)
         mask.append(1 if is_target else 0)
@@ -96,7 +99,7 @@ def build_conversation_example(
     end_ids = _encode(processor, CONVERSATION_END)
     ids.extend(end_ids)
     mask.extend([0] * len(end_ids))
-    return ids, mask, sum(mask)
+    return ids, mask, response_body_token_count
 
 
 def truncate_and_pad(

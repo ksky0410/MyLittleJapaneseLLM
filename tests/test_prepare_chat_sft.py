@@ -62,7 +62,7 @@ class PrepareChatSFTTests(unittest.TestCase):
         end = self.processor.encode("<|endofconversation|>")[0]
         self.assertEqual(ids, [start, speaker_a, body_a, 3, speaker_b, body_b, 3, end])
         self.assertEqual(mask, [0, 0, 0, 0, 0, 1, 1, 0])
-        self.assertEqual(body_count, 2)
+        self.assertEqual(body_count, 1)
 
     def test_creates_each_later_turn_as_a_target(self) -> None:
         first = build_conversation_example(self.turns, 1, self.processor)
