@@ -204,6 +204,46 @@ def token_overlap_scores(
     }
 
 
+def summarize_chat_results(
+    results: list[dict[str, Any]],
+) -> dict[str, dict[str, float | int]]:
+    """held-out生成結果を層ごとに集計する。"""
+
+    summary: dict[str, dict[str, float | int]] = {}
+    for item in results:
+        stratum = str(item.get("stratum") or "unstratified")
+        bucket = summary.setdefault(
+            stratum,
+            {
+                "count": 0,
+                "eos_count": 0,
+                "mean_generated_tokens": 0.0,
+                "mean_token_overlap_precision": 0.0,
+                "mean_token_overlap_recall": 0.0,
+                "mean_token_overlap_f1": 0.0,
+            },
+        )
+        bucket["count"] = int(bucket["count"]) + 1
+        bucket["eos_count"] = int(bucket["eos_count"]) + int(item["eos_reached"])
+        for key, item_key in (
+            ("mean_generated_tokens", "generated_token_count"),
+            ("mean_token_overlap_precision", "token_overlap_precision"),
+            ("mean_token_overlap_recall", "token_overlap_recall"),
+            ("mean_token_overlap_f1", "token_overlap_f1"),
+        ):
+            bucket[key] = float(bucket[key]) + float(item[item_key])
+    for bucket in summary.values():
+        count = int(bucket["count"])
+        for key in (
+            "mean_generated_tokens",
+            "mean_token_overlap_precision",
+            "mean_token_overlap_recall",
+            "mean_token_overlap_f1",
+        ):
+            bucket[key] = float(bucket[key]) / count
+    return summary
+
+
 def _format_text(result: dict[str, Any]) -> str:
     lines = [
         "# Held-out chat dataset evaluation",
@@ -218,7 +258,15 @@ def _format_text(result: dict[str, Any]) -> str:
         f"top_k: {result['generation']['top_k']}",
         f"selection: {result.get('selection')}",
         "",
+        "## stratum summary",
     ]
+    for stratum, summary in result.get("stratum_summary", {}).items():
+        lines.append(
+            f"{stratum}: count={summary['count']} eos={summary['eos_count']} "
+            f"mean_generated_tokens={summary['mean_generated_tokens']:.2f} "
+            f"mean_overlap_f1={summary['mean_token_overlap_f1']:.4f}"
+        )
+    lines.append("")
     for index, item in enumerate(result["results"], start=1):
         lines.extend(
             [
@@ -362,6 +410,7 @@ def evaluate_chat_dataset(
         "selection_sha256": _sha256_file(selection_file)
         if selection_file is not None
         else None,
+        "stratum_summary": summarize_chat_results(results),
         "results": results,
     }
     output_file.parent.mkdir(parents=True, exist_ok=True)

@@ -11,6 +11,7 @@ from evaluate_chat_dataset import (
     encode_history,
     select_examples,
     select_examples_from_manifest,
+    summarize_chat_results,
     token_overlap_scores,
 )
 
@@ -92,6 +93,32 @@ class EvaluateChatDatasetTests(unittest.TestCase):
         examples = select_examples_from_manifest(records, manifest)
         self.assertEqual(examples[0]["target_index"], 1)
         self.assertEqual(examples[0]["stratum"], "short")
+
+    def test_summarizes_results_by_stratum(self) -> None:
+        summary = summarize_chat_results(
+            [
+                {
+                    "stratum": "short",
+                    "eos_reached": True,
+                    "generated_token_count": 4,
+                    "token_overlap_precision": 0.25,
+                    "token_overlap_recall": 0.5,
+                    "token_overlap_f1": 1 / 3,
+                },
+                {
+                    "stratum": "short",
+                    "eos_reached": False,
+                    "generated_token_count": 8,
+                    "token_overlap_precision": 0.5,
+                    "token_overlap_recall": 0.25,
+                    "token_overlap_f1": 1 / 3,
+                },
+            ]
+        )
+        self.assertEqual(summary["short"]["count"], 2)
+        self.assertEqual(summary["short"]["eos_count"], 1)
+        self.assertEqual(summary["short"]["mean_generated_tokens"], 6.0)
+        self.assertAlmostEqual(summary["short"]["mean_token_overlap_f1"], 1 / 3)
 
 
 if __name__ == "__main__":
