@@ -53,6 +53,26 @@ test parquetは9,843,060 bytes、SHA-256は`2dbc0824036cc083b4e52f249006c66d99b7
 
 現時点ではデータ準備が成功し、学習はまだ開始していません。次に、既存3 sourceへFineWeb抽出本文を追加した5M Token以下の混合コーパスを作成し、source別Token比率とhashを確認してからToken化・学習へ進みます。
 
+その後、`mix_corpora.py`を次の条件で実行しました。
+
+```bash
+.venv/bin/python scripts/mix_corpora.py \
+  --source aozora=artifacts/corpus/aozora-general-v1.txt \
+  --source fineweb=artifacts/corpus/fineweb2-edu-japanese-v1/train.txt \
+  --source conversation=artifacts/corpus/conversation-v1/train.txt \
+  --source medical=artifacts/corpus/medical-qb-v2/train.txt \
+  --weight aozora=8 --weight fineweb=8 \
+  --weight conversation=1 --weight medical=1 \
+  --tokenizer artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model \
+  --target-tokens 5000000 --seed 42 \
+  --output artifacts/corpus/mixed-ja-token-budget-fineweb2-5m-v1.txt \
+  --manifest artifacts/corpus/mixed-ja-token-budget-fineweb2-5m-v1.manifest.json
+```
+
+混合結果は5,000,000 Tokenの上限内で4,999,958 Token、14,392単位、35,767行、6,653,005文字でした。出力本文のSHA-256は`6259d9ada9cc92a1498942724d4365e5041501ff6a7dd0ac4f2d3a3068f1a0ff`です。Token比率はFineWeb 71.867983%、青空文庫10.165645%、会話8.982855%、医療8.983515%でした。FineWeb sourceの有限サイズに対してweightを8にしたため、希望weight比率そのものではなく、sourceの採用可能量を反映した結果になっています。混合manifestは`artifacts/corpus/mixed-ja-token-budget-fineweb2-5m-v1.manifest.json`へ保存します。
+
+この時点では元の1Mコーパス、会話・医療の元split、FineWebの抽出本文を変更していません。次にこの混合本文を既存TokenizerでToken化し、Token数とSHA-256を確認してから学習を開始します。
+
 ## 結果と解釈
 
 未実施です。
