@@ -24,6 +24,7 @@ from my_little_japanese_llm.sft import (
     masked_causal_lm_loss,
     split_sft_rehearsal_batch_size,
     validate_rehearsal_ratio,
+    validate_short_response_options,
 )
 from my_little_japanese_llm.tokenizer import load_processor
 from my_little_japanese_llm.training import (
@@ -65,6 +66,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="rehearsal lossの重み（0以上1未満）",
     )
+    parser.add_argument(
+        "--short-response-ratio",
+        type=float,
+        default=None,
+        help="SFT batchに占める短い応答例の割合（0以上1未満）",
+    )
+    parser.add_argument(
+        "--short-response-max-tokens",
+        type=int,
+        default=None,
+        help="短い応答と判定するloss対象Token数の上限",
+    )
     return parser
 
 
@@ -88,6 +101,11 @@ def main() -> None:
     try:
         rehearsal_tokens_arg, rehearsal_ratio = validate_rehearsal_options(
             args.rehearsal_tokens, args.rehearsal_ratio
+        )
+        short_response_ratio, short_response_max_tokens = (
+            validate_short_response_options(
+                args.short_response_ratio, args.short_response_max_tokens
+            )
         )
     except ValueError as error:
         parser.error(str(error))
@@ -191,10 +209,17 @@ def main() -> None:
                 rehearsal_ratio,
                 rng,
                 mx,
+                short_response_ratio=short_response_ratio,
+                short_response_max_tokens=short_response_max_tokens,
             )
         else:
             inputs, targets, loss_mask = make_sft_batch(
-                train_arrays, config.training.batch_size, rng, mx
+                train_arrays,
+                config.training.batch_size,
+                rng,
+                mx,
+                short_response_ratio=short_response_ratio,
+                short_response_max_tokens=short_response_max_tokens,
             )
         lr = learning_rate(
             step - 1,
@@ -243,6 +268,8 @@ def main() -> None:
                 if rehearsal_path is not None
                 else None,
                 "rehearsal_ratio": rehearsal_ratio,
+                "short_response_ratio": short_response_ratio,
+                "short_response_max_tokens": short_response_max_tokens,
             }
             if rehearsal_active:
                 sft_train_loss = masked_causal_lm_loss(
@@ -284,6 +311,8 @@ def main() -> None:
         "validation_examples": int(validation_arrays["input_ids"].shape[0]),
         "rehearsal_tokens": str(rehearsal_path) if rehearsal_path is not None else None,
         "rehearsal_ratio": rehearsal_ratio,
+        "short_response_ratio": short_response_ratio,
+        "short_response_max_tokens": short_response_max_tokens,
         "elapsed_seconds": time.monotonic() - started,
     }
     (checkpoint_dir / "summary.json").write_text(

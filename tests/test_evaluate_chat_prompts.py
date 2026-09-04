@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from evaluate_chat_prompts import load_prompts
+from evaluate_chat_prompts import load_prompts, summarize_prompt_results
 
 
 class EvaluateChatPromptsTests(unittest.TestCase):
@@ -85,6 +85,28 @@ class EvaluateChatPromptsTests(unittest.TestCase):
             )
             with self.assertRaises(ValueError):
                 load_prompts(path)
+
+    def test_summarizes_results_by_category(self) -> None:
+        summary = summarize_prompt_results(
+            [
+                {
+                    "category": "short",
+                    "completion": "返答",
+                    "completion_token_count": 4,
+                    "eos_reached": True,
+                },
+                {
+                    "category": "short",
+                    "completion": "",
+                    "completion_token_count": 0,
+                    "eos_reached": False,
+                },
+            ]
+        )
+        self.assertEqual(summary["short"]["count"], 2)
+        self.assertEqual(summary["short"]["empty_count"], 1)
+        self.assertEqual(summary["short"]["eos_count"], 1)
+        self.assertEqual(summary["short"]["mean_completion_tokens"], 2.0)
 
 
 if __name__ == "__main__":

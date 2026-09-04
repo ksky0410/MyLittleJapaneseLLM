@@ -96,6 +96,36 @@ def _encode_prompt(item: dict[str, str], processor: Any) -> tuple[list[int], str
     return processor.encode(item["prompt"], out_type=int), item["prompt"]
 
 
+def summarize_prompt_results(
+    results: list[dict[str, Any]],
+) -> dict[str, dict[str, float | int]]:
+    """固定promptの結果をcategoryごとに集計する。"""
+
+    summary: dict[str, dict[str, float | int]] = {}
+    for item in results:
+        category = str(item["category"])
+        bucket = summary.setdefault(
+            category,
+            {
+                "count": 0,
+                "empty_count": 0,
+                "eos_count": 0,
+                "mean_completion_tokens": 0.0,
+            },
+        )
+        bucket["count"] = int(bucket["count"]) + 1
+        bucket["empty_count"] = int(bucket["empty_count"]) + int(not item["completion"])
+        bucket["eos_count"] = int(bucket["eos_count"]) + int(item["eos_reached"])
+        bucket["mean_completion_tokens"] = float(
+            bucket["mean_completion_tokens"]
+        ) + float(item["completion_token_count"])
+    for bucket in summary.values():
+        bucket["mean_completion_tokens"] = float(
+            bucket["mean_completion_tokens"]
+        ) / int(bucket["count"])
+    return summary
+
+
 def _format_text(result: dict[str, Any]) -> str:
     lines = [
         "# Chat prompt evaluation",
@@ -109,7 +139,15 @@ def _format_text(result: dict[str, Any]) -> str:
         f"temperature: {result['generation']['temperature']}",
         f"top_k: {result['generation']['top_k']}",
         "",
+        "## category summary",
     ]
+    for category, summary in result["category_summary"].items():
+        lines.append(
+            f"{category}: count={summary['count']} "
+            f"empty={summary['empty_count']} eos={summary['eos_count']} "
+            f"mean_completion_tokens={summary['mean_completion_tokens']:.2f}"
+        )
+    lines.append("")
     for item in result["results"]:
         lines.extend(
             [
@@ -208,6 +246,8 @@ def evaluate_chat_prompts(
                 "seed": base_seed + index,
                 "prompt_token_count": len(prompt_ids),
                 "rendered_prompt": rendered_prompt,
+                "completion_token_count": len(output_ids) - len(prompt_ids),
+                "eos_reached": int(processor.eos_id()) in output_ids[len(prompt_ids) :],
                 "completion": completion,
             }
         )
@@ -221,6 +261,7 @@ def evaluate_chat_prompts(
         "config": str(config_file),
         "seed": base_seed,
         "generation": generation,
+        "category_summary": summarize_prompt_results(results),
         "results": results,
     }
     output_file.parent.mkdir(parents=True, exist_ok=True)
