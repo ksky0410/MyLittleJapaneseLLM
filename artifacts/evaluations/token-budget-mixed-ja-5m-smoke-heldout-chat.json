@@ -26,6 +26,9 @@
       "completion": "そうなんですね。",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 42
     },
     {
@@ -40,6 +43,9 @@
       "completion": "そうなんですね、でも、もうも、、それのですね",
       "generated_token_count": 12,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 43
     },
     {
@@ -54,6 +60,9 @@
       "completion": "それのか?",
       "generated_token_count": 5,
       "eos_reached": true,
+      "token_overlap_precision": 0.25,
+      "token_overlap_recall": 0.0625,
+      "token_overlap_f1": 0.1,
       "seed": 44
     },
     {
@@ -68,6 +77,9 @@
       "completion": "なるほど!",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 45
     },
     {
@@ -82,6 +94,9 @@
       "completion": "おー!",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.1,
+      "token_overlap_f1": 0.15384615384615383,
       "seed": 46
     },
     {
@@ -96,6 +111,9 @@
       "completion": "",
       "generated_token_count": 1,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 47
     },
     {
@@ -110,6 +128,9 @@
       "completion": "こんばんは。",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 48
     },
     {
@@ -124,6 +145,9 @@
       "completion": "お食べん|>そうですね、スイキラ",
       "generated_token_count": 11,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 49
     },
     {
@@ -138,6 +162,9 @@
       "completion": "はいね。",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.1111111111111111,
+      "token_overlap_f1": 0.16666666666666666,
       "seed": 50
     },
     {
@@ -152,6 +179,9 @@
       "completion": "はい、",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 51
     },
     {
@@ -166,6 +196,9 @@
       "completion": "お願いますね",
       "generated_token_count": 5,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 52
     },
     {
@@ -180,6 +213,9 @@
       "completion": "暑うわん?",
       "generated_token_count": 6,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 53
     },
     {
@@ -194,6 +230,9 @@
       "completion": "",
       "generated_token_count": 1,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 54
     },
     {
@@ -208,6 +247,9 @@
       "completion": "そう、",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 55
     },
     {
@@ -222,6 +264,9 @@
       "completion": "そうくときに入って、",
       "generated_token_count": 9,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 56
     },
     {
@@ -236,6 +281,9 @@
       "completion": "私もアランコンラドは自覚きか、",
       "generated_token_count": 15,
       "eos_reached": true,
+      "token_overlap_precision": 0.14285714285714285,
+      "token_overlap_recall": 0.09523809523809523,
+      "token_overlap_f1": 0.11428571428571427,
       "seed": 57
     },
     {
@@ -250,6 +298,9 @@
       "completion": "",
       "generated_token_count": 1,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 58
     },
     {
@@ -264,6 +315,9 @@
       "completion": "",
       "generated_token_count": 1,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 59
     },
     {
@@ -278,6 +332,9 @@
       "completion": "最近がが出に、私も",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 60
     },
     {
@@ -292,6 +349,9 @@
       "completion": "こんにちは。",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.5,
+      "token_overlap_recall": 0.125,
+      "token_overlap_f1": 0.2,
       "seed": 61
     },
     {
@@ -306,6 +366,9 @@
       "completion": "こんにちは。",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 62
     },
     {
@@ -320,6 +383,9 @@
       "completion": "よろしくお願いします",
       "generated_token_count": 2,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 63
     },
     {
@@ -334,6 +400,9 @@
       "completion": "そう!",
       "generated_token_count": 3,
       "eos_reached": true,
+      "token_overlap_precision": 0.5,
+      "token_overlap_recall": 0.06666666666666667,
+      "token_overlap_f1": 0.11764705882352941,
       "seed": 64
     },
     {
@@ -348,6 +417,9 @@
       "completion": "ほんとをいきになので。",
       "generated_token_count": 9,
       "eos_reached": true,
+      "token_overlap_precision": 0.0,
+      "token_overlap_recall": 0.0,
+      "token_overlap_f1": 0.0,
       "seed": 65
     }
   ]

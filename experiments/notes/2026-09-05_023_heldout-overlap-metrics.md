@@ -24,12 +24,22 @@ SFT-onlyとrehearsalも同じcheckpoint差し替えで実行します。成功�
 
 ## 実験中の記録
 
-未実施です。モデルごとの平均precision・recall・F1、EOS停止数、平均生成長、代表例を追記します。
+2026-09-05に3 checkpointを同じ24例で再評価しました。指標追加後のJSON SHA-256は、pretrainingが`62cf553535701ea6de1c85720b8c625759459617a595ff0b001d418856bc6fed`、SFT-onlyが`34f333925416debc56cd874e3fec1fe06ece4272b23bf4518966205d5ae6cd20`、rehearsalが`e8c10a1f05ecc6b3e284c5c581a615259711b1f75bec0aee1caa3a713fb304a5`です。選択例の識別子とtarget indexは前実験と同じSHA-256`eff39e1a3ef62a87a0c3b353ca7a3e954149a17da755e254b08358f7d7f71389`でした。
+
+平均値は次のとおりです。
+
+- pretraining：平均生成4.92 token、EOS停止24/24、precision 0.0858、recall 0.0234、F1 0.0355
+- SFT-only：平均生成27.29 token、EOS停止20/24、precision 0.1858、recall 0.2506、F1 0.1557
+- rehearsal 0.25：平均生成14.50 token、EOS停止23/24、precision 0.2419、recall 0.2124、F1 0.1844
+
+SFT-onlyはcompletionを長くしてrecallを上げましたが、rehearsalはそれより短く、precisionとF1が高くなりました。これは24例・1 seedの探索結果にすぎず、Token overlapは意味理解の証明ではありませんが、rehearsalが単なる生成短縮ではなく、参照発話と共有するTokenを相対的に増やしたことを示します。
 
 ## 結果と解釈
 
-未実施です。
+「SFT-onlyの長文化が内容対応を伴わなければ、生成長は増えてもoverlap F1は改善しない」という仮説は、今回の値では支持されませんでした。SFT-onlyのF1はpretrainingより改善し、held-out会話の内容へ部分的に近づいた可能性があります。ただしrehearsalのF1がさらに高く、EOS停止率も高かったため、rehearsalは内容対応と暴走抑制のバランスを改善した候補です。
+
+一方、Token overlapは「参照をそのまま繰り返した」場合にも上がります。したがって、これを自然さや意味的正しさとして扱わず、既存の生成TXT・domain loss・会話形式と合わせて解釈します。次の検証では例数とseedを増やし、長さ別にF1を分解し、単純な相づちが高得点を得ていないかを確認します。
 
 ## 次に試すこと
 
-overlap F1が生成長と連動しない場合は、次に文字列編集距離やROUGE-Lを追加する前に、簡易指標が有効な差分を示すかを確認します。SFT-onlyがoverlapでも改善しない場合は、学習データのtargetと履歴の条件付けを見直します。
+まず24例から例数を増やし、少なくとも複数seedでoverlap F1・生成長・EOS停止を再計算します。その後、相づちや定型挨拶を分離した層別評価を追加し、学習データのtargetと履歴の条件付けが本当に効いているかを確認します。

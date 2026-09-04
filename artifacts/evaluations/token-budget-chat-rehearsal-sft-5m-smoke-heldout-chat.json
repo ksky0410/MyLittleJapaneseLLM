@@ -26,6 +26,9 @@
       "completion": "そうですね。",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.06666666666666667,
+      "token_overlap_f1": 0.1111111111111111,
       "seed": 42
     },
     {
@@ -40,6 +43,9 @@
       "completion": "もう最近、それの人でしたか、、一前に見ないと思っていで、私も、何を使く、気のどっすきどっしゃに作りにいいらあ!いっくって、私もまだまたお物のうちもはおうのと、何で",
       "generated_token_count": 64,
       "eos_reached": false,
+      "token_overlap_precision": 0.03125,
+      "token_overlap_recall": 0.2,
+      "token_overlap_f1": 0.05405405405405406,
       "seed": 43
     },
     {
@@ -54,6 +60,9 @@
       "completion": "確かに。どんな味ですか?",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.2857142857142857,
+      "token_overlap_recall": 0.125,
+      "token_overlap_f1": 0.17391304347826086,
       "seed": 44
     },
     {
@@ -68,6 +77,9 @@
       "completion": "そうですね!お願いです",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.14285714285714285,
+      "token_overlap_recall": 0.3333333333333333,
+      "token_overlap_f1": 0.2,
       "seed": 45
     },
     {
@@ -82,6 +94,9 @@
       "completion": "うが、、どっか?",
       "generated_token_count": 10,
       "eos_reached": true,
+      "token_overlap_precision": 0.2222222222222222,
+      "token_overlap_recall": 0.2,
+      "token_overlap_f1": 0.2105263157894737,
       "seed": 46
     },
     {
@@ -96,6 +111,9 @@
       "completion": "おかきいのところが、今日は、また作わずました。でも、、私も作りりと言さいですね。よろしくお願いします。",
       "generated_token_count": 33,
       "eos_reached": true,
+      "token_overlap_precision": 0.09375,
+      "token_overlap_recall": 0.375,
+      "token_overlap_f1": 0.15,
       "seed": 47
     },
     {
@@ -110,6 +128,9 @@
       "completion": "そうですか?",
       "generated_token_count": 5,
       "eos_reached": true,
+      "token_overlap_precision": 0.25,
+      "token_overlap_recall": 0.2,
+      "token_overlap_f1": 0.22222222222222224,
       "seed": 48
     },
     {
@@ -124,6 +145,9 @@
       "completion": "なるほど!",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.6666666666666666,
+      "token_overlap_recall": 0.6666666666666666,
+      "token_overlap_f1": 0.6666666666666666,
       "seed": 49
     },
     {
@@ -138,6 +162,9 @@
       "completion": "あ、それは、、私はお願い、夜、まだごくな。",
       "generated_token_count": 19,
       "eos_reached": true,
+      "token_overlap_precision": 0.1111111111111111,
+      "token_overlap_recall": 0.2222222222222222,
+      "token_overlap_f1": 0.14814814814814814,
       "seed": 50
     },
     {
@@ -152,6 +179,9 @@
       "completion": "はい、ちょっとおー。",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.2857142857142857,
+      "token_overlap_recall": 0.11764705882352941,
+      "token_overlap_f1": 0.16666666666666666,
       "seed": 51
     },
     {
@@ -166,6 +196,9 @@
       "completion": "そうですね。でもお好きです",
       "generated_token_count": 7,
       "eos_reached": true,
+      "token_overlap_precision": 0.16666666666666666,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.2,
       "seed": 52
     },
     {
@@ -180,6 +213,9 @@
       "completion": "それにかすりはいいので、どうしてましたね。",
       "generated_token_count": 16,
       "eos_reached": true,
+      "token_overlap_precision": 0.06666666666666667,
+      "token_overlap_recall": 0.125,
+      "token_overlap_f1": 0.08695652173913045,
       "seed": 53
     },
     {
@@ -194,6 +230,9 @@
       "completion": "お作りですね!",
       "generated_token_count": 7,
       "eos_reached": true,
+      "token_overlap_precision": 0.16666666666666666,
+      "token_overlap_recall": 0.1,
+      "token_overlap_f1": 0.125,
       "seed": 54
     },
     {
@@ -208,6 +247,9 @@
       "completion": "@ばなな|> お愛いらないとお願うののものとお願いので、よくまだ楽し。あと、どうですか?",
       "generated_token_count": 33,
       "eos_reached": true,
+      "token_overlap_precision": 0.09375,
+      "token_overlap_recall": 0.11538461538461539,
+      "token_overlap_f1": 0.10344827586206896,
       "seed": 55
     },
     {
@@ -222,6 +264,9 @@
       "completion": "結構なしそうでしかったです",
       "generated_token_count": 9,
       "eos_reached": true,
+      "token_overlap_precision": 0.125,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.16666666666666666,
       "seed": 56
     },
     {
@@ -236,6 +281,9 @@
       "completion": "えます。",
       "generated_token_count": 5,
       "eos_reached": true,
+      "token_overlap_precision": 0.5,
+      "token_overlap_recall": 0.09523809523809523,
+      "token_overlap_f1": 0.16,
       "seed": 57
     },
     {
@@ -250,6 +298,9 @@
       "completion": "そうですね。",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 1.0,
+      "token_overlap_recall": 0.17647058823529413,
+      "token_overlap_f1": 0.3,
       "seed": 58
     },
     {
@@ -264,6 +315,9 @@
       "completion": "@うんえます。それは、おか?",
       "generated_token_count": 13,
       "eos_reached": true,
+      "token_overlap_precision": 0.16666666666666666,
+      "token_overlap_recall": 0.15384615384615385,
+      "token_overlap_f1": 0.16,
       "seed": 59
     },
     {
@@ -278,6 +332,9 @@
       "completion": "うちゃっかっていたがね。",
       "generated_token_count": 11,
       "eos_reached": true,
+      "token_overlap_precision": 0.1,
+      "token_overlap_recall": 0.16666666666666666,
+      "token_overlap_f1": 0.125,
       "seed": 60
     },
     {
@@ -292,6 +349,9 @@
       "completion": "はい。私も、大こないんですよ。私も私も、おちっか?もう使くらないことですね。",
       "generated_token_count": 27,
       "eos_reached": true,
+      "token_overlap_precision": 0.07692307692307693,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.11764705882352941,
       "seed": 61
     },
     {
@@ -306,6 +366,9 @@
       "completion": "@しらたき @こんぶ @まりも @ そうなんですね!今の大人だいです!",
       "generated_token_count": 23,
       "eos_reached": true,
+      "token_overlap_precision": 0.045454545454545456,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.07692307692307693,
       "seed": 62
     },
     {
@@ -320,6 +383,9 @@
       "completion": "よろしくお願いします!",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.14285714285714285,
+      "token_overlap_f1": 0.2,
       "seed": 63
     },
     {
@@ -334,6 +400,9 @@
       "completion": "あっか、ちょっと気かるんだ",
       "generated_token_count": 11,
       "eos_reached": true,
+      "token_overlap_precision": 0.4,
+      "token_overlap_recall": 0.26666666666666666,
+      "token_overlap_f1": 0.32,
       "seed": 64
     },
     {
@@ -348,6 +417,9 @@
       "completion": "はい。私は、おおかーなってすごいですね。",
       "generated_token_count": 15,
       "eos_reached": true,
+      "token_overlap_precision": 0.14285714285714285,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.18181818181818182,
       "seed": 65
     }
   ]

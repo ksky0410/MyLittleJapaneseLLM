@@ -26,6 +26,9 @@
       "completion": "確かに、私も何か動いです。でもまだ好きです。私もいいしそうですね。おうんですか??それはでも、自分が出しの手学は変いに行かしょいですね。でもそれは、大学のなし。でも、同じですね。",
       "generated_token_count": 60,
       "eos_reached": true,
+      "token_overlap_precision": 0.05084745762711865,
+      "token_overlap_recall": 0.2,
+      "token_overlap_f1": 0.08108108108108107,
       "seed": 42
     },
     {
@@ -40,6 +43,9 @@
       "completion": "確かになきいけるんと、今が、いいとさいません。私も、いです。それってたいから大人していたから、、よく結構うなのかしいです!",
       "generated_token_count": 45,
       "eos_reached": true,
+      "token_overlap_precision": 0.06818181818181818,
+      "token_overlap_recall": 0.3,
+      "token_overlap_f1": 0.11111111111111109,
       "seed": 43
     },
     {
@@ -54,6 +60,9 @@
       "completion": "そうですね。私はちょっと海道の方でかけに使ってくりも、一前に行くにあ、私のにおか?",
       "generated_token_count": 32,
       "eos_reached": true,
+      "token_overlap_precision": 0.16129032258064516,
+      "token_overlap_recall": 0.3125,
+      "token_overlap_f1": 0.2127659574468085,
       "seed": 44
     },
     {
@@ -68,6 +77,9 @@
       "completion": "お酒にやってます!おかわかってなくなしないです!",
       "generated_token_count": 20,
       "eos_reached": true,
+      "token_overlap_precision": 0.05263157894736842,
+      "token_overlap_recall": 0.3333333333333333,
+      "token_overlap_f1": 0.09090909090909091,
       "seed": 45
     },
     {
@@ -82,6 +94,9 @@
       "completion": "夏で、今から、もう、もう大人によく食べうと思います!大いです。気になります。私もまたお食べました。でも、、それは今手だけど、私ですか?お物もいいですね。お子はそれなの外は、今を食べれもいいと",
       "generated_token_count": 64,
       "eos_reached": false,
+      "token_overlap_precision": 0.0625,
+      "token_overlap_recall": 0.4,
+      "token_overlap_f1": 0.10810810810810811,
       "seed": 46
     },
     {
@@ -96,6 +111,9 @@
       "completion": "なるほど。パクイットをこで、今のも私も大段も。どうですか?",
       "generated_token_count": 23,
       "eos_reached": true,
+      "token_overlap_precision": 0.045454545454545456,
+      "token_overlap_recall": 0.125,
+      "token_overlap_f1": 0.06666666666666667,
       "seed": 47
     },
     {
@@ -110,6 +128,9 @@
       "completion": "なるほど。",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.2,
+      "token_overlap_f1": 0.25,
       "seed": 48
     },
     {
@@ -124,6 +145,9 @@
       "completion": "そうなんですね!それもそうそうまうってくれます!",
       "generated_token_count": 14,
       "eos_reached": true,
+      "token_overlap_precision": 0.15384615384615385,
+      "token_overlap_recall": 0.6666666666666666,
+      "token_overlap_f1": 0.25,
       "seed": 49
     },
     {
@@ -138,6 +162,9 @@
       "completion": "いいですね。でも今のもススイズラがいいっています。子供も、あとはあらないらし。でも、私も大変かけさるのところで、私もまだも、今のですね。おろっきてないんです。私もスを見たことですね!と",
       "generated_token_count": 64,
       "eos_reached": false,
+      "token_overlap_precision": 0.046875,
+      "token_overlap_recall": 0.3333333333333333,
+      "token_overlap_f1": 0.08219178082191782,
       "seed": 50
     },
     {
@@ -152,6 +179,9 @@
       "completion": "夏とか、いいと思います。一生なお外でした。",
       "generated_token_count": 15,
       "eos_reached": true,
+      "token_overlap_precision": 0.14285714285714285,
+      "token_overlap_recall": 0.11764705882352941,
+      "token_overlap_f1": 0.12903225806451615,
       "seed": 51
     },
     {
@@ -166,6 +196,9 @@
       "completion": "はい!アチーキドと",
       "generated_token_count": 10,
       "eos_reached": true,
+      "token_overlap_precision": 0.1111111111111111,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.15384615384615383,
       "seed": 52
     },
     {
@@ -180,6 +213,9 @@
       "completion": "はい、",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.125,
+      "token_overlap_f1": 0.18181818181818182,
       "seed": 53
     },
     {
@@ -194,6 +230,9 @@
       "completion": "@てばさき えましたか笑いのスタキキコレルが、結構ないうおくっかけいくてできも好きです!今日はおかん そうですね!お子だと、おちまうわかにすのですが、一後のですね!私はは",
       "generated_token_count": 64,
       "eos_reached": false,
+      "token_overlap_precision": 0.078125,
+      "token_overlap_recall": 0.5,
+      "token_overlap_f1": 0.13513513513513514,
       "seed": 54
     },
     {
@@ -208,6 +247,9 @@
       "completion": "そうですねなさいません。",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.42857142857142855,
+      "token_overlap_recall": 0.11538461538461539,
+      "token_overlap_f1": 0.18181818181818182,
       "seed": 55
     },
     {
@@ -222,6 +264,9 @@
       "completion": "カイイイイトッケスプレレモーッキフェー、私もすごいです! うんがあいが、いますか?",
       "generated_token_count": 37,
       "eos_reached": true,
+      "token_overlap_precision": 0.027777777777777776,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.049999999999999996,
       "seed": 56
     },
     {
@@ -236,6 +281,9 @@
       "completion": "私ももう今!、それは、何かなに、何か気を食べてるように、どうしておか?",
       "generated_token_count": 26,
       "eos_reached": true,
+      "token_overlap_precision": 0.08,
+      "token_overlap_recall": 0.09523809523809523,
+      "token_overlap_f1": 0.08695652173913043,
       "seed": 57
     },
     {
@@ -250,6 +298,9 @@
       "completion": "そうですね。もう食べますよね。",
       "generated_token_count": 8,
       "eos_reached": true,
+      "token_overlap_precision": 0.42857142857142855,
+      "token_overlap_recall": 0.17647058823529413,
+      "token_overlap_f1": 0.25,
       "seed": 58
     },
     {
@@ -264,6 +315,9 @@
       "completion": "おも作るのはそれでもはあがいですね",
       "generated_token_count": 15,
       "eos_reached": true,
+      "token_overlap_precision": 0.07142857142857142,
+      "token_overlap_recall": 0.07692307692307693,
+      "token_overlap_f1": 0.07407407407407408,
       "seed": 59
     },
     {
@@ -278,6 +332,9 @@
       "completion": "でも寝たか?",
       "generated_token_count": 7,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.3333333333333333,
+      "token_overlap_f1": 0.3333333333333333,
       "seed": 60
     },
     {
@@ -292,6 +349,9 @@
       "completion": "そうなんですね。どうです",
       "generated_token_count": 6,
       "eos_reached": true,
+      "token_overlap_precision": 0.4,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.3076923076923077,
       "seed": 61
     },
     {
@@ -306,6 +366,9 @@
       "completion": "@えのき @えのき @つくね @かに作を多くうんうんな、それだったと思っていらうんわけうと思っていっぱいで。その人が、カンニー!お酒を行っていいですね!",
       "generated_token_count": 57,
       "eos_reached": true,
+      "token_overlap_precision": 0.017857142857142856,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.03333333333333333,
       "seed": 62
     },
     {
@@ -320,6 +383,9 @@
       "completion": "そうなんです。",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.6666666666666666,
+      "token_overlap_recall": 0.2857142857142857,
+      "token_overlap_f1": 0.4,
       "seed": 63
     },
     {
@@ -334,6 +400,9 @@
       "completion": "そうなんですね!",
       "generated_token_count": 4,
       "eos_reached": true,
+      "token_overlap_precision": 0.3333333333333333,
+      "token_overlap_recall": 0.06666666666666667,
+      "token_overlap_f1": 0.1111111111111111,
       "seed": 64
     },
     {
@@ -348,6 +417,9 @@
       "completion": "そうそうそう、どうで行ったかさなくっぱっこないので、おくにありますね。私も、私はその後はまだ使うです。最1000のスは、小さも、でもあね。ただ、最近飲きですね。それもに、ど",
       "generated_token_count": 64,
       "eos_reached": false,
+      "token_overlap_precision": 0.03125,
+      "token_overlap_recall": 0.25,
+      "token_overlap_f1": 0.05555555555555555,
       "seed": 65
     }
   ]
