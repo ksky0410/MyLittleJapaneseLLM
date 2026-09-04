@@ -1,0 +1,50 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/token-budget-mixed-ja-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## casual-01 [short-reply]
+prompt: まじで
+completion:
+、また話してないが、自分のござます。
+
+## casual-02 [backchannel]
+prompt: それな
+completion:
+。代助はもそうか、今の方を得て、何に置いてありませんかんの方にかくんだ、此足の方を至ない。私は、其事を、僕が、いから、いかした。この間へつに相いた。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+completion:
+して、その一方のと、此方は、一前に心の間へ、又Kに、平岡にかない所に置つて、大ともくに行ちしろしてた。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+completion:
+」と、其方を大くと、一方へ出て、、あは、これがな気へ着た。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+completion:
+ないがもに飲のに、といよればある。
+
+## casual-07 [parting]
+prompt: おつかれ
+completion:
+か、この男に、大段をた。御三のに心のである。そのは一方のないの中を思つて、また話したとと云つた。この眼が、私の時は見ないから、一と、不上を呈なか、此方を、このに、その代り、そのような顔の一眼から、あなたの御平を着くやかにな。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+completion:
+

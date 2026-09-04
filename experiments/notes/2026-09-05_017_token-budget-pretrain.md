@@ -44,3 +44,21 @@ stepごとのmetrics、checkpoint metadata、固定prompt生成は次のディ�
 ## 次に試すこと
 
 次に、既存expanded absoluteモデルと同じgeneral・conversation・medical評価、およびIssue #1固定promptを実行します。Token予算混合モデルで会話文体が改善しない場合は、次に会話SFTの応答側loss maskingへ進みます。
+
+## 追加結果：domain評価とIssue #1固定prompt
+
+step 500のcheckpointを、既存のv2 validation Token列へ評価しました。結果は次のとおりです。
+
+- general：validation loss 5.606362、perplexity 272.1523
+- conversation：validation loss 3.852320、perplexity 47.1022
+- medical：validation loss 4.909000、perplexity 135.5039
+
+既存expanded mixed v2 absoluteの値（general 5.735948、conversation 3.715580、medical 4.925170）と比べると、generalは0.129586低下し、medicalも0.016170低下しました。一方でconversationは0.136740上昇しました。これは、token比率を変えたことで一般・医療の検証損失に差が出た一方、会話の検証損失は改善しなかった結果です。
+
+Issue #1固定promptでは、「今日なにしてた？」「明日ひま？」が空completionになりました。「まじで」「それな」「やば」「なんかさ」「おつかれ」なども短い自然な返答にはならず、夏目漱石作品由来と思われる「代助」「其方」「此方」などの文語的な断片を長く生成しました。医療定型文の漏れは減りましたが、会話能力が生じたとは評価できません。生成結果は次のファイルへ保存しました。
+
+- [domain評価JSON](../../artifacts/evaluations/token-budget-mixed-ja-5m-smoke-domains.json)
+- [Issue #1生成JSON](../../artifacts/evaluations/token-budget-mixed-ja-5m-smoke-chat.json)
+- [Issue #1生成テキスト](../../artifacts/samples/token-budget-mixed-ja-5m-smoke/chat-issue-1.txt)
+
+今回の観察から、会話データを通常のpretrainingへ多く含めるだけでは、短い会話promptへの自然な応答にならないと判断します。次は会話の話者境界を学習時に利用し、応答側tokenだけへlossをかけるSFT形式を作る必要があります。
