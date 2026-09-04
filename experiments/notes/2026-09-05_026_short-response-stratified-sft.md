@@ -41,6 +41,8 @@ rehearsal ratio 0.25、batch size 8では、各stepのSFT部分は6例、rehears
 
 短文層化samplingの実装後、49件のテスト、ruff check、ruff format --checkを通過し、commit `ea684f7`以降の実装を`f84cec6`で条件訂正したうえで2026-09-05に学習を開始しました。1,000 step時点のvalidation lossは4.5272（perplexity 92.50）で、SFT train lossは3.8997、rehearsal train lossは4.5472でした。100 stepごとのmetricsと生成TXTは継続して保存されています。途中値は基準rehearsalの同じ学習率スケジュールより高めですが、学習は異常なく進行しています。
 
+2,000 stepまで完走しました。最終validation lossは4.4612（perplexity 86.59）、SFT train lossは3.9445、rehearsal train lossは4.5395、学習時間は約566.6秒でした。step 1、100、200から2,000まで100 step間隔のmetrics、checkpoint metadata、固定prompt生成が保存され、短文条件は`short_response_ratio=0.5`、`short_response_max_tokens=8`として全metricsへ記録されています。最終SFT validation lossは、基準rehearsalの実験025における4.4089より高く、全応答分布への適合は遅れています。
+
 ## 結果と解釈
 
 未実施です。
