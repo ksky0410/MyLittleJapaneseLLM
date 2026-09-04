@@ -101,6 +101,8 @@ metrics、checkpoint metadata、summary、stepごとの生成文は`artifacts/ch
 
 今回のデータ追加実験は、データ取得からparquet抽出、重複処理、source混合、Token化、pretraining、FineWeb validation、固定会話testまで正常に一周できた点では成功です。一方、500 stepの既存general・conversation・medical loss、固定会話F1、生成文の自然さを改善するという性能面の成功基準は満たしませんでした。失敗条件を削除せず、学習step不足とTokenizer分布差を次の仮説として残します。
 
+学習完了後、現在のheadless実行環境でdomain評価と固定chat評価を再実行して再現確認しようとしましたが、MLX初期化時に`metal::load_device: No Metal device available`となり、モデルロード前に終了しました。したがって、この再試行は既存JSON・TXTを上書きしていません。既存の評価成果物は、Metalが利用できた同じ実験条件で生成済みであり、ファイルの存在、48例、層別集計、manifest SHA-256、ノート記載の成果物SHA-256を確認済みです。以後この環境でMLX評価を実行する場合は、Metalが見えるMac上の通常セッションへ戻す必要があります。今回の失敗は学習結果の失敗ではなく、再検証環境の制約として記録します。
+
 ## 次に試すこと
 
 まず、同じFineWeb混合Token列とTokenizerを固定し、学習stepだけを500から2,500程度へ増やす追試を行います。これで、今回の悪化が単なる学習step不足で説明できるかを確認します。その後、同じToken列・同じ学習stepを使い、`dim=384・layers=10・heads=6・context=256`の約19.4M parameterモデルへ拡張します。モデル容量を変える実験では学習stepやTokenizerを同時に変えず、今回の処置条件を基準にした別実験として記録します。
