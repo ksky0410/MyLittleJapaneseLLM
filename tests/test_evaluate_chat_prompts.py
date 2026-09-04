@@ -51,6 +51,41 @@ class EvaluateChatPromptsTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_prompts(path)
 
+    def test_accepts_conversation_template(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "prompts.json"
+            path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "conversation",
+                            "template": "conversation",
+                            "prompt": "こんにちは",
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            prompts = load_prompts(path)
+            self.assertEqual(prompts[0]["template"], "conversation")
+
+            path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "unknown",
+                            "template": "unknown",
+                            "prompt": "こんにちは",
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError):
+                load_prompts(path)
+
 
 if __name__ == "__main__":
     unittest.main()

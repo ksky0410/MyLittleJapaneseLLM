@@ -239,6 +239,39 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
   --output artifacts/evaluations/mixed-ja-5m-smoke-domains.json
 ```
 
+Issue #1の会話らしさを比較するため、短い返答・相づち・くだけた表現を固定promptへまとめています。既定のpromptはraw入力ですが、`template: conversation`を指定したprompt setでは、学習時と同じ開始marker・話者Aの発話・EOS・話者B markerを組み立てます。JSONと、生成結果を人間が読みやすいTXTの両方を保存してください。空出力や文法の崩れも削除せず、比較対象として残します。
+
+```bash
+.venv/bin/python scripts/evaluate_chat_prompts.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --checkpoint artifacts/checkpoints/token-budget-chat-sft-5m-smoke/step_000500.npz \
+  --prompt-file experiments/prompts/issue-1-chat-sft-v1.json \
+  --output artifacts/evaluations/chat-sft.json \
+  --text-output artifacts/samples/token-budget-chat-sft-5m-smoke/chat-issue-1-sft-format.txt
+```
+
+会話SFTを試すときは、`prepare_chat_sft.py`で会話JSONLを例へ展開します。各会話の2発話目以降を一つの応答例にし、履歴と話者markerを文脈、現在発話の本文とEOSだけをloss対象にします。NPZは大きくなりやすいためGitへ追加せず、manifestと実験ノートに入力・Tokenizer・NPZのSHA-256を残します。
+
+```bash
+.venv/bin/python scripts/prepare_chat_sft.py \
+  --tokenizer artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model \
+  --input artifacts/corpus/conversation-v1 \
+  --output artifacts/sft/chat-v1-context256 \
+  --manifest artifacts/sft/chat-v1-context256.manifest.json \
+  --context-length 256 \
+  --seed 42
+
+.venv/bin/python scripts/train_sft.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --base-checkpoint artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz \
+  --train-data artifacts/sft/chat-v1-context256/train.npz \
+  --validation-data artifacts/sft/chat-v1-context256/validation.npz \
+  --output-dir artifacts/checkpoints/token-budget-chat-sft-5m-smoke \
+  --samples-dir artifacts/samples/token-budget-chat-sft-5m-smoke
+```
+
+SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、通常のdomain評価のlossとは直接比較しません。SFT前後の一般日本語・会話・医療の全Token lossも別に測定し、会話応答の改善と引き換えに忘却が起きていないかを確認します。
+
 ## 現代的な位置表現を比較する
 
 現在のbaselineは、学習可能なabsolute position embedding、LayerNorm、通常のmulti-head attentionです。RoPEを一度に他の変更と組み合わせず、`configs/rope-mixed-ja-5m-smoke.toml`で位置表現だけをRoPEへ切り替えられます。RoPEでは学習可能な位置embeddingを持たないため、同じ語彙・層数・次元数ならパラメータ数が少し減ります。checkpoint metadataにも位置表現を残し、absoluteとRoPEの取り違えを拒否します。
@@ -257,7 +290,7 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```

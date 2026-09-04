@@ -20,6 +20,8 @@ from my_little_japanese_llm.training import (
 )
 
 DEFAULT_PROMPT_FILE = "experiments/prompts/issue-1-chat-v1.json"
+CONVERSATION_TEMPLATE = "conversation"
+CONVERSATION_START = "<|startofconversation|>"
 
 
 def _sha256_file(path: Path) -> str:
@@ -51,6 +53,7 @@ def load_prompts(path: str | Path) -> list[dict[str, str]]:
         prompt_id = item.get("id")
         category = item.get("category", "uncategorized")
         prompt = item.get("prompt")
+        template = item.get("template", "raw")
         if not isinstance(prompt_id, str) or not prompt_id.strip():
             raise ValueError(f"prompt #{index + 1}のidが空です")
         if prompt_id in ids:
@@ -59,9 +62,38 @@ def load_prompts(path: str | Path) -> list[dict[str, str]]:
             raise ValueError(f"prompt {prompt_id}のcategoryが空です")
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError(f"prompt {prompt_id}の本文が空です")
+        if not isinstance(template, str) or template not in {
+            "raw",
+            CONVERSATION_TEMPLATE,
+        }:
+            raise ValueError(f"prompt {prompt_id}のtemplateが不正です: {template}")
         ids.add(prompt_id)
-        prompts.append({"id": prompt_id, "category": category, "prompt": prompt})
+        normalized = {"id": prompt_id, "category": category, "prompt": prompt}
+        if template != "raw":
+            normalized["template"] = template
+        prompts.append(normalized)
     return prompts
+
+
+def _encode_prompt(item: dict[str, str], processor: Any) -> tuple[list[int], str]:
+    """prompt setの指定に従い、生成用Token列と表示用promptを返す。"""
+
+    if item.get("template", "raw") == CONVERSATION_TEMPLATE:
+        speaker_a = "<|speaker:A|>"
+        speaker_b = "<|speaker:B|>"
+        ids = (
+            processor.encode(CONVERSATION_START, out_type=int)
+            + processor.encode(speaker_a, out_type=int)
+            + processor.encode(item["prompt"], out_type=int)
+            + [int(processor.eos_id())]
+            + processor.encode(speaker_b, out_type=int)
+        )
+        rendered = (
+            f"{CONVERSATION_START}{speaker_a}{item['prompt']}"
+            f"<eos:{int(processor.eos_id())}>{speaker_b}"
+        )
+        return ids, rendered
+    return processor.encode(item["prompt"], out_type=int), item["prompt"]
 
 
 def _format_text(result: dict[str, Any]) -> str:
@@ -83,6 +115,7 @@ def _format_text(result: dict[str, Any]) -> str:
             [
                 f"## {item['id']} [{item['category']}]",
                 f"prompt: {item['prompt']}",
+                f"rendered_prompt: {item['rendered_prompt']}",
                 "completion:",
                 item["completion"],
                 "",
@@ -155,7 +188,7 @@ def evaluate_chat_prompts(
     base_seed = seed if seed is not None else config.training.seed
     results: list[dict[str, Any]] = []
     for index, item in enumerate(prompts):
-        prompt_ids = processor.encode(item["prompt"], out_type=int)
+        prompt_ids, rendered_prompt = _encode_prompt(item, processor)
         if not prompt_ids:
             raise ValueError(f"promptをToken化できません: {item['id']}")
         output_ids = generate_ids(
@@ -174,6 +207,7 @@ def evaluate_chat_prompts(
                 **item,
                 "seed": base_seed + index,
                 "prompt_token_count": len(prompt_ids),
+                "rendered_prompt": rendered_prompt,
                 "completion": completion,
             }
         )
