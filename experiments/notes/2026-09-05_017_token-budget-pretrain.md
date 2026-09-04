@@ -6,7 +6,7 @@
 
 比較の基準は、同じTokenizer・モデル構造・seed・学習stepの既存expanded mixed v2 absoluteモデルです。新しい学習はabsolute position embeddingだけを使い、RoPEやSFTなど他の変更は入れません。モデルはdim 240、6層、6 heads、context 256、batch size 8、学習率3e-4、warmup 300、weight decay 0.1、seed 42、最大500 stepです。Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`を再利用し、学習Token列だけを実016の混合出力から作ります。検証は既存のgeneral validation Token列で行い、終了後にconversation・medicalのdomain評価とIssue #1固定会話prompt評価も行います。
 
-実験前のGitコミットは、設定追加後に作成したコミットを記録します。入力混合出力のSHA-256は`d0eb6691a25107fb2ab94b91c2a366e2a80a5fd720797fec27434a29d1cea000`、TokenizerのSHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。Token化コマンドは次のとおりです。
+実験前のGitコミットは`709810b`（`exp: plan token budget pretraining`）です。入力混合出力のSHA-256は`d0eb6691a25107fb2ab94b91c2a366e2a80a5fd720797fec27434a29d1cea000`、TokenizerのSHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。Token化コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/encode_data.py \
