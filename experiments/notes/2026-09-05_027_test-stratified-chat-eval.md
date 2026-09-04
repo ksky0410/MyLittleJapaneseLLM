@@ -12,7 +12,7 @@
 
 会話本文のtrain/test重複は、選択時に完全一致本文の候補を照合してフラグにします。一般的な挨拶のような頻出文は重複しても直ちに除外せず、明確な完全重複を記録したうえで、結果の解釈に注意書きを付けます。test JSONLや大きな元データはGitへコピーせず、manifestと評価成果物だけを追跡します。元データは読み取り専用で扱い、削除・変更しません。
 
-開始前のGitコミットは、実験026の結果を記録した`2467999`（`exp: record stratified short response results`）です。選択スクリプトと評価CLIを実装し、52件のテスト、ruff check、ruff format --checkを通過した実装commitを作成してから評価を開始します。
+開始前のGitコミットは、実験026の結果を記録した`2467999`（`exp: record stratified short response results`）です。選択スクリプトと評価CLIを実装し、52件のテスト、ruff check、ruff format --checkを通過しました。各層のsource偏りを確認したところ、長文層がRealPersonaChatへ寄っていたため、各層でRealPersonaChatとMRMPをできるだけ均等に選ぶ修正を`c66ed9f`へ追加し、評価開始前に再生成します。
 
 実行するコマンドは次のとおりです。
 
@@ -39,6 +39,8 @@
 ```
 
 三つのcheckpointは、token-budget pretraining step 500、通常rehearsal 0.25 step 2,000、短文sampling + rehearsal step 2,000です。
+
+選択manifestは2026-09-05に作成しました。short・medium・longは各16例、各層のRealPersonaChatとMRMPは各8例、全48例の会話IDは一意です。train本文との完全一致候補は7例、context 256を超える履歴は33例でした。評価JSONにもこの情報を引き継ぎ、重複候補と履歴切り詰めの影響を後から分解できるようにします。
 
 ## 実験中の記録
 

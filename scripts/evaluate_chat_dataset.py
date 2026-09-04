@@ -330,6 +330,7 @@ def evaluate_chat_dataset(
                 "rendered_prompt": rendered_prompt,
                 "prompt_token_count": len(prompt_ids),
                 "history_truncated": len(prompt_ids) > config.model.context_length,
+                "train_text_overlap": example.get("train_text_overlap"),
                 "reference": turns[target_index]["text"],
                 "reference_token_count": len(
                     processor.encode(turns[target_index]["text"], out_type=int)
