@@ -59,6 +59,15 @@ SentencePieceやMLXがない場合、Tokenizerまたは学習系の実行時に�
   --output artifacts/tokens/val.bin
 ```
 
+UnigramとBPEを同じ入力で比較するときは、Tokenizerを複数回指定してJSONレポートを出力します。レポートには実語彙数、総token数、平均文字/token、固定した3つの日本語サンプルのpiece分割が含まれます。
+
+```bash
+.venv/bin/python scripts/tokenizer_report.py \
+  --tokenizer artifacts/tokenizer/unigram.model \
+  --tokenizer artifacts/tokenizer/bpe.model \
+  --input artifacts/corpus/train.txt
+```
+
 学習前に、Tokenizerの実際の語彙数とモデルの入力・出力形状、概算パラメータ数を確認します。
 
 ```bash
@@ -112,10 +121,9 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```
 
 生成結果、checkpoint、ローカルデータ、キャッシュは `.gitignore` でGit管理対象外です。内蔵サンプル自体と、再現に必要なコード・設定・実験ノートは管理対象として残します。
-

@@ -1,0 +1,33 @@
+{
+  "experiment": "002-tokenizer-comparison",
+  "input": "artifacts/corpus/train.txt",
+  "input_character_count": 1323,
+  "requested_vocab_size": 128,
+  "effective_vocab_size": 299,
+  "tokenizers": [
+    {
+      "model": "artifacts/tokenizer/unigram.model",
+      "model_type": "unigram",
+      "vocab_size": 299,
+      "total_token_count": 1341,
+      "average_characters_per_token": 0.9865771812080537,
+      "fixed_samples": {
+        "むかしむかし": ["▁", "む", "か", "し", "む", "か", "し"],
+        "人工知能とは": ["▁", "人", "工", "知", "能", "と", "は"],
+        "今日は良い天気です。": ["▁", "今", "日", "は", "良", "い", "天気", "で", "す", "。"]
+      }
+    },
+    {
+      "model": "artifacts/tokenizer/bpe.model",
+      "model_type": "bpe",
+      "vocab_size": 299,
+      "total_token_count": 1283,
+      "average_characters_per_token": 1.0311769290724864,
+      "fixed_samples": {
+        "むかしむかし": ["▁", "む", "か", "し", "む", "か", "し"],
+        "人工知能とは": ["▁", "人", "工", "知", "能", "と", "は"],
+        "今日は良い天気です。": ["▁", "今", "日", "は", "良", "い", "天気", "で", "す", "。"]
+      }
+    }
+  ]
+}
