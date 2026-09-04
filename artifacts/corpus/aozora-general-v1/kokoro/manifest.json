@@ -1,0 +1,23 @@
+{
+  "format": "aozora-import-v1",
+  "source": "https://www.aozora.gr.jp/cards/000148/card773.html",
+  "input_path": "/private/tmp/my-little-japanese-llm-data/aozora-general-v1/773_ruby_5968.zip",
+  "input_member": "kokoro.txt",
+  "encoding": "shift_jis",
+  "input_sha256": "c55d7bf6c7cc5bd960ce291949f38cae9ba6a672a6142c3b9e1a9f5a159fa4c4",
+  "output_sha256": "6b8366a89f76508a9a861fc1364ffd7d155e01601d94ddbae1e5fb548c7db9fa",
+  "input_characters": 188792,
+  "output_characters": 161572,
+  "input_lines": 1595,
+  "output_lines": 1331,
+  "removed_lines": 264,
+  "removed_blank_lines": 233,
+  "removed_annotation_lines": 2,
+  "annotation_count": 237,
+  "ruby_count": 4567,
+  "vertical_marker_count": 0,
+  "split_count": 0,
+  "split_paragraphs": 0,
+  "split_segments": 0,
+  "max_paragraph_characters": 4000
+}

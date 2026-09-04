@@ -42,4 +42,10 @@ artifacts/corpus/aozora-general-v1/sorekara/manifest.json
 
 ## 結果
 
-取得・変換後に、実際のzip SHA-256、出力行数・文字数、除去件数、各作品の本文SHA-256、元ディレクトリのGit状態を追記する。一般source拡張の混合・Tokenizer・学習は、取得結果を確認し、別の実験番号を発行して開始前条件を記録してから行う。
+3 zipの取得と変換は成功した。取得したzipのSHA-256は、坊っちゃんが`53c4d86033d0e4590c0354df5fec2709820ef21c09fa402826ff33376ec21228`、こころが`c55d7bf6c7cc5bd960ce291949f38cae9ba6a672a6142c3b9e1a9f5a159fa4c4`、それからが`d7fa3626fe64a374bd50a00e6e25c6f0ade1fc080a2128b69e79d39266f00222`である。変換後の本文は、坊っちゃん482行・88,773文字、こころ1,331行・161,572文字、それから1,910行・172,220文字となった。各作品の入力・出力SHA-256、除去行数、注記数、ルビ数は作品別manifestへ保存した。
+
+3作品を既存の吾輩は猫である。trainと一緒に、seed 42・同じsource優先順で混ぜた。入力5,869単位から完全一致重複111単位を除き、一般sourceは5,758単位、727,095文字となった。作品別の採用単位比率は、吾輩36.97%、坊っちゃん8.09%、こころ21.80%、それから33.14%であり、一作品だけに偏った状態を緩和できた。一般sourceのmanifestは`artifacts/corpus/aozora-general-v1.manifest.json`に保存した。
+
+元zipのダウンロード先は`/tmp/my-little-japanese-llm-data/aozora-general-v1/`で、small_llm側には変換本文と軽量manifestだけを置いた。元の`/Users/koseki/projects/medilink_analysis`は変更されておらず、Git状態は`feature/quizpack-v1`のままである。本文に残るルビ記号やAozora注記を確認したが、Importerの変換後manifest上、各作品は正常に本文を出力している。
+
+この結果から、一般sourceを単位数5,758まで増やせたため、会話・医療を水増しせずにtarget 7,000、重み8:1:1で一般5,600・会話700・医療700を選べる見込みである。次の実験012でこの混合比を作り、Tokenizer後のsource別token比率も確認する。取得・変換結果の確認だけであり、モデル学習はまだ実施していない。

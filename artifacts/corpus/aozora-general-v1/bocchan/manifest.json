@@ -1,0 +1,23 @@
+{
+  "format": "aozora-import-v1",
+  "source": "https://www.aozora.gr.jp/cards/000148/card752.html",
+  "input_path": "/private/tmp/my-little-japanese-llm-data/aozora-general-v1/752_ruby_2438.zip",
+  "input_member": "bocchan.txt",
+  "encoding": "shift_jis",
+  "input_sha256": "53c4d86033d0e4590c0354df5fec2709820ef21c09fa402826ff33376ec21228",
+  "output_sha256": "710c0ab73499adc3aec9df91c0e5926fc32cb2392b9e3d36c52e21443feea4db",
+  "input_characters": 105638,
+  "output_characters": 88773,
+  "input_lines": 538,
+  "output_lines": 482,
+  "removed_lines": 56,
+  "removed_blank_lines": 29,
+  "removed_annotation_lines": 0,
+  "annotation_count": 42,
+  "ruby_count": 3042,
+  "vertical_marker_count": 0,
+  "split_count": 0,
+  "split_paragraphs": 0,
+  "split_segments": 0,
+  "max_paragraph_characters": 4000
+}

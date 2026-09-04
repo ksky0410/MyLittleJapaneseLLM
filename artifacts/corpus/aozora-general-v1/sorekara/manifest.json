@@ -1,0 +1,23 @@
+{
+  "format": "aozora-import-v1",
+  "source": "https://www.aozora.gr.jp/cards/000148/card1746.html",
+  "input_path": "/private/tmp/my-little-japanese-llm-data/aozora-general-v1/1746_ruby_18324.zip",
+  "input_member": "sorekara.txt",
+  "encoding": "shift_jis",
+  "input_sha256": "d7fa3626fe64a374bd50a00e6e25c6f0ade1fc080a2128b69e79d39266f00222",
+  "output_sha256": "5593ab87e5156da23ac755dba6753f106e6d3e4face41bf2383045ccd8ed6814",
+  "input_characters": 248723,
+  "output_characters": 172220,
+  "input_lines": 2167,
+  "output_lines": 1910,
+  "removed_lines": 257,
+  "removed_blank_lines": 224,
+  "removed_annotation_lines": 0,
+  "annotation_count": 252,
+  "ruby_count": 16419,
+  "vertical_marker_count": 0,
+  "split_count": 0,
+  "split_paragraphs": 0,
+  "split_segments": 0,
+  "max_paragraph_characters": 4000
+}
