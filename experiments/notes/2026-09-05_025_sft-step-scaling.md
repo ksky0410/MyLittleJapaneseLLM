@@ -38,7 +38,9 @@
 
 ## 実験中の記録
 
-未実施です。各モデルのstep、SFT loss、rehearsal loss、validation loss、生成を確認します。
+学習は2026-09-05に開始し、SFT-onlyとrehearsal 0.25を並列に実行しています。100 step間隔でmetricsを保存し、1,000 step時点ではSFT-onlyのvalidation lossが4.4665（perplexity 87.05）でした。rehearsal側は900 step時点でvalidation loss 4.5039（perplexity 90.37）であり、途中経過ではSFT-onlyがやや先行しています。これは学習率が減衰中の途中値であり、忘却とheld-out応答の結果は学習完了後に評価します。
+
+1,000 stepまでのログは各モデルの`metrics.jsonl`に保存されています。学習中の固定prompt生成も各stepのTXTとして保存される設定です。
 
 ## 結果と解釈
 
