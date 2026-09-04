@@ -36,4 +36,27 @@ absolute基準の概算パラメータ数は5,197,920、RoPEは位置embedding�
 
 ## 実行結果
 
-学習と評価の直後に、metrics、summary、checkpoint metadata、生成文へのリンク、domain別評価JSONを追記する。巨大な`.npz`とToken・Tokenizer本体はGit管理対象外とし、軽量な生成文・metrics・metadata・評価JSON・このノートはGitHubへcommit・pushする。
+RoPE学習は500 stepまでエラー、NaN、OOM、途中停止なく完走し、所要時間は79.53秒であった。stepごとの主要値は次のとおりである。
+
+| step | train loss | validation loss | validation perplexity |
+|---:|---:|---:|---:|
+| 1 | 8.9089 | 8.8342 | 6,865.24 |
+| 100 | 5.5780 | 6.7096 | 820.26 |
+| 200 | 5.1642 | 6.3333 | 563.03 |
+| 300 | 5.7729 | 5.9549 | 385.63 |
+| 400 | 3.7901 | 5.6826 | 293.70 |
+| 500 | 4.0454 | 5.5442 | 255.76 |
+
+最良checkpointは`artifacts/checkpoints/rope-mixed-ja-5m-smoke/step_000500.npz`で、validation loss 5.5442326864、perplexity 255.7582561343である。実験009のabsolute基準に対してvalidation lossは0.2027、perplexityは57.46下がった。RoPEのdomain別評価は`artifacts/evaluations/rope-mixed-ja-5m-smoke-domains.json`に保存した。
+
+| domain | token数 | validation loss | perplexity |
+|---|---:|---:|---:|
+| 一般 | 11,367 | 5.5442 | 255.76 |
+| 会話 | 1,163,469 | 3.3523 | 28.57 |
+| 医療 | 199,138 | 4.5273 | 92.51 |
+
+absolute基準との差は、一般-0.2027、会話-0.2009、医療-0.3814で、今回の短いrunではすべてのdomainでRoPE側が低かった。ただし、同じseedでもabsolute側は学習可能なposition embeddingの乱数初期化を一つ余分に行うため、qkvなどの初期値まで完全に同じではない。したがって、この結果はRoPEの優位性を確定するものではなく、同じ初期値を厳密にそろえた追試が必要である。また、最初のMLX実行に伴うコンパイル時間の差もあり、所要時間の比較は参考値にとどめる。
+
+reload後の生成文は、一般promptでは`今日はは`、物語promptでは短い文、会話promptでは`こんにちは。`、医療promptでは問題番号や選択肢らしい形式を含む出力となった。生成文は[reloaded-today.txt](../../artifacts/samples/rope-mixed-ja-5m-smoke/reloaded-today.txt)、[reloaded-story.txt](../../artifacts/samples/rope-mixed-ja-5m-smoke/reloaded-story.txt)、[reloaded-conversation.txt](../../artifacts/samples/rope-mixed-ja-5m-smoke/reloaded-conversation.txt)、[reloaded-medical.txt](../../artifacts/samples/rope-mixed-ja-5m-smoke/reloaded-medical.txt)から確認できる。会話のmarkerは生成時のTokenizer正規化で空白区切りになっており、会話継続の品質は別評価が必要である。
+
+metrics、summary、checkpoint metadata、生成文、domain別評価JSONはGitHubへcommit・pushする。巨大な`.npz`とToken・Tokenizer本体はGit管理対象外とし、manifestと実験ノートへ条件とSHA-256を残す。次は、一般sourceを増やしてtoken比率を記録する実験か、初期値を厳密にそろえたRoPE追試のどちらか一つを行う。
