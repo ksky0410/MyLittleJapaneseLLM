@@ -6,7 +6,13 @@ from pathlib import Path
 
 import numpy as np
 
-from my_little_japanese_llm.sft import load_sft_arrays, make_sft_batch
+from my_little_japanese_llm.sft import (
+    load_rehearsal_tokens,
+    load_sft_arrays,
+    make_sft_batch,
+    split_sft_rehearsal_batch_size,
+    validate_rehearsal_ratio,
+)
 
 
 class _FakeMX:
@@ -51,6 +57,24 @@ class SFTDataTests(unittest.TestCase):
             )
             with self.assertRaises(ValueError):
                 load_sft_arrays(path, context_length=3)
+
+    def test_splits_rehearsal_batch_and_validates_ratio(self) -> None:
+        self.assertEqual(split_sft_rehearsal_batch_size(8, 0.25), (6, 2))
+        self.assertEqual(split_sft_rehearsal_batch_size(8, 0.0), (8, 0))
+        self.assertEqual(validate_rehearsal_ratio(0.25), 0.25)
+        with self.assertRaises(ValueError):
+            validate_rehearsal_ratio(-0.1)
+        with self.assertRaises(ValueError):
+            validate_rehearsal_ratio(1.0)
+
+    def test_loads_uint32_rehearsal_tokens(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "rehearsal.bin"
+            np.array([1, 2, 3, 4], dtype=np.uint32).tofile(path)
+            tokens = load_rehearsal_tokens(path)
+            np.testing.assert_array_equal(
+                tokens, np.array([1, 2, 3, 4], dtype=np.int32)
+            )
 
 
 if __name__ == "__main__":

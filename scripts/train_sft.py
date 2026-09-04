@@ -14,10 +14,16 @@ from _common import repo_path
 from my_little_japanese_llm.config import load_config
 from my_little_japanese_llm.model import TinyJapaneseGPT, require_mlx
 from my_little_japanese_llm.sft import (
+    combined_sft_rehearsal_loss,
     evaluate_sft_loss,
+    full_causal_lm_loss,
+    load_rehearsal_tokens,
     load_sft_arrays,
     make_sft_batch,
+    make_sft_rehearsal_batch,
     masked_causal_lm_loss,
+    split_sft_rehearsal_batch_size,
+    validate_rehearsal_ratio,
 )
 from my_little_japanese_llm.tokenizer import load_processor
 from my_little_japanese_llm.training import (
@@ -35,7 +41,9 @@ def _append_jsonl(path: Path, value: dict) -> None:
         handle.write(json.dumps(value, ensure_ascii=False) + "\n")
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
+    """train_sftのCLI parserを作る。MLXなしの引数検証にも使える。"""
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config", default="configs/token-budget-chat-sft-5m-smoke.toml"
@@ -46,7 +54,43 @@ def main() -> None:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--samples-dir", required=True)
     parser.add_argument("--max-steps", type=int, default=None)
+    parser.add_argument(
+        "--rehearsal-tokens",
+        default=None,
+        help="通常のraw uint32 Token列。rehearsal-ratioと同時に指定する",
+    )
+    parser.add_argument(
+        "--rehearsal-ratio",
+        type=float,
+        default=None,
+        help="rehearsal lossの重み（0以上1未満）",
+    )
+    return parser
+
+
+def validate_rehearsal_options(
+    rehearsal_tokens: str | None, rehearsal_ratio: float | None
+) -> tuple[str | None, float]:
+    """rehearsal CLI引数の組み合わせを検証する。"""
+
+    if (rehearsal_tokens is None) != (rehearsal_ratio is None):
+        raise ValueError(
+            "--rehearsal-tokensと--rehearsal-ratioは必ず同時に指定してください"
+        )
+    if rehearsal_ratio is None:
+        return None, 0.0
+    return rehearsal_tokens, validate_rehearsal_ratio(rehearsal_ratio)
+
+
+def main() -> None:
+    parser = build_parser()
     args = parser.parse_args()
+    try:
+        rehearsal_tokens_arg, rehearsal_ratio = validate_rehearsal_options(
+            args.rehearsal_tokens, args.rehearsal_ratio
+        )
+    except ValueError as error:
+        parser.error(str(error))
 
     mx = require_mlx()
     from mlx import nn, optimizers
@@ -57,6 +101,14 @@ def main() -> None:
     train_arrays = load_sft_arrays(args.train_data, config.model.context_length)
     validation_arrays = load_sft_arrays(
         args.validation_data, config.model.context_length
+    )
+    rehearsal_path = (
+        repo_path(rehearsal_tokens_arg).resolve()
+        if rehearsal_tokens_arg is not None
+        else None
+    )
+    rehearsal_tokens = (
+        load_rehearsal_tokens(rehearsal_path) if rehearsal_path is not None else None
     )
     max_steps = (
         args.max_steps if args.max_steps is not None else config.training.max_steps
@@ -83,7 +135,16 @@ def main() -> None:
         learning_rate=config.training.learning_rate,
         weight_decay=config.training.weight_decay,
     )
-    loss_and_grad = nn.value_and_grad(model, masked_causal_lm_loss)
+    rehearsal_active = rehearsal_tokens is not None and rehearsal_ratio > 0
+    if rehearsal_active:
+        sft_batch_size, rehearsal_batch_size = split_sft_rehearsal_batch_size(
+            config.training.batch_size, rehearsal_ratio
+        )
+        loss_and_grad = nn.value_and_grad(model, combined_sft_rehearsal_loss)
+    else:
+        sft_batch_size = config.training.batch_size
+        rehearsal_batch_size = 0
+        loss_and_grad = nn.value_and_grad(model, masked_causal_lm_loss)
     signature = signature_from_config(config, vocab_size)
     checkpoint_dir = repo_path(args.output_dir).resolve()
     samples_dir = repo_path(args.samples_dir).resolve()
@@ -115,9 +176,26 @@ def main() -> None:
     best_validation_loss = float("inf")
     best_checkpoint: Path | None = None
     for step in range(1, max_steps + 1):
-        inputs, targets, loss_mask = make_sft_batch(
-            train_arrays, config.training.batch_size, rng, mx
-        )
+        if rehearsal_active:
+            (
+                sft_inputs,
+                sft_targets,
+                sft_loss_mask,
+                rehearsal_inputs,
+                rehearsal_targets,
+            ) = make_sft_rehearsal_batch(
+                train_arrays,
+                rehearsal_tokens,
+                config.training.batch_size,
+                config.model.context_length,
+                rehearsal_ratio,
+                rng,
+                mx,
+            )
+        else:
+            inputs, targets, loss_mask = make_sft_batch(
+                train_arrays, config.training.batch_size, rng, mx
+            )
         lr = learning_rate(
             step - 1,
             max_steps,
@@ -126,7 +204,18 @@ def main() -> None:
             config.training.warmup_steps,
         )
         optimizer.learning_rate = lr
-        loss, gradients = loss_and_grad(model, inputs, targets, loss_mask)
+        if rehearsal_active:
+            loss, gradients = loss_and_grad(
+                model,
+                sft_inputs,
+                sft_targets,
+                sft_loss_mask,
+                rehearsal_inputs,
+                rehearsal_targets,
+                rehearsal_ratio,
+            )
+        else:
+            loss, gradients = loss_and_grad(model, inputs, targets, loss_mask)
         optimizer.update(model, gradients)
         mx.eval(model.parameters(), optimizer.state, loss)
         should_log = (
@@ -150,7 +239,27 @@ def main() -> None:
                 "validation_perplexity": perplexity(validation_loss),
                 "learning_rate": lr,
                 "elapsed_seconds": time.monotonic() - started,
+                "rehearsal_tokens": str(rehearsal_path)
+                if rehearsal_path is not None
+                else None,
+                "rehearsal_ratio": rehearsal_ratio,
             }
+            if rehearsal_active:
+                sft_train_loss = masked_causal_lm_loss(
+                    model, sft_inputs, sft_targets, sft_loss_mask
+                )
+                rehearsal_train_loss = full_causal_lm_loss(
+                    model, rehearsal_inputs, rehearsal_targets
+                )
+                mx.eval(sft_train_loss, rehearsal_train_loss)
+                metrics.update(
+                    {
+                        "sft_train_loss": float(sft_train_loss.item()),
+                        "rehearsal_train_loss": float(rehearsal_train_loss.item()),
+                        "sft_batch_size": sft_batch_size,
+                        "rehearsal_batch_size": rehearsal_batch_size,
+                    }
+                )
             print(json.dumps(metrics, ensure_ascii=False))
             _append_jsonl(metrics_path, metrics)
             checkpoint = save_checkpoint(
@@ -173,6 +282,8 @@ def main() -> None:
         "base_checkpoint": str(base_checkpoint),
         "train_examples": int(train_arrays["input_ids"].shape[0]),
         "validation_examples": int(validation_arrays["input_ids"].shape[0]),
+        "rehearsal_tokens": str(rehearsal_path) if rehearsal_path is not None else None,
+        "rehearsal_ratio": rehearsal_ratio,
         "elapsed_seconds": time.monotonic() - started,
     }
     (checkpoint_dir / "summary.json").write_text(
