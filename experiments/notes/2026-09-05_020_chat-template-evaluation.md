@@ -30,12 +30,23 @@
 
 ## 実験中の記録
 
-未実施です。各checkpointの完了、出力SHA-256、空completion数、内容の傾向を追記します。
+2026-09-05に両checkpointの評価を完了しました。エラーはなく、両方とも8 promptすべてでcompletionが生成され、空completionは0件でした。pretraining側JSONのSHA-256は`0cd7d2505f60b927e4c5006523da7bf87a0f13bff074e7f67f556f764ed9f378`、SFT側JSONのSHA-256は`53325b3a4f0623e04ad0cf62f66ccfeea9c204041fdd48c45906e39d5d24f4e5`です。
+
+pretraining側は「まじで」への「おー」、「今日なにしてた？」への「そうですね。」、「いやそれは」への「そうですね」など、短いcompletionと長いcompletionが混在しました。SFT側は8件中7件が「こんにちは」を含むcompletionになり、入力に応じた使い分けよりも、会話応答の頻出パターンを強く出しました。「明日ひま？」だけは「@っていました」となりました。SFT側の出力は形式に適合したものの、内容の自然さと条件付き応答は不十分です。
+
+保存先は次のとおりです。
+
+- [pretraining構造化prompt JSON](../../artifacts/evaluations/token-budget-mixed-ja-5m-smoke-chat-sft-format.json)
+- [pretraining構造化promptテキスト](../../artifacts/samples/token-budget-mixed-ja-5m-smoke/chat-issue-1-sft-format.txt)
+- [SFT構造化prompt JSON](../../artifacts/evaluations/token-budget-chat-sft-5m-smoke-chat-sft-format.json)
+- [SFT構造化promptテキスト](../../artifacts/samples/token-budget-chat-sft-5m-smoke/chat-issue-1-sft-format.txt)
 
 ## 結果と解釈
 
-未実施です。
+仮説の前半、すなわちSFTモデルが学習時と同じ構造化形式でのみraw形式とは異なる挙動を示す可能性は確認できました。しかし、SFT側のcompletionはpromptに応じて内容を変えるより「こんにちは」へ崩れており、Issue #1が求める短い会話の自然さが改善したとは言えません。SFT前モデルも8件すべてでcompletionを出したため、空出力の解消だけを成果とみなすこともできません。
+
+また、SFT後の通常domain loss悪化と合わせると、会話データだけを500 step追加する設定は、一般日本語・医療・会話の保持と条件付き応答の両方で不十分です。次は会話SFTの各batchへ一般pretrainingデータを少量混ぜ、忘却を抑えながら応答maskを維持できるかを検証します。比較対象と差分を一つに絞ります。
 
 ## 次に試すこと
 
-テンプレート版でも改善しない場合は、SFTデータの長い履歴切り詰めと、会話データに一般日本語を混ぜる忘却対策を別実験にします。改善した場合も、複数seedと実際のvalidation会話で再確認します。
+まず会話SFTの各batchへ一般pretraining batchを一定割合で混ぜる「rehearsal」方式を実装し、SFT-onlyとの違いを比較します。改善した場合も、複数seedと実際のvalidation会話で再確認します。
