@@ -6,7 +6,7 @@
 
 今回の仮説は、同じFineWeb混合Token列を2,500 stepまで学習すれば、500 step条件よりgeneral validation lossとFineWeb validation lossが下がり、出力が極端に崩れる頻度も減るというものです。反対に、2,500 stepでvalidation lossが頭打ちまたは悪化し、生成文も改善しない場合は、学習step不足だけでなく、現在のTokenizer・source混合・モデル容量のいずれかが主なボトルネックだと判断します。
 
-この実験ではデータ、Tokenizer、モデル構造、optimizer、learning rate schedule、batch size、seedを変更しません。変更するのは最大step数と、それに伴う専用checkpoint・sample保存先だけです。実験028の500 step結果と同じseedで最初から学習するため、step 500までのmetricsとcheckpointが一致することも再現性の確認に使います。
+この実験ではデータ、Tokenizer、モデル構造、optimizerの種類、batch size、seedを変更しません。ただし現在の実装ではcosine learning rate scheduleの終点が`max_steps`に依存するため、最大step数を500から2,500へ変えると、同じstepでの学習率も変わります。したがって今回は「長い学習予算に合わせてschedule horizonも延長した条件」として扱い、step 500までのmetricsとcheckpointが実験028と一致することは期待しません。この実装上の制約を含めて記録し、必要なら後続実験でschedule horizonを独立指定できるようにします。
 
 ## 使用するデータとTokenizer
 
@@ -18,7 +18,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`で、SHA-25
 
 モデルはvocab size 4,096、dim 240、6層、6 heads、context length 256、MLP倍率4、absolute position embeddingで、概算5,197,920 parametersです。batch size 8、最大2,500 step、evaluation interval 100、sample interval 100、evaluation batches 20、AdamW、learning rate 3e-4、minimum learning rate 3e-5、warmup 300、weight decay 0.1、seed 42です。設定は`configs/fineweb2-mixed-ja-5m-2p5k.toml`へ固定します。
 
-対照は実験028の500 step条件、補助的な比較は実験017の約1M Token・500 step条件です。主比較では同じFineWeb混合Token列の500 stepと2,500 stepを比べ、500 stepまでの同一性を確認した後、100 stepごとのvalidation loss、perplexity、生成文を追跡します。学習途中の出力は悪いものも削除せずGitHubへ保存します。
+対照は実験028の500 step条件、補助的な比較は実験017の約1M Token・500 step条件です。主比較では同じFineWeb混合Token列の500 stepと2,500 stepを比べますが、学習率schedule horizonも異なるため、結果は「長時間学習条件」の効果として解釈します。100 stepごとのvalidation loss、perplexity、生成文を追跡し、学習途中の出力は悪いものも削除せずGitHubへ保存します。
 
 ## 実行前の再現情報
 
@@ -33,6 +33,10 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`で、SHA-25
 ## 実験中の記録
 
 未実施です。
+
+2026-09-05、step 500まで到達しました。train lossは5.293273、general validation lossは5.938881、perplexityは379.510、学習率は`0.0002945857`でした。実験028の500 step条件は学習率が`0.0000300167`までcosine decayしていたため、step 500のlossが一致しないのは異常ではなく、`max_steps`をschedule horizonへ使う実装による予定された差です。2,500 stepまで継続し、最終的なlossと生成の変化を確認します。
+
+step 1,000まで到達しました。train lossは4.797299、general validation lossは5.606614、perplexityは272.221、学習率は`0.0002381486`です。general validation lossは実験028の500 step条件6.004154から0.397541下がり、実験017の約1M Token・500 step条件5.606362にも近づきました。ただし、step 1,000時点でも学習率scheduleが異なり、実験017とは学習step数も異なるため、これは「FineWeb追加だけの効果」ではなく、長い学習予算とschedule延長を含む中間結果です。学習は2,500 stepまで継続します。
 
 ## 結果と解釈
 
