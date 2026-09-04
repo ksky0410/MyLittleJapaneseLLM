@@ -45,7 +45,13 @@ parquetを指定commitから取得し、重複注意の先頭20,000行を除外�
 
 ## 実験中の記録
 
-未実施です。
+2026-09-05に、dataset commit `180ca004c6a89b590daaad86cb062a07a5353c69`からtrain shardとtest shardを取得しました。導入したデータ処理依存は`pyarrow 25.0.1`で、`.venv`には`ensurepip`でpipを復旧してから導入しました。導入スクリプトと任意依存の定義は`c359082`（`feat: add pinned FineWeb Japanese importer`）としてGitHubへpush済みです。
+
+train parquetは268,597,958 bytes、SHA-256は`a38a4b50e7aee2e9c2ca1eeb96858d794751c1a4c2d2f6f1119964fc8d4d6838`でした。先頭20,000行を除外し、空行と本文完全一致の重複を除きながら、現行Tokenizerで5,000,000 Tokenを超えないところまで9,796文書を抽出しました。実際の選択Token数は4,999,748、走査行数は29,797、空行は0、skip後の重複除去は0です。抽出本文のSHA-256は`471869caa73aa5987a52a2dbcfa28846441d0729ff03bb0c05db0fa461e3890f`で、条件は`artifacts/corpus/fineweb2-edu-japanese-v1-train.manifest.json`へ保存しました。
+
+test parquetは9,843,060 bytes、SHA-256は`2dbc0824036cc083b4e52f249006c66d99b724be0ecb7d5e4ae0c3c7332dc534`でした。test側はskipせず全8,082行を走査し、本文完全一致の重複4,041行を除いて4,041文書、2,061,459 Tokenを抽出しました。抽出本文のSHA-256は`f7cb1fd629f75095399becdcff0eed9306bf339203131988addca14158d3a297`で、条件は`artifacts/corpus/fineweb2-edu-japanese-v1-test.manifest.json`へ保存しました。dataset cardの重複注意に従い、trainでは先頭20,000行をskipし、testでは重複除去の実績を記録しています。入力parquetと抽出本文はGit管理対象外ですが、manifestは追跡対象にします。
+
+現時点ではデータ準備が成功し、学習はまだ開始していません。次に、既存3 sourceへFineWeb抽出本文を追加した5M Token以下の混合コーパスを作成し、source別Token比率とhashを確認してからToken化・学習へ進みます。
 
 ## 結果と解釈
 
