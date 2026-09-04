@@ -32,7 +32,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`で、SHA-25
 
 ## 実験中の記録
 
-未実施です。
+実験開始前は未実施と記録していました。
 
 2026-09-05、step 500まで到達しました。train lossは5.293273、general validation lossは5.938881、perplexityは379.510、学習率は`0.0002945857`でした。実験028の500 step条件は学習率が`0.0000300167`までcosine decayしていたため、step 500のlossが一致しないのは異常ではなく、`max_steps`をschedule horizonへ使う実装による予定された差です。2,500 stepまで継続し、最終的なlossと生成の変化を確認します。
 
@@ -40,8 +40,22 @@ step 1,000まで到達しました。train lossは4.797299、general validation 
 
 ## 結果と解釈
 
-未実施です。
+2026-09-05に2,500 stepを完走しました。最終train lossは4.005231、general validation lossは5.290503、perplexityは198.443、最終学習率は`0.0000300001`でした。summary上の学習時間は551.22秒で、最良checkpointは`artifacts/checkpoints/fineweb2-mixed-ja-5m-2p5k/step_002500.npz`です。NaN、shape error、データ長エラー、途中停止は発生しませんでした。最大メモリと温度は専用計測を実施していないため、未計測です。
+
+実験028の同じFineWeb混合データ・5Mモデル・500 step条件と比べると、general lossは6.004154から5.290503へ0.713651低下しました。FineWeb test lossは5.281133から4.560703へ0.720430低下し、会話validation lossは3.966163から3.341280へ0.624882低下、医療validation lossは5.217864から3.883457へ1.334407低下しました。実験017の約1M Token・500 step条件と比べてもgeneralは5.606362から0.315859低く、会話は3.852320から0.511040低く、医療は4.909000から1.025543低くなっています。ただし、029は学習Token列だけでなく、`max_steps`に応じてcosine learning rate scheduleの終点も延長しているため、これらをFineWeb追加単独の効果とは解釈しません。今回の結果は「広い5M候補プールを長いscheduleで十分に学習すると、500 step時点の短期悪化が解消される」ことを示す探索結果です。
+
+固定chat-test-v1の48例では、EOS到達が48/48、平均生成長が6.60 Token、precision・recall・F1が0.1425、0.0653、0.0723でした。実験028の500 step条件はEOS 47/48、平均8.79 Token、F1 0.0421でしたので、029は全体F1が0.0302上がり、生成長は2.19 Token短くなりました。層別F1もshort 0.0835、medium 0.0755、long 0.0579となり、実験028の0.0493、0.0424、0.0345から全層で上がりました。実験017のstep 500ベース条件F1 0.0505と比べても上がっています。
+
+一方、生成文の意味的な品質はまだ不十分です。固定testでは、挨拶に対する「そうなんですね!」、話題に対する空欄や「私も、いか?」、長い履歴に対する「はい。」のような定型・短文が目立ちました。実験028の崩れた長文より停止と日本語らしさは改善していますが、参照応答の内容や話者役割を安定して捉えたとは言えません。Token overlap F1の改善には、正しい内容の学習だけでなく、無関係な長文を出さず短く終了する変化も含まれています。
+
+今回の仮説は、一般validationとFineWeb validationのloss改善について支持されました。500 stepでは約1M Tokenしか処理しないため、5M候補プールの追加が短期では不利に見えましたが、2,500 stepへ延長するとlossは一貫して改善し、FineWeb testを含む複数domainで効果が確認されました。ただし、学習率schedule horizonの変更が含まれるため、純粋なstep数の因果効果はまだ分離できていません。また、会話testの意味評価は未実施で、train本文完全一致候補7例と履歴切り詰め33例という実験027の注意点も引き継いでいます。
+
+学習・評価パイプライン、checkpoint保存、100 stepごとの生成記録、domain評価、固定chat testはすべて成功しました。性能面ではlanguage modeling lossとoverlap指標は改善しましたが、自然な日本語会話という最終目標は未達です。失敗した短い出力や崩れた出力を含む全sampleをGitHubへ保存し、次のモデル容量実験の基準として使用します。
 
 ## 次に試すこと
 
-step延長で改善が確認できれば、同じFineWeb混合Token列・Tokenizer・学習stepを固定し、`dim=384・layers=10・heads=6・context=256`の約19.4M parameterモデルへ拡張します。step延長で改善しなければ、モデル容量を増やす前にTokenizerの再学習またはFineWeb source比率の再設計を別実験として検討します。
+次は、今回のFineWeb混合Token列、Tokenizer、学習step 2,500を固定し、`dim=384・layers=10・heads=6・context=256`の約19.4M parameterモデルへ拡張します。まず50〜100 stepのsmokeで速度とメモリを確認し、その後に同じ2,500 stepを実行します。モデル容量実験ではTokenizer、データ、seed、schedule horizonを変えず、5Mモデルとの比較を可能にします。会話評価の意味面については、別途48例の人手レビュー用テンプレートを作成し、自動overlap指標と混同しない形で追加します。
+
+## 成果物のハッシュ
+
+metricsのSHA-256は`f9da848dd2085cd7cc2f6704999f9f6f0144e987c6a9325de8fe138e61e2d28b`、summaryは`12fc16d2fd9bb81770a82b2adf98c925c253b73a750947c2f8818cd849e506e3`、step 2,500 metadataは`cf7084d4ea233dafeab606de73f2dd858915bc2f1d826168c69b0eb43fa86165`です。step 2,500生成文は`3950580065707e36d5d2cb312aef2bc890abd6669e16210e82d753bb9a5ba1fb`、固定chat-test TXTは`794d5e777a83c867fa3c2673dd1fb06ff5652de6857eb8ce988bb1bad6168916`、domain評価JSONは`f71c99f8adc422354eb0fbf84ddda39a5611e68b35c8dc883e4bce6c49fb03e4`、固定chat評価JSONは`63dc7a56f40d1c9dc1244b87f009cbbc425a2373ce94032566e898fb1a50a6ca`です。metricsにはstep 1と100〜2,500の100 step間隔、合計26行を保存しています。
