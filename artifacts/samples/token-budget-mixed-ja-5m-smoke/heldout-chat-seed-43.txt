@@ -1,0 +1,178 @@
+# Held-out chat dataset evaluation
+format: heldout-chat-dataset-evaluation-v1
+input: /Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/validation.jsonl
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+seed: 43
+max_examples: 24
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## example 001: real-persona-chat:real_persona_chat/dialogues/11243.json turn 9
+speaker: DH
+prompt: <|startofconversation|><|speaker:BJ|>こんにちは！<eos:3><|speaker:DH|>こんにちはー！<eos:3><|speaker:BJ|>テレビってどのくらいの頻度で見ますか？<eos:3><|speaker:DH|>今はほぼ毎日ですね！<eos:3><|speaker:BJ|>おー本当ですか。好きな番組はありますか<eos:3><|speaker:DH|>クイズ番組みたいなのが好きです。<eos:3><|speaker:BJ|>ほーQさまみたいな？<eos:3><|speaker:DH|>そうですね、ネプリーグとか<eos:3><|speaker:BJ|>あー面白いですよね。懐かしい最近見てないなあ<eos:3><|speaker:DH|>
+reference: ヘキサゴンとかめちゃくちゃ好きでした
+completion:
+はい、はい。
+
+## example 002: real-persona-chat:real_persona_chat/dialogues/06283.json turn 21
+speaker: GF
+prompt: <|startofconversation|><|speaker:FS|>こんにちは！<eos:3><|speaker:GF|>こんにちは！<eos:3><|speaker:FS|>今日はどこか出かけるんですか？<eos:3><|speaker:GF|>子どもの習い事の送迎のみです。<eos:3><|speaker:FS|>何の習い事ですか？<eos:3><|speaker:GF|>国語塾というものがありまして、進学塾よりも良さそうで通っています！<eos:3><|speaker:FS|>国語塾というのがあるんですね。国語に特化しているんですか？<eos:3><|speaker:GF|>はい、それも色々工夫を凝らしてくれるので楽しいんです！！<eos:3><|speaker:FS|>楽しみながら学べるの良いですね！<eos:3><|speaker:GF|>そうなんですよ。今はドラえもんの道具をプレゼンするというのをやっています。<eos:3><|speaker:FS|>今はプレゼンのやり方を学べるんですね！本当に役に立ちますよね！<eos:3><|speaker:GF|>そうなんです！進学塾は合格のためですが、こちらは長い人生で役立つことを教えてくれます。<eos:3><|speaker:FS|>内容気になります！プレゼン学んでいたらもう少し堂々とできたのかな。<eos:3><|speaker:GF|>そうですね、グループディスカッションとかもやりますし。プレゼンで困った経験ございましたか？<eos:3><|speaker:FS|>プレゼンというか大勢の前で意見を言ったりするのが苦手なんです。緊張してしまって。<eos:3><|speaker:GF|>うわわ、同じなんです。めっちゃ緊張しますよね？？<eos:3><|speaker:FS|>考えもまとまらなくなりますし、事前に考えていても言う順序がおかしくなったりします！<eos:3><|speaker:GF|>わかります！用意していたのに！とか。簡単な自己紹介ですらそうなりますよー。<eos:3><|speaker:FS|>自己紹介イヤですー！学生時代のクラスでの自己紹介も名前くらいしか言えませんでした。<eos:3><|speaker:GF|>本当はもう少し言いたいのに、緊張が勝って、自分で強制終了ですよね！<eos:3><|speaker:FS|>強制終了！そうなんです！この時を早く終わらせたいって感じで！<eos:3><|speaker:GF|>
+reference: はい、自分つまんないな！とか思ったりしながら座ります。笑えて来ました。
+completion:
+なるほど、今、今に出てうらます
+
+## example 003: real-persona-chat:real_persona_chat/dialogues/12005.json turn 7
+speaker: EI
+prompt: <|startofconversation|><|speaker:DV|>こんばんはー！<eos:3><|speaker:EI|>こんばんはー！<eos:3><|speaker:DV|>好きなおかずってお肉系ですか？魚系ですか？<eos:3><|speaker:EI|>お肉です！<eos:3><|speaker:DV|>和食ですか？洋食ですか？<eos:3><|speaker:EI|>洋食ですかね！いきなりステーキとか好きです！<eos:3><|speaker:DV|>結構がっつり系が好きなんですねー<eos:3><|speaker:EI|>
+reference: はい、ウエイトトレーニングを結構やっているので、タンパク質大好きです
+completion:
+はい!
+
+## example 004: real-persona-chat:real_persona_chat/dialogues/00650.json turn 27
+speaker: BV
+prompt: <|startofconversation|><|speaker:AV|>こんにちは。<eos:3><|speaker:BV|>こんにちはー。<eos:3><|speaker:AV|>あなたはやめられない癖ってありますか？<eos:3><|speaker:BV|>あーありますね！<eos:3><|speaker:AV|>わわ、なんですか？聞きたい聞きたい！<eos:3><|speaker:BV|>洗濯物を取る時ハンガーそのままになっているみたいで。<eos:3><|speaker:AV|>あははー！洗濯物だけをとるんですね。<eos:3><|speaker:BV|>本当は、次使いやすいように端に寄せるとかしてて欲しいみたいなんですが。<eos:3><|speaker:AV|>確かにそれありますね！うちの子供によくハンガーも片づけて！って言い続けているやつです。<eos:3><|speaker:BV|>これ自分では気付いてなくて！<eos:3><|speaker:AV|>性格的なものなのかしら？<eos:3><|speaker:BV|>なんでしょうか？言われて、あぁたしかに！ってなりました。<eos:3><|speaker:AV|>指摘されて直りましたか？<eos:3><|speaker:BV|>や、それが急いでいる時はそのままにしていたり、、。<eos:3><|speaker:AV|>なかなか直らないもんですよねー。日常になっているから。<eos:3><|speaker:BV|>そうなんですよね。最初は気をつけてても戻ってます。<eos:3><|speaker:AV|>わたしは、シャーペンやボールペンと指の上でクルクル回しちゃう癖が直りません。<eos:3><|speaker:BV|>いますね！そういう方。器用だなーと思って見ちゃいます。<eos:3><|speaker:AV|>子供の頃からの癖で、考え事とかしているとずっと回しているようです。<eos:3><|speaker:BV|>無意識なんですね。<eos:3><|speaker:AV|>完全に無意識ですね。<eos:3><|speaker:BV|>そんなクルクル回せないですよ。<eos:3><|speaker:AV|>子供の頃に流行ってやたら練習をしました。<eos:3><|speaker:BV|>子供の頃取得した物って今でもできちゃいますよね。<eos:3><|speaker:AV|>あー！確かに。長らく泳いでいませんでしたが今でも泳げることに気づきました。<eos:3><|speaker:BV|>体が覚えているんですよね。<eos:3><|speaker:AV|>そう考えると一度できるようになったことは手放すことが難しいのかもですね。<eos:3><|speaker:BV|>
+reference: 体の衰えがあると手放せるかも？
+completion:
+そうなんですね!
+
+## example 005: real-persona-chat:real_persona_chat/dialogues/07329.json turn 27
+speaker: AN
+prompt: <|startofconversation|><|speaker:ET|>おはようございますー！<eos:3><|speaker:AN|>おはようございます、今日も1日が始まりましたね。<eos:3><|speaker:ET|>はい、おかげさまで充実した朝を送っております。まだ１０時前なんですね！<eos:3><|speaker:AN|>まだまだ何でもできますね！<eos:3><|speaker:ET|>早起きは三文の徳と言いますが、その通りですねー。子供が生まれる前の休日なんて昼まで寝てましたが。<eos:3><|speaker:AN|>わかりますー。今は強制的に早起きになっちゃいます。今朝は子供に5時に起こされました。<eos:3><|speaker:ET|>ひゃー。５時！？お疲れさまです。毎日眠くないですか？<eos:3><|speaker:AN|>お昼過ぎに眠くなってきますね。たまに子供たちと一緒にお昼寝をしていますよ。<eos:3><|speaker:ET|>お昼寝してくれるんですね！お昼寝すると短い時間でもスッキリ目覚められますよねー。<eos:3><|speaker:AN|>そうなんです。あなたはいつも何時ごろに起床しますか？<eos:3><|speaker:ET|>私は７時ですね。旦那が５時に起きて筋トレ、子供は６時に起きて宿題やってるみたいです。<eos:3><|speaker:AN|>皆様朝型なのですね！旦那さん朝から筋トレすごいですね。<eos:3><|speaker:ET|>私が一番遅いんですよ！７時なのに。うちの旦那は筋トレオタクですね。<eos:3><|speaker:AN|>7時でも早いですよね。うちの夫も最近筋トレにハマっています。<eos:3><|speaker:ET|>そうなんですね！ムキムキですか？うちの旦那は４２なんですが、下腹だけちょっと出てます。。<eos:3><|speaker:AN|>ちょっとずつ大きくなってきています。スーツが窮屈そうになってきました。<eos:3><|speaker:ET|>胸板とかは厚いんですが、下腹が。。どうしようもないと本人は言ってますね！<eos:3><|speaker:AN|>下腹ってどうして出てくるんでしょうね？夫も少しずつお腹が出てきています。<eos:3><|speaker:ET|>肉が溜まりやすいんですかねー。お酒もほとんど飲まない人なんですけどね。そして私も人のこと言えませんでした。<eos:3><|speaker:AN|>そうなんですか！何か運動とかして下腹対策してらっしゃいますか？<eos:3><|speaker:ET|>一応、レッグレイズというやつをしております。下腹対策に良い筋トレだと聞いて。<eos:3><|speaker:AN|>初めて聞きました。後で調べてみます！効果はありましたか？<eos:3><|speaker:ET|>はい！私も旦那もそれで少し引っ込みました。レッグレイズ、良いですよ。おススメです。<eos:3><|speaker:AN|>効果あるんですねー！調べて夫にオススメしてみます。最近結構気にしているみたいなので。<eos:3><|speaker:ET|>とにかく筋トレといえばレッグレイズとスクワットらしいです。旦那さんにもよろしくお伝えください！<eos:3><|speaker:AN|>はい！いい情報教えて下さってありがとうございます。<eos:3><|speaker:ET|>私も偉そうにオススメしちゃったからには、サボらずに頑張ろうと思います！<eos:3><|speaker:AN|>
+reference: 頑張って下さい。わたしも夫と一緒に少しはトレーニングするようにしようっと。
+completion:
+そうですね。
+
+## example 006: real-persona-chat:real_persona_chat/dialogues/01305.json turn 14
+speaker: BL
+prompt: <|startofconversation|><|speaker:BL|>こんにちはー！よろしくお願いします。<eos:3><|speaker:CI|>よろしくお願いします！<eos:3><|speaker:BL|>好きな食べ物は何ですか？<eos:3><|speaker:CI|>最近はさっぱりしたものが好きです。サラダとか。<eos:3><|speaker:BL|>私もサラダ大好きです！<eos:3><|speaker:CI|>お！何サラダがお好きですか？<eos:3><|speaker:BL|>ポテサラも好きですし、生野菜サラダも好きです。<eos:3><|speaker:CI|>私もどちらも好きです！おすすめのドレッシングとか調味料ありますか？<eos:3><|speaker:BL|>マヨネーズをかけてしまうことが多いです。和風も好きです。<eos:3><|speaker:CI|>うちもマヨから和まで結構色々かけます。子供に野菜を食べさせるのに必死で。<eos:3><|speaker:BL|>野菜苦手な子が多いですよね。野菜ジュースに頼ったりしています。<eos:3><|speaker:CI|>野菜ジュースはホント助かりますね。最近すごく美味しいのばかりですし。<eos:3><|speaker:BL|>種類もいろいろあるので飽きなくていいです。<eos:3><|speaker:CI|>期間限定のフレーバーとか見つけるとつい買っちゃいます。<eos:3><|speaker:BL|>
+reference: 期間限定はたとえばどんなのがありましたか？
+completion:
+私はもう、お願いっきなちします。
+
+## example 007: real-persona-chat:real_persona_chat/dialogues/13184.json turn 16
+speaker: FV
+prompt: <|startofconversation|><|speaker:FV|>こんばんは！<eos:3><|speaker:GJ|>こんばんは！<eos:3><|speaker:FV|>最近ハマっていることとかありますか？<eos:3><|speaker:GJ|>最近はないですね。探し中です。何かありますか？<eos:3><|speaker:FV|>私は最近マイブームが健康について考えることです。<eos:3><|speaker:GJ|>健康ですか！それは主に食事ですか？<eos:3><|speaker:FV|>食事、運動、睡眠、薬事って感じです。<eos:3><|speaker:GJ|>生活全てですね！それはなかなか大変そうですね。<eos:3><|speaker:FV|>食事は今まで好きなものつくってたんで、塩分、糖分、カロリー、油分、炭水化物、色々考えると難しいです。<eos:3><|speaker:GJ|>私も気にせず作るので、難しそうです。すごいですね。<eos:3><|speaker:FV|>一度、過労や不摂生で体調崩して入院したので、そっから考え始めました。<eos:3><|speaker:GJ|>それは大変でしたね。そんなに偏った食生活だったんですか？<eos:3><|speaker:FV|>と、いうよりは、自炊好きなんで好きなもの作って食べて、あとほとんど不眠で生活してました。<eos:3><|speaker:GJ|>なるほど！何かに熱中してて不眠に？<eos:3><|speaker:FV|>昔仕事が好きだったころに一日15分くらいしか寝ずに仕事してたんで、そっから、癖で起きてました。<eos:3><|speaker:GJ|>1日15分睡眠でも仕事に熱中できるって羨ましいです。<eos:3><|speaker:FV|>
+reference: 働くの好きだったので。つい。
+completion:
+はい、
+
+## example 008: real-persona-chat:real_persona_chat/dialogues/09544.json turn 24
+speaker: AY
+prompt: <|startofconversation|><|speaker:AY|>どうもです！<eos:3><|speaker:BG|>どうもどうも！お久しぶりですー。実は相談が。<eos:3><|speaker:AY|>え！なんですか？<eos:3><|speaker:BG|>んー、実はね、腹の贅肉に困っています。<eos:3><|speaker:AY|>それはわかります！私も相談したいです。<eos:3><|speaker:BG|>きっと手立てはあるんですが、それをやらない自分がいるのです。<eos:3><|speaker:AY|>でしょうね！私の中にもその人います。<eos:3><|speaker:BG|>今まではなかった場所に、変な肉がついてくるの許せませんね。<eos:3><|speaker:AY|>そうそう！私はお尻の上の肉も憎いんですよ。<eos:3><|speaker:BG|>そうそう！！！お尻の上の肉、どこから来たんでしょう。人に無断で。<eos:3><|speaker:AY|>デニム穿く時とか、非常に困る！<eos:3><|speaker:BG|>困るんですよね、ほんと。私はサイズがひとつ大きくなっちゃいました。<eos:3><|speaker:AY|>うわ！それ地味にショックですね。<eos:3><|speaker:BG|>ショックですよー。どうにかして戻したい。<eos:3><|speaker:AY|>戻れますよ！今なら！<eos:3><|speaker:BG|>そうですよね。。今しかないですよねー<eos:3><|speaker:AY|>そうそう！今でしょ！<eos:3><|speaker:BG|>今やらないと、お肉は増える。<eos:3><|speaker:AY|>そうそう！なんか硬くなったら終わりのような気がする。<eos:3><|speaker:BG|>そうですよねー。また頑張ろうかな。。<eos:3><|speaker:AY|>そうですね！柔らかいうちに揉みほぐすというか。<eos:3><|speaker:BG|>もみほぐしも有効なのかな？お詳しいですねー！<eos:3><|speaker:AY|>一回、塩マッサージやったことあるんですよ。<eos:3><|speaker:BG|>お！塩で引き締めるやつですね？効果は？<eos:3><|speaker:AY|>
+reference: 青たんが増えましたね。
+completion:
+お好きです。
+
+## example 009: real-persona-chat:real_persona_chat/dialogues/07681.json turn 18
+speaker: CD
+prompt: <|startofconversation|><|speaker:CD|>こんにちは！<eos:3><|speaker:EX|>こんにちは！<eos:3><|speaker:CD|>今日も暑かったですね。<eos:3><|speaker:EX|>最近暑すぎですねー。<eos:3><|speaker:CD|>そうですね。今日は何されましたか？<eos:3><|speaker:EX|>今日は休みだったので家でゆっくりしてました！<eos:3><|speaker:CD|>私も同じです。そういえば祝日でしたね。<eos:3><|speaker:EX|>そうですね。何かしようと思ってもなかなか腰が重くて。<eos:3><|speaker:CD|>分かります。明日はお仕事ですか？<eos:3><|speaker:EX|>そうです！お仕事ですか？<eos:3><|speaker:CD|>明日も休みです。<eos:3><|speaker:EX|>お！いいですね。4連休ですか？<eos:3><|speaker:CD|>１週間のお休みをいただきました。<eos:3><|speaker:EX|>何かご予定はありますか？<eos:3><|speaker:CD|>いえ。実はコロナの濃厚接触者になりましたので。<eos:3><|speaker:EX|>そうだったのですか。体調大丈夫ですか？<eos:3><|speaker:CD|>私は元気です！旦那が辛そうです。<eos:3><|speaker:EX|>それは心配ですね。<eos:3><|speaker:CD|>
+reference: はい。私は元気なので普通のお休みになってラッキーな感じです。
+completion:
+そうですよね。
+
+## example 010: real-persona-chat:real_persona_chat/dialogues/04903.json turn 18
+speaker: FV
+prompt: <|startofconversation|><|speaker:FV|>こんにちは。<eos:3><|speaker:EJ|>こんにちは！<eos:3><|speaker:FV|>最近ハマっていることとかありますか？<eos:3><|speaker:EJ|>最近は好きなブランドの服を集めるのにハマっています！<eos:3><|speaker:FV|>おぉおお、お金かかりそうな趣味ですね！<eos:3><|speaker:EJ|>滅茶苦茶掛かります！結構多趣味だったんですが、金銭的にそれだけになってしまいました。<eos:3><|speaker:FV|>私はむしろそういうのに疎いので、好きなブランドって、ちなみにお伺いしてもいいですか？<eos:3><|speaker:EJ|>コムデギャルソンが好きで、最近集め始めました。<eos:3><|speaker:FV|>そうですね、初めて聞く言葉ですね。<eos:3><|speaker:EJ|>そうなんですね。有名なので、調べたらみたことがあるかもしれないです。<eos:3><|speaker:FV|>ギャルソンだけはなんとなく聞き覚えが、程度です。<eos:3><|speaker:EJ|>一般にはそんなものなのかもしれないですね。<eos:3><|speaker:FV|>毎月どのくらいかけていますか？<eos:3><|speaker:EJ|>具体的な額は自分でも確かじゃないのですが、生活に必要な費用以外は全部使ってます。<eos:3><|speaker:FV|>すごいですね、それこそ、ほかの部分を削りたくなってしまいそうです。<eos:3><|speaker:EJ|>したいんですが、それは流石にまずいかなと思い生活費は削らないようにしてます。<eos:3><|speaker:FV|>なるほど、そこのラインがしっかりしてれば大丈夫ですね。<eos:3><|speaker:EJ|>そうですね。お金を借りたりとか、一線は超えないように気を付けています！<eos:3><|speaker:FV|>
+reference: 最近は推し活のために、食費を削ったり、借金したり、グレーなビジネスに手を出す方も少なくないですよね。
+completion:
+いいですね。
+
+## example 011: real-persona-chat:real_persona_chat/dialogues/02054.json turn 27
+speaker: CZ
+prompt: <|startofconversation|><|speaker:BQ|>よろしくお願いします。<eos:3><|speaker:CZ|>よろしくお願いします！<eos:3><|speaker:BQ|>夢はよく見る方ですか？<eos:3><|speaker:CZ|>寝つきが浅いときは見ますよ。<eos:3><|speaker:BQ|>私はよく見るのですが、どんな夢か覚えていますか？<eos:3><|speaker:CZ|>なんだろね。誰かと何かを話してたりとかどこか行ってたりとかですかね。<eos:3><|speaker:BQ|>そうなんですね。怖い夢とかは見ませんか？<eos:3><|speaker:CZ|>最近はなくなりましたね。何かありますか？<eos:3><|speaker:BQ|>自分だけ旅行に置いていかれたり、孤独になる夢とか見ました。<eos:3><|speaker:CZ|>そういうのか。いっぺん虎に襲われる夢を見て飛び起きたことがあります。<eos:3><|speaker:BQ|>虎は怖すぎますね。<eos:3><|speaker:CZ|>起きたら汗だらけでした。<eos:3><|speaker:BQ|>夢を見ると夢占いとか見るんですが、見たりしますか？<eos:3><|speaker:CZ|>あるある。悪い夢って結構いい夢だったりするんですよね？<eos:3><|speaker:BQ|>らしいですね。結構当たってたりしますよね。<eos:3><|speaker:CZ|>えーでも、金運アップの夢はいまいちじゃないですか？<eos:3><|speaker:BQ|>金運アップは確かに当たりませんね。一番当たってほしいんですが。<eos:3><|speaker:CZ|>夢見た後、宝くじ買うといいらしいですけど、買ったことないですね。<eos:3><|speaker:BQ|>宝くじしばらく買ってないですね。よく買いますか？<eos:3><|speaker:CZ|>宝くじは自分で買ったことないですね。スクラッチはあります。<eos:3><|speaker:BQ|>スクラッチ買ったことあります。数百円しか当たったことがないです。<eos:3><|speaker:CZ|>そうなのです。数百円しか当たらないのです。<eos:3><|speaker:BQ|>本当に当たり入っているのかって思いますよね。<eos:3><|speaker:CZ|>けどまあ、元が取れれば金運もプラマイゼロになりますからね。<eos:3><|speaker:BQ|>確かにそうですね。夢の中だけでも大金持ちになってみたいです。<eos:3><|speaker:CZ|>夢の中だけでも、気分良く夢みたいですよ。<eos:3><|speaker:BQ|>興奮する夢ってすぐ覚めちゃうみたいですね。<eos:3><|speaker:CZ|>
+reference: 全然覚えてないような気がします。
+completion:
+ほんとはおっぱました。
+
+## example 012: real-persona-chat:real_persona_chat/dialogues/11699.json turn 9
+speaker: EZ
+prompt: <|startofconversation|><|speaker:CV|>よろしくお願いいたしますー！<eos:3><|speaker:EZ|>おねがいします！<eos:3><|speaker:CV|>最近、これ買って良かった！的なヒット商品はありましたか？<eos:3><|speaker:EZ|>これ買ってよかった！ですか。お茶入れるための水筒ですかね。<eos:3><|speaker:CV|>水筒、最近はいろんなサイズや形のものがありますよね！<eos:3><|speaker:EZ|>そうですね！夏はやっぱり喉乾くので、節約にもなります。<eos:3><|speaker:CV|>お茶は、ご自身で作ったものを入れるのですか？<eos:3><|speaker:EZ|>そうですよ。パックから作ったものを。<eos:3><|speaker:CV|>麦茶ですか？<eos:3><|speaker:EZ|>
+reference: 私は麦茶が好きです。
+completion:
+ですよね。
+
+## example 013: real-persona-chat:real_persona_chat/dialogues/02293.json turn 26
+speaker: BG
+prompt: <|startofconversation|><|speaker:BG|>今日も日が暮れましたねー<eos:3><|speaker:DP|>先ほど近所で花火上がってましたよ<eos:3><|speaker:BG|>お、いいですねー。今年はあちらこちらで花火が開催されましたね。我が家も月末までにやる予定です。<eos:3><|speaker:DP|>花火大会復活しましたよね。季節感あってやっぱりいいものですよねえ。<eos:3><|speaker:BG|>そうですねー。やっぱり夏といったら花火ですね。私は手持ちの方がなんか好きです。<eos:3><|speaker:DP|>風情ありますね。私も線香花火が一番好きです。あのはかなさが。<eos:3><|speaker:BG|>一緒です。ちょっと物悲しい気持ちになる感じですね。終わる時がちょっと切ない。<eos:3><|speaker:DP|>そうそう。少し子供のころの自分も思い出しながら。<eos:3><|speaker:BG|>考えているだけで、色々思い出しますよね。火薬の匂いとか、なんか特別な夜って感じです。<eos:3><|speaker:DP|>火薬のにおいとか、夜のにおい。いいですねえ。これから外に出ようかな。<eos:3><|speaker:BG|>夜散歩したくなりますねー。蚊取り線香をお忘れなく。<eos:3><|speaker:DP|>こちらはもう蚊がいなくなりました。<eos:3><|speaker:BG|>なんと！それはびっくりですねー。こちらはまだウロウロ飛んでますよ、やだやだ。<eos:3><|speaker:DP|>なんか最近気温が極端で蚊が少なくなったような気がしませんか？<eos:3><|speaker:BG|>んー。確かに一時期よりは減ったかなぁ。ちょっと夕方外へ出ると近寄ってきますが。<eos:3><|speaker:DP|>刺されると一日気分が悪いです。虫よけとか塗ってます？<eos:3><|speaker:BG|>そうですよねー。虫除け、ちょっと庭で作業する時は使いますよ。<eos:3><|speaker:DP|>お庭あるんですね。夏は手入れ大変じゃないですか？<eos:3><|speaker:BG|>狭いですけどね。雑草の手入れが大変ですー。雑草ってすごく強いんですよね。<eos:3><|speaker:DP|>あの強さ自分に欲しいです。野菜とか育ててますか？<eos:3><|speaker:BG|>ほんとほんと。雑草みたく強くなりたいです。野菜は今年はやらなかったなぁ。<eos:3><|speaker:DP|>今まで何を育てました？<eos:3><|speaker:BG|>ミニトマトとバジルを育てたことあります。<eos:3><|speaker:DP|>バジルとトマト！最高です。料理好きなのでハーブ育てたいんですよ。<eos:3><|speaker:BG|>イタリアンに欠かせませんね！今年、トマトがとても美味しかったです。<eos:3><|speaker:DP|>イタリアン大好きです。トマトは品種にこだわってますか？<eos:3><|speaker:BG|>
+reference: いえいえ、そこまでは。スーパーで大きなトマトを買ったら、ぜーんぶ美味しかったです。
+completion:
+なるほど。
+
+## example 014: real-persona-chat:real_persona_chat/dialogues/10781.json turn 4
+speaker: AZ
+prompt: <|startofconversation|><|speaker:AZ|>こんばんは！<eos:3><|speaker:DH|>こんばんはー！<eos:3><|speaker:AZ|>今日はこちらは快晴でした。そちらは？<eos:3><|speaker:DH|>こちらも今日は晴れていたと思います！少し涼しくなってきました。<eos:3><|speaker:AZ|>
+reference: あまり、外出はされなかったのですか？
+completion:
+そうなんですね、どうですか?
+
+## example 015: real-persona-chat:real_persona_chat/dialogues/12657.json turn 17
+speaker: FT
+prompt: <|startofconversation|><|speaker:CS|>こんにちはー<eos:3><|speaker:FT|>こんにちは<eos:3><|speaker:CS|>よろしくお願いします<eos:3><|speaker:FT|>はい、お願いします<eos:3><|speaker:CS|>お昼ご飯は何を食べますか？<eos:3><|speaker:FT|>昨日の残り物で済まそうかと思ってます<eos:3><|speaker:CS|>昨日は何を食べたんですか？<eos:3><|speaker:FT|>牛肉とごぼうと白滝と油揚げを甘辛く煮たやつです<eos:3><|speaker:CS|>へぇ、おいしそうですね！<eos:3><|speaker:FT|>お酒にもあいますよ。でもこういうのは1日置いたほうがおいしいですね<eos:3><|speaker:CS|>煮物とか、2日目のほうがおいしいですよね。味が染みてて。<eos:3><|speaker:FT|>そうですね。1日目はん？と思っても2日目食べたらおいしい！って感じるパターン割とあります<eos:3><|speaker:CS|><FT>さん料理結構されるんですか？<eos:3><|speaker:FT|>いえ、ぜんぜんです。昨日はたまたまやる気があって、牛肉が食べたいきぶんだったので<eos:3><|speaker:CS|>結構料理やる人が作りそうな料理だったので、結構されるのかと思いました<eos:3><|speaker:FT|>たしかに煮物系はなかなかハードル高い気がしますね<eos:3><|speaker:CS|>揚げ物とかもハードル高い気がします<eos:3><|speaker:FT|>
+reference: 揚げ物は難しいけど初心者がわりとチャレンジしてるイメージです
+completion:
+そうですね。
+
+## example 016: real-persona-chat:real_persona_chat/dialogues/11044.json turn 11
+speaker: DD
+prompt: <|startofconversation|><|speaker:DE|>こんにちはー！<eos:3><|speaker:DD|>こんにちはっ！<eos:3><|speaker:DE|>休日はどんなことして過ごしてますか？<eos:3><|speaker:DD|>休日は掃除したり、ほとんど家から出ずに過ごしてます。<eos:3><|speaker:DE|>そうなんですね。お掃除えらいです！お掃除以外はどんなことを？<eos:3><|speaker:DD|>ドラマを見たり、勉強したりしてますかね。<eos:3><|speaker:DE|>そうなんですね。ドラマはどんなものを観ましたか？<eos:3><|speaker:DD|>韓国ドラマもアメリカドラマもイギリスドラマも好きなので、色々見ます！<eos:3><|speaker:DE|>海外の物が多いんですね。ネットフリックスとかですか？<eos:3><|speaker:DD|>そうですね！ネットフリックスかディズニープラスかアマプラですね。逆に日本のドラマは疎いです。<eos:3><|speaker:DE|>いいですね。うちは月500円のドコモDTVで作品が少ないので、加入を検討している所です。<eos:3><|speaker:DD|>
+reference: 私もdTV 入ってますが、確かに少ないですね！どんな作品を見ようと検討しているのですか？
+completion:
+
+
+## example 017: mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10001.json turn 98
+speaker: うさぎ
+prompt: <|startofconversation|><|speaker:うさぎ|>おはようございます<eos:3><|speaker:えのき|>おはようございます！<eos:3><|speaker:てばさき|>おはようございます<eos:3><|speaker:うさぎ|>こちら関東ですが冬晴れです！<eos:3><|speaker:えのき|>そうですね！<eos:3><|speaker:てばさき|>外寒いです<eos:3><|speaker:うさぎ|>えのきさんも関東ですか？<eos:3><|speaker:えのき|>関東です<eos:3><|speaker:うさぎ|>てばさきさんも？<eos:3><|speaker:てばさき|>同居です<eos:3><|speaker:うさぎ|>あっ、親子でいらっしゃいましたか？<eos:3><|speaker:えのき|>はい<eos:3><|speaker:てばさき|>娘です<eos:3><|speaker:えのき|>そうなんです<eos:3><|speaker:うさぎ|>うちも高校生の娘がいます<eos:3><|speaker:えのき|>今日はよろしくお願いしますね！<eos:3><|speaker:うさぎ|>お願いします！<eos:3><|speaker:えのき|>てばさきは大学生なんですよ～<eos:3><|speaker:うさぎ|>あっ！いいですね！<eos:3><|speaker:てばさき|>まだピカピカの一年生です！<eos:3><|speaker:うさぎ|>うちも高二でそろそろ大学受験です<eos:3><|speaker:えのき|>大変ですね～<eos:3><|speaker:うさぎ|>年が近いですね<eos:3><|speaker:てばさき|>そうですね<eos:3><|speaker:うさぎ|>てばさきさん、受験されたんですよね？<eos:3><|speaker:てばさき|>しました<eos:3><|speaker:うさぎ|>うわーーー<eos:3><|speaker:えのき|>大学受験は親も大変ですよね<eos:3><|speaker:うさぎ|>どんな感じでしたか？<eos:3><|speaker:てばさき|>父が頑張っていました<eos:3><|speaker:うさぎ|>お父様が？！<eos:3><|speaker:えのき|>予備校とかにも通ったよね<eos:3><|speaker:うさぎ|>情報収集ですか？<eos:3><|speaker:てばさき|>通った通った<eos:3><|speaker:えのき|>お父さんは情報収集係です<eos:3><|speaker:てばさき|>父は調べ物得意なので<eos:3><|speaker:うさぎ|>うらやましい！<eos:3><|speaker:えのき|>関東は大学が多すぎるので<eos:3><|speaker:うさぎ|>ですよね！<eos:3><|speaker:うさぎ|>わかります<eos:3><|speaker:えのき|>選択肢が多すぎても大変ですよね<eos:3><|speaker:うさぎ|>実はいま、甥っ子が大学受験中です<eos:3><|speaker:えのき|>ええ！<eos:3><|speaker:てばさき|>お〜<eos:3><|speaker:えのき|>今まさ<eos:3><|speaker:うさぎ|>私立、補欠が一つ出てますが、、<eos:3><|speaker:うさぎ|>なんかほんと厳しいらしくて<eos:3><|speaker:えのき|>心配です<eos:3><|speaker:うさぎ|>A判定だったんですよ<eos:3><|speaker:うさぎ|>当てにならないのかしら？<eos:3><|speaker:てばさき|>判定はあくまで参考程度ですからね…<eos:3><|speaker:えのき|>参考・・・<eos:3><|speaker:うさぎ|>そうですか、、肝に銘じます<eos:3><|speaker:うさぎ|>私立いくらでも受験できるからかえって大変ですよね<eos:3><|speaker:えのき|>受験料が気になります。親的には<eos:3><|speaker:うさぎ|>甥っ子も義弟が全部マネージメントしてます<eos:3><|speaker:えのき|>やっぱりお父さんがやってくれると心強いですよね<eos:3><|speaker:うさぎ|>そう！10校受けるみたいです<eos:3><|speaker:えのき|>ええ！<eos:3><|speaker:てばさき|>親のマネジメントはありがたいですよ、子供的には<eos:3><|speaker:うさぎ|>てばさきさん、いいお言葉<eos:3><|speaker:うさぎ|>うちの娘なんてのーんびりですよ<eos:3><|speaker:えのき|>てばちゃんは何校受けたんだっけ？<eos:3><|speaker:てばさき|>３校くらいだった気がする、基本センター一本だったから<eos:3><|speaker:うさぎ|>おーー<eos:3><|speaker:うさぎ|>優秀でいらしたんですね！<eos:3><|speaker:えのき|>まずはセンターです<eos:3><|speaker:てばさき|>今は共通テストだっけ？<eos:3><|speaker:うさぎ|>甥っ子はセンター？共通テスト失敗したんです<eos:3><|speaker:えのき|>ここで点数を取ってもらわないと<eos:3><|speaker:えのき|>そうだったんですね～<eos:3><|speaker:うさぎ|>それですね<eos:3><|speaker:うさぎ|>娘も来年ですが、同日テスト受けました<eos:3><|speaker:えのき|>どうでした？<eos:3><|speaker:うさぎ|>英語がめちゃくちゃ長い！らしくて<eos:3><|speaker:うさぎ|>平均はいってましたが。。<eos:3><|speaker:てばさき|>難しかったです、私の時も<eos:3><|speaker:うさぎ|>そうですか！<eos:3><|speaker:えのき|>平均取れたってすごくないですか？<eos:3><|speaker:うさぎ|>いや、でも共通テスト利用なら全然らしいですね<eos:3><|speaker:てばさき|>私は英語はボロボロだった記憶しかないです<eos:3><|speaker:うさぎ|>てばさきさん、それでもピカピカの大学生！<eos:3><|speaker:うさぎ|>羨ましい<eos:3><|speaker:えのき|>私は遠い記憶すぎて覚えてません・・・<eos:3><|speaker:てばさき|>今と昔では勝手が違うのでは？<eos:3><|speaker:うさぎ|>えのきさん、私は実はエスカレーターで女子大なので受けてもいません<eos:3><|speaker:えのき|>へー！<eos:3><|speaker:うさぎ|>バカにされます<eos:3><|speaker:てばさき|>私も今女子大です<eos:3><|speaker:えのき|>大学あがる時に試験はないんですか？<eos:3><|speaker:えのき|>そういえば女子大生<eos:3><|speaker:うさぎ|>なかったですね、成績のみでした<eos:3><|speaker:えのき|>そうなんですね<eos:3><|speaker:うさぎ|>てばさきさん、専攻は？きいてもよければ<eos:3><|speaker:てばさき|>ええと、<eos:3><|speaker:てばさき|>文学部です<eos:3><|speaker:うさぎ|>私もでした！心理でした<eos:3><|speaker:えのき|>すごい<eos:3><|speaker:うさぎ|>
+reference: いや何も使えてませんトホホ
+completion:
+ですよね
+
+## example 018: real-persona-chat:real_persona_chat/dialogues/01319.json turn 11
+speaker: BS
+prompt: <|startofconversation|><|speaker:CD|>よろしくおねがいしますー！<eos:3><|speaker:BS|>よろしくお願いします。<eos:3><|speaker:CD|>最近買った、高額な買い物はなんですか？<eos:3><|speaker:BS|>特に思いつかないですね。あなたはありますか？<eos:3><|speaker:CD|>私は、最近でもないですが掃除機を買いました。<eos:3><|speaker:BS|>おお、どんな掃除機ですか？<eos:3><|speaker:CD|>普通のコードレスなんですけど、軽くて掃除がやりやすくなりましたよ！<eos:3><|speaker:BS|>そうなんですね！コードレス気になってました。<eos:3><|speaker:CD|>ストレスフリーです！オススメです。<eos:3><|speaker:BS|>ありがとうございます。おいくらぐらいでしたか？<eos:3><|speaker:CD|>７万円ぐらいです。<eos:3><|speaker:BS|>
+reference: おー！確かに高価なお買物ですね。でもそれでストレスフリーになるならいい買い物です。
+completion:
+こんばんは!
+
+## example 019: real-persona-chat:real_persona_chat/dialogues/02082.json turn 18
+speaker: BX
+prompt: <|startofconversation|><|speaker:BX|>こんばんは！<eos:3><|speaker:CY|>こんばんは！<eos:3><|speaker:BX|>今日の夕飯は何にしましたか？<eos:3><|speaker:CY|>今晩は祖母がスペアリブを煮てくれました。<eos:3><|speaker:BX|>おお！すごい！とてもおいしそうです！<eos:3><|speaker:CY|>初めて食べました。意外とお肉が柔らかいんです。<eos:3><|speaker:BX|>鍋などで煮込むとトロトロになりますね！<eos:3><|speaker:CY|>圧力鍋を使ったので骨まで崩れるほどでした。あなたは何を食べましたか？<eos:3><|speaker:BX|>今日はハッシュドビーフにしました！<eos:3><|speaker:CY|>わーすごい！作られたのですか？<eos:3><|speaker:BX|>はい。キャンプ用の鉄鍋で煮込んでみました！<eos:3><|speaker:CY|>え！！それはすごいですね！<eos:3><|speaker:BX|>実はスペアリブもそれでやったことがありました！<eos:3><|speaker:CY|>お料理得意なんですね。羨ましいです。<eos:3><|speaker:BX|>最近はググれば何でも出てくるので楽しいです！<eos:3><|speaker:CY|>得意料理はありますか？<eos:3><|speaker:BX|>うーん。夫が特に喜んでくれるのは巾着とかですかね。<eos:3><|speaker:CY|>おお！どういう料理でしょうか？<eos:3><|speaker:BX|>
+reference: 鶏肉と豆腐とヒジキなどを油揚げに入れて煮つけます！
+completion:
+そう?
+
+## example 020: real-persona-chat:real_persona_chat/dialogues/13738.json turn 19
+speaker: FY
+prompt: <|startofconversation|><|speaker:GX|>こんにちは。<eos:3><|speaker:FY|>こんにちは。<eos:3><|speaker:GX|>好きな食べ物は何ですか？<eos:3><|speaker:FY|>たくさんありますがハンバーグ好きです！<eos:3><|speaker:GX|>ハンバーグですか！自分で作ります？<eos:3><|speaker:FY|>作らないで買ってます！<eos:3><|speaker:GX|>そうなんですね。お惣菜的な？<eos:3><|speaker:FY|>そうですね。あと今だと宅配とかでも。<eos:3><|speaker:GX|>ウーバーとかですか。<eos:3><|speaker:FY|>そんな感じです。ここは田舎なのでウーバーより出前館が強いですが。<eos:3><|speaker:GX|>田舎は出前館なんですね！初めて聞きました。<eos:3><|speaker:FY|>田舎だとウーバー宅配員が少なくてマッチングできないんですよ。<eos:3><|speaker:GX|>なるほど！出前館は本格的に雇ってる感じだからってことですね。<eos:3><|speaker:FY|>そうです。常にスタッフが待機しているので安心です。<eos:3><|speaker:GX|>なるほど。どこのハンバーグをよく食べるんですか？<eos:3><|speaker:FY|>私はデニーズのハンバーグが好きです。<eos:3><|speaker:GX|>あまり食べたことないです。チーズインハンバーグとかあります？<eos:3><|speaker:FY|>あります！チーズイン好きです！<eos:3><|speaker:GX|>私も好きです！今度行ったら探してみます。<eos:3><|speaker:FY|>
+reference: あとはガストにもチーズインがあるのでそちらもたまに食べます。
+completion:
+そうですね。
+
+## example 021: real-persona-chat:real_persona_chat/dialogues/11619.json turn 11
+speaker: CU
+prompt: <|startofconversation|><|speaker:FB|>よろしくお願いします。そちらのお昼ご飯はどんな感じですか？<eos:3><|speaker:CU|>今日はオムライスにしようかと思っています。<eos:3><|speaker:FB|>いいですね。私も時々作ります。<eos:3><|speaker:CU|>卵料理がすごく好きなのですが、おすすめありますか？<eos:3><|speaker:FB|>こちらが教えてほしいです。オムライスも，包むのしかしたことがなくて<eos:3><|speaker:CU|>私は逆にうまく包めないので、スクランブルエッグを乗せる方式です。<eos:3><|speaker:FB|>あのやり方を試したことがあるのですが，スクランブルエッグが小さくて，よくわからないものになって<eos:3><|speaker:CU|>たしかにそうですね。卵２－３個使わないと見た目がよくないですよね。<eos:3><|speaker:FB|>そうなんですよね。卵一人一個で，薄ーくして強引に包んでいます<eos:3><|speaker:CU|>破れないようにするのが難しいですよね！<eos:3><|speaker:FB|>割と破れていますね。いつも。でもなんとか<eos:3><|speaker:CU|>
+reference: ご家族に評判のいい料理は何ですか？
+completion:
+いっちますよねー!
+
+## example 022: real-persona-chat:real_persona_chat/dialogues/10367.json turn 13
+speaker: EB
+prompt: <|startofconversation|><|speaker:DY|>こんにちは、よろしくお願いします！<eos:3><|speaker:EB|>こちらこそおねがいしますー！<eos:3><|speaker:DY|>普段休みの日ってなにされてますか？<eos:3><|speaker:EB|>休みの日はためてあるアニメをみるか子供とゲームしてます！<eos:3><|speaker:DY|>いいですねー！アニメはなにを見てますか？<eos:3><|speaker:EB|>アニメは異世界系が好きなので、オーバーロードとかですね！<eos:3><|speaker:DY|>なるほど、異世界系ですか！あまり見たことないです。10年前くらいはアニメいっぱい見てました！<eos:3><|speaker:EB|>そうなんですね！僕は昔からアニメ派だったんですよ、漫画だとなんか音がないから引き込まれなくて<eos:3><|speaker:DY|>なるほど、そうなんですね！自分はアニメも漫画も好きです。<eos:3><|speaker:EB|>いいですね！どんなのみてました？<eos:3><|speaker:DY|>アニメは最近のだとブルーピリオドっていうの見てました。昔は化物語とか、けいおんとか。<eos:3><|speaker:EB|>あぁなるほどぉ！ほのぼの系ですかね！<eos:3><|speaker:DY|>そうですね！結構日常系とかよく見てました。<eos:3><|speaker:EB|>
+reference: そうなんですねー結構楽しいですよね！
+completion:
+はい。
+
+## example 023: mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B14505.json turn 62
+speaker: つくね
+prompt: <|startofconversation|><|speaker:ぺんぎん|>こんにちは！<eos:3><|speaker:しらたき|>こんにちは！<eos:3><|speaker:つくね|>こんにちはー<eos:3><|speaker:ぺんぎん|>ドラマとかみてますか？<eos:3><|speaker:しらたき|>見てないです！<eos:3><|speaker:つくね|>最近ドラマ見てないです、、、<eos:3><|speaker:しらたき|>なんか見てますか？<eos:3><|speaker:つくね|>@ぺんぎん 何か見てたんですか？<eos:3><|speaker:ぺんぎん|>@しらたき お仕事とかで忙しいとなかなか見れないですよね<eos:3><|speaker:ぺんぎん|>阿部サダヲさんでてるやつは見てます！<eos:3><|speaker:しらたき|>@ぺんぎん 暇があるとYouTube見ちゃう<eos:3><|speaker:つくね|>あー失礼みたいなやつ！<eos:3><|speaker:つくね|>だったような…<eos:3><|speaker:ぺんぎん|>不適切にもほどがあるってやつです！<eos:3><|speaker:つくね|>@ぺんぎん あ！それです！笑<eos:3><|speaker:つくね|>全然違った笑<eos:3><|speaker:しらたき|>知ってるー<eos:3><|speaker:つくね|>昔はよく見てましたー！<eos:3><|speaker:しらたき|>見た事ないけど<eos:3><|speaker:つくね|>月9とか！<eos:3><|speaker:ぺんぎん|>@しらたき しってますか？昭和のやつ<eos:3><|speaker:しらたき|>@ぺんぎん CMしか知りません！笑<eos:3><|speaker:しらたき|>@つくね 昔は見てたねー<eos:3><|speaker:ぺんぎん|>@しらたき 最近のドラマとかすぐに終わるからねー<eos:3><|speaker:つくね|>@しらたき ブザービートとか！<eos:3><|speaker:しらたき|>@つくね ごくせんとか<eos:3><|speaker:つくね|>@しらたき ごくせんよかったよね！<eos:3><|speaker:つくね|>ルーキーズも見てたねー<eos:3><|speaker:ぺんぎん|>ごくせんはよかったですね！<eos:3><|speaker:つくね|>@ぺんぎん 1も2も良かった！<eos:3><|speaker:つくね|>3がちょっと、、、<eos:3><|speaker:ぺんぎん|>ルーキーズもやってましたね！<eos:3><|speaker:しらたき|>昔は良く観てたよね！<eos:3><|speaker:つくね|>@しらたき 見てたねー<eos:3><|speaker:しらたき|>ブラウン管で予約も出来ないのに<eos:3><|speaker:つくね|>@ぺんぎん 結局俳優さんかな？笑<eos:3><|speaker:しらたき|>よく毎週みてたわ<eos:3><|speaker:ぺんぎん|>なかなか今はドラマ見ないですよね<eos:3><|speaker:つくね|>@しらたき ブラウン管！笑古っ！<eos:3><|speaker:ぺんぎん|>@つくね ですね！笑<eos:3><|speaker:しらたき|>ビデオ！笑<eos:3><|speaker:ぺんぎん|>@しらたき 笑もうそれ世代！<eos:3><|speaker:しらたき|>デーブイデー無いから！<eos:3><|speaker:つくね|>@ぺんぎん ですよねー！花男とかも豪華だったし！<eos:3><|speaker:ぺんぎん|>@つくね 花男！すごい時代でした<eos:3><|speaker:しらたき|>録画出来なかった<eos:3><|speaker:つくね|>@ぺんぎん 本当！めっちゃ良かった！松潤！笑<eos:3><|speaker:しらたき|>@ぺんぎん 花男みてない！笑<eos:3><|speaker:つくね|>小栗派だけど笑<eos:3><|speaker:つくね|>@しらたき もったいなーい！<eos:3><|speaker:つくね|>見た方がいいよ！<eos:3><|speaker:ぺんぎん|>@つくね そうなんですねーかっこよかったですねー<eos:3><|speaker:しらたき|>自分医療系好きでした！<eos:3><|speaker:つくね|>めっちゃいい！<eos:3><|speaker:つくね|>@ぺんぎん かっこよかったですー！本当に！<eos:3><|speaker:ぺんぎん|>@しらたき どんな？<eos:3><|speaker:しらたき|>コードブルーとか！<eos:3><|speaker:つくね|>あ！あと花ざかり！！<eos:3><|speaker:ぺんぎん|>@つくね 全盛期でしたよねー<eos:3><|speaker:つくね|>とーまたんが好きでしたー！！笑<eos:3><|speaker:しらたき|>@つくね 花盛！<eos:3><|speaker:ぺんぎん|>@しらたき なるほど！意外と医療系もやってましたね！<eos:3><|speaker:つくね|>
+reference: @しらたき よかったよね！と
+completion:
+エニー!
+
+## example 024: real-persona-chat:real_persona_chat/dialogues/00887.json turn 11
+speaker: AT
+prompt: <|startofconversation|><|speaker:AL|>こんばんは！<eos:3><|speaker:AT|>こんばんはっ！<eos:3><|speaker:AL|>夕飯、済ませましたか？<eos:3><|speaker:AT|>はい、今日は冷やし中華と餃子を食べました。<eos:3><|speaker:AL|>さ、最高ですね<eos:3><|speaker:AT|>ゴマダレで美味しかったです。<eos:3><|speaker:AL|>たまたまですが、うちも冷凍餃子焼きました<eos:3><|speaker:AT|>うちも餃子は冷凍です！<eos:3><|speaker:AL|>うふふ、うち、生協のですよ。もう何年も作ってないですー<eos:3><|speaker:AT|>今は十分冷凍でも美味しいですからね。<eos:3><|speaker:AL|>本当ですね。ちょっと驚かれるかもしれませんが、最後に餃子作ったの、メキシコです<eos:3><|speaker:AT|>
+reference: それは驚きです、何でメキシコで餃子作ったのですか？
+completion:
+えんだいですね。
