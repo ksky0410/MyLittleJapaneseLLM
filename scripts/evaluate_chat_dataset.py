@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import random
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -123,6 +124,24 @@ def encode_history(
     return ids, "".join(parts)
 
 
+def token_overlap_scores(
+    reference_ids: list[int], completion_ids: list[int], eos_id: int
+) -> dict[str, float]:
+    """EOSを除いた参照と生成のmultiset token overlapを計算する。"""
+
+    reference = Counter(token for token in reference_ids if token != eos_id)
+    completion = Counter(token for token in completion_ids if token != eos_id)
+    overlap = sum((reference & completion).values())
+    precision = overlap / sum(completion.values()) if completion else 0.0
+    recall = overlap / sum(reference.values()) if reference else 0.0
+    f1 = 2.0 * precision * recall / (precision + recall) if precision + recall else 0.0
+    return {
+        "token_overlap_precision": precision,
+        "token_overlap_recall": recall,
+        "token_overlap_f1": f1,
+    }
+
+
 def _format_text(result: dict[str, Any]) -> str:
     lines = [
         "# Held-out chat dataset evaluation",
@@ -211,6 +230,13 @@ def evaluate_chat_dataset(
             int(processor.eos_id()),
         )
         completion_ids = output_ids[len(prompt_ids) :]
+        reference_ids = [
+            int(token)
+            for token in processor.encode(turns[target_index]["text"], out_type=int)
+        ]
+        overlap = token_overlap_scores(
+            reference_ids, completion_ids, int(processor.eos_id())
+        )
         results.append(
             {
                 "conversation_id": example["conversation_id"],
@@ -226,6 +252,7 @@ def evaluate_chat_dataset(
                 "completion": processor.decode(completion_ids),
                 "generated_token_count": len(completion_ids),
                 "eos_reached": int(processor.eos_id()) in completion_ids,
+                **overlap,
                 "seed": seed + index,
             }
         )

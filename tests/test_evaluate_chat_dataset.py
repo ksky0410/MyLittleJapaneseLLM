@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from evaluate_chat_dataset import encode_history, select_examples
+from evaluate_chat_dataset import encode_history, select_examples, token_overlap_scores
 
 
 class _FakeProcessor:
@@ -55,6 +55,12 @@ class EvaluateChatDatasetTests(unittest.TestCase):
         self.assertEqual(ids, [ord("<"), ord("<"), ord("最"), 3, ord("<")])
         self.assertIn("<|speaker:B|>", rendered)
         self.assertNotIn("応答<eos", rendered)
+
+    def test_token_overlap_is_multiset_and_ignores_eos(self) -> None:
+        scores = token_overlap_scores([2, 2, 3], [2, 2, 4, 3], eos_id=3)
+        self.assertAlmostEqual(scores["token_overlap_precision"], 2 / 3)
+        self.assertAlmostEqual(scores["token_overlap_recall"], 1.0)
+        self.assertAlmostEqual(scores["token_overlap_f1"], 0.8)
 
 
 if __name__ == "__main__":

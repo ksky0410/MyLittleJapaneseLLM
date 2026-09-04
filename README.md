@@ -284,6 +284,8 @@ SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、�
   --examples 24 --max-new-tokens 64 --seed 42
 ```
 
+JSONにはEOSを除いたmultiset Token overlapのprecision・recall・F1も保存します。これは参照との表面的な一致を測る補助指標であり、意味的な正しさや自然さの代わりにはならないため、生成TXTの目視確認と併用します。
+
 会話SFTだけで一般文体を忘れる場合は、`--rehearsal-tokens`と`--rehearsal-ratio`を指定します。rehearsal側は通常のpretraining loss、会話側は応答mask lossとして別々に平均し、最後に指定比率で結合します。たとえば`0.25`なら、SFT目的を75%、pretraining目的を25%として学習します。Token数の多い通常batchが短い応答maskを圧倒しないよう、単純なToken列連結ではなくloss単位で重み付けします。
 
 ```bash
