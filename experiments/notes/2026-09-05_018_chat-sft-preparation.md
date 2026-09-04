@@ -6,7 +6,7 @@
 
 入力はsmall_llm側へ取り込んだ`artifacts/corpus/conversation-v1/train.jsonl`と`validation.jsonl`です。元のRealPersonaChat・MRMPのリポジトリや、医師国家試験SQLiteは変更しません。Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、context lengthは256、seedは42です。会話単位の各2発話目以降を一つの例とし、sequence length 257へ切り、長い例は左側を切り、右側をpadします。応答本文のTokenと直後のEOSだけがmask 1、それ以外はmask 0です。
 
-実験前のGitコミットは`ec6e630`（`feat: prepare masked chat sft data`）です。使用コマンドは次のとおりです。
+実験前の実行コードは`60d8bc4`（`fix: separate chat response eos count`）です。最初の整形後レビューで、`response_body_token_count`の集計がEOSを含んでいたことが分かりました。これは学習配列のmaskには影響しない記録上の不整合でしたが、body token数とEOS込みresponse token数を分離して修正しました。修正前に作成したNPZとmanifestは最終成果物として扱わず、修正後に同じコマンドを再実行します。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/prepare_chat_sft.py \
@@ -22,7 +22,7 @@ NPZは学習に必要なローカル成果物ですが、サイズが大きい�
 
 ## 実験中の記録
 
-未実施です。整形後にsplit別の会話数、例数、応答Token数、切り詰め数、ファイルSHA-256を追記します。
+修正前の初回実行では、train 396,966例、validation 49,045例を作成しましたが、body token数の記録にEOSが混ざっていたため採用しませんでした。修正後に同じseed・入力・Tokenizer・context lengthで再実行し、split別の会話数、例数、応答Token数、切り詰め数、ファイルSHA-256を確定します。
 
 ## 結果と解釈
 
