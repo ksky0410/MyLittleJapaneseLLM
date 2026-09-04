@@ -77,6 +77,24 @@ class PipelineTests(unittest.TestCase):
         self.assertGreaterEqual(parameters, 4_500_000)
         self.assertLessEqual(parameters, 5_500_000)
 
+    def test_fineweb2_20m_config_changes_only_capacity(self) -> None:
+        config = load_config(ROOT / "configs/fineweb2-mixed-ja-20m-2p5k.toml")
+        self.assertEqual(config.model.dim, 384)
+        self.assertEqual(config.model.layers, 10)
+        self.assertEqual(config.model.heads, 6)
+        self.assertEqual(config.model.context_length, 256)
+        self.assertEqual(config.model.position_embedding, "absolute")
+        parameters = estimate_parameter_count(
+            4096,
+            config.model.dim,
+            config.model.layers,
+            config.model.heads,
+            config.model.context_length,
+            config.model.mlp_ratio,
+            config.model.position_embedding,
+        )
+        self.assertEqual(parameters, 19_382_016)
+
     def test_position_embedding_defaults_to_absolute_and_rope_config_is_valid(
         self,
     ) -> None:
