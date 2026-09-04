@@ -1,0 +1,3 @@
+prompt: <|startofconversation|>\n<|speaker:A|>こんにちは。\n<|speaker:B|>
+
+<|startofconversation|> ⁇ n<|speaker:A|>こんにちは。 ⁇ n<|speaker:B|>はい、おはカマー。
