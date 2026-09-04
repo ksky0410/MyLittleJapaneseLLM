@@ -6,7 +6,11 @@
 
 今回はモデル構造、Tokenizer、学習率、学習step、rehearsal条件を変えず、SFT batch内の例の選び方だけを変更します。会話SFT trainのloss maskを調べると、EOSを含む応答Token数が8以下の例は82,904/396,966例（20.9%）でした。短い返答が少数派であるため、各batchのSFT例8行のうち4行を応答Token数8以下から、残り4行をそれ以外の例から選ぶ層化samplingを導入します。短い例の選択は既存のランダム選択と同じく復元抽出とし、validation配列とrehearsal Token列は変更しません。
 
+ここでいう「応答Token数」は、整形済みNPZの`loss_mask`の合計、すなわち応答本文に続くEOSを含むloss対象Token数です。そのため上限8は、本文が通常7 Token以下の例を指します。本文8 Token以下を厳密に試す実験では上限9が必要ですが、今回は条件を途中で変えず、上限8をそのまま検証します。
+
 仮説は、短い応答を過剰代表するとIssue #1の「まじで」「それな」「やば」「おつかれ」のような短文promptで、過度に長いcompletionを出す割合が下がり、カテゴリ別の短文応答評価が改善するというものです。rehearsal ratio 0.25を併用するため、general・conversation・medicalの通常domain lossは実験025のrehearsal 0.25に近く保たれると予想します。反対に、短文へ寄せすぎるとheld-outの長い発話でrecallが低下する可能性があります。
+
+rehearsal ratio 0.25、batch size 8では、各stepのSFT部分は6例、rehearsal部分は2例です。したがって`short_response_ratio=0.5`はSFT 6例のうち3例を短文、3例を通常応答から選ぶ設定であり、全batchの8例中4例という意味ではありません。
 
 比較対象は、実験025で得た通常rehearsal 0.25のstep 2,000 checkpointです。新条件は同じbase checkpointから、`short_response_ratio=0.5`、`short_response_max_tokens=8`、rehearsal ratio 0.25、最大2,000 stepで学習します。model dim 240、6層、6 heads、context 256、absolute position embedding、batch size 8、learning rate 5e-5、minimum learning rate 5e-6、warmup 50、weight decay 0.01、seed 42は維持します。
 
