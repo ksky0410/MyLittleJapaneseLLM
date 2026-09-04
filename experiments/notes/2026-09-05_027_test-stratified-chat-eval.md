@@ -44,14 +44,30 @@
 
 ## 実験中の記録
 
-未実施です。開始前に選択manifestとそのハッシュをGitHubへ保存し、評価中はcheckpointごとのJSON・TXTを確認します。
+2026-09-05に、固定manifestを使って三つのcheckpointを評価しました。評価開始時点のコードとノートに対する補正は`f980e18`（`fix: record fixed evaluation example metadata`）で、評価前にGitHubへpush済みです。補正後にも53件のテスト、`ruff check .`、`ruff format --check .`が成功しました。
 
-2026-09-05の再実行前に、固定manifest使用時のメタデータを補正しました。CLIの`--examples`既定値は24ですが、manifestには48例が固定されており、この場合は既定値を評価例数として記録するとJSONの説明が実際の評価と食い違います。そこで`selection_file`を使ったときの`max_examples`を`null`として保存するように変更しました。変更後に53件のテスト、`ruff check .`、`ruff format --check .`が成功しています。この補正を含むコミットを評価再実行前に作成し、3条件のJSONとTXTを再生成します。
+三つの評価は同じ`experiments/evaluation/chat-test-v1.json`、seed 42、temperature 0.8、top-k 40、最大64 Tokenで実行しました。固定manifestのSHA-256は`ab2f372d4c6d5000ab0a8ec91c8d8c22837b6ffa2005e79db3f63fdc7a8ab530`であり、各JSONは48例を評価しています。manifest使用時はCLIの既定値24を`max_examples`へ記録せず、`null`として保存されることも確認しました。
+
+実際に使ったcheckpointは、ベース条件が`artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz`、通常rehearsal条件が`artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-2k/step_002000.npz`、短文sampling条件が`artifacts/checkpoints/token-budget-chat-rehearsal-short-sft-5m-2k/step_002000.npz`です。評価結果のJSONと、48例それぞれのprompt・参照応答・生成文を含むTXTは、対応する`artifacts/evaluations/`と`artifacts/samples/`に保存しました。3条件とも評価処理はエラーなく終了しました。
 
 ## 結果と解釈
 
-未実施です。
+全体では、ベース条件は48例中48例でEOSに到達し、平均生成長は4.94 Token、Token overlapのprecision・recall・F1はそれぞれ0.1267、0.0457、0.0505でした。通常rehearsal条件はEOSが33例、平均生成長が35.35 Token、precision・recall・F1が0.1569、0.2688、0.1443でした。短文sampling条件はEOSが41例、平均生成長が24.60 Token、precision・recall・F1が0.1991、0.2277、0.1518でした。したがって、短文sampling条件は通常rehearsal条件と比べてEOSが8例増え、平均生成長が10.75 Token短くなり、precisionは上がりましたがrecallは下がりました。全体F1の改善は0.0075にとどまっています。
+
+short層では、通常rehearsal条件のF1が0.1436、EOSが12/16、平均生成長が31.75 Tokenだったのに対し、短文sampling条件はF1が0.1992、EOSが13/16、平均生成長が31.19 Tokenでした。今回の仮説である「短文samplingの改善が未使用testのshort層でも再現する」は、Token overlapという限定的な指標では支持されました。medium層ではF1が0.1240から0.1302へ小幅に上がり、EOSは11/16から15/16へ増え、平均生成長は37.50から16.88 Tokenへ大きく短くなりました。一方でrecallは0.2049から0.1301へ下がっており、正しい内容を十分に出せたというより、短く停止しやすくなった影響が大きいと解釈します。long層ではF1が0.1654から0.1261へ下がり、EOSは10/16から13/16へ増え、平均生成長は36.81から25.75 Tokenへ短くなりました。長い応答を必要とする例では、短文samplingが内容の保持を犠牲にしている可能性があります。
+
+生成TXTを見ると、短文sampling条件では「そうです!?」「確かに!?」のように短い反応として読める例が一部増えましたが、話題に合わないメンション、文法の崩れ、途中で別の話題へ飛ぶ出力も残っています。通常rehearsal条件より出力を止める能力は改善しましたが、文脈に沿った返答や話者役割の適合が改善したとはまだ言えません。ベース条件はほぼすべてが数Tokenで終了しており、step 500のpretraining checkpointは会話生成の比較対象としては未成熟です。
+
+今回の評価セットは各層16例、各層でMRMPとRealPersonaChatが8例ずつになるように固定されています。ただし、選択時点でtrain本文との完全一致候補が7例あり、履歴がモデルのcontext長を超えて切り詰められた例も33例あります。これらは評価JSONの各例にフラグとして残しています。Token overlapは語彙の一致しか測らず、意味・文脈適合・話者役割を評価しないため、今回の結果だけで会話能力の向上を認定しません。人手判定はまだ実施していません。
+
+今回の結論は、短文sampling + rehearsalは「短く終わる」挙動をtestでも再現し、short層の表面的なoverlap F1を改善した一方、medium・long層を含む一般的な会話内容の改善までは示さなかった、というものです。仮説は長さとEOS停止については部分的に支持されましたが、内容面の仮説は未支持です。
 
 ## 次に試すこと
 
-test層別評価の結果を確認した後、必要なら48例へ人手判定用の三項目（文脈適合、応答役割、明らかな崩壊）を付けます。評価層やモデル条件を同時に変えず、短文samplingの内容面の効果を分離します。
+まず48例に対して、文脈に合っているか、求められた応答役割を果たしているか、明らかな崩壊がないかを別々に判定できるレビューテンプレートを作成します。人手で確認していない値を自動で埋めることはせず、Token overlapと意味評価を分離します。
+
+その後は、今回確認できた出力長の変化だけをモデル性能と取り違えないようにしながら、一般日本語データを増やした20M級モデルを同じtest manifestで評価します。データセットを追加する場合は、元データを変更せず、取得元・ライセンス・commitまたは取得日時・ファイルSHA-256・使用Token数を別ノートへ記録してから学習へ進みます。短文samplingの改良は、データ量またはモデル容量を変えた実験と同時に行わず、比較条件を分けます。
+
+## 成果物のハッシュ
+
+評価JSONと生成TXTは、再生成後に次のSHA-256になっています。ベース条件のJSONは`0cd7e22edd85f39da4476261f4fe54ea268aafa1f8f575f16bf430680263e9ce`、通常rehearsal条件のJSONは`e3f189fcfe0d376c600621748abf60b7ffb2f724854a34701a92761386b201be`、短文sampling条件のJSONは`5b18c1683b79ed96891dac1851e3aab3c3850c8603428c80501022be2852716`です。対応する生成TXTは順に`7fe9f6583be94098ffa58a9442e4ac5edbe02cd4784cf3a4d9ff27f1d16d1453`、`43108ffba97dd74848358266edcbf3c7cf7addb65cbddc5573a5b4eaf8f56f9a`、`5b0d2090184caf0164b5c585f86634901a18e49f6248e9f1d7981fc248c9ad0a`です。
