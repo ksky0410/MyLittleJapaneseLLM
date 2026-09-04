@@ -59,10 +59,20 @@ def main() -> None:
         metavar="NAME=FLOAT",
         help="source間の選択優先度。省略時は全sourceが1.0",
     )
-    parser.add_argument(
+    target_group = parser.add_mutually_exclusive_group()
+    target_group.add_argument(
         "--target-units",
         type=int,
         help="混合後に採用する論理単位数。省略時は全sourceのunique単位",
+    )
+    target_group.add_argument(
+        "--target-tokens",
+        type=int,
+        help="SentencePieceで測った混合後token数の上限。単位を分割せず予算へ近づける",
+    )
+    parser.add_argument(
+        "--tokenizer",
+        help="--target-tokensで単位のtoken数を測るSentencePiece .model",
     )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", required=True, help="混合後UTF-8テキスト")
@@ -80,6 +90,10 @@ def main() -> None:
     unknown = sorted(set(weights) - set(source_names))
     if unknown:
         parser.error(f"sourceに存在しないweight名です: {', '.join(unknown)}")
+    if args.target_tokens is not None and args.tokenizer is None:
+        parser.error("--target-tokensには--tokenizerが必要です")
+    if args.target_tokens is None and args.tokenizer is not None:
+        parser.error("--tokenizerは--target-tokensと一緒に指定してください")
     sources = [
         (name, repo_path(path), weights.get(name, 1.0)) for name, path in args.source
     ]
@@ -89,6 +103,8 @@ def main() -> None:
         repo_path(args.manifest),
         seed=args.seed,
         target_units=args.target_units,
+        tokenizer_path=repo_path(args.tokenizer) if args.tokenizer else None,
+        target_tokens=args.target_tokens,
     )
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
 

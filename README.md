@@ -206,7 +206,26 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
   --manifest artifacts/corpus/mixed-ja-pretraining.manifest.json
 ```
 
-manifestには各sourceの入力SHA-256、行数、文字数、重み、希望比率、採用単位数・文字数、重複除去数と、混合出力のSHA-256を記録します。異なるsourceに同じ本文が元からある場合は、source指定順で最初の一つだけを採用します。
+単位数ではなくToken数をそろえたい場合は、学習に使うSentencePieceモデルと`--target-tokens`を指定します。各sourceの論理単位をTokenizerで数え、sourceのweightをtoken比率として扱うweighted fair queueで、単位を分割・複製せず予算以下へ近づけます。論理単位の境界上で選ぶため、最後の単位を入れると予算を超える場合は、その単位を見送って少し手前で止まることがあります。
+
+```bash
+.venv/bin/python scripts/mix_corpora.py \
+  --source general=artifacts/corpus/aozora-neko-formal-v2/train.txt \
+  --source medical=artifacts/corpus/medical-qb-v2/train.txt \
+  --source conversation=artifacts/corpus/conversation-v1/train.txt \
+  --weight general=8.0 \
+  --weight medical=1.0 \
+  --weight conversation=1.0 \
+  --tokenizer artifacts/tokenizer/aozora-neko-formal-v2-unigram.model \
+  --target-tokens 1000000 \
+  --seed 42 \
+  --output artifacts/corpus/mixed-ja-token-budget.txt \
+  --manifest artifacts/corpus/mixed-ja-token-budget.manifest.json
+```
+
+`--target-units`と`--target-tokens`は同時に指定できません。`--tokenizer`は`--target-tokens`と一緒に指定した場合だけ使えます。従来の`--target-units`経路ではTokenizerを読み込まないため、既存の混合結果と使い方を保てます。Token予算経路のmanifestには、目標token数、Tokenizerの絶対パスとSHA-256、実際に選んだtoken数、source別のtoken share・unit数、重複除去数、選択アルゴリズムを記録します。
+
+異なるsourceに同じ本文が元からある場合は、source指定順で最初の一つだけを採用します。Tokenizerによる単位のtoken数は、通常の非空行をencodeしてEOSを1個加え、会話ブロックでは内部の各非空行にも同じ規則を適用して数えます。
 
 混合学習後にsourceごとの差を確認する場合は、同じcheckpointを複数のvalidation Token列へ通します。評価結果は軽量なJSONとして保存し、GitHubから確認できます。
 

@@ -150,6 +150,84 @@ def _choose_units(
     return selected
 
 
+def _unit_token_cost(processor: Any, unit: str) -> int:
+    """現在のテキストToken化規則で、論理単位のtoken数を数える。"""
+
+    token_count = 0
+    for line in unit.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        token_count += len(processor.encode(line, out_type=int)) + 1
+    return token_count
+
+
+def _choose_units_by_token_budget(
+    sources: list[_Source],
+    *,
+    target_tokens: int,
+    seed: int,
+    token_costs: dict[str, list[int]],
+) -> list[tuple[str, str, int]]:
+    """重み付き公平キューで、予算を超えない論理単位を選ぶ。
+
+    各sourceの単位を先に同じ乱数系列でshuffleし、単位のtoken costを含む
+    weighted fair queueで次のsourceを決める。単位は分割・複製せず、残り予算に
+    収まる候補だけを選ぶため、出力token数はtarget_tokens以下になる。
+    """
+
+    if target_tokens == 0:
+        return []
+
+    shuffled: dict[str, list[tuple[str, int]]] = {}
+    randomiser = random.Random(seed)
+    for source in sources:
+        costs = token_costs[source.name]
+        if len(costs) != len(source.unique_units):
+            raise ValueError(f"token costの単位数が一致しません: {source.name}")
+        pairs = list(zip(source.unique_units, costs, strict=True))
+        randomiser.shuffle(pairs)
+        shuffled[source.name] = pairs
+
+    # next_finishはsourceごとの仮想的な送信完了時刻。cost/weightで進めることで、
+    # 単位の長さが異なってもweightをtoken比率として扱える。
+    next_finish = {source.name: 0.0 for source in sources}
+    selected: list[tuple[str, str, int]] = []
+    remaining = target_tokens
+    source_order = {source.name: index for index, source in enumerate(sources)}
+
+    while remaining > 0:
+        candidates: list[tuple[float, int, _Source, int, int]] = []
+        for source in sources:
+            fitting_index = next(
+                (
+                    index
+                    for index, (_, cost) in enumerate(shuffled[source.name])
+                    if cost <= remaining
+                ),
+                None,
+            )
+            if fitting_index is None:
+                continue
+            _, cost = shuffled[source.name][fitting_index]
+            finish = next_finish[source.name] + (cost / source.weight)
+            candidates.append(
+                (finish, source_order[source.name], source, fitting_index, cost)
+            )
+        if not candidates:
+            break
+
+        _, _, source, fitting_index, cost = min(
+            candidates, key=lambda item: (item[0], item[1])
+        )
+        unit, _ = shuffled[source.name].pop(fitting_index)
+        finish = next_finish[source.name] + (cost / source.weight)
+        next_finish[source.name] = finish
+        remaining -= cost
+        selected.append((source.name, unit, cost))
+    return selected
+
+
 def mix_corpora(
     sources: Iterable[SourceSpec],
     output_path: str | Path,
@@ -157,8 +235,27 @@ def mix_corpora(
     *,
     seed: int = 42,
     target_units: int | None = None,
+    tokenizer_path: str | Path | None = None,
+    target_tokens: int | None = None,
 ) -> dict[str, Any]:
-    """sourceを重複なく混ぜ、本文と再現用manifestを書き出す。"""
+    """sourceを重複なく混ぜ、本文と再現用manifestを書き出す。
+
+    ``target_units``を指定した場合は従来どおり単位数で選ぶ。``target_tokens``を
+    指定した場合は``tokenizer_path``のSentencePieceで各単位を測り、指定予算を
+    超えない範囲でtoken数が近くなるように選ぶ。両方の指定はできない。
+    """
+
+    if target_units is not None and target_tokens is not None:
+        raise ValueError("target_unitsとtarget_tokensは同時に指定できません")
+    if target_tokens is not None:
+        if isinstance(target_tokens, bool) or not isinstance(target_tokens, int):
+            raise ValueError("target_tokensは0以上の整数で指定してください")
+        if target_tokens < 0:
+            raise ValueError("target_tokensは0以上の整数で指定してください")
+        if tokenizer_path is None:
+            raise ValueError("target_tokensにはtokenizer_pathが必要です")
+    elif tokenizer_path is not None:
+        raise ValueError("tokenizer_pathはtarget_tokensと一緒に指定してください")
 
     specs = list(sources)
     if not specs:
@@ -177,8 +274,41 @@ def mix_corpora(
     if destination == manifest_file:
         raise ValueError("outputとmanifestには別のパスを指定してください")
 
-    selected = _choose_units(source_data, target_units=target_units, seed=seed)
-    output_text = "\n".join(unit for _, unit in selected)
+    tokenizer_file: Path | None = None
+    tokenizer_sha256: str | None = None
+    token_costs: dict[str, list[int]] | None = None
+    if target_tokens is not None:
+        from .tokenizer import load_processor
+
+        tokenizer_file = Path(tokenizer_path).expanduser().resolve()
+        if not tokenizer_file.is_file():
+            raise FileNotFoundError(
+                f"Tokenizerモデルが見つかりません: {tokenizer_file}"
+            )
+        tokenizer_bytes = tokenizer_file.read_bytes()
+        tokenizer_sha256 = _sha256(tokenizer_bytes)
+        processor = load_processor(tokenizer_file)
+        token_costs = {
+            source.name: [
+                _unit_token_cost(processor, unit) for unit in source.unique_units
+            ]
+            for source in source_data
+        }
+
+    if target_tokens is None:
+        selected_by_source = _choose_units(
+            source_data, target_units=target_units, seed=seed
+        )
+        selected = [(name, unit, None) for name, unit in selected_by_source]
+    else:
+        assert token_costs is not None
+        selected = _choose_units_by_token_budget(
+            source_data,
+            target_tokens=target_tokens,
+            seed=seed,
+            token_costs=token_costs,
+        )
+    output_text = "\n".join(unit for _, unit, _ in selected)
     if output_text:
         output_text += "\n"
     output_bytes = output_text.encode("utf-8")
@@ -188,11 +318,17 @@ def mix_corpora(
 
     selected_counts = {source.name: 0 for source in source_data}
     selected_characters = {source.name: 0 for source in source_data}
-    for name, unit in selected:
+    selected_tokens = {source.name: 0 for source in source_data}
+    for name, unit, token_count in selected:
         selected_counts[name] += 1
         selected_characters[name] += len(unit)
+        if token_count is not None:
+            selected_tokens[name] += token_count
     total_weight = sum(source.weight for source in source_data)
     total_selected_chars = sum(selected_characters.values())
+    total_selected_tokens = (
+        sum(selected_tokens.values()) if target_tokens is not None else None
+    )
 
     def share(value: float, total: float) -> float:
         return value / total if total else 0.0
@@ -201,8 +337,20 @@ def mix_corpora(
         "format": "corpus-mix-v1",
         "seed": seed,
         "target_units": target_units,
-        "algorithm": "sourceごとにshuffle後、available source間のsmooth weighted round-robinでquotaまで選択。枯渇sourceはactiveから外して残余を再配分する。",
-        "weight_semantics": "weightはtarget_unitsに対する希望比率であり、単位の複製には使わない。",
+        "target_tokens": target_tokens,
+        "tokenizer_path": str(tokenizer_file) if tokenizer_file is not None else None,
+        "tokenizer_sha256": tokenizer_sha256,
+        "algorithm": (
+            "sourceごとにshuffle後、available source間のsmooth weighted round-robinで"
+            "quotaまで選択。枯渇sourceはactiveから外して残余を再配分する。"
+            if target_tokens is None
+            else "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算する"
+            "weighted fair queueで、target_tokensを超えない候補を決定的に選択。"
+        ),
+        "weight_semantics": (
+            "weightは採用単位数またはtoken数に対する希望比率であり、"
+            "単位の複製には使わない。"
+        ),
         "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
         "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
         "requested_weight_share": {
@@ -215,6 +363,7 @@ def mix_corpora(
         "output_character_count": len(output_text),
         "output_sha256": _sha256(output_bytes),
         "output_path": str(destination),
+        "selected_token_count": total_selected_tokens,
         "actual_adoption_share": {
             source.name: share(selected_counts[source.name], len(selected))
             for source in source_data
@@ -223,6 +372,22 @@ def mix_corpora(
             source.name: share(selected_characters[source.name], total_selected_chars)
             for source in source_data
         },
+        "actual_adoption_token_share": (
+            {
+                source.name: share(selected_tokens[source.name], total_selected_tokens)
+                for source in source_data
+            }
+            if total_selected_tokens is not None
+            else None
+        ),
+        "actual_token_share": (
+            {
+                source.name: share(selected_tokens[source.name], total_selected_tokens)
+                for source in source_data
+            }
+            if total_selected_tokens is not None
+            else None
+        ),
         "sources": [],
     }
     for source in source_data:
@@ -240,8 +405,16 @@ def mix_corpora(
                 "requested_weight_share": share(source.weight, total_weight),
                 "adopted_unit_count": selected_counts[source.name],
                 "adopted_characters": selected_characters[source.name],
+                "adopted_token_count": (
+                    selected_tokens[source.name] if target_tokens is not None else None
+                ),
                 "actual_adoption_share": share(
                     selected_counts[source.name], len(selected)
+                ),
+                "actual_token_share": (
+                    share(selected_tokens[source.name], total_selected_tokens)
+                    if total_selected_tokens is not None
+                    else None
                 ),
             }
         )
