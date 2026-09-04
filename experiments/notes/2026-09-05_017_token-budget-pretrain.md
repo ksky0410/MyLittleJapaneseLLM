@@ -25,7 +25,9 @@
 
 ## 実験中の記録
 
-未実施です。Token化後と学習中のstepごとに追記します。
+2026-09-05にToken化を実行し、エラーなく999,997 tokenを得ました。Token列のbinary SHA-256は`91423864b083009c6ed10cad7645263b5b8c60f7ea8e9d1c3af1f25474cad471`で、混合manifestの`selected_token_count`と一致しました。実効語彙数は4,096、EOS IDは3です。binary本体は大きいためGitへ追加せず、同名JSON metadataとこのノートへ保存条件を残します。
+
+学習はこのToken化記録をpushした後に開始します。学習中は100 step以内の間隔でmetricsと固定prompt生成を確認し、途中停止や出力崩れも削除せず残します。
 
 ## 結果と解釈
 
