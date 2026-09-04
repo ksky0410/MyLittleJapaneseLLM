@@ -159,6 +159,18 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 
 正式Token列で5,000 stepの独立実験を行う場合は、`configs/aozora-5m-full.toml`を`train.py`の入口として使用します。checkpointとsampleは`aozora-5m-full`専用ディレクトリへ保存されます。
 
+## 医師国家試験SQLiteを取り込む
+
+`/Users/koseki/projects/medilink_analysis/data/qb.sqlite`を読み取り専用で開き、`questions`と`descriptions`から医師国家試験データセットを作成できます。元のSQLiteへ書き込まず、出力はsmall_llm側の`artifacts/corpus/medical-qb-v1/`だけに保存します。119回をvalidation、120回をtest、その他をtrainへ分け、説明JSONがない問題も説明欄を空にして処理を続けます。
+
+```bash
+.venv/bin/python scripts/import_medical_qb.py \
+  --input /Users/koseki/projects/medilink_analysis/data/qb.sqlite \
+  --output-dir artifacts/corpus/medical-qb-v1
+```
+
+分割回を変更する場合は、`--validation-version 118 --test-version 119`のように指定します。複数回を同じsplitへ入れる場合はオプションを繰り返してください。出力には構造化された`train.jsonl`・`validation.jsonl`・`test.jsonl`と、問題・選択肢・正解・ポイント・選択肢解説を自然なラベルで連結した1問1行の`train.txt`・`validation.txt`・`test.txt`が含まれます。画像URLは保存せず、`[図表あり]`へ置き換えます。件数、exam_version別件数、欠損件数、画像件数、入力・出力SHA-256はmanifestへ記録します。
+
 ## テストと入口の確認
 
 プロジェクトの仮想環境を使い、軽量なテストを実行できます。MLXまたはSentencePieceがない環境では、それらを必要とするテストだけがskipされます。
@@ -166,9 +178,13 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```
 
-生成結果、checkpoint、ローカルデータ、キャッシュは `.gitignore` でGit管理対象外です。内蔵サンプル自体と、再現に必要なコード・設定・実験ノートは管理対象として残します。
+## 実験成果物のGit管理
+
+学習の進行をGitHubで細かく確認できるよう、`artifacts/samples/**/*.txt`に保存されるstepごとの生成文とreloaded生成文、`artifacts/checkpoints/**/metrics.jsonl`、`summary.json`、checkpoint metadataのJSON、Tokenizer・corpusのmanifestとreport JSONはGitの追跡対象として、実験の区切りごとにcommit・pushします。生成文はlossだけでは分からないモデルの変化を確認するため、悪い出力や途中の出力も削除せず残します。
+
+一方、巨大な`.npz`・`.bin`・Tokenizerモデルや語彙ファイル、元データなどは引き続きGitへ追加しません。これらは保存場所、作成条件、SHA-256を実験ノートへ記録し、必要なバイナリをGitHubへ持ち込まずに再現できるよう管理します。

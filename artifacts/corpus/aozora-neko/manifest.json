@@ -1,0 +1,10 @@
+{
+  "source": "/private/tmp/my-little-japanese-llm-data/wagahai_clean.txt",
+  "source_sha256": "be374e14b58c5f3302c9ba263e905665558e52a9e10c593c8a1736f47d8c63c4",
+  "seed": 42,
+  "val_ratio": 0.05,
+  "train_documents": 2142,
+  "validation_documents": 113,
+  "train_characters": 302876,
+  "validation_characters": 16442
+}

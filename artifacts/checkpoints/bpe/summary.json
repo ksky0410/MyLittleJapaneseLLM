@@ -1,0 +1,6 @@
+{
+  "final_step": 100,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/bpe/step_000100.npz",
+  "best_validation_loss": 4.165308952331543,
+  "elapsed_seconds": 0.6160727920942008
+}

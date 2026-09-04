@@ -1,0 +1,23 @@
+{
+  "format": "aozora-import-v1",
+  "source": "https://www.aozora.gr.jp/cards/000148/files/789_ruby_5639.zip",
+  "input_path": "/private/tmp/my-little-japanese-llm-data/789_ruby_5639.zip",
+  "input_member": "wagahaiwa_nekodearu.txt",
+  "encoding": "shift_jis",
+  "input_sha256": "6545750b89ee2c57f215a65079eeab56ee7c997373b7b86e5b00ae74fe69208f",
+  "output_sha256": "59695d2509558d36998ed06c8425fadb0d70c8dda401225781eda1c456a7f758",
+  "input_characters": 377325,
+  "output_characters": 320716,
+  "input_lines": 2376,
+  "output_lines": 2259,
+  "removed_lines": 120,
+  "removed_blank_lines": 25,
+  "removed_annotation_lines": 60,
+  "annotation_count": 461,
+  "ruby_count": 9214,
+  "vertical_marker_count": 0,
+  "split_count": 2,
+  "split_paragraphs": 2,
+  "split_segments": 3,
+  "max_paragraph_characters": 4000
+}

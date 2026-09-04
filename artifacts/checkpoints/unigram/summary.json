@@ -1,0 +1,6 @@
+{
+  "final_step": 100,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/unigram/step_000100.npz",
+  "best_validation_loss": 3.955749034881592,
+  "elapsed_seconds": 1.7581867498811334
+}

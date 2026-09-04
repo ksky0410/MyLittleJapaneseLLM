@@ -1,0 +1,10 @@
+{
+  "source": "/Users/koseki/projects/small_llm/data/sample_ja.txt",
+  "source_sha256": "0a760b8dedfefe2cc38b352e16b48009ddb3b71cd111958d5a5f08bc8460f18f",
+  "seed": 42,
+  "val_ratio": 0.2,
+  "train_documents": 46,
+  "validation_documents": 11,
+  "train_characters": 1323,
+  "validation_characters": 338
+}

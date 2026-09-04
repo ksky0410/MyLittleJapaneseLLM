@@ -9,7 +9,7 @@ venv/
 .mypy_cache/
 
 # Local data and experiment outputs
-artifacts/
+artifacts/**
 checkpoints/
 samples/
 logs/
@@ -32,6 +32,27 @@ data/cache/
 *.pth
 *.model
 *.vocab
+
+# Lightweight experiment records intentionally tracked under artifacts/
+!artifacts/
+!artifacts/samples/
+!artifacts/samples/**/
+!artifacts/samples/**/*.txt
+!artifacts/checkpoints/
+!artifacts/checkpoints/**/
+!artifacts/checkpoints/**/metrics.jsonl
+!artifacts/checkpoints/**/summary.json
+!artifacts/checkpoints/**/*.json
+!artifacts/corpus/
+!artifacts/corpus/**/
+!artifacts/corpus/manifest.json
+!artifacts/corpus/**/manifest.json
+!artifacts/corpus/*.manifest.json
+!artifacts/corpus/**/*report*.json
+!artifacts/tokenizer/
+!artifacts/tokenizer/**/
+!artifacts/tokenizer/**/*manifest*.json
+!artifacts/tokenizer/**/*report*.json
 
 # macOS
 .DS_Store

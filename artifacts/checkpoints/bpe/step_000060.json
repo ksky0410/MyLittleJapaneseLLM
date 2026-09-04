@@ -1,0 +1,20 @@
+{
+  "format_version": 1,
+  "weights_file": "step_000060.npz",
+  "model": {
+    "vocab_size": 299,
+    "dim": 64,
+    "layers": 2,
+    "heads": 4,
+    "context_length": 64,
+    "mlp_ratio": 4
+  },
+  "metrics": {
+    "step": 60,
+    "train_loss": 3.2848174571990967,
+    "validation_loss": 4.207721710205078,
+    "validation_perplexity": 67.20325677074075,
+    "learning_rate": 0.00014621163137039118,
+    "elapsed_seconds": 0.40397945791482925
+  }
+}

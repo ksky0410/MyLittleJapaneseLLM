@@ -1,0 +1,10 @@
+{
+  "source": "/Users/koseki/projects/small_llm/artifacts/corpus/aozora-neko-formal-v2.txt",
+  "source_sha256": "59695d2509558d36998ed06c8425fadb0d70c8dda401225781eda1c456a7f758",
+  "seed": 42,
+  "val_ratio": 0.05,
+  "train_documents": 2146,
+  "validation_documents": 113,
+  "train_characters": 302791,
+  "validation_characters": 16530
+}

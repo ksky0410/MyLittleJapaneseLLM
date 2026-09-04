@@ -1,0 +1,6 @@
+{
+  "final_step": 500,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/aozora-5m/step_000500.npz",
+  "best_validation_loss": 5.576969941457112,
+  "elapsed_seconds": 76.19748966698535
+}
