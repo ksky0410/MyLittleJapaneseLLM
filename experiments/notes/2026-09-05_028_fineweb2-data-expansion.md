@@ -73,6 +73,10 @@ test parquetは9,843,060 bytes、SHA-256は`2dbc0824036cc083b4e52f249006c66d99b7
 
 この時点では元の1Mコーパス、会話・医療の元split、FineWebの抽出本文を変更していません。次にこの混合本文を既存TokenizerでToken化し、Token数とSHA-256を確認してから学習を開始します。
 
+混合本文を次の二つのToken列へ変換しました。学習Token列は4,999,958 Token、SHA-256は`54eb3fab617c94bda59899db4f78e6ac65665606219414a710e40cc8ccb8603c`です。FineWeb test由来のvalidation Token列は2,061,459 Token、SHA-256は`36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c`です。いずれもvocab size 4,096、EOS ID 3、Tokenizer SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`で作成しました。新しい学習条件は`configs/fineweb2-mixed-ja-5m-smoke.toml`へ保存し、旧Token列や旧configを上書きしていません。
+
+学習開始前の確認として、`scripts/inspect_model.py`はvocab size 4,096、dim 240、6層、6 heads、context 256、absolute position embedding、概算5,197,920 parametersを返しました。ここまでのデータ混合・Token化・形状確認は成功し、次にこのconfigで500 stepのpretrainingを実行します。
+
 ## 結果と解釈
 
 未実施です。
