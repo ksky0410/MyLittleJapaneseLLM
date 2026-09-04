@@ -8,7 +8,7 @@ base checkpointは`artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000
 
 SFT前後で、SFT validation lossだけでなく、通常のgeneral・conversation・medical validation lossも評価します。Issue #1の8固定promptも同じtemperature 0.8、top-k 40、各promptのseed 42〜49で再生成します。SFTで会話以外のlossが悪化する可能性も結果として記録します。自然な返答が一つでも出れば成功と決めつけず、空出力・文語・医療形式への漏れも含めて保存します。
 
-実験前のGitコミットは、ノート追加後に作成したものを記録します。使用コマンドは次のとおりです。
+実験前のGitコミットは`1d24563`（`exp: plan masked chat sft training`）です。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/train_sft.py \
