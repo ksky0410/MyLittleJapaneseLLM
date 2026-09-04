@@ -14,7 +14,7 @@
 
 validation JSONLからseed 42で最大24例を選び、各会話の2発話目以降を候補とします。target本文はpromptへ含めず、開始marker、履歴turn、履歴EOS、target speaker markerまでをToken化します。生成はtemperature 0.8、top-k 40、最大64 token、例ごとにseed 42から順に加算します。completionが空か、EOSで停止したか、生成Token数、参照本文をJSONとTXTへ残します。
 
-実験前のGitコミットは、評価器実装後に記録します。使用コマンドは次のとおりです。
+実験前のGitコミットは`3e9ea2a`（`eval: add heldout chat generation`）です。使用コマンドは次のとおりです。
 
 ```bash
 .venv/bin/python scripts/evaluate_chat_dataset.py \
