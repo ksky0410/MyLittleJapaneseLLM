@@ -12,7 +12,33 @@
 
 会話本文のtrain/test重複は、選択時に完全一致本文の候補を照合してフラグにします。一般的な挨拶のような頻出文は重複しても直ちに除外せず、明確な完全重複を記録したうえで、結果の解釈に注意書きを付けます。test JSONLや大きな元データはGitへコピーせず、manifestと評価成果物だけを追跡します。元データは読み取り専用で扱い、削除・変更しません。
 
-開始前のGitコミットは、実験026の結果を記録した`2467999`（`exp: record stratified short response results`）です。選択スクリプトと評価CLIの実装、単体テスト、全テスト、ruffを完了してから評価を開始します。
+開始前のGitコミットは、実験026の結果を記録した`2467999`（`exp: record stratified short response results`）です。選択スクリプトと評価CLIを実装し、52件のテスト、ruff check、ruff format --checkを通過した実装commitを作成してから評価を開始します。
+
+実行するコマンドは次のとおりです。
+
+```bash
+.venv/bin/python scripts/select_chat_eval_set.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --train-input artifacts/corpus/conversation-v1/train.jsonl \
+  --output experiments/evaluation/chat-test-v1.json \
+  --per-stratum 16 --seed 42
+```
+
+選択manifest作成後、同じmanifestを次の三つへ渡します。
+
+```bash
+.venv/bin/python scripts/evaluate_chat_dataset.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --checkpoint CHECKPOINT \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --selection-file experiments/evaluation/chat-test-v1.json \
+  --output OUTPUT_JSON \
+  --text-output OUTPUT_TXT \
+  --max-new-tokens 64 --seed 42
+```
+
+三つのcheckpointは、token-budget pretraining step 500、通常rehearsal 0.25 step 2,000、短文sampling + rehearsal step 2,000です。
 
 ## 実験中の記録
 

@@ -101,6 +101,68 @@ def select_examples(
     return candidates[: min(max_examples, len(candidates))]
 
 
+def select_examples_from_manifest(
+    records: list[dict[str, Any]], manifest: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """固定manifestのrecord indexとtarget indexから評価例を復元する。"""
+
+    raw_examples = manifest.get("examples")
+    if not isinstance(raw_examples, list) or not raw_examples:
+        raise ValueError("評価manifestのexamplesが空、または配列ではありません")
+    examples: list[dict[str, Any]] = []
+    used_conversations: set[str] = set()
+    for index, item in enumerate(raw_examples):
+        if not isinstance(item, dict):
+            raise TypeError(f"評価manifestのexample #{index}がobjectではありません")
+        try:
+            record_index = int(item["record_index"])
+            target_index = int(item["target_index"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError(
+                f"評価manifestのexample #{index}のindexが不正です"
+            ) from error
+        if record_index < 0 or record_index >= len(records):
+            raise ValueError(f"評価manifestのrecord_indexが範囲外です: {record_index}")
+        turns = _turns(records[record_index])
+        if target_index < 1 or target_index >= len(turns):
+            raise ValueError(f"評価manifestのtarget_indexが範囲外です: {target_index}")
+        conversation_id = records[record_index].get(
+            "conversation_id", f"record-{record_index}"
+        )
+        if not isinstance(conversation_id, str) or not conversation_id:
+            conversation_id = f"record-{record_index}"
+        if item.get("conversation_id") != conversation_id:
+            raise ValueError(
+                f"評価manifestと入力のconversation_idが一致しません: {index}"
+            )
+        if conversation_id in used_conversations:
+            raise ValueError(f"一会話一例の条件に違反しています: {conversation_id}")
+        if item.get("target_speaker") != turns[target_index]["speaker_id"]:
+            raise ValueError(
+                f"評価manifestと入力のtarget_speakerが一致しません: {index}"
+            )
+        if item.get("reference") != turns[target_index]["text"]:
+            raise ValueError(f"評価manifestと入力のreferenceが一致しません: {index}")
+        example = {
+            "record_index": record_index,
+            "conversation_id": conversation_id,
+            "target_index": target_index,
+            "turns": turns,
+        }
+        for key in (
+            "source",
+            "stratum",
+            "history_token_count",
+            "history_truncated",
+            "train_text_overlap",
+        ):
+            if key in item:
+                example[key] = item[key]
+        examples.append(example)
+        used_conversations.add(conversation_id)
+    return examples
+
+
 def encode_history(
     turns: list[dict[str, str]], target_index: int, processor: Any
 ) -> tuple[list[int], str]:
@@ -154,6 +216,7 @@ def _format_text(result: dict[str, Any]) -> str:
         f"max_new_tokens: {result['generation']['max_new_tokens']}",
         f"temperature: {result['generation']['temperature']}",
         f"top_k: {result['generation']['top_k']}",
+        f"selection: {result.get('selection')}",
         "",
     ]
     for index, item in enumerate(result["results"], start=1):
@@ -181,6 +244,7 @@ def evaluate_chat_dataset(
     max_examples: int,
     max_new_tokens: int,
     seed: int,
+    selection_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """held-out会話を評価し、生成内容をJSONとTXTへ保存する。"""
 
@@ -191,10 +255,28 @@ def evaluate_chat_dataset(
     input_file = repo_path(input_path).resolve()
     output_file = repo_path(output_path).resolve()
     text_file = repo_path(text_output_path).resolve()
+    selection_file = (
+        repo_path(selection_path).resolve() if selection_path is not None else None
+    )
     if output_file == text_file or output_file == input_file or text_file == input_file:
         raise ValueError("入力会話JSONLと出力ファイルは別のパスにしてください")
+    if selection_file in {input_file, output_file, text_file}:
+        raise ValueError("評価manifestと入力・出力ファイルは別のパスにしてください")
     records = _read_records(input_file)
-    examples = select_examples(records, max_examples, seed)
+    if selection_file is None:
+        examples = select_examples(records, max_examples, seed)
+    else:
+        if not selection_file.is_file():
+            raise FileNotFoundError(f"評価manifestが見つかりません: {selection_file}")
+        try:
+            manifest = json.loads(selection_file.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ValueError(f"評価manifestを読めません: {selection_file}") from error
+        if not isinstance(manifest, dict):
+            raise TypeError("評価manifestはobjectで指定してください")
+        if manifest.get("input_sha256") != _sha256_file(input_file):
+            raise ValueError("評価manifestと入力会話JSONLのSHA-256が一致しません")
+        examples = select_examples_from_manifest(records, manifest)
     if not examples:
         raise ValueError("評価可能な2発話以上の会話がありません")
 
@@ -243,8 +325,11 @@ def evaluate_chat_dataset(
                 "record_index": example["record_index"],
                 "target_index": target_index,
                 "target_speaker": turns[target_index]["speaker_id"],
+                "source": example.get("source"),
+                "stratum": example.get("stratum"),
                 "rendered_prompt": rendered_prompt,
                 "prompt_token_count": len(prompt_ids),
+                "history_truncated": len(prompt_ids) > config.model.context_length,
                 "reference": turns[target_index]["text"],
                 "reference_token_count": len(
                     processor.encode(turns[target_index]["text"], out_type=int)
@@ -272,6 +357,10 @@ def evaluate_chat_dataset(
             "temperature": config.generation.temperature,
             "top_k": config.generation.top_k,
         },
+        "selection": str(selection_file) if selection_file is not None else None,
+        "selection_sha256": _sha256_file(selection_file)
+        if selection_file is not None
+        else None,
         "results": results,
     }
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -293,6 +382,7 @@ def main() -> None:
     parser.add_argument("--examples", type=int, default=24)
     parser.add_argument("--max-new-tokens", type=int, default=64)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--selection-file", default=None, help="固定評価manifest")
     args = parser.parse_args()
     result = evaluate_chat_dataset(
         args.config,
@@ -303,6 +393,7 @@ def main() -> None:
         max_examples=args.examples,
         max_new_tokens=args.max_new_tokens,
         seed=args.seed,
+        selection_path=args.selection_file,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

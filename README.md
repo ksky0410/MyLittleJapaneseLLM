@@ -286,6 +286,26 @@ SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、�
 
 JSONにはEOSを除いたmultiset Token overlapのprecision・recall・F1も保存します。これは参照との表面的な一致を測る補助指標であり、意味的な正しさや自然さの代わりにはならないため、生成TXTの目視確認と併用します。
 
+学習中に使っていないtest splitを層別評価へ固定する場合は、まず一会話一例のselection manifestを作ります。応答本文Token数でshort・medium・longを分け、train本文との完全一致候補と履歴のcontext超過もmanifestへ保存します。そのmanifestを使うと、複数checkpointを完全に同じ48例で比較できます。
+
+```bash
+.venv/bin/python scripts/select_chat_eval_set.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --train-input artifacts/corpus/conversation-v1/train.jsonl \
+  --output experiments/evaluation/chat-test-v1.json \
+  --per-stratum 16 --seed 42
+
+.venv/bin/python scripts/evaluate_chat_dataset.py \
+  --config configs/token-budget-chat-sft-5m-smoke.toml \
+  --checkpoint artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --selection-file experiments/evaluation/chat-test-v1.json \
+  --output artifacts/evaluations/test-chat.json \
+  --text-output artifacts/samples/test-chat.txt \
+  --max-new-tokens 64 --seed 42
+```
+
 会話SFTだけで一般文体を忘れる場合は、`--rehearsal-tokens`と`--rehearsal-ratio`を指定します。rehearsal側は通常のpretraining loss、会話側は応答mask lossとして別々に平均し、最後に指定比率で結合します。たとえば`0.25`なら、SFT目的を75%、pretraining目的を25%として学習します。Token数の多い通常batchが短い応答maskを圧倒しないよう、単純なToken列連結ではなくloss単位で重み付けします。
 
 ```bash
@@ -318,7 +338,7 @@ JSONにはEOSを除いたmultiset Token overlapのprecision・recall・F1も保�
 ```bash
 .venv/bin/python -m pytest -q
 
-for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/evaluate_chat_dataset.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
+for script in scripts/import_aozora.py scripts/import_medical_qb.py scripts/import_conversations.py scripts/mix_corpora.py scripts/evaluate_domains.py scripts/evaluate_chat_prompts.py scripts/evaluate_chat_dataset.py scripts/select_chat_eval_set.py scripts/prepare_chat_sft.py scripts/train_sft.py scripts/prepare_data.py scripts/train_tokenizer.py scripts/encode_data.py scripts/tokenizer_report.py scripts/inspect_model.py scripts/train.py scripts/generate.py scripts/evaluate.py; do
   .venv/bin/python "$script" --help >/dev/null
 done
 ```

@@ -7,7 +7,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from evaluate_chat_dataset import encode_history, select_examples, token_overlap_scores
+from evaluate_chat_dataset import (
+    encode_history,
+    select_examples,
+    select_examples_from_manifest,
+    token_overlap_scores,
+)
 
 
 class _FakeProcessor:
@@ -61,6 +66,32 @@ class EvaluateChatDatasetTests(unittest.TestCase):
         self.assertAlmostEqual(scores["token_overlap_precision"], 2 / 3)
         self.assertAlmostEqual(scores["token_overlap_recall"], 1.0)
         self.assertAlmostEqual(scores["token_overlap_f1"], 0.8)
+
+    def test_restores_examples_from_fixed_manifest(self) -> None:
+        records = [
+            {
+                "conversation_id": "test:one",
+                "turns": [
+                    {"speaker_id": "A", "text": "入力"},
+                    {"speaker_id": "B", "text": "応答"},
+                ],
+            }
+        ]
+        manifest = {
+            "examples": [
+                {
+                    "record_index": 0,
+                    "conversation_id": "test:one",
+                    "target_index": 1,
+                    "target_speaker": "B",
+                    "reference": "応答",
+                    "stratum": "short",
+                }
+            ]
+        }
+        examples = select_examples_from_manifest(records, manifest)
+        self.assertEqual(examples[0]["target_index"], 1)
+        self.assertEqual(examples[0]["stratum"], "short")
 
 
 if __name__ == "__main__":
