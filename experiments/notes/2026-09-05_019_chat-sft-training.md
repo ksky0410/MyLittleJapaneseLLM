@@ -24,11 +24,17 @@ SFT前後で、SFT validation lossだけでなく、通常のgeneral・conversat
 
 ## 実験中の記録
 
-未実施です。100 step以内の間隔でmetricsと生成を確認します。
+2026-09-05に500 stepまで完了しました。エラーやメモリ不足はありませんでした。mask付きvalidation lossの推移は、step 1が5.400093、step 100が4.804685、step 200が4.717910、step 300が4.670404、step 400が4.633231、step 500が4.623544でした。validation perplexityはstep 500で101.8543、train lossは4.570463、学習時間は141.35秒です。最良checkpointはstep 500です。
+
+通常の生成サンプルは、step 0では「今日は左生の後と云を開い」といった文語的な長文でしたが、step 300では「今日は今日か、いい!私は、と聞いた。」、step 500では「今日はおかけてあってます。」となりました。短く止まる傾向は現れましたが、自然な応答とはまだ言えません。良化だけでなく、文法崩れも含めてstep 0〜500の全サンプルを保存しています。
+
+- `artifacts/checkpoints/token-budget-chat-sft-5m-smoke/metrics.jsonl`
+- `artifacts/checkpoints/token-budget-chat-sft-5m-smoke/summary.json`
+- `artifacts/samples/token-budget-chat-sft-5m-smoke/`
 
 ## 結果と解釈
 
-未実施です。
+会話SFT validation lossは学習中一貫して下がり、応答本文とEOSへ限定した目的関数は正常に最適化されました。これは「会話SFTデータの応答tokenを予測する」学習が進んだことを示しますが、自然な会話能力の獲得を意味しません。特に通常の生成promptはSFTデータの入力形式と異なるため、次の固定会話prompt評価で本来の仮説を確認します。
 
 ## 次に試すこと
 
