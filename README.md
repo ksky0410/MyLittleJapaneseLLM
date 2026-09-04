@@ -272,6 +272,20 @@ Issue #1の会話らしさを比較するため、短い返答・相づち・く
 
 SFTのvalidation lossは応答maskが1のTokenだけで計算されるため、通常のdomain評価のlossとは直接比較しません。SFT前後の一般日本語・会話・医療の全Token lossも別に測定し、会話応答の改善と引き換えに忘却が起きていないかを確認します。
 
+会話SFTだけで一般文体を忘れる場合は、`--rehearsal-tokens`と`--rehearsal-ratio`を指定します。rehearsal側は通常のpretraining loss、会話側は応答mask lossとして別々に平均し、最後に指定比率で結合します。たとえば`0.25`なら、SFT目的を75%、pretraining目的を25%として学習します。Token数の多い通常batchが短い応答maskを圧倒しないよう、単純なToken列連結ではなくloss単位で重み付けします。
+
+```bash
+.venv/bin/python scripts/train_sft.py \
+  --config configs/token-budget-chat-rehearsal-sft-5m-smoke.toml \
+  --base-checkpoint artifacts/checkpoints/token-budget-mixed-ja-5m-smoke/step_000500.npz \
+  --train-data artifacts/sft/chat-v1-context256/train.npz \
+  --validation-data artifacts/sft/chat-v1-context256/validation.npz \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-token-budget-1m-train.bin \
+  --rehearsal-ratio 0.25 \
+  --output-dir artifacts/checkpoints/token-budget-chat-rehearsal-sft-5m-smoke \
+  --samples-dir artifacts/samples/token-budget-chat-rehearsal-sft-5m-smoke
+```
+
 ## 現代的な位置表現を比較する
 
 現在のbaselineは、学習可能なabsolute position embedding、LayerNorm、通常のmulti-head attentionです。RoPEを一度に他の変更と組み合わせず、`configs/rope-mixed-ja-5m-smoke.toml`で位置表現だけをRoPEへ切り替えられます。RoPEでは学習可能な位置embeddingを持たないため、同じ語彙・層数・次元数ならパラメータ数が少し減ります。checkpoint metadataにも位置表現を残し、absoluteとRoPEの取り違えを拒否します。
