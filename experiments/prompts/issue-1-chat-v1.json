@@ -1,0 +1,42 @@
+[
+  {
+    "id": "casual-01",
+    "category": "short-reply",
+    "prompt": "まじで"
+  },
+  {
+    "id": "casual-02",
+    "category": "backchannel",
+    "prompt": "それな"
+  },
+  {
+    "id": "casual-03",
+    "category": "short-turn",
+    "prompt": "今日なにしてた？"
+  },
+  {
+    "id": "casual-04",
+    "category": "short-reply",
+    "prompt": "やば"
+  },
+  {
+    "id": "casual-05",
+    "category": "discourse-marker",
+    "prompt": "なんかさ"
+  },
+  {
+    "id": "casual-06",
+    "category": "disagreement",
+    "prompt": "いやそれは"
+  },
+  {
+    "id": "casual-07",
+    "category": "parting",
+    "prompt": "おつかれ"
+  },
+  {
+    "id": "casual-08",
+    "category": "invitation",
+    "prompt": "明日ひま？"
+  }
+]
