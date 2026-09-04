@@ -1,0 +1,78 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 42,
+  "target_units": 7000,
+  "algorithm": "sourceごとにshuffle後、available source間のsmooth weighted round-robinでquotaまで選択。枯渇sourceはactiveから外して残余を再配分する。",
+  "weight_semantics": "weightはtarget_unitsに対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "general": 0.8,
+    "conversation": 0.1,
+    "medical": 0.1
+  },
+  "input_unit_count": 23535,
+  "unique_unit_count": 23530,
+  "output_unit_count": 7000,
+  "output_lines": 32281,
+  "output_character_count": 2037962,
+  "output_sha256": "454d6031a634485e047b6377e4f72bfd4eb1f6657052f5ad4cd18978ee227401",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-80-10-10-v2.txt",
+  "actual_adoption_share": {
+    "general": 0.8,
+    "conversation": 0.1,
+    "medical": 0.1
+  },
+  "actual_adoption_character_share": {
+    "general": 0.34173657606592345,
+    "conversation": 0.4517637454565866,
+    "medical": 0.20649967847748998
+  },
+  "sources": [
+    {
+      "name": "general",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/aozora-general-v1.txt",
+      "input_sha256": "0b992488d310351f3f595b2cc7928661cc00dd9caff5a5932a359f2539372978",
+      "input_lines": 5758,
+      "input_characters": 727095,
+      "input_unit_count": 5758,
+      "unique_unit_count": 5758,
+      "duplicate_units_removed": 0,
+      "weight": 8.0,
+      "requested_weight_share": 0.8,
+      "adopted_unit_count": 5600,
+      "adopted_characters": 694054,
+      "actual_adoption_share": 0.8
+    },
+    {
+      "name": "conversation",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/train.txt",
+      "input_sha256": "747026f9ed29f2f39112f40a62da7fd261230a0765fab247e1fdb189216f844e",
+      "input_lines": 443505,
+      "input_characters": 15203901,
+      "input_unit_count": 11635,
+      "unique_unit_count": 11630,
+      "duplicate_units_removed": 5,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 700,
+      "adopted_characters": 917515,
+      "actual_adoption_share": 0.1
+    },
+    {
+      "name": "medical",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt",
+      "input_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "input_lines": 6142,
+      "input_characters": 3674479,
+      "input_unit_count": 6142,
+      "unique_unit_count": 6142,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 700,
+      "adopted_characters": 419393,
+      "actual_adoption_share": 0.1
+    }
+  ]
+}
