@@ -1,0 +1,41 @@
+{
+  "experiment": "003-tokenizer-training",
+  "data": {
+    "train_tokens_with_eos": {
+      "unigram": 1387,
+      "bpe": 1329
+    },
+    "validation_tokens_with_eos": {
+      "unigram": 354,
+      "bpe": 335
+    }
+  },
+  "conditions": {
+    "steps": 100,
+    "seed": 42,
+    "dim": 64,
+    "layers": 2,
+    "heads": 4,
+    "context_length": 64,
+    "batch_size": 8,
+    "learning_rate": 0.0003
+  },
+  "results": {
+    "unigram": {
+      "final_train_loss": 2.7415452003479004,
+      "final_validation_loss": 3.955749034881592,
+      "validation_perplexity": 52.23480498580345,
+      "elapsed_seconds": 1.7581867498811334,
+      "checkpoint": "artifacts/checkpoints/unigram/step_000100.npz",
+      "sample": "むかしむかし、小さない作が咲い作が駅になできた。"
+    },
+    "bpe": {
+      "final_train_loss": 2.8895180225372314,
+      "final_validation_loss": 4.165308952331543,
+      "validation_perplexity": 64.41257978634458,
+      "elapsed_seconds": 0.6160727920942008,
+      "checkpoint": "artifacts/checkpoints/bpe/step_000100.npz",
+      "sample": "むかしむかし、好実が動こと、使がしました。"
+    }
+  }
+}

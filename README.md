@@ -68,6 +68,22 @@ UnigramとBPEを同じ入力で比較するときは、Tokenizerを複数回指�
   --input artifacts/corpus/train.txt
 ```
 
+UnigramとBPEを同じモデル条件で短く学習して比較する場合は、Token列とcheckpointの保存先を分けた設定を使います。先に両Tokenizerと4つのToken列を作り、その後に2つの学習を実行します。
+
+```bash
+.venv/bin/python scripts/train_tokenizer.py --input artifacts/corpus/train.txt --model-prefix artifacts/tokenizer/unigram --vocab-size 128 --model-type unigram
+.venv/bin/python scripts/train_tokenizer.py --input artifacts/corpus/train.txt --model-prefix artifacts/tokenizer/bpe --vocab-size 128 --model-type bpe
+.venv/bin/python scripts/encode_data.py --tokenizer artifacts/tokenizer/unigram.model --input artifacts/corpus/train.txt --output artifacts/tokens/unigram-train.bin
+.venv/bin/python scripts/encode_data.py --tokenizer artifacts/tokenizer/unigram.model --input artifacts/corpus/val.txt --output artifacts/tokens/unigram-val.bin
+.venv/bin/python scripts/encode_data.py --tokenizer artifacts/tokenizer/bpe.model --input artifacts/corpus/train.txt --output artifacts/tokens/bpe-train.bin
+.venv/bin/python scripts/encode_data.py --tokenizer artifacts/tokenizer/bpe.model --input artifacts/corpus/val.txt --output artifacts/tokens/bpe-val.bin
+
+.venv/bin/python scripts/train.py --config configs/debug-unigram.toml
+.venv/bin/python scripts/train.py --config configs/debug-bpe.toml
+```
+
+Unigram側の評価には`configs/debug-unigram.toml`と`artifacts/checkpoints/unigram/step_000100.npz`を、BPE側の評価には`configs/debug-bpe.toml`と`artifacts/checkpoints/bpe/step_000100.npz`を指定します。比較の計画と結果は [実験003のノート](experiments/notes/2026-09-05_003-tokenizer-training.md) に記録します。
+
 学習前に、Tokenizerの実際の語彙数とモデルの入力・出力形状、概算パラメータ数を確認します。
 
 ```bash

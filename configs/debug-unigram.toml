@@ -1,0 +1,33 @@
+[paths]
+prepared_dir = "artifacts/corpus"
+tokenizer_model = "artifacts/tokenizer/unigram.model"
+train_tokens = "artifacts/tokens/unigram-train.bin"
+val_tokens = "artifacts/tokens/unigram-val.bin"
+checkpoint_dir = "artifacts/checkpoints/unigram"
+samples_dir = "artifacts/samples/unigram"
+
+[model]
+dim = 64
+layers = 2
+heads = 4
+context_length = 64
+mlp_ratio = 4
+
+[training]
+batch_size = 8
+max_steps = 100
+eval_interval = 20
+sample_interval = 20
+eval_batches = 4
+learning_rate = 0.0003
+min_learning_rate = 0.00003
+warmup_steps = 10
+weight_decay = 0.1
+seed = 42
+
+[generation]
+prompt = "むかしむかし、"
+max_new_tokens = 80
+temperature = 0.8
+top_k = 20
+
