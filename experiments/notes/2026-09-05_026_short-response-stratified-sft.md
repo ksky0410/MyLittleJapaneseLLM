@@ -39,7 +39,7 @@ rehearsal ratio 0.25、batch size 8では、各stepのSFT部分は6例、rehears
 
 ## 実験中の記録
 
-未実施です。コード実装とテストの結果、学習中のstepごとのlossおよび生成をここへ追記します。
+短文層化samplingの実装後、49件のテスト、ruff check、ruff format --checkを通過し、commit `ea684f7`以降の実装を`f84cec6`で条件訂正したうえで2026-09-05に学習を開始しました。1,000 step時点のvalidation lossは4.5272（perplexity 92.50）で、SFT train lossは3.8997、rehearsal train lossは4.5472でした。100 stepごとのmetricsと生成TXTは継続して保存されています。途中値は基準rehearsalの同じ学習率スケジュールより高めですが、学習は異常なく進行しています。
 
 ## 結果と解釈
 
