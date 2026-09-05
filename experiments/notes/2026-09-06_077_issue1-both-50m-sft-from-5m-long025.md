@@ -78,6 +78,34 @@ step 2,600はvalidation loss 3.558445、PPL 35.1086、learning rate 7.0898e-6、
 
 step 3,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは`でした。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存済みです。最良`best.pt`のSHA-256は`dd73ce926e973b5c5dd7d0a8d4d1f2be1486347b19813f1841de43cf6d804ab9`、学習時間はsummary上3,666.15秒、実測の最終step到達は3,664.77秒でした。評価用にはこの最良checkpointを使います。
 
+学習完了後、同じbest checkpointをCPUで評価します。5領域はgeneral・conversation・medical・RPC・MRMPを各20 batchで測定し、固定chat-test-v1は48例、評価seed 42、最大64 Token、Issue #1に関連するsourceと長さ層別の結果を保存します。生成全文を削除せず、評価JSON、全文TXT、人手レビュー用JSONをGitHubへ追加します。評価開始前の入力は学習と同じconfig、Tokenizer、best checkpointで、評価結果は学習成果物と別ファイル名にします。
+
+予定する評価コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-sft-from-5m-long025-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-long025-3k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-domains.json
+
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-sft-from-5m-long025-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-long025-3k/best.pt \
+  --device cpu \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --selection-file experiments/evaluation/chat-test-v1.json \
+  --examples 48 --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-chat-test-v1.txt
+```
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
