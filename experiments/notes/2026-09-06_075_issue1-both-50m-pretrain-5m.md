@@ -46,6 +46,8 @@ step 600はtrain loss 4.860228、general validation loss 5.724469、PPL 306.27�
 
 step 1,100はtrain loss 3.920229、general validation loss 5.250916、PPL 190.74、経過1298.73秒、step 1,200は3.816042、5.128983、PPL 168.85、経過1420.77秒、step 1,300は3.978298、5.102706、PPL 164.47、経過1540.99秒、step 1,400は3.664692、5.013380、PPL 150.41、経過1661.24秒でした。step 1,500ではtrain loss 3.635811、general validation loss 4.942713、PPL 140.15、learning rate 1.4598e-4、経過1790.18秒となりました。step 1,000からvalidation lossは0.354494低下し、step 1,500のcheckpoint weights SHA-256は`dcded2e301a983d314a8331b4cf72cd651af8a2d6fc500a855a58fc7d627222e`です。固定promptの生成は、step 1,000の断片からstep 1,500で「ニュース」「システム」などの語を含む記事風の連続へ変わりましたが、質問への会話応答にはなっていません。前回073の同じ50M構造・約1M Token条件ではstep 1,300以降にvalidationが悪化したため、現時点では約500万Token条件の方が過学習を遅らせている可能性があります。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
 
+step 1,600はtrain loss 3.962660、general validation loss 4.914219、PPL 136.21、経過1923.12秒、step 1,700は3.697206、4.889252、PPL 132.85、経過2052.33秒、step 1,800は3.518451、4.849867、PPL 127.72、経過2181.83秒、step 1,900は3.627597、4.798238、PPL 121.30、経過2312.05秒でした。step 2,000ではtrain loss 3.981688、general validation loss 4.775174、PPL 118.53、learning rate 6.3100e-5、経過2444.92秒となりました。step 1,500からvalidation lossは0.167540低下し、step 2,000のcheckpoint weights SHA-256は`9b7846c34d0711ded3867505cbf9aa0ae5911c8d580e36e60ac3ed1e6a7f16df`です。固定promptの出力は、日本語の単語・助詞・敬語風の連続が増えましたが、「お金」「お客様」の反復が強く、質問への適切な会話応答にはなっていません。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
