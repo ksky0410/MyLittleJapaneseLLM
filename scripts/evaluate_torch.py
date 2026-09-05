@@ -266,6 +266,9 @@ def evaluate_chat(args: argparse.Namespace) -> dict[str, Any]:
         },
         "selection": str(selection_path) if selection_path is not None else None,
         "selection_sha256": _sha256_file(selection_path) if selection_path is not None else None,
+        "overall_summary": summarize_chat_results(
+            [{**item, "stratum": "overall"} for item in results]
+        )["overall"],
         "stratum_summary": summarize_chat_results(results),
         "results": results,
     }

@@ -44,6 +44,8 @@ bootstrapは`/content/small_llm`へbundleを展開してから、`scripts/train_
 
 2026-09-05、学習用T4 session停止後に評価専用T4 session `torch20m-wikipedia-mid-colab-eval`の作成を試みましたが、Colab CLIが`TooManyAssignmentsError`（HTTP 412 `Precondition Failed`）を返し、GPU割当前に停止しました。評価セッションは作成されておらず、入力データやcheckpointは変更していません。この失敗は削除せず、まずローカル仮想環境へのPyTorch追加が可能か確認し、可能ならCPU評価へ切り替えます。追加できない場合はColab割当上限が解消してから同じwrapperを再実行します。
 
+その後、PyTorch 2.14.0 macOS arm64をこのリポジトリの`.venv`へ追加し、CPUでdomain評価とchat評価を実行しました。general domainの再計算値はColab学習中に記録されたvalidation lossと小数点以下5桁程度まで一致しました。最初のchat評価結果は生成JSON/TXTへ保存済みです。全体集計も参照しやすくするため、同じ入力・checkpoint・seed・生成条件で`overall_summary`をJSONへ追加して再実行します。これはモデルやデータを変えない評価出力形式の修正です。
+
 ## 結果と解釈
 
 未実施です。
