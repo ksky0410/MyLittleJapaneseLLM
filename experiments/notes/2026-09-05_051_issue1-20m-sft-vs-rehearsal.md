@@ -50,6 +50,30 @@
 
 20M本学習は5M smokeと同じ引数でconfig、base checkpoint、出力先だけを20M用へ置き換え、Colab T4で実行します。SFT-onlyとrehearsalの両条件を同じVM・同じseedで順番に走らせるか、割当が取れない場合は5M smokeの結果を先に確定します。
 
+20M Colab用wrapperは`scripts/colab_bootstrap_051.py`、軽量成果物の回収用archive作成は`scripts/colab_package_051.py`です。wrapperは`/content/small_llm_051`へ展開し、実験050のbase checkpointを上書きせず、SFT-onlyとrehearsalの出力先を分けます。20M configのSHA-256は`e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b`、wrapperは`ace9c0c7de89c6b3891e96158ad806b9e75bbc53cad97e49bb5dbb1ca9be560e`、package scriptは`52250b1c5e7b1dbfd4ab4c14cd4ba4a8bac4be0c253102927eac45d07b4daff3`です。予定コマンドは次のとおりです。
+
+```bash
+tar -czf /tmp/small_llm-colab-051.tar.gz \
+  configs/issue1-both-20m-sft-torch-colab-1k.toml \
+  scripts/train_sft_torch.py scripts/train_torch.py scripts/_common.py \
+  src artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model \
+  artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt \
+  artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.json \
+  artifacts/sft/chat-v1-context256/train.npz \
+  artifacts/sft/chat-v1-context256/validation.npz \
+  artifacts/tokens/mixed-ja-80-10-10-v2-train.bin
+
+colab new --session exp051-20m-sft --gpu T4
+colab upload --session exp051-20m-sft /tmp/small_llm-colab-051.tar.gz /content/exp051_bundle.tar.gz
+colab exec --session exp051-20m-sft --timeout 1800 --file scripts/colab_bootstrap_051.py
+colab exec --session exp051-20m-sft --timeout 120 --file scripts/colab_package_051.py
+colab download --session exp051-20m-sft /content/exp051-lightweight.tar.gz /tmp/exp051-lightweight.tar.gz
+colab download --session exp051-20m-sft /content/exp051-manifest.json /tmp/exp051-manifest.json
+colab download --session exp051-20m-sft /content/small_llm_051/artifacts/checkpoints/issue1-both-20m-sft-torch-colab-1k/best.pt /tmp/issue1-both-20m-sft-torch-colab-1k-best.pt
+colab download --session exp051-20m-sft /content/small_llm_051/artifacts/checkpoints/issue1-both-20m-rehearsal-torch-colab-1k/best.pt /tmp/issue1-both-20m-rehearsal-torch-colab-1k-best.pt
+colab stop --session exp051-20m-sft
+```
+
 ## 成功条件
 
 5M smokeがmask対象Tokenのないbatch、NaN、shape error、checkpoint reloadエラーなく完走し、SFT-onlyとrehearsalのmetrics、summary、生成TXTを保存することです。20M比較では、同じ初期checkpointから両条件が完走し、general・medical・conversation・RPC・MRMPのdomain評価と48例の固定chat-testを実施することです。SFT loss対象Token、rehearsal Token、実際のoptimizer stepを分けて記録します。PyTorch版の不具合やColab割当失敗は成功結果へ混ぜず、原因と次の対策をこのノートへ残します。
