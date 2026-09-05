@@ -67,6 +67,8 @@ step 600ではvalidation loss 3.944994、PPL 51.6760、step 700では3.926233、
 
 step 1,100ではvalidation loss 3.859794、PPL 47.4556、step 1,200では3.843093、PPL 46.6696、step 1,300では3.840304、PPL 46.5396、step 1,400では3.829444、PPL 46.0369となりました。step 1,500ではtrain loss 3.643088、SFT loss 3.513138、rehearsal loss 4.162886、validation loss 3.820388、PPL 45.6219、learning rate 2.8742e-5、経過時間838.03秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、1,500 step時点の成果物をコミット・pushします。固定promptへのstep 1,500生成は「こんばんはー!」となり、短い挨拶の出力表現は引き続き変化しています。ここまで異常はありませんが、long stratumへの効果は最終評価まで保留します。
 
+step 1,600ではvalidation loss 3.811465、PPL 45.2166、step 1,700では3.806735、PPL 45.0033、step 1,800では3.804759、PPL 44.9144、step 1,900では3.798270、PPL 44.6239となりました。step 2,000ではtrain loss 2.876710、SFT loss 2.845041、rehearsal loss 3.003387、validation loss 3.785511、PPL 44.0582、learning rate 1.6982e-5、経過時間1,124.38秒となりました。step 1,600〜2,000の生成本文、step 2,000のcheckpoint metadata、metricsを保存し、2,000 step時点の成果物をコミット・pushします。固定promptへのstep 2,000生成は「こんにちは!」となりました。validation lossは一貫して改善していますが、長文応答への効果判定は最終評価で行います。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
