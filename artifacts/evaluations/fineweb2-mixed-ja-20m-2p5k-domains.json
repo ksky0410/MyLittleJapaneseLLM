@@ -1,0 +1,42 @@
+{
+  "format": "domain-evaluation-v1",
+  "config": "/Users/koseki/projects/small_llm/configs/fineweb2-mixed-ja-20m-2p5k.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-mixed-ja-20m-2p5k/step_002500.npz",
+  "checkpoint_step": 2500,
+  "seed": 42,
+  "eval_batches": 20,
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 5.158013820648193,
+      "perplexity": 173.81887706365728
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 3.2485801378885903,
+      "perplexity": 25.753747175175842
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 3.637988328933716,
+      "perplexity": 38.015285503351905
+    },
+    {
+      "name": "fineweb_test",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 4.382244904836019,
+      "perplexity": 80.01746351878417
+    }
+  ]
+}

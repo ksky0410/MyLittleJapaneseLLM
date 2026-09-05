@@ -1,0 +1,6 @@
+{
+  "final_step": 2500,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-mixed-ja-20m-2p5k/step_002500.npz",
+  "best_validation_loss": 5.158013820648193,
+  "elapsed_seconds": 1409.9936686670408
+}
