@@ -38,6 +38,8 @@ uv run python scripts/train_torch.py \
 
 2026年9月6日、MPS学習の前に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp075-both-50m-pretrain-5m --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返して終了しました。Colab側のbundle upload、入力検証、Python初期化、学習stepは発生していません。今回のColab失敗を成功実験と混ぜず、同じcommit・config・入力・seedでMPSへ切り替えます。
 
+同日、MPSで学習を開始しました。開始時の実測parameter数は50,207,616、PyTorch 2.14.0、AMP無効でした。step 1はtrain loss 8.895693、general validation loss 8.819042、PPL 6761.78、learning rate 1.0e-6、経過4.96秒でした。step 100はtrain loss 6.729032、general validation loss 7.089904、PPL 1199.79、learning rate 1.0e-4、経過60.74秒でした。NaN、OOM、shape error、警告は発生しておらず、学習を継続します。step 0とstep 100の生成文、metrics、step 100 metadataを保存しました。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
