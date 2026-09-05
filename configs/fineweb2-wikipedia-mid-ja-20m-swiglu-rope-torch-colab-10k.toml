@@ -1,0 +1,36 @@
+[paths]
+prepared_dir = "artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1"
+tokenizer_model = "artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model"
+train_tokens = "artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1-train.bin"
+val_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin"
+checkpoint_dir = "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k"
+samples_dir = "artifacts/samples/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k"
+
+[model]
+dim = 384
+layers = 10
+heads = 6
+context_length = 256
+mlp_ratio = 4
+position_embedding = "rope"
+norm_type = "layernorm"
+ffn_type = "swiglu"
+
+[training]
+batch_size = 8
+max_steps = 10000
+eval_interval = 100
+sample_interval = 100
+checkpoint_interval = 1000
+eval_batches = 20
+learning_rate = 0.0003
+min_learning_rate = 0.00003
+warmup_steps = 300
+weight_decay = 0.1
+seed = 42
+
+[generation]
+prompt = "今日は"
+max_new_tokens = 160
+temperature = 0.8
+top_k = 40
