@@ -57,6 +57,8 @@ step 1,100ではvalidation loss 3.833365、PPL 46.2178、step 1,200では3.82629
 
 step 1,600ではvalidation loss 3.788731、PPL 44.2003、step 1,700では3.763321、PPL 43.0913、step 1,800では3.745196、PPL 42.3173、step 1,900では3.750456、PPL 42.5405となりました。step 2,000ではtrain loss 3.648080、SFT loss 3.543768、rehearsal loss 4.065326、validation loss 3.732562、PPL 41.7860、learning rate 1.6982e-5、経過時間1007.76秒となりました。step 1,600〜2,000の生成本文、step 2,000のcheckpoint metadata、metricsを保存しました。step 2,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはー。`で、EOSへ到達しています。step 1,900で小さな反発がありましたが、step 2,000では再び改善しています。ここまで異常はありません。学習は継続中です。
 
+step 2,100ではvalidation loss 3.739756、PPL 42.0877、step 2,200では3.747287、PPL 42.4059、step 2,300では3.738759、PPL 42.0458、step 2,400では3.737458、PPL 41.9911となりました。step 2,500ではtrain loss 3.577265、SFT loss 3.119239、rehearsal loss 5.409369、validation loss 3.729172、PPL 41.6446、learning rate 8.2333e-6、経過時間1278.62秒となりました。step 2,100〜2,500の生成本文、step 2,500のcheckpoint metadata、metricsを保存しました。step 2,500の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはー!`で、EOSへ到達しています。rehearsal train lossがstep 2,500で高くなりましたが、validation lossは今回の実行中で最良です。ここまで異常はありません。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察を追記します。068との差分だけでなく、067と070を含む比較表を残し、2/6条件を採用・保留・棄却のいずれかに判断します。
