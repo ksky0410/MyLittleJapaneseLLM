@@ -38,7 +38,11 @@ smokeは100 step、本学習は2,500 stepをNaN、OOM、shape error、Token列�
 
 ## 実験中の記録
 
-smoke開始前の基準commitは`781c053`です。smoke設定のSHA-256は`13935351be7f97b4a7595bface483547bbd90b88a3e8d606a0b4145cd8abdf44`、本学習設定のSHA-256は`e27c4d9b5fffa8465b617b7c4bcf1d56d8a0dd5eaa6a936d5a515db49890ca4e`です。入力Token列とTokenizerのhashは前節の記載どおりで、設定を読み込んだところ20M級の概算parameter数は19,283,712でした。smokeを開始する前に、実行環境、MLXまたはCUDAのdevice、Python・PyTorch・MLX versionを追記します。学習中は100 stepを超えない間隔でmetricsと生成文を確認し、異常や予定変更があればその時点で追記します。長時間の本学習では、checkpoint保存間隔と学習Token数、累積処理Token数、メモリ使用量を記録します。
+smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935351be7f97b4a7595bface483547bbd90b88a3e8d606a0b4145cd8abdf44`、本学習設定のSHA-256は`e27c4d9b5fffa8465b617b7c4bcf1d56d8a0dd5eaa6a936d5a515db49890ca4e`です。入力Token列とTokenizerのhashは前節の記載どおりで、設定を読み込んだところ20M級の概算parameter数は19,283,712でした。smokeを開始する前に、実行環境、MLXまたはCUDAのdevice、Python・PyTorch・MLX versionを追記します。学習中は100 stepを超えない間隔でmetricsと生成文を確認し、異常や予定変更があればその時点で追記します。長時間の本学習では、checkpoint保存間隔と学習Token数、累積処理Token数、メモリ使用量を記録します。
+
+2026-09-05、開始前の主実験コマンドをこの実行環境で一度だけ試しましたが、MLX import時に`ImportError: [metal::load_device] No Metal device available`となり、step 0のcheckpointやmetricsは作成されませんでした。これはheadless・sandboxed環境でMetal deviceが見えないことによる実行失敗です。失敗を隠すためにPyTorch CPUへ切り替えることはせず、046までのMLX実行成果物も上書きしていません。SwiGLU・20M級の主実験は未実施として扱い、Metalが利用できるMac実行環境またはCUDA bundleへ移してから再開します。
+
+2026-09-05 13:32 JST、Metalが利用できないため、同じ047設定をPyTorch/CUDA bundleへまとめ、Colab T4でsmokeを実行する計画を追加しました。まず100 stepのsmokeでRoPE・LayerNorm・SwiGLUのshape、AMP、checkpoint、生成文を確認し、成功した場合だけ同じbundleを使って2,500 stepの本学習へ進みます。Colab側では041と異なる`047`専用出力先を使い、生成文は100 stepごと、重みcheckpointは500 stepごとに保存します。開始前のこの計画とbundleのhashをcommitした後にsessionを作成します。
 
 ## 結果と解釈
 
