@@ -1,0 +1,42 @@
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch",
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "mps",
+    "amp_enabled": false
+  },
+  "inputs": {
+    "config_sha256": "13d7891e36825566809304fb5c2bddc5f18aabc2dfbb3b750e291f0357579ca1",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "bce88dc2c7ef83093923c0e166e485360bafc6177b6be99813664610169cb7af",
+    "validation_data_sha256": "3a045389072a14da8b5ffec1e309bf4918e78f16a318f24cd54334f23cdd4e7b",
+    "base_checkpoint_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "parameter_count": 19308032,
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "final_step": 3000,
+  "lr_schedule_steps": 3000,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 2900,
+  "best_validation_loss": 3.486413097381592,
+  "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt",
+  "train_examples": 81382,
+  "validation_examples": 9343,
+  "rehearsal_tokens": null,
+  "rehearsal_ratio": 0.0,
+  "elapsed_seconds": 1781.183492709184,
+  "sample_prompt": {
+    "text": "今日なにしてた？",
+    "template": "raw",
+    "speaker_a": "A",
+    "speaker_b": "B"
+  },
+  "exclude_eos_from_sft_loss": false,
+  "eos_loss_weight": 0.5
+}

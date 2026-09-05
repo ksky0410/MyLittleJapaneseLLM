@@ -1,0 +1,65 @@
+{
+  "format_version": 1,
+  "backend": "pytorch",
+  "checkpoint_role": "best",
+  "checkpoint_step": 3000,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 3.5903432369232178,
+  "weights_file": "best.pt",
+  "weights_bytes": 77265478,
+  "weights_sha256": "e38e59f56ba552bf28dda974cb539e1f9207dd4fc32b7016f731172faf20dee8",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 3000,
+    "train_loss": 3.5903432369232178,
+    "sft_train_loss": 3.5903432369232178,
+    "validation_loss": 3.730382776260376,
+    "validation_perplexity": 41.695064990940566,
+    "learning_rate": 5.0000132025016246e-06,
+    "elapsed_seconds": 1470.4124664170668,
+    "rehearsal_ratio": 0.0,
+    "eos_loss_weight": 0.5,
+    "lr_schedule_steps": 3000
+  },
+  "inputs": {
+    "config_sha256": "eb5ea47b089ee903a20b21d234328614a42a59792a92920eb1d0223ee0f667b3",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "476b497eaf13653d894f82c78bb194c928daaaa7f2aef119967e1f59a6f71cc7",
+    "validation_data_sha256": "70c2611c9fdfab5ed2ba88bdf22db5311ff97f7a52533b8fa6be05ca712ff40d",
+    "base_checkpoint_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "mps",
+    "amp_enabled": false
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "lr_schedule_steps": 3000,
+  "base_checkpoint": {
+    "path": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt",
+    "weights_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "sft": {
+    "train_examples": 47315,
+    "validation_examples": 39702,
+    "rehearsal_ratio": 0.0,
+    "rehearsal_tokens": null,
+    "exclude_eos_from_sft_loss": false,
+    "eos_loss_weight": 0.5
+  }
+}

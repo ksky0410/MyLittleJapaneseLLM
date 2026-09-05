@@ -63,10 +63,27 @@ base変更後のRPC条件をMPSで実行し、3,000 stepまで完走しました
 
 続けてMRMP条件も同じbase、MPS、seed、SFT条件で3,000 stepまで完走しました。学習時間は1,781.18秒、best stepは2,900、best validation lossは3.4864130974、perplexityは32.66855836、final stepのtrain lossは3.3756878376、validation lossは3.4869752169でした。MRMP best checkpointのSHA-256は`a5f3d69b5d682a2b9d056660b04c0202165139b4cab82e379670b85cab26caa2`です。step 0から3,000まで100 step間隔の31個の生成本文と、step 500間隔のcheckpoint metadataを保存しました。NaN、OOM、shape errorは発生していません。ここまでのsource-specific validation lossは、RPCがRPC validation、MRMPがMRMP validationで計算されているため、次に同じ5領域と固定chat-testを両条件へ適用して比較します。
 
+両条件のbest checkpointをローカルCPUでreloadし、general、conversation、medical、RPC、MRMPの5領域を20 batchずつ評価しました。共通評価のvalidation lossとperplexityは次のとおりです。
+
+| 条件 | general | conversation | medical | RPC | MRMP |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| RPC-SFT | 6.2620 / 524.27 | 3.3115 / 27.43 | 3.5680 / 35.45 | 3.2802 / 26.58 | 3.0044 / 20.17 |
+| MRMP-SFT | 6.2947 / 541.71 | 3.3812 / 29.41 | 3.5966 / 36.48 | 3.4092 / 30.24 | 2.7601 / 15.80 |
+
+共通評価でも、RPC-SFTはgeneral、medical、RPCで、MRMP-SFTはMRMPで低いlossになりました。MRMP-SFTはconversation全体でもわずかに不利でしたが、MRMP validationではRPC-SFTより0.6492低くなっています。実験062のpretrainingではRPC条件のconversation lossがMRMP条件より大きく低かったため、応答部分だけを学ぶSFTではsource差の現れ方が変わりました。これはSFTが会話の履歴から応答を作る分布を直接学習した可能性を示しますが、同時に各sourceのvalidation形式とデータ量の差も残るため、sourceの一般的な優劣とは解釈しません。SFT後のgeneral lossは、baseである実験050 both条件のgeneral loss 6.2145よりRPC-SFTで0.0475、MRMP-SFTで0.0802高く、応答学習により一般文書の次Token性能を少し犠牲にした可能性があります。
+
+固定chat-test v1の48例は、RPC-SFTがEOS 48/48、平均生成長10.98 Token、Token overlap F1 0.1815、MRMP-SFTがEOS 48/48、平均生成長9.23 Token、F1 0.2027でした。stratum別F1は、RPC-SFTがshort 0.2704、medium 0.1573、long 0.1169、MRMP-SFTがshort 0.3380、medium 0.1519、long 0.1181です。MRMP-SFTはshort例を中心にF1が高く、例えば`こんにちは`へ`こんにちは!`、`えー`へ`うんうん`のような短い応答を生成しました。RPC-SFTにも`たしかにそうだけど、またお話しましょう`のような応答がありましたが、`こんにちは`へ`あなたはは?`のような不自然な例も残っています。いずれも全文を評価JSON/TXTへ保存し、見栄えの良い例だけを選んでいません。EOSが48/48である点は形式を学んだ可能性がある一方、短い出力を促してF1を押し上げる可能性もあるため、自然さの結論とは分けて扱います。
+
+評価JSONのSHA-256は、RPC domainが`5ffbd6273b5b6b6659458e6006ab0642b63ffc760ac785699866b483432be6a4`、MRMP domainが`ae06631d8166e23450cda6dfce323525cc5e7cea5647aeecd9f885392b2a8640`、RPC chatが`3024d1d704b58c9c68db2b0cb013a29048ed1939c852b34c8954fd6e8ec2b8d4`、MRMP chatが`523258e22320558093641eb8d4ef9fd6ddd0bb110fbab7c2fbae1288e8a844ce`です。評価はCPUで行い、chatはselection manifest `experiments/evaluation/chat-test-v1.json`、seed 42、temperature 0.8、top-k 40、最大64 Token、domainは各20 batchに固定しました。
+
 ## 実験終了後の結果と解釈
 
 ここへデータ件数、SFTの実測parameter数、runtime、学習時間、best step、source別loss、固定chat-testのEOS・生成長・Token overlap、代表生成の観察を追記します。SFT validation lossは応答マスク部分の次Token予測であり、一般知識、医学的正確性、安全性、会話の人間らしさを直接保証しません。source別のvalidationが良くても、抽出元への過適合や定型表現の記憶を切り分けます。
 
+実験063では、source別のresponse Token予算を揃えたうえで、同じbaseからRPC-SFTとMRMP-SFTを実行しました。共通5領域ではRPC-SFTがgeneral・medical・RPC、MRMP-SFTがMRMPで優位となり、固定chat-testではMRMP-SFTのF1が0.2027、RPC-SFTが0.1815でした。実験062のpretraining結果と比べ、SFTではMRMPの短い応答に対する適合が目立ちました。ただし、これは20M級、3,000 step、約77万response Token、単一seedの結果であり、現代的なチャットモデルの性能を意味しません。特にF1とEOSは短い定型応答の影響を受けるため、次の実験では同じ学習条件で両sourceを混ぜたSFTと比較し、生成の文脈適合を人手レビューへ回します。
+
 ## 次に試すこと
 
 結果に応じて、両sourceを同時に含むSFT、SFTとrehearsalの混合、EOS loss weightの再比較、または固定promptを現代口語へ広げた人手レビューへ進みます。一度に複数の変更を入れず、source配分、学習対象、rehearsal、EOS制御を分けて検証します。
+
+今回のsource別SFTの次は、RPCとMRMPを同じresponse Token予算で混ぜたboth-SFTを同じbaseと3,000 stepで実行します。RPC-SFT、MRMP-SFT、both-SFTを同じ共通5領域とchat-testで比較し、sourceを混ぜることで一方のsource適合が失われるか、両方への転移が得られるかを確認します。その後、general lossの悪化と早期EOSを抑えるため、both-SFTへrehearsalを加える実験を別条件として検証します。
