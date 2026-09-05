@@ -82,6 +82,8 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 次の実行は各configを同じseedで500 step学習するCPU探索です。予定コマンドは`.venv/bin/python scripts/train_torch.py --config configs/issue1-core-5m-smoke.toml --device cpu`、rpc・mrmp・bothも同じ形式です。4条件の学習前記録とToken hashを確定したため、ここから学習を開始します。
 
+13:55 JSTごろ、4条件の500 step学習を同時に開始し、すべて完走しました。実測parameter数は各条件5,205,120、PyTorch 2.14.0 CPU、AMP無効です。最終stepのgeneral validation lossはcore 6.7451613744（PPL 849.9363）、rpc 6.7525075277（PPL 856.2030）、mrmp 6.7579027812（PPL 860.8349）、both 6.7657705943（PPL 867.6345）でした。学習時間はcore 269.90秒、rpc 270.80秒、mrmp 264.04秒、both 267.81秒です。4条件ともNaN、OOM、shape error、Token列不足は発生せず、step 0と100 stepごとの生成文、step 1と500のcheckpoint metadata、metrics、summaryを保存しました。現時点のgeneral lossだけでは会話sourceの優劣を決めず、同じ最終checkpointをreloadしてdomain別・固定chat評価を続けます。
+
 ## 成功条件
 
 4条件の混合とToken化が入力hashの検証つきで完了し、各500 step学習がNaN、OOM、shape error、Token列不足なしに完走することです。各条件について、metrics、checkpoint metadata、step 0・100・200・300・400・500の生成文、general・conversation・medical・RPC・MRMP評価、固定chat-test JSON/TXTを保存します。性能差が小さい場合も失敗とはせず、会話sourceの影響がこの規模では検出できなかった結果として記録します。
