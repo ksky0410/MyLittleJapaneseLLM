@@ -61,6 +61,8 @@ Colab CLIが利用可能ですので、学習前にT4 GPUの割り当てを一�
 
 2026年9月5日22:49:57 JSTに、Colab CLIで`colab new -s exp068-both-long025 --gpu T4`を実行しました。しかしColab APIのassignment endpointがHTTP 503 `Service Unavailable`を返し、sessionは作成されませんでした。直後の`colab sessions`でもactive sessionがないことを確認しました。したがってColab上のbundle uploadや学習は発生しておらず、予定どおり同じ条件をMPSで実行します。今回もColab割り当て失敗は成果の失敗ではなく、計算資源の切り替えとして扱います。
 
+2026年9月5日22:50台に、予定したMPSコマンドで学習を開始しました。step 1はtrain loss 5.056197、SFT loss 5.095090、rehearsal loss 4.900624、validation loss 4.723757、PPL 112.5905、経過時間2.33秒でした。step 100はvalidation loss 4.107846、PPL 60.8156、step 200は4.042297、PPL 56.9570、step 300は4.009820、PPL 55.1370、step 400は3.998523、PPL 54.5176でした。step 500ではtrain loss 3.321728、SFT loss 3.270458、rehearsal loss 3.526806、validation loss 3.974348、PPL 53.2154、learning rate 4.7931e-5、経過時間294.72秒となりました。step 0〜500の生成本文とstep 500までのmetrics・checkpoint metadataを保存済みです。固定promptへのstep 500生成は「こんにちは〜。」となり、少なくともEOS直後の会話形式を壊さず応答しています。学習は継続中で、ここまで異常はありません。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
