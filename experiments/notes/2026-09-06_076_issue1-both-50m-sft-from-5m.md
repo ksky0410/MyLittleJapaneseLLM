@@ -70,6 +70,14 @@ step 600はtrain loss 3.535798、SFT train loss 3.595123、rehearsal loss 3.2984
 
 完走後に実際のruntime、最良・最終loss、SFTとrehearsalの損失、学習時間、best checkpoint hash、5領域評価、固定chat評価、生成本文を追記します。074との差は、初期checkpointとSFT条件を分けて記載し、075基盤の効果とSFT条件の効果を混同しません。
 
+2026年9月6日、best checkpoint（step 2,800、SHA-256 `e663e0530347c6f0834c07a8b195232a60d406f6e4fe0c22dcf5a436bee34030`）をCPUで評価しました。5領域のvalidation lossはgeneral 4.672603、conversation 2.729673、medical 2.952243、RPC 2.723093、MRMP 2.271843でした。075 pretraining bestと比較すると、それぞれ0.016567、0.159972、0.025792、0.132503、0.310598低下しました。SFT後も一般・会話・医療・両会話sourceのlossが改善し、rehearsal ratio 0.20で基盤分布を大きく壊さずに応答形式を学習できたと考えます。ただし、validation lossは会話能力の直接評価ではありません。
+
+固定chat-test-v1の48例では、EOS到達48/48、平均生成長11.6042 Token、precision 0.273218、recall 0.209831、overall Token overlap F1 0.207251でした。short・medium・longのF1はそれぞれ0.300797、0.142684、0.178271でした。075 pretrainingのoverall F1 0.060641から0.146609上がり、平均生成長も9.8958から1.7083 Token伸びました。shortでは挨拶や相づちの表面一致が増え、longでは075の0.067563から0.178271へ改善しました。一方、出力には「いえ、ネットで売っていくか、パスタがあるので、ぜひ。」のように文脈を部分的に拾いながら無関係な語を混ぜる例もあり、自然な会話能力が完成したとは判定しません。評価例のcontext超過、train本文重複、Token overlapの限界も引き続きあります。
+
+074の50M SFT（075より小さい約1M Token基盤）と比べると、076のoverall F1は0.207251で074の0.220457を0.013206下回りました。shortは0.300797対0.371271、mediumは0.142684対0.170805で076が低く、longは0.178271対0.119294で076が高くなりました。つまり、075の大きな基盤は長い履歴の表面一致には有利な兆候がありますが、短い定型応答では074より優れるとは言えません。今回の比較から、データ量を増やした事前学習とSFTの組み合わせは有望ですが、SFTデータの構成、応答長、context length 256の制約を分けた追加実験が必要です。
+
+5領域評価JSONのSHA-256は`b7b83426991604928eb4edb228985a6d8a4cb0591e06e633c2b42e33052f3dff`、固定chat JSONは`980c96b5a44d366a42c9e23440641201aecdaa35bd21f731ec30c786cf810c34`、全文TXTは`b3c612c0ece3646d24bd4fb67756da3e8300c2b024990bd65f4aa474e4bc09bb`、人手レビューtemplateは`c02e586cbd5dfedcc5a090f42cb0632c2a9919aa94f888045df8618a7e05a754`です。metricsのSHA-256は`0b032ec2d04ca2004b34cf63821600731f67a0d1b56a9351b9d1bde063c4bc4e`、summaryは`76de6482a0e7426e9ee58c9f31c5a4b853cd680b2c8e06732bf9b4fecea634b4`です。生成本文、軽量metadata、評価結果はGitHubへ追加し、重い`.pt`本体はhashだけを追跡します。レビュー状態は未確認であり、自然さ・話題適合性・応答完結性は人手評価待ちです。
+
 ## 次に試すこと
 
 076で075基盤のSFT効果を確認した後、会話データの長い応答比率を変更するか、現代的なinstruction形式と通常pretrainingの混合比率を一つだけ変更します。SFT後も長文会話が改善しない場合は、context length 512への拡張を別実験として検証します。
