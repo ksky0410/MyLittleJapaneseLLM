@@ -36,6 +36,8 @@
 
 評価用の`colab_evaluate_057.py`と`colab_prepare_eval_057.py`を追加し、同じT4 sessionへ評価コードとvalidation入力を送ります。評価時もbest checkpointのhashをmetadataで照合し、生成JSON/TXTを両条件で回収します。
 
+評価の初回実行は、EOS 1.00条件のdomain評価開始後に終了コード1で停止しました。学習完了、checkpoint、入力uploadには影響していません。Colab wrapperが子プロセスstderrを表示しなかったため原因はこの時点では未確定で、stderrをそのまま表示する修正版へ更新して再実行します。
+
 ## 結果と解釈
 
 実験終了直後に、両条件の実際のloss、PPL、学習時間、EOS到達率、生成例、055および056との差、仮説に対する判断を追記します。

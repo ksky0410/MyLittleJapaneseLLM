@@ -19,7 +19,19 @@ CONDITIONS = (
 
 def run(command: list[str]) -> None:
     print("$ " + " ".join(command), flush=True)
-    subprocess.run(command, cwd=PROJECT, check=True)
+    result = subprocess.run(
+        command,
+        cwd=PROJECT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.stdout:
+        print(result.stdout, end="", flush=True)
+    if result.stderr:
+        print(result.stderr, end="", flush=True)
+    if result.returncode:
+        raise subprocess.CalledProcessError(result.returncode, command)
 
 
 def main() -> None:
