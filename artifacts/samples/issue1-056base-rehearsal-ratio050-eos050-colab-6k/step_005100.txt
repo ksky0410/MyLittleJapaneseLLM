@@ -1,0 +1,3 @@
+prompt: <|startofconversation|><|speaker:DA|>こんにちはー！<eos:3><|speaker:DC|>
+
+<|startofconversation|> <|speaker:DA|> こんにちはー! <|speaker:DC|> こんにちはー!何かお腹空いたら、

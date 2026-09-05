@@ -1,0 +1,75 @@
+{
+  "experiment": "059",
+  "condition": "issue1-056base-rehearsal-ratio050-eos050-colab-6k",
+  "lightweight_files": 76,
+  "lightweight_archive": "/content/exp059-lightweight.tar.gz",
+  "archive_bytes": 11381,
+  "archive_sha256": "a767448211d5c3e0a6e89af9a91524bede35f67b4cdd55f0964acc56b0ab0ab5",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/best.pt",
+      "bytes": 77267142,
+      "sha256": "eff8ddc5a7e9fa9cc79e301c0b67d7dc352e43f5b314964f11be8840a7be2907"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_000500.pt",
+      "bytes": 77275917,
+      "sha256": "1b5eed332be6231209a1d458a5c3266c16b8f5a15bda39969a8c9a04d56a5898"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "77cdac2f17e6d3ba960a4aab8cf7f6f082d6bb202fa61fba5fccd6ea628c080a"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_001500.pt",
+      "bytes": 77275917,
+      "sha256": "a31c88dc43f20e6fac6fceb6c07294e9b7b9520a8122328eaba2573a5610739e"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_002000.pt",
+      "bytes": 77275917,
+      "sha256": "a7b61e0a8008c958e527dae1dd4f757c0ad01af6a6c929888a6bf047115884c5"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_002500.pt",
+      "bytes": 77275917,
+      "sha256": "ad49f25a84e04ccc33015876d1fb2d1c17fb6566e499eab48905b8d45fe767b3"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_003000.pt",
+      "bytes": 77275917,
+      "sha256": "407316e54c276aabdecb1d74b831fc39f4340acdaeb301def61a4a91a78de46c"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_003500.pt",
+      "bytes": 77275917,
+      "sha256": "bef27cf1f028d1987cee4340d53d9cbee0c7846da898c081bc94771573d89310"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_004000.pt",
+      "bytes": 77275917,
+      "sha256": "ecc6cf787a88b09c43b9dfd9979bd6d2312aab9acbac310b0acd58dc86cc26d5"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_004500.pt",
+      "bytes": 77275917,
+      "sha256": "ad436e499d6d85e93db4cad15401a30da6f9f8833630d542e71c76bbdfce431e"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_005000.pt",
+      "bytes": 77275917,
+      "sha256": "93088cd707cf0c0c0dccbfb87944815fe119518af7802d0488f9499aca47e07d"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_005500.pt",
+      "bytes": 77275917,
+      "sha256": "9481980b91968ca6342923c1e42ff03730fc89d78f49eca1f598a30d244e52de"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-056base-rehearsal-ratio050-eos050-colab-6k/step_006000.pt",
+      "bytes": 77275917,
+      "sha256": "acf5a1216d71b17513e708d439a57237125b0f99dda7cbc2838562dd47a9c13c"
+    }
+  ]
+}
