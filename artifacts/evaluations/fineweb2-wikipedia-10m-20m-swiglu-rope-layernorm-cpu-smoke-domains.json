@@ -1,0 +1,27 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch",
+  "config": "/Users/koseki/projects/small_llm/configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke/step_000100.pt",
+  "checkpoint_sha256": "2eb9f3591dbc54e76cbe82a117688e8ca6ea8a8fa26329822857220dca169134",
+  "checkpoint_step": 100,
+  "parameter_count": 19308032,
+  "seed": 42,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 7.108960469563802,
+      "perplexity": 1222.875668651368
+    }
+  ]
+}

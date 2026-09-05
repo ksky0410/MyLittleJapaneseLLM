@@ -1,0 +1,27 @@
+{
+  "backend": "pytorch",
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "inputs": {
+    "config_sha256": "89074fe4299c3726ca142300fedec5c17cf98b37c0c65d30a9737c7f8217a4e3",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4",
+    "val_tokens_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4"
+  },
+  "parameter_count": 19308032,
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 100
+  },
+  "final_step": 100,
+  "best_checkpoint": "step_000100.pt",
+  "best_checkpoint_step": 100,
+  "best_validation_loss": 7.108960469563802,
+  "checkpoint_interval": 100,
+  "elapsed_seconds": 123.98507966613397
+}

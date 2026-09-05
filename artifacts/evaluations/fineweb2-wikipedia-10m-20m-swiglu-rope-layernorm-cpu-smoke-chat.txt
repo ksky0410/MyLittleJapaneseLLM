@@ -1,0 +1,70 @@
+# Held-out chat dataset evaluation
+format: heldout-chat-dataset-evaluation-torch-v1
+input: /Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke/step_000100.pt
+checkpoint_step: 100
+seed: 42
+max_examples: 8
+max_new_tokens: 32
+temperature: 0.8
+top_k: 40
+selection: None
+
+## stratum summary
+unstratified: count=8 eos=7 mean_generated_tokens=17.12 mean_overlap_f1=0.0902
+
+## example 001: real-persona-chat:real_persona_chat/dialogues/01175.json turn 6
+speaker: BP
+prompt: <|startofconversation|><|speaker:BP|>こんばんは。宜しくお願いいたします！<eos:3><|speaker:BU|>こんばんは。お願いいたします。<eos:3><|speaker:BP|>この夏は、何か楽しい事ありましたか？<eos:3><|speaker:BU|>今日ありました！<eos:3><|speaker:BP|>へー、どんなことがあったんですか？<eos:3><|speaker:BU|>甲子園で応援してる高校がサヨナラ勝ちしました！<eos:3><|speaker:BP|>
+reference: それは良かったですね！もう決勝とかですか？
+completion:
+:: <| は。ak」。:へakakなspe:|>
+
+## example 002: real-persona-chat:real_persona_chat/dialogues/07767.json turn 4
+speaker: BS
+prompt: <|startofconversation|><|speaker:BS|>おはようございます！お願いします。<eos:3><|speaker:CJ|>こちらこそよろしくです。<eos:3><|speaker:BS|>朝ご飯は取りましたか？<eos:3><|speaker:CJ|>いただきました。そちらは？<eos:3><|speaker:BS|>
+reference: 私も取りました。何を召し上がったか聞いてもよいですか？
+completion:
+|>らr|>に <|spe <||>。 し <| <|akdak:!speak!ak|>akさが <|er
+
+## example 003: mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A07601.json turn 66
+speaker: おにぎり
+prompt: <|startofconversation|><|speaker:しらす|>こんにちは<eos:3><|speaker:おにぎり|>こんにちは。<eos:3><|speaker:こぐま|>こんにちわ！<eos:3><|speaker:しらす|>また寒くなりましたね<eos:3><|speaker:おにぎり|>よろしくお願いいたします。<eos:3><|speaker:こぐま|>今朝も寒かったー<eos:3><|speaker:おにぎり|>寒いですね！風もすごいです。<eos:3><|speaker:しらす|>こちらも風がすごいです<eos:3><|speaker:おにぎり|>台風並みと、ニュースで言っていました。<eos:3><|speaker:こぐま|>風が強い？<eos:3><|speaker:おにぎり|>こちらは、すごい強風です！<eos:3><|speaker:こぐま|>@おにぎり 言ってましたね<eos:3><|speaker:しらす|>@おにぎり えー？台風なみ!!<eos:3><|speaker:しらす|>音がすごいです<eos:3><|speaker:おにぎり|>怖いくらいですよ。<eos:3><|speaker:こぐま|>めちゃ強風！<eos:3><|speaker:しらす|>嫌ですよね<eos:3><|speaker:おにぎり|>電車も止まってしまったようで。。<eos:3><|speaker:こぐま|>おー！それはすごい<eos:3><|speaker:しらす|>@おにぎり 電車止まるくらいの強風!!<eos:3><|speaker:おにぎり|>天気が狂暴化してますよね。<eos:3><|speaker:こぐま|>@おにぎり 電車止まって、影響ある？<eos:3><|speaker:おにぎり|>極端というか。。<eos:3><|speaker:しらす|>たしかに極端…<eos:3><|speaker:しらす|>先週ずっと雨だったし<eos:3><|speaker:おにぎり|>子供が電車通学なので、このまま夜まで止まるとまずいです。。<eos:3><|speaker:こぐま|>@おにぎり 最近の天気は怖いですね<eos:3><|speaker:しらす|>@おにぎり それは大変<eos:3><|speaker:こぐま|>@おにぎり え？行っちゃった後に止まったんですか？<eos:3><|speaker:おにぎり|>自分は、在宅なので大丈夫なのですが。。<eos:3><|speaker:おにぎり|>@こぐま 朝は動いていたのですけどね！<eos:3><|speaker:こぐま|>朝から止まってたら良かったのにね<eos:3><|speaker:しらす|>たしかに<eos:3><|speaker:こぐま|>帰りの足がないのは心配<eos:3><|speaker:おにぎり|>もう一人は、自転車で40分だし、自分だけ家でぬくぬく、<eos:3><|speaker:おにぎり|>なんか申し訳ないです笑<eos:3><|speaker:こぐま|>風が強いと<eos:3><|speaker:しらす|>風の日の自転車も大変ですね<eos:3><|speaker:しらす|>前に進まない<eos:3><|speaker:こぐま|>チャリもしんどそう<eos:3><|speaker:こぐま|>進まないねー<eos:3><|speaker:おにぎり|>追い風だととても速く帰れるそうです笑<eos:3><|speaker:こぐま|>負荷が半端ない<eos:3><|speaker:こぐま|>追い風ね！<eos:3><|speaker:おにぎり|>自転車普段乗りますか？<eos:3><|speaker:しらす|>追い風、早そう!!<eos:3><|speaker:こぐま|>それならいいけど<eos:3><|speaker:しらす|>@おにぎり 坂の街なので乗れません笑<eos:3><|speaker:こぐま|>私はあるけど、ついついクルマ<eos:3><|speaker:おにぎり|>私はもっぱら車です。。<eos:3><|speaker:おにぎり|>@しらす 坂は大変ですね！<eos:3><|speaker:しらす|>私も車です<eos:3><|speaker:こぐま|>@しらす 坂が多いと、無理だー<eos:3><|speaker:おにぎり|>電動自転車とか必要なのかな。<eos:3><|speaker:しらす|>自転車は電動アシストがないと乗れないレベルです<eos:3><|speaker:こぐま|>前に、レンタルでアシスト自転車乗ったけど<eos:3><|speaker:おにぎり|>おー結構な急坂っぽいですね。<eos:3><|speaker:こぐま|>いいですねー<eos:3><|speaker:しらす|>うんうん<eos:3><|speaker:こぐま|>感動しました<eos:3><|speaker:しらす|>まだ乗ったことないです<eos:3><|speaker:おにぎり|>普通のより楽ですかね？<eos:3><|speaker:こぐま|>アシスト自転車なら、乗るかなー？<eos:3><|speaker:しらす|>ビュンっていきそうなイメージ<eos:3><|speaker:こぐま|>めちゃ楽！<eos:3><|speaker:しらす|>おぉ<eos:3><|speaker:おにぎり|>
+reference: ほぉ！
+completion:
+akspe <||>をspe!aker。!ak:speakム|>
+
+## example 004: real-persona-chat:real_persona_chat/dialogues/00497.json turn 3
+speaker: BM
+prompt: <|startofconversation|><|speaker:AF|>こんばんはー。<eos:3><|speaker:BM|>こんばんはー！<eos:3><|speaker:AF|>秋ごろに旅行に行けたらいいなーって考えている所です。<eos:3><|speaker:BM|>
+reference: 最近は感染症の影響であまり出歩けないですよね。
+completion:
+er |>!|>:|>er|>erer、:er <| <|: <||>こと
+
+## example 005: real-persona-chat:real_persona_chat/dialogues/09370.json turn 28
+speaker: BJ
+prompt: <|startofconversation|><|speaker:BJ|>こんばんはー！<eos:3><|speaker:BF|>こんばんは！よろしくお願いします！<eos:3><|speaker:BJ|>突然ですけど、子供の頃って何になりたかったとかあります？<eos:3><|speaker:BF|>そうですね、保育園の頃はケーキ屋さんとか言ってたかな？<eos:3><|speaker:BJ|>あーー王道ですねええ。かわいい<eos:3><|speaker:BF|>あはは、あなたは何になりたかったとかあります？<eos:3><|speaker:BJ|>スパイです<eos:3><|speaker:BF|>スパイ！！かっこいいじゃないですか！<eos:3><|speaker:BJ|>すごく馬鹿だったんだと思います。<eos:3><|speaker:BF|>いえいえ、映画とかドラマとかの影響ですか？<eos:3><|speaker:BJ|>多分その時コナンが好きだったんですよね！それでなんとなく探偵から結びついたのかと。。。<eos:3><|speaker:BF|>おーコナン！私も好きです！それでいうと私は刑事になりたいって思ったこともあります。<eos:3><|speaker:BJ|>あー刑事もいいですよね！いまだに憧れます<eos:3><|speaker:BF|>あとは科捜研の女になりたいと思ったことも。<eos:3><|speaker:BJ|>ははは！最高ですね。ミステリーが好きなんですね<eos:3><|speaker:BF|>好きですね！科捜研は理系が全然ダメで諦めました。<eos:3><|speaker:BJ|>私も理系苦手です。リトマス紙で挫折しました<eos:3><|speaker:BF|>リトマス紙懐かしいー！何に使うかはよく覚えてませんが。。<eos:3><|speaker:BJ|>何にも使わないですよあんなの。なんで勉強させられたのか・・・<eos:3><|speaker:BF|>あはは、勉強ってそういうの多いですよね。大人になっても使わない知識！<eos:3><|speaker:BJ|>いまだに役に立っているものなんだろうなあ。好きな教科なんでしたか？<eos:3><|speaker:BF|>私は日本史が好きでしたね。今じゃほとんど覚えてないですけど。<eos:3><|speaker:BJ|>私も日本史専攻でした！文化史が好きでした<eos:3><|speaker:BF|>文化史！資料集とか見るの楽しかった記憶があります。<eos:3><|speaker:BJ|>楽しいですよね。今は何も覚えてないけど、奈良とかまで寺を見に行ってました<eos:3><|speaker:BF|>おー！すごい！私実はちょっとだけ奈良に住んでたことあるんですよ。<eos:3><|speaker:BJ|>え、ほんとですか！いいところですか？<eos:3><|speaker:BF|>いいところでした！唐招提寺がよかった記憶があります。<eos:3><|speaker:BJ|>
+reference: 懐かしい！暑かった記憶があります、奈良
+completion:
+|>
+
+## example 006: real-persona-chat:real_persona_chat/dialogues/00479.json turn 27
+speaker: BB
+prompt: <|startofconversation|><|speaker:BK|>こんにちは！<eos:3><|speaker:BB|>こんにちは！<eos:3><|speaker:BK|>聞いてください！今朝、家の中でムカデを見ちゃいました！<eos:3><|speaker:BB|>家の中でですか！！それは嫌だ！！無事退治できましたか？<eos:3><|speaker:BK|>それが、退治するのをためらっていたら、逃がしちゃいました。<eos:3><|speaker:BB|>あら、、、今もどこかに隠れてるかもなんですね。<eos:3><|speaker:BK|>はい、おそらく玄関のどこかに潜んでます。参りました。<eos:3><|speaker:BB|>お薬とか、まきましたが？<eos:3><|speaker:BK|>お薬、できればまきたくないんです。ヤモリさんを愛しているので。<eos:3><|speaker:BB|>なるほど。ヤモリさんは虫を食べてくれるし、ちょっと見た目もかわいいですよね。<eos:3><|speaker:BK|>そうなんです。だからもう、ムカデっちはなんとか見つけ出して外に追い出さないと。<eos:3><|speaker:BB|>なるほど。それなら夏の虫対策は、なるべく薬を使わない方ですか？<eos:3><|speaker:BK|>使わないですね。ゴではじまるアレですら、見つけ次第個別対処です。<eos:3><|speaker:BB|>それはすごい！私はちょっと自分で対処できないので、いつも定期的に薬をまいて、侵入を防いでます。<eos:3><|speaker:BK|>薬って、どんな風に使うんですか？ドア枠に沿ってまく感じですか？<eos:3><|speaker:BB|>そうですね。スプレータイプのものがあって。2週間に1回ていど、ドアとか窓周辺にシューってしてます。<eos:3><|speaker:BK|>ああ、それは手軽ですね。2週間に一度で済むんですか？<eos:3><|speaker:BB|>今のところなんとか。あとは侵入できそうなところにネットを貼っておくとかですね。<eos:3><|speaker:BK|>ネット。侵入できそうなところって、換気扇とかですか？<eos:3><|speaker:BB|>換気扇とか、エアコンの排水パイプとかですね！<eos:3><|speaker:BK|>なるほど。今朝のムカデっちもそういうところから入ってきてるのかもしれません。<eos:3><|speaker:BB|>結局どの虫も一緒かもですね。<eos:3><|speaker:BK|>ネットって、百均とかで売ってますか？<eos:3><|speaker:BB|>百均でもあると思います！私は排水溝ネットを切って使ってます。<eos:3><|speaker:BK|>それ、賢い！！真似させていただきます！<eos:3><|speaker:BB|>お金もあまりかからないし、効果も確かです！<eos:3><|speaker:BK|>貼り付けるときは、養生テープとかマステとかですか？<eos:3><|speaker:BB|>
+reference: そうですね。外壁にも使えるマステがあって、そういうのを使ってます。
+completion:
+|>を|>:。も。。speい
+
+## example 007: real-persona-chat:real_persona_chat/dialogues/09143.json turn 18
+speaker: BB
+prompt: <|startofconversation|><|speaker:BB|>はじめまして、<BB>です。<eos:3><|speaker:BK|>初めまして、<BK>です！<eos:3><|speaker:BB|>歴史とかお好きですか？<eos:3><|speaker:BK|>嫌いではないですが、場所と時代にもよりますね。<eos:3><|speaker:BB|>例えばどんな時代とかですか？<eos:3><|speaker:BK|>あまり詳しくないのですが、ケルトとかマヤとかインカとか、未知なのが好きです。<eos:3><|speaker:BB|>マヤとかですか！いきなり存在がなくなって、なんだかミステリアスですよね。<eos:3><|speaker:BK|>ですよね。どうやら食糧難で都市を捨てたっぽいですが。<eos:3><|speaker:BB|>そういうことまで研究で明らかになったのですね。それは初めて聞きました。<eos:3><|speaker:BK|>私もなにかのテレビ番組で、調査途中の報告を見ただけなんです。所説あると思います。<eos:3><|speaker:BB|>そうなんですね。私は最近ミイラ展に行ってきて、ちょっとだけエジプトに興味がわいてきました。<eos:3><|speaker:BK|>エジプトもいいですね！ルクソールとか行ってみたいです。<eos:3><|speaker:BB|>ピラミッドを実際見れたらいいなと思いますよね。エジプトは観光には不向きらしいですが。<eos:3><|speaker:BK|>実はちょっとだけ行ったことあるんですが、あれは、個人よりツアーの方がいいです。<eos:3><|speaker:BB|>行かれたことあるんですね！どんな感じでしたか？<eos:3><|speaker:BK|>カイロとかギザとか行ったんですが、とりあえず暑かったです！干からびるかと思いました。<eos:3><|speaker:BB|>日本よりは湿気が少ないからマシかと思ったんですが、そうでもないんですね。<eos:3><|speaker:BK|>暑かったですよ。湿気がないから汗がすぐ蒸発して、ミイラになります。<eos:3><|speaker:BB|>
+reference: だからミイラを作りやすかったんでしょうね、きっと。
+completion:
+<|spe:をいをakakerでがな|> <|spe:|>|>。erロak <| <|er。。をspe <|er、
+
+## example 008: real-persona-chat:real_persona_chat/dialogues/07059.json turn 19
+speaker: AK
+prompt: <|startofconversation|><|speaker:AF|>こんにちは、今日も暑くなってきました。<eos:3><|speaker:AK|>こんにちは！毎日暑いですね。<eos:3><|speaker:AF|>最近、何か夏らしいことはしましたか？<eos:3><|speaker:AK|>頻繫にカキ氷を食べています！<eos:3><|speaker:AF|>かき氷いいですね！ご自宅にかき氷機があるんですね。<eos:3><|speaker:AK|>去年買ったんですよー。夏場は大活躍です！<eos:3><|speaker:AF|>ふわふわの氷が作れるようなタイプでしょうか。<eos:3><|speaker:AK|>そういう宣伝で買ったんですが、そこまでって感じですね。<eos:3><|speaker:AF|>氷もやっぱりいいものじゃないと難しいとか？<eos:3><|speaker:AK|>どうなんでしょう。専用のケースに冷やして入れるんで、他の氷を試すことはできないんですよね。<eos:3><|speaker:AF|>美味しい氷やさんって氷を買ってるって聞いたことがあります。<eos:3><|speaker:AK|>そうですねー。天然水だったりしますしねー。氷の密度も高いんでしょうか。<eos:3><|speaker:AF|>そういうことなんでしょうね。一度美味しいお店でかき氷を食べてみたいです。<eos:3><|speaker:AK|>お店だと本当にフワフワだったりしますよね。<eos:3><|speaker:AF|>以前、伊勢で食べた赤福氷は美味しかった記憶があります。<eos:3><|speaker:AK|>赤福餅ならありますが、氷もあるんですか！食べてみたい！<eos:3><|speaker:AF|>かき氷の中に、赤福が埋まっています。<eos:3><|speaker:AK|>めっちゃ贅沢ですね！絶対美味しいじゃないですか！<eos:3><|speaker:AF|>美味しいです、夏季限定なのでその季節じゃないと食べられないんです。<eos:3><|speaker:AK|>
+reference: 行ってみたいです。そういうその店でしか食べられないっていうのいいですよね。
+completion:
+|>ererer

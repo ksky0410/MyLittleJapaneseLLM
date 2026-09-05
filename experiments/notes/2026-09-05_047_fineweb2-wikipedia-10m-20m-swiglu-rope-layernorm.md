@@ -50,10 +50,18 @@ smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935
 
 13:37 JST、ColabのGPU割当失敗を性能結果と混同しないため、出力先を分離した`configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml`を作成しました。これは047のsmokeと同じモデル・データ・100 step条件を使い、CPUで構造、NaN、checkpoint reloadに相当する成果物、生成処理だけを確認する補助実験です。CPUの速度やlossをColab T4の本実験結果とは比較しません。設定SHA-256は`89074fe4299c3726ca142300fedec5c17cf98b37c0c65d30a9737c7f8217a4e3`です。実行コマンドは`.venv/bin/python scripts/train_torch.py --config configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml --device cpu`です。この計画をcommitへ固定してから実行します。
 
+13:38 JST、CPU smokeを上記コマンドで開始し、step 100まで完走しました。PyTorch 2.14.0、CPU、AMP無効、実測parameter数19,308,032でした。step 1のtrain/validation lossは8.835138/8.837431、step 100では6.477190/7.108960、PPL 1,222.876まで低下しました。NaN、OOM、shape errorは発生せず、`step_000001.pt`、`step_000100.pt`、metadata、metrics、step 0/100の生成文が専用出力先に保存されています。学習時間は123.99秒でした。これは構造確認の成功であり、Colab T4本学習の性能結果ではありません。続けてstep 100 checkpointのreload評価を行い、評価JSONと生成結果を保存します。
+
 ## 結果と解釈
 
-実験終了後、smokeと本学習を混ぜずに、backend、最終および最良checkpoint、train・validation loss、domain評価、固定chat評価、reload生成、失敗・停止理由、成果物hashを追記します。20Mモデルの出力を医療助言や医学的正解として扱わず、医師国家試験データを含むことによる見かけの専門性と、一般日本語の生成能力を分けて評価します。
+Colab T4の047 smokeおよび本学習は、041完走直後のGPU割当上限により開始できていません。この失敗は13:35 JSTの記録どおりで、既存sessionの流用は行っていません。
+
+代替として、13:38 JSTにCPU補助smokeを開始し、`configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml`で100 stepを完走しました。backendはPyTorch 2.14.0 CPU、AMP無効、実測parameter数は19,308,032、経過時間は123.99秒でした。step 1のtrain/validation lossは8.835138/8.837431、step 100では6.477190/7.108960、PPL 1,222.876でした。NaN、OOM、shape errorは発生せず、step 0とstep 100の生成文、metrics、step 1およびstep 100 checkpoint metadataと重みが保存されています。CPU補助smokeの設定SHA-256は`89074fe4299c3726ca142300fedec5c17cf98b37c0c65d30a9737c7f8217a4e3`です。
+
+step 100 checkpointをreloadし、general validationを再評価した結果はloss 7.1089604696、PPL 1,222.8757でした。reload後のheld-out会話8例ではEOS到達7/8、平均生成17.125 Token、Token overlap F1 0.090199でした。固定prompt `今日は`のstep 0出力は「猜胴兆兆付内低い…」のように文字が崩れ、step 100では数字・英字・特殊Tokenに偏りました。これは100 stepの構造確認として保存したもので、Colab T4本学習の日本語品質結果ではありません。評価JSON/TXTと生成文はそれぞれ`artifacts/evaluations/`、`artifacts/samples/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke/`へ保存しています。
+
+今回確認できたことは、SwiGLU・RoPE・LayerNormを組み合わせた20M級モデルがCPU上で正常にforward/backwardし、AMPなしのcheckpoint保存・reload・生成評価まで通ることです。Colabで実施すべき本来の比較、すなわち047の約10M Token・2,500 stepと041の約7.5M Token・10,000 stepの比較は未実施です。CPU smokeのlossや速度から、T4本学習の性能を推定しません。また、医師国家試験データを含むモデル出力を医学的助言や医学的正解として扱いません。
 
 ## 次に試すこと
 
-047の結果が安定していれば、同じ20M構造で学習Token数を増やすか、vocab 8,192・16,384のTokenizer対照を行います。その後、instruction tuning用の日本語会話データを別splitで作成し、pretrainingとSFTを分離して評価します。新しいdatasetを追加する場合は、出所・revision・ライセンス・取得日時・hash・混合比率を先に記録し、原本を変更せずに加工済みデータを別パスへ保存します。
+ColabのT4割当が戻り次第、まず`torch20m-swiglu-rope-colab-047`という新規sessionでbundle hashを検証し、047の100 step smokeを実行します。smokeが成功すれば同じbundleの`--full`指定で2,500 step本学習へ進み、軽量成果物・生成文・checkpoint hashを回収してからT4上でdomain/chat評価を行います。047が安定していれば、同じ20M構造で学習Token数を増やすか、vocab 8,192・16,384のTokenizer対照を行います。その後、instruction tuning用の日本語会話データを別splitで作成し、pretrainingとSFTを分離して評価します。新しいdatasetを追加する場合は、出所・revision・ライセンス・取得日時・hash・混合比率を先に記録し、原本を変更せずに加工済みデータを別パスへ保存します。
