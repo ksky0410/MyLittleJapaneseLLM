@@ -27,9 +27,11 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 ## 実行前の再現情報
 
-このノートと設定をcommit・pushした後、そのcommit SHAをここへ追記します。学習開始時のMLX、Python、macOS、Metal情報、設定SHA-256は開始直前に追記します。
+開始前のGit commitは`dfcdb61a5efa3df73b6701c27b360e1db85cc534`です。設定SHA-256は`99e6e4335451565db02f270a139f15daa9f23ccb2a637fa24ea8d00c43dc8458`です。学習Token列、validation Token列、TokenizerのSHA-256は前節へ記録済みです。実行環境はPython 3.13.1、macOS 15.5 arm64、MLX import成功、`mx.default_device()`は`Device(gpu, 0)`でした。Metalデバイスが見えていることを確認してから学習を開始します。
 
 ## 実験中の記録
+
+2026-09-05 12:19 JST、開始前に公開commit、設定SHA-256、入力Token列とTokenizerのSHA-256、Metal GPU deviceを確認しました。これから予定コマンドで学習を開始します。
 
 ## 結果と解釈
 
