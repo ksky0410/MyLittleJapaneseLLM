@@ -43,6 +43,12 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 041の長時間実験に向け、`training.checkpoint_interval`を追加しました。`eval_interval`と`sample_interval`は100のまま維持し、checkpointだけを1,000 step間隔で保存します。validation lossが更新された場合は`best.pt`を保存し、periodic checkpointとbest checkpointの役割をmetadataへ記録します。既存configでこの項目を省略した場合は従来どおりevaluation intervalをcheckpoint間隔として扱う後方互換実装です。変更は実験開始前にテストし、commitへ固定します。
 
+2026-09-05 13:12 JST、新規T4 session `torch20m-wikipedia-mid-colab-10k-r3`のfresh probeに成功しました。Colab側はPython 3.13.15、PyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、15,360 MiB、compute capability 7.5でした。probeのmatmul 10回は0.185408626秒で、最大GPUメモリ使用量は75,628,544 bytesでした。sessionには安全bundle `/content/small_llm_bundle.tar.gz`をアップロードし、bootstrapは6項目のSHA-256を検証してから学習を起動しました。bundleのSHA-256は`27d776f394b73140e3aa901f7095add90eb0bf7ad7ebd6de10bddaa226e25b93`です。
+
+bootstrapは検証用展開先`/content/small_llm_041`を使った後、`colab_bootstrap_train.py`の既定実行先である`/content/small_llm`へ学習用bundleを展開しました。そのため、学習成果物は`/content/small_llm/artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/`と`/content/small_llm/artifacts/samples/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/`に生成されています。これは041の想定出力先と一致し、古いsessionやローカル出力先との競合はありません。
+
+13:17 JST時点で、fresh T4学習はstep 5,500まで到達し、metrics 56件、step 0から5,500までの生成文、periodic checkpointはstep 1,000、2,000、3,000、4,000に生成されています。途中最新のstep 5,500はtrain loss 3.9399766922、general validation loss 4.7700667381、perplexity 117.9271119328、学習経過232.32秒です。この途中時点での最良validation lossもstep 5,500の4.7700667381です。回収した途中metricsは`artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/metrics-colab-partial.jsonl`、step 4,700の生成文は`artifacts/samples/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/step_004700-colab-partial.txt`へ保存しました。学習はまだ継続中であり、これらは最終結果ではありません。
+
 再試行用コードでは、評価stepとcheckpoint保存stepが一致しない場合に備え、metadataの`checkpoint_step`を独立して保存し、評価スクリプトもこの値を優先して読むようにしました。ローカルの小型CPU統合確認では、evaluationがstep 1・3・6・7、periodic checkpointがstep 5・7、生成文がstep 0・4・7となり、step 5 metadataの保存step 5と直近validation step 3も区別できました。全テストは63件成功しました。
 
 041 bundleのuploadは成功しましたが、実行要求から約20分経過しても、Colab側の041出力ディレクトリ、`metrics.jsonl`、step 1 checkpointはいずれも生成されませんでした。Colab CLIのログ取得もtimeoutし、既存kernelが実行要求を受け付けない状態と判断してローカルの実行待ちを中断しました。`colab download`で確認した際も`metrics.jsonl`と`summary.json`は存在せず、学習stepには到達していません。040の成果物を含む別ディレクトリは変更していません。sessionを停止し、停止後の`colab sessions`が空であることを確認しました。
