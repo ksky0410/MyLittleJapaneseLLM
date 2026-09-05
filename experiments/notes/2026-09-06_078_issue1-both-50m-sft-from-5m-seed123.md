@@ -39,6 +39,8 @@ Colab送信用bundleは`/tmp/small_llm-colab-078-XXXXXX.tar.gz`、236,435,549 by
 
 ここにはColab試行、bundle hash、MPSへの切り替え、step 1・500・1,000・1,500・2,000・2,500・3,000のloss・PPL・経過時間・学習率・固定prompt生成を時系列で追記します。警告、失敗、悪い生成も削除せず残します。
 
+2026年9月6日07:59台に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp078-both-50m-sft-seed123 --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返しました。Colabセッションは作成されず、bundle upload、入力hash検証、モデル初期化、学習stepは発生していません。078も同一条件をMPSへ切り替えます。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、077との差、seed分散への解釈を追記します。評価結果と生成全文のSHA-256も残します。
