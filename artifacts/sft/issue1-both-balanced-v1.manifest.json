@@ -1,0 +1,33 @@
+{
+  "format": "sft-npz-equal-source-budget-v1",
+  "seed": 42,
+  "target_response_tokens": 770975,
+  "sources": {
+    "rpc": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-rpc-full-v1/train.npz",
+      "input_sha256": "038bf678f5548bd2759fe5b28d8d98e0b19b7456c81b2cbfb8c71878adbbda15",
+      "input_example_count": 315584,
+      "input_response_token_count": 5132071,
+      "target_response_tokens": 385487,
+      "selected_example_count": 23687,
+      "selected_response_token_count": 385500
+    },
+    "mrmp": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-full-v1/train.npz",
+      "input_sha256": "49cab24b683f902a83a0d128d01adddfc69b947b97f0419fda545e4c55b5ddab",
+      "input_example_count": 81382,
+      "input_response_token_count": 770975,
+      "target_response_tokens": 385488,
+      "selected_example_count": 40736,
+      "selected_response_token_count": 385490
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-both-balanced-v1/train.npz",
+  "output_sha256": "645febae8fc8d471a78822027c3b693da346cf605c5cdf435a84902dffb73a44",
+  "output_example_count": 64423,
+  "output_response_token_count": 770990,
+  "array_shape": [
+    64423,
+    256
+  ]
+}
