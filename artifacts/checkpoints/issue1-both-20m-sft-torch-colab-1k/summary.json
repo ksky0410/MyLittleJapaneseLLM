@@ -1,0 +1,41 @@
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 787474432,
+    "peak_memory_reserved_bytes": 832569344
+  },
+  "inputs": {
+    "config_sha256": "e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "parameter_count": 19308032,
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "final_step": 1000,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 1000,
+  "best_validation_loss": 3.899234616756439,
+  "base_checkpoint": "/content/small_llm_051/artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt",
+  "train_examples": 396966,
+  "validation_examples": 49045,
+  "rehearsal_tokens": null,
+  "rehearsal_ratio": 0.0,
+  "elapsed_seconds": 58.614878596999915
+}

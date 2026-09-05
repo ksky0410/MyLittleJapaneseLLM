@@ -1,0 +1,70 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 1000,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 4.093145370483398,
+  "weights_file": "step_001000.pt",
+  "weights_bytes": 77275917,
+  "weights_sha256": "1ccc3fd4dfa2c7781ebbe784628915934209cbace43cadc7844a5318a8a92877",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 1000,
+    "train_loss": 4.093145370483398,
+    "sft_train_loss": 4.124272346496582,
+    "validation_loss": 3.905764377117157,
+    "validation_perplexity": 49.68804580540851,
+    "learning_rate": 5.0001370776997165e-06,
+    "elapsed_seconds": 84.38505060099988,
+    "rehearsal_ratio": 0.25,
+    "rehearsal_train_loss": 3.999765396118164
+  },
+  "inputs": {
+    "config_sha256": "e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 737864192,
+    "peak_memory_reserved_bytes": 803209216
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "base_checkpoint": {
+    "path": "/content/small_llm_051/artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt",
+    "weights_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "sft": {
+    "train_examples": 396966,
+    "validation_examples": 49045,
+    "rehearsal_ratio": 0.25,
+    "rehearsal_tokens": "/content/small_llm_051/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin"
+  }
+}
