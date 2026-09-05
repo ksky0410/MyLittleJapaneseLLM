@@ -41,6 +41,10 @@ Colab送信用bundleは`/tmp/small_llm-colab-078-XXXXXX.tar.gz`、236,435,549 by
 
 2026年9月6日07:59台に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp078-both-50m-sft-seed123 --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返しました。Colabセッションは作成されず、bundle upload、入力hash検証、モデル初期化、学習stepは発生していません。078も同一条件をMPSへ切り替えます。
 
+同日08:01台に予定したMPSコマンドで学習を開始しました。step 1はtrain loss 4.245380、SFT loss 4.537371、rehearsal loss 3.077420、validation loss 4.342219、PPL 76.8780、learning rate 5e-7、経過時間4.11秒でした。step 100はtrain loss 3.526594、SFT loss 3.504326、rehearsal loss 3.615668、validation loss 3.824654、PPL 45.8169、learning rate 5e-5、経過時間64.54秒でした。step 200はvalidation loss 3.800898、PPL 44.7413、learning rate 4.9871e-5、経過時間207.87秒、step 300はtrain loss 3.686939、SFT loss 3.650456、rehearsal loss 3.832873、validation loss 3.813421、PPL 45.3052、learning rate 4.9479e-5、経過時間327.62秒でした。step 400はvalidation loss 3.766543、PPL 43.2304、learning rate 4.8830e-5、経過時間450.85秒でした。
+
+step 500はtrain loss 3.344829、SFT loss 3.413326、rehearsal loss 3.070840、validation loss 3.762769、PPL 43.0675、learning rate 4.7931e-5、経過時間582.20秒でした。step 500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> よろしくお願いします!`で、077のstep 500とは異なるseed依存の出力になっています。step 0〜500の生成本文、step 500のcheckpoint metadata、metricsを保存し、GitHubへpushします。NaN、OOM、shape error、警告はありません。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、077との差、seed分散への解釈を追記します。評価結果と生成全文のSHA-256も残します。
