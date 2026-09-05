@@ -47,6 +47,8 @@ uv run python scripts/train_sft_torch.py \
 
 この節には、Colab試行、MPS切り替え、500 stepごとのtrain loss・validation loss・PPL・経過時間・学習率・生成本文、警告や途中停止を時系列で追記します。学習中の出力は省略せず保存します。
 
+2026年9月6日、MPS学習の開始前に`colab new -s exp072-both-long025-seed777 --gpu T4`を実行しました。しかしColab CLIのassignment endpointがHTTP 503 `Service Unavailable`を返し、セッション作成に失敗しました。直後の`colab sessions`は`No active sessions found on server.`でした。bundle uploadやColab上の学習は発生していないため、同一条件をMPSで実行します。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察、071・068との差分を追記します。三つの学習seedをまとめ、2/6条件の採用・保留・棄却を判断します。
