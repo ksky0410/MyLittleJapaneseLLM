@@ -33,6 +33,8 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 2026-09-05 12:19 JST、開始前に公開commit、設定SHA-256、入力Token列とTokenizerのSHA-256、Metal GPU deviceを確認しました。これから予定コマンドで学習を開始します。
 
+学習完了後の評価は、`scripts/evaluate_domains.py`でgeneral・conversation・medicalの3 domainを同じv2 Token列に対して測定し、`scripts/evaluate_chat_prompts.py`でIssue #1の固定prompt 8件を評価します。reload確認として`generate.py`から`今日は`、`吾輩は`、会話marker付きprompt、`問題：`を生成し、既存stepサンプルと別ファイルへ保存します。評価JSON、可読TXT、reload生成文はすべてGitHubへ追加します。
+
 ## 結果と解釈
 
 ## 次に試すこと
