@@ -57,6 +57,8 @@ MPSでの初回起動は、既存`train_sft_torch.py`が`mps`をdeviceとして�
 
 MPS対応後の再実行では、当初指定していた`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt`がabsolute position・GELUの別モデルであることをcheckpoint metadataが検出しました。さらに、実験056のRoPE・SwiGLU重み本体はローカルに存在せずmetadataだけが残っていたため、そのまま使いません。代わりに、ローカルで重み本体とmetadataの両方が揃い、構造が一致する実験050の`issue1-both-20m-colab-2p5k/best.pt`を両条件共通のbaseへ変更します。この変更はSFT開始前の条件変更であり、実験050の会話混合pretrainingからsource別SFTを比較する実験としてノートとwrapperを更新します。初回の不一致検出により、誤ったbaseで学習を進めずに済みました。
 
+base変更後のRPC条件をMPSで実行し、3,000 stepまで完走しました。PyTorchは2.14.0、deviceはMPS、AMPは無効、parameter数は19,308,032です。学習時間は1,471.26秒、best stepは3,000、best validation lossは3.7303827763、perplexityは41.69506499、final train lossは3.5903432369でした。RPC best checkpointのSHA-256は`e38e59f56ba552bf28dda974cb539e1f9207dd4fc32b7016f731172faf20dee8`です。step 0から3,000まで100 step間隔の31個の生成本文と、step 500間隔のcheckpoint metadataを保存しました。NaN、OOM、shape errorは発生していません。RPC validationはSFT応答maskを含むsource-specific validationであり、実験062のpretraining lossと直接同じ意味ではない点に注意します。続けてMRMP条件を同じMPS runtimeで実行します。
+
 ## 実験終了後の結果と解釈
 
 ここへデータ件数、SFTの実測parameter数、runtime、学習時間、best step、source別loss、固定chat-testのEOS・生成長・Token overlap、代表生成の観察を追記します。SFT validation lossは応答マスク部分の次Token予測であり、一般知識、医学的正確性、安全性、会話の人間らしさを直接保証しません。source別のvalidationが良くても、抽出元への過適合や定型表現の記憶を切り分けます。
