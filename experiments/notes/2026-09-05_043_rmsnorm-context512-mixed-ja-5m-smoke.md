@@ -29,7 +29,7 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 ## 実験中の記録
 
-学習開始前に、このノート、設定、コードcommit、入力Token列、TokenizerのSHA-256を確認します。学習中は設定の評価間隔に従って少なくとも100 stepごとにloss、perplexity、生成文、所要時間を保存します。異常や予定変更があれば、その時点で追記します。
+2026-09-05 12:34 JST、学習開始前の確認を行いました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。ノートと設定はcommit `59bf4d9`でpush済みで、設定、入力Token列、TokenizerのSHA-256は前節の値と一致しました。学習中は設定の評価間隔に従って少なくとも100 stepごとにloss、perplexity、生成文、所要時間を保存します。異常や予定変更があれば、その時点で追記します。
 
 （ここへ開始時刻、実行環境、stepごとの記録、警告、停止理由を追記する。）
 
