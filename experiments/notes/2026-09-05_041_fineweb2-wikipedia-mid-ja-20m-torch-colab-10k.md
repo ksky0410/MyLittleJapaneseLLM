@@ -35,6 +35,8 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 12:16 JST、T4の割当制限がGPU種別固有かを切り分けるため、L4で同じprobeを一度だけ試す計画を追加しました。L4でも割当できない場合は、ColabのGPU割当待ちとして041を開始せず、MacBook側の次の実験準備へ戻ります。
 
+12:17 JST、`colab run --session torch20m-wikipedia-mid-colab-10k-l4 --gpu L4 --keep --timeout 180 scripts/colab_probe.py`を実行しました。Colab backendは「L4 acceleratorはこのアカウントのquotaまたはentitlementでは利用できない」と拒否し、probeは実行されませんでした。直後の`colab sessions`は空でした。T4は割当制限、L4は利用権限不足と判断し、古いsessionの再利用やCPU上での041実行は行いません。
+
 2026-09-05、041専用の新規T4 session `torch20m-wikipedia-mid-colab-10k`の作成を試みましたが、Colab CLIがHTTP 412 `Precondition Failed`を返し、`TooManyAssignmentsError`で割当できませんでした。入力bundleやリポジトリは変更されていません。この失敗は、040の評価用session作成失敗と同様に削除せず記録します。
 
 新規割当の代わりに`colab sessions`を再確認したところ、040で使用した既存session `torch20m-wikipedia-mid-colab-5k`がサーバー上に残っていることが分かりました。040の学習出力は別ディレクトリに保存済みで、041の出力先は`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k`と分離されているため、同じT4 sessionへ041 bundleを上書きuploadして再利用します。再利用後は041の成果物回収を確認してから、明示的にsessionを停止し、もう一度`colab sessions`を確認します。
@@ -49,10 +51,10 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 ## 結果と解釈
 
-041の学習結果は未実施です。新規T4割当の失敗と、既存sessionを再利用した際のkernel応答停止という二つの失敗を削除せず記録しました。回収できた041の学習成果物はなく、metrics、checkpoint metadata、生成文は生成されていません。したがって、040とのlossや生成品質の比較もまだ行えません。
+041の学習結果は未実施です。新規T4割当の失敗、既存sessionを再利用した際のkernel応答停止、L4 acceleratorの権限不足という三つの失敗を削除せず記録しました。回収できた041の学習成果物はなく、metrics、checkpoint metadata、生成文は生成されていません。したがって、040とのlossや生成品質の比較もまだ行えません。
 
 今回の失敗から、長時間実験を始める前に、sessionが新しいkernelとして実行可能かを短いprobeで確認し、probeの出力と最初のmetrics生成を検証する手順が必要だと分かりました。また、10,000 stepを100 step間隔で重み保存すると約100個、合計約7.7GBの`.pt`を書き込むため、再試行用コードではmetricsと生成文の記録間隔を維持しつつ、重みcheckpointを1,000 step間隔と最良重み`best.pt`へ分離しました。保存stepと直近のvalidation stepもmetadataで別々に記録します。
 
 ## 次に試すこと
 
-Colabの新規kernelが確保できたら、まずPython・PyTorch・T4のprobeを実行し、実行コードcommitとbundle hashを検証した後に041を再試行します。生成文とmetricsは100 step間隔、periodicな重み本体は1,000 step間隔、最良重みは`best.pt`へ上書き保存する方式です。完走後は040との同一条件比較を行い、10,000 stepの延長効果が確認できなければ、データ量を増やす実験またはRoPE・RMSNorm・SwiGLU・GQAを一つずつ比較する実験へ進みます。
+Colabの新規T4 kernelが確保できたら、まずPython・PyTorch・T4のprobeを実行し、実行コードcommitとbundle hashを検証した後に041を再試行します。生成文とmetricsは100 step間隔、periodicな重み本体は1,000 step間隔、最良重みは`best.pt`へ上書き保存する方式です。Colabが使えない間は、MacBookの既存MLX実装でRoPE・RMSNorm・SwiGLU・GQAを一つずつ比較し、Colab復旧後に50M級または長いToken予算へ進みます。
