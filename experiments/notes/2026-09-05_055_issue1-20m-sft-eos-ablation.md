@@ -14,6 +14,8 @@
 
 新しいCLI引数`--exclude-eos-from-sft-loss`を`scripts/train_sft_torch.py`へ追加し、mask処理のテストを追加します。Colab wrapperは`scripts/colab_bootstrap_055.py`、bundle連結は`scripts/colab_concat_055.py`、archive化は`scripts/colab_package_055.py`です。学習開始前にコード、config、bundle hash、連結scriptをcommitしてpushします。
 
+学習前の基準commitは`426e884`です。configのSHA-256は`b7e3ab2a69559ede23c9d37680215c7d424d64084be854608f626f9189803cf8`、更新後の`train_sft_torch.py`は`76f61c4a56b63177bfc9387735460b958145d0a7da91ee31bda7c7de0e30a01d`です。`/tmp/exp055_bundle.tar.gz`は271,721,152 bytes、SHA-256 `682c8f778e5af94b7ce7cedf81d7bf8a9b735225a62d704a216b25cb4bbc0816`です。45MBのpart 5個と、残りを17MB、17MB、137KBへ分割した3個を使います。連結scriptへこのbytesとhashを固定しました。更新後の`colab_concat_055.py`のSHA-256は`257137bff7ce16c6ca9ba8b3dab68139e55afa18e24be08a4b091bdbeddb2cea`です。この状態をpushしてからuploadを開始します。
+
 ## 実行コマンド
 
 ```bash
