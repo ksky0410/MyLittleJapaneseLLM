@@ -53,6 +53,10 @@ uv run python scripts/train_sft_torch.py \
 
 step 600ではvalidation loss 3.929026、PPL 50.8574、step 700では3.920575、PPL 50.4294、step 800では3.902041、PPL 49.5034、step 900では3.879163、PPL 48.3837となりました。step 1,000ではtrain loss 3.661442、SFT loss 3.639277、rehearsal loss 3.750103、validation loss 3.883222、PPL 48.5805、learning rate 4.0147e-5、経過時間484.01秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存しました。step 1,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはー`で、EOSへ到達しています。step 900から1,000でvalidationが小さく反発しましたが、ここまで異常はありません。学習は継続中です。
 
+step 1,100ではvalidation loss 3.874502、PPL 48.1587、step 1,200では3.855232、PPL 47.2396、step 1,300では3.861849、PPL 47.5532、step 1,400では3.847373、PPL 46.8698となりました。step 1,500ではtrain loss 3.714425、SFT loss 3.706227、rehearsal loss 3.747217、validation loss 3.824269、PPL 45.7993、learning rate 2.8742e-5、経過時間745.76秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存しました。step 1,500の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> よろしくお願いします!`で、EOSへ到達しています。step 1,300で小さな反発がありましたが、step 1,400〜1,500では改善しています。ここまで異常はありません。学習は継続中です。
+
+step 600ではvalidation loss 3.929026、PPL 50.8574、step 700では3.920575、PPL 50.4294、step 800では3.902041、PPL 49.5034、step 900では3.879163、PPL 48.3837となりました。step 1,000ではtrain loss 3.661442、SFT loss 3.639277、rehearsal loss 3.750103、validation loss 3.883222、PPL 48.5805、learning rate 4.0147e-5、経過時間484.01秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存しました。step 1,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはー`で、EOSへ到達しています。step 900から1,000でvalidationが小さく反発しましたが、ここまで異常はありません。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察、071・068との差分を追記します。三つの学習seedをまとめ、2/6条件の採用・保留・棄却を判断します。
