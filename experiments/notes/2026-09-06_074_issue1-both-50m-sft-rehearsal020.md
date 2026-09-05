@@ -64,6 +64,10 @@ uv run python scripts/train_sft_torch.py \
   --sample-speaker-a DA --sample-speaker-b DC --device mps
 ```
 
+同日、MPS fallbackを実行しました。開始時に50M base checkpointのreload、実測parameter数50,207,616、PyTorch 2.14.0、MPS、AMP無効を確認しました。step 1ではtrain loss 4.502950、SFT loss 4.327504、rehearsal loss 5.204732、validation loss 4.746552、PPL 115.1864、経過4.78秒でした。step 100ではtrain loss 4.218567、SFT loss 4.378421、rehearsal loss 3.579152、validation loss 4.139629、PPL 62.7795、learning rate 5.0000e-5、経過290.54秒となりました。step 200ではvalidation loss 4.120917、PPL 61.6157、step 300では4.048874、PPL 57.3328、step 400では4.040423、PPL 56.8504となりました。step 500ではtrain loss 4.293469、SFT loss 4.217976、rehearsal loss 4.595441、validation loss 4.034588、PPL 56.5197、learning rate 4.7931e-5、経過1090.11秒でした。step 0〜500のmetricsと生成本文を保存し、step 500のcheckpoint metadataも作成しました。checkpoint `step_000500.pt`のSHA-256は`1e7288a22a050e505e756002f0f54f82db7a3b0054195063e9f1e458c595dab1`です。
+
+step 500の固定会話prompt生成は、`<|speaker:DA|>こんにちは！<eos:3><|speaker:DC|>`に対して`こんばんは～!`でした。会話形式の出力とEOSは成立しておりますが、入力への適切な応答か、SFTで期待する話題適合性があるかはまだ判断できません。ここまでNaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のruntime、parameter数、最良・最終loss、学習時間、最大メモリ、生成本文の代表例、checkpoint・入力・bundleのhash、20Mとの差を追記します。領域別lossとchat-testの自動指標が一致しない場合は、片方だけで容量効果を断定しません。人手レビュー未実施の場合はその状態を明記します。
