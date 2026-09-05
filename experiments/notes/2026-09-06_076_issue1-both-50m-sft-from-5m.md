@@ -38,6 +38,8 @@ uv run python scripts/train_sft_torch.py \
 
 Colab CLIでT4割当を先に試し、bundleには075 best checkpoint、加工済みSFTデータ、rehearsal Token列、Tokenizer、コード、設定だけを含めます。元JSONL、医師国家試験原本、`medilink_analysis`は含めません。503や割当上限で失敗した場合は、エラーとsession状態をノートへ残して同一条件のMPSへ切り替えます。
 
+開始commitは`6b8adf4`で、GitHubの`origin/main`へpush済みです。設定ファイルのSHA-256は`42b378bef6c16cdd6335acf92fc6e6ab2afd5e17e24db0e63108d2b782c32a27`、bootstrapのSHA-256は`eb3473ec0428f51afda2d0bfdd40572b78dc1105c6bd3c9d9889c9ec586a67c9`です。Colab送信用bundleは`/tmp/small_llm-colab-076-XXXXXX.tar.gz`、236,430,874 bytes、SHA-256 `622c5e5586409f4c726abc6b274e1f3999737061bf363c220528be9f7586636b`です。bundleには075 best重み、入力hash検証に必要なmetadata、SFTデータ、rehearsal Token列、Tokenizer、コードと設定だけを含め、原JSONL・医師国家試験原本・`medilink_analysis`は含めていません。
+
 ## 成功・失敗の判定基準
 
 3,000 stepをNaN、OOM、shape error、base checkpoint signature不一致なく完走し、100 step間隔のlossと生成文、500 step間隔のcheckpoint metadata、summaryを保存できれば実装上の成功とします。品質比較では074と同じ5領域、固定chat-test-v1、EOS到達率、平均生成長、short・medium・long別F1を記録します。lossやToken overlapだけで自然さ、医学的正確性、会話能力を断定しません。失敗や崩れた生成も削除せず保存します。
