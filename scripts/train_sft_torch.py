@@ -152,7 +152,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="cosine学習率の終点step。省略時はmax_stepsと同じ",
     )
-    parser.add_argument("--device", default="auto", help="auto、cuda、cpuのいずれか")
+    parser.add_argument(
+        "--device", default="auto", help="auto、cuda、mps、cpuのいずれか"
+    )
     parser.add_argument("--no-amp", action="store_true", help="CUDAでもfloat32で実行")
     parser.add_argument(
         "--sample-template",
@@ -355,12 +357,18 @@ def _load_base_checkpoint(
 
 def _device(torch: Any, requested: str) -> Any:
     if requested == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    if requested not in {"cuda", "cpu"}:
-        raise ValueError("--deviceはauto、cuda、cpuのいずれかで指定してください")
+        if torch.cuda.is_available():
+            return torch.device("cuda")
+        if torch.backends.mps.is_available():
+            return torch.device("mps")
+        return torch.device("cpu")
+    if requested not in {"cuda", "mps", "cpu"}:
+        raise ValueError("--deviceはauto、cuda、mps、cpuのいずれかで指定してください")
     device = torch.device(requested)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("--device cudaが指定されましたがCUDAが利用できません")
+    if device.type == "mps" and not torch.backends.mps.is_available():
+        raise RuntimeError("--device mpsが指定されましたがMPSが利用できません")
     return device
 
 

@@ -72,6 +72,25 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         self.assertTrue(args.no_amp)
         self.assertEqual(args.rehearsal_ratio, 0.25)
 
+    def test_parser_accepts_mps_device(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--base-checkpoint",
+                "base.pt",
+                "--train-data",
+                "train.npz",
+                "--validation-data",
+                "validation.npz",
+                "--output-dir",
+                "checkpoints",
+                "--samples-dir",
+                "samples",
+                "--device",
+                "mps",
+            ]
+        )
+        self.assertEqual(args.device, "mps")
+
     def test_parser_accepts_eos_exclusion(self) -> None:
         args = build_parser().parse_args(
             [
