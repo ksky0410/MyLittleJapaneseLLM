@@ -34,6 +34,8 @@
 
 次に同じColab T4で、両条件をgeneral・conversation・medical・RPC・MRMPのdomain lossと固定chat-test-v1へ評価します。評価用Token列と会話入力のuploadは、056で確認済みの親ディレクトリ作成手順を使います。
 
+評価用の`colab_evaluate_057.py`と`colab_prepare_eval_057.py`を追加し、同じT4 sessionへ評価コードとvalidation入力を送ります。評価時もbest checkpointのhashをmetadataで照合し、生成JSON/TXTを両条件で回収します。
+
 ## 結果と解釈
 
 実験終了直後に、両条件の実際のloss、PPL、学習時間、EOS到達率、生成例、055および056との差、仮説に対する判断を追記します。
