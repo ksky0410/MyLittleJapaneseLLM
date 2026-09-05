@@ -18,9 +18,9 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 実行前の再現情報
 
-実験039を完了したcommitは`0a32af2`です。実験040の設定とノートを準備したコードcommitは`4a01fb1`で、config SHA-256は`93e2e1a970fb8c520aee259f19b72050cfc73f34fbb63f9eb35008bf65d9509a`です。実行コードは既存のPyTorch backend、`scripts/train_torch.py`、`scripts/colab_bootstrap_train.py`を使用し、コード変更は行いません。Colabへはコード、config、Tokenizer、Token列、general validationをbundleとして送り、学習後に軽量成果物とcheckpoint本体を回収します。
+実験039を完了したcommitは`0a32af2`です。実験040の設定とノートを準備したcommitは`4a01fb1`で、040専用configを固定するwrapperを追加した実行コードcommitは`3ce40a2`です。config SHA-256は`93e2e1a970fb8c520aee259f19b72050cfc73f34fbb63f9eb35008bf65d9509a`です。実行コードは既存のPyTorch backend、`scripts/train_torch.py`、`scripts/colab_bootstrap_train.py`、`scripts/colab_bootstrap_040.py`を使用します。Colabへはコード、config、Tokenizer、Token列、general validationをbundleとして送り、学習後に軽量成果物とcheckpoint本体を回収します。
 
-送信用bundleは`/tmp/small_llm-colab-040.tar.gz`、SHA-256は`77416df8bbb90d47ee5be1fbe315d9817b97212beda50321e82c2d7a59066af4`、サイズは9.6MBです。bundleには`src/my_little_japanese_llm`、`scripts/_common.py`、`scripts/train_torch.py`、`scripts/colab_bootstrap_train.py`、設定、Tokenizer、7.5M Token列、general validation Token列を含めています。
+送信用bundleは`/tmp/small_llm-colab-040.tar.gz`、SHA-256は`5316852dee7950a94cfda5d494e9bae4b56b1609a3899f0bdccf49286d6ad103`、サイズは9.6MBです。bundleには`src/my_little_japanese_llm`、`scripts/_common.py`、`scripts/train_torch.py`、`scripts/colab_bootstrap_train.py`、`scripts/colab_bootstrap_040.py`、設定、Tokenizer、7.5M Token列、general validation Token列を含めています。先ほどuploadしたbundleはwrapper追加前のhashだったため、これからこの新しいbundleで差し替えます。
 
 予定コマンドは次のとおりです。
 
