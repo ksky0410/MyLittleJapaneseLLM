@@ -30,7 +30,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 実験中の記録
 
-未実施です。学習開始後は、step 1,000を超えない間隔でvalidation loss、perplexity、learning rate、経過時間、固定prompt生成を追記します。失敗や崩れた生成があった場合も削除せず保存します。
+2026-09-05、学習を開始しました。step 1ではtrain loss 8.721458、general validation loss 8.801644、perplexity 6645.158でした。warmup中のstep 300ではtrain loss 5.494156、validation loss 6.306765、perplexity 548.269、learning rate `3.000000e-4`、経過時間32.85秒でした。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。step 300までの生成結果は`artifacts/samples/fineweb2-mixed-ja-5m-5k/step_000300.txt`へ保存されています。学習は継続中です。
 
 ## 結果と解釈
 
