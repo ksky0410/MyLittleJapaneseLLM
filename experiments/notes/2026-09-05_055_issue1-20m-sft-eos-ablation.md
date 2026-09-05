@@ -43,6 +43,20 @@ bundle連結時にbytesとSHA-256を検証し、学習後は軽量archive、mani
 
 EOS除外条件が3,000 stepまで完走し、NaN、OOM、shape error、mask対象不足、checkpoint reload errorがないことです。step 0から3,000まで100 step間隔の生成TXT、500 step間隔のmetadata、5 domain評価、固定chat 48例を保存します。
 
+## 実施記録
+
+15:35 JST、新規session `exp055-20m-noeos-sft`へT4を割り当て、分割した8個のpartをuploadしました。連結後のbundleは271,721,152 bytes、SHA-256 `682c8f778e5af94b7ce7cedf81d7bf8a9b735225a62d704a216b25cb4bbc0816`で、開始前に固定した値と一致しました。wrapperの入力hashもconfig、EOS除外を含むSFT script、base checkpoint、train/validation NPZ、rehearsal Token列、Tokenizerのすべてで一致しました。
+
+EOS除外条件は3,000 stepまでNaN、OOM、shape error、mask対象不足、checkpoint reload errorなしで完走しました。Colab環境はPyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、AMP有効でした。実測parameter数は19,308,032、peak allocatedは750,051,840 bytes、peak reservedは817,889,280 bytes、経過時間は248.03秒でした。bestはstep 2,400で、SFT validation loss 3.939761、PPL 51.4063でした。best checkpointは`artifacts/checkpoints/issue1-both-20m-rehearsal-ratio050-noeos-colab-3k/best.pt`、SHA-256 `2b894d75837381a8cc886dbcab7c4249ecc40ac6a7de1a43649650cb4cab4fbf`です。軽量archiveは40ファイル、7,084 bytes、SHA-256 `8997814168a1ec87d8c1355568154aa3bcf9463ae8253ea051b5518fccd58ecf`でした。archive、manifest、best weightを回収し、学習後にColab sessionを停止して`colab sessions`が空であることを確認しました。
+
+学習中サンプルは054と同じ実在話者ID `DA`・`DC`のconversation形式です。step 0では054と同じ崩れた続きを出しましたが、step 1,000では「こんにちは!よろしくお願いします。お願いします!!あなたは?」、step 2,000では「こんばんは!今日もお願いいたします。」、step 3,000では「こんにちは!よろしくお願いします!よろしくお願いします!」となりました。EOSをloss対象から除いたため応答が早く終了しなくなった一方、挨拶の反復と過生成が現れました。step 0から3,000まで100 step間隔の全31個の生成TXTを保存しています。
+
+best checkpointをローカルPyTorch 2.14.0 CPUでreloadし、052・054と同じ5 domainを20 batchずつ評価しました。general lossは5.1779（PPL 177.30）、conversationは2.8318（PPL 16.98）、medicalは3.0903（PPL 21.98）、RealPersonaChatは2.8250（PPL 16.86）、MRMPは2.3748（PPL 10.75）でした。054のEOS込み・ratio 0.50・3,000 stepの5.1347、2.8062、3.0669、2.7972、2.3432より、5領域すべてで悪化しました。評価JSONは`artifacts/evaluations/issue1-both-20m-rehearsal-ratio050-noeos-colab-3k-domains.json`です。
+
+固定chat-test v1の48例では、EOS 42/48、平均生成長34.02 Token、precision 0.1331、recall 0.2841、Token overlap F1 0.1596でした。short・medium・longのF1は0.2004、0.1195、0.1589でした。054のEOS込み条件はEOS 48/48、平均10.06 Token、F1 0.2080でした。EOS除外によって生成長とrecallは増えましたが、precisionとF1が下がり、固定会話では適切な終了と内容適合を両立できませんでした。評価JSON/TXTは`artifacts/evaluations/issue1-both-20m-rehearsal-ratio050-noeos-colab-3k-chat-test-v1.json`・`.txt`、レビュー用JSONは`experiments/evaluation/issue1-both-20m-rehearsal-ratio050-noeos-colab-3k-chat-review.json`です。
+
+054と055を比較すると、EOSを除く仮説は「短すぎるcompletionを減らす」という点では支持されましたが、validation、5 domain、固定chat F1、生成の反復では支持されませんでした。現時点では、EOS込みで学習した054をSFTの基準条件として維持します。EOSを単純に除くのではなく、response長や会話境界を考慮したEOSの重み付けを次に試す価値があります。ただし、この結果だけでEOS重みの最適値を決めず、まず複数の実在履歴を使った人手レビューで反復と自然さを確認します。
+
 ## 結果と解釈
 
 学習完了後にEOS込みの054とEOS除外の055を、SFT validation、通常domain、EOS・生成長、固定chat F1、生成の反復・長文化・話者境界の観点で比較します。EOS除外が良い場合も、評価データの重複と20Mモデルの制約を明記します。

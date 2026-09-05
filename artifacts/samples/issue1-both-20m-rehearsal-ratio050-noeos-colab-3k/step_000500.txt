@@ -1,0 +1,3 @@
+prompt: <|startofconversation|><|speaker:DA|>こんにちはー！<eos:3><|speaker:DC|>
+
+<|startofconversation|> <|speaker:DA|> こんにちはー! <|speaker:DC|> こんにちは、何かのお願いします。お店とかお気に入っていましたが、お子さんの本日はなしではありません。
