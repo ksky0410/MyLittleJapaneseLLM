@@ -1,0 +1,39 @@
+{
+  "experiment": "051",
+  "lightweight_files": 32,
+  "lightweight_archive": "/content/exp051-lightweight.tar.gz",
+  "archive_bytes": 6038,
+  "archive_sha256": "0d80d358eba1b18a7123fc71875962134fa17a6824e1679a2bfd7de2d6713c69",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-sft-torch-colab-1k/best.pt",
+      "bytes": 77267142,
+      "sha256": "8c0c936c4b42432c7ebbfd49f5aeacfb4770f76ec04c0f6fa23f2e3c7fa08b6d"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-sft-torch-colab-1k/step_000500.pt",
+      "bytes": 77275917,
+      "sha256": "07b5fc08a9c047be39a9af5e458d65a96e94ff6f68d16ecfca35cd691ed2a383"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-sft-torch-colab-1k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "bbeed387b7bb32fa79049096da18880328979ec3e66fe99349c6147b61b42b77"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-rehearsal-torch-colab-1k/best.pt",
+      "bytes": 77267142,
+      "sha256": "82eec9f7b4f178c852583117c2cc4314952f203caf7889a4b308f8dd916f5de6"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-rehearsal-torch-colab-1k/step_000500.pt",
+      "bytes": 77275917,
+      "sha256": "4500408b0071bc640764413781710610630c87ad7b602713d401e1775c20aa1c"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-20m-rehearsal-torch-colab-1k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "1ccc3fd4dfa2c7781ebbe784628915934209cbace43cadc7844a5318a8a92877"
+    }
+  ]
+}
