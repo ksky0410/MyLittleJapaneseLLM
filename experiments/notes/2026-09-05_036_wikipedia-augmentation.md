@@ -58,6 +58,8 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 .venv/bin/python scripts/train.py --config configs/fineweb2-wikipedia-augmented-ja-5m-2p5k.toml
 ```
 
+学習開始前の公開commitは`79cfda1`です。smoke configのSHA-256は`37868d1dded50b3d3c2310a2acf720fb005b22e45b71fa53c632aed147625ae3`、本学習configは`667a6752cbf9565aa50d0737a383cc1fc17cb7c09547431403a8871c4166a6d0`、`scripts/train.py`は`e8f600df408f53772b3f0729c1d8047a656e1f63b0e8907e04d6502eae612ee0`です。実行環境はPython 3.13.1、既存の`.venv`へ導入済みのMLXです。smokeを先に完走させ、成功後に本学習を開始します。
+
 ## 実験中の記録
 
 2026-09-05、実験031で抽出したWikipedia本文と既存4 sourceを用いた混合Token列を準備しました。混合manifestは`artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1.manifest.json`、出力本文のSHA-256は`4ddbc8da19ab87663a3d94e44db2d5a881993679f38c19c42df41c813fd8b305`、実際のToken数は9,999,973です。Token列は`artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1-train.bin`、SHA-256は`d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4`です。Token metadataではvocab size 4,096、EOS ID 3を確認しました。
