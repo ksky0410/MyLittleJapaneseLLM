@@ -11,8 +11,8 @@ PARTS = tuple(
     + [Path(f"/content/exp054_last_part_{index}") for index in range(3)]
 )
 BUNDLE = Path("/content/exp054_bundle.tar.gz")
-EXPECTED_BYTES = 0
-EXPECTED_SHA256 = ""
+EXPECTED_BYTES = 271721074
+EXPECTED_SHA256 = "c133ce79bd086abe778a7430387d33a3b28fa8d028f1966b08a68821b4fc78b4"
 
 
 def sha256(path: Path) -> str:

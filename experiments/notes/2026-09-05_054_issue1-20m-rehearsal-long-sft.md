@@ -14,6 +14,8 @@
 
 学習実行用scriptは`scripts/train_sft_torch.py`で、`--sample-template conversation --sample-speaker-a DA --sample-speaker-b DC`を追加します。Colab wrapperは`scripts/colab_bootstrap_054.py`、bundle連結は`scripts/colab_concat_054.py`、成果物回収archiveは`scripts/colab_package_054.py`です。新しいsample prompt処理とテストを含む基準commitをpushしてからbundleを作成し、bundleのbytesとSHA-256をこのノートへ追記してから学習を開始します。
 
+基準commitは`e9a6e31`で、`configs/issue1-both-20m-rehearsal-ratio050-colab-3k.toml`のSHA-256は`21d71a92f3dca17f96334c81724ecc55fa21c1023991d4e849bd8169427c671c`、更新後の`train_sft_torch.py`は`7e81ffad0f713c0f916d174b918ffce54aad4cbf77fcd07cc295ca789230a85e`です。`/tmp/exp054_bundle.tar.gz`は271,721,074 bytes、SHA-256 `c133ce79bd086abe778a7430387d33a3b28fa8d028f1966b08a68821b4fc78b4`です。45MBのpart 5個と、残りを17MB、17MB、137KBへ分割した3個のpartを使い、連結scriptにはこのbytesとhashを固定しました。連結script更新後のSHA-256は`f658954bda14623c74e2860d747bf1e4b3a27afef215e8a3db29bd7da857a6c3`です。このhashをpushしてからColabへuploadします。
+
 ## 実行コマンド
 
 ```bash
