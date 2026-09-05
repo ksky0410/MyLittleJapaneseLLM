@@ -25,13 +25,15 @@ colab exec --session torch20m-wikipedia-mid-colab-10k --timeout 2400 --file scri
 colab stop --session torch20m-wikipedia-mid-colab-10k
 ```
 
-成功基準は、10,000 stepをNaN、OOM、shape error、Token列不足なく完走し、step 100間隔のmetrics・checkpoint metadata・生成文を回収できることです。失敗した場合も、発生したstep、エラー、回収できた成果物、次に確認することをこのノートへ残します。生成文はstep 0から最後のstepまで削除せずGitHubへpushします。
+成功基準は、10,000 stepをNaN、OOM、shape error、Token列不足なく完走し、step 100間隔のmetrics・生成文と、step 1,000間隔のperiodic checkpoint metadata、およびvalidation loss最良時点のbest checkpointを回収できることです。20Mモデルの重みは約77MBあるため、学習中のcheckpoint保存を100 step間隔から1,000 step間隔へ分離し、生成文とmetricsの細かな記録は維持します。失敗した場合も、発生したstep、エラー、回収できた成果物、次に確認することをこのノートへ残します。生成文はstep 0から最後のstepまで削除せずGitHubへpushします。
 
 ## 実験中の記録
 
 2026-09-05、041専用の新規T4 session `torch20m-wikipedia-mid-colab-10k`の作成を試みましたが、Colab CLIがHTTP 412 `Precondition Failed`を返し、`TooManyAssignmentsError`で割当できませんでした。入力bundleやリポジトリは変更されていません。この失敗は、040の評価用session作成失敗と同様に削除せず記録します。
 
 新規割当の代わりに`colab sessions`を再確認したところ、040で使用した既存session `torch20m-wikipedia-mid-colab-5k`がサーバー上に残っていることが分かりました。040の学習出力は別ディレクトリに保存済みで、041の出力先は`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k`と分離されているため、同じT4 sessionへ041 bundleを上書きuploadして再利用します。再利用後は041の成果物回収を確認してから、明示的にsessionを停止し、もう一度`colab sessions`を確認します。
+
+041の長時間実験に向け、`training.checkpoint_interval`を追加しました。`eval_interval`と`sample_interval`は100のまま維持し、checkpointだけを1,000 step間隔で保存します。validation lossが更新された場合は`best.pt`を保存し、periodic checkpointとbest checkpointの役割をmetadataへ記録します。既存configでこの項目を省略した場合は従来どおりevaluation intervalをcheckpoint間隔として扱う後方互換実装です。変更は実験開始前にテストし、commitへ固定します。
 
 041 bundleのuploadは成功しましたが、実行要求から約20分経過しても、Colab側の041出力ディレクトリ、`metrics.jsonl`、step 1 checkpointはいずれも生成されませんでした。Colab CLIのログ取得もtimeoutし、既存kernelが実行要求を受け付けない状態と判断してローカルの実行待ちを中断しました。`colab download`で確認した際も`metrics.jsonl`と`summary.json`は存在せず、学習stepには到達していません。040の成果物を含む別ディレクトリは変更していません。sessionを停止し、停止後の`colab sessions`が空であることを確認しました。
 
