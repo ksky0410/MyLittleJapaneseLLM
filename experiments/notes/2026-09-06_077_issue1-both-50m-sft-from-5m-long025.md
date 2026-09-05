@@ -62,6 +62,10 @@ step 600はvalidation loss 3.785381、PPL 44.0525、learning rate 4.6792e-5、�
 
 step 1,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> よろしくお願いします!`で、step 500より自然な定型応答へ変化しました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は継続中です。
 
+step 1,100はvalidation loss 3.688642、PPL 39.9905、learning rate 3.8061e-5、経過時間1,284.53秒でした。step 1,200は3.679265、PPL 39.6173、learning rate 3.5851e-5、経過時間1,410.11秒、step 1,300は3.677154、PPL 39.5337、learning rate 3.3543e-5、経過時間1,536.27秒でした。step 1,400は3.653691、PPL 38.6169、learning rate 3.1164e-5、経過時間1,663.07秒、step 1,500はtrain loss 3.412549、SFT loss 3.394965、rehearsal loss 3.482884、validation loss 3.641220、PPL 38.1383、learning rate 2.8742e-5、経過時間1,785.21秒でした。step 1,000以降もvalidationは改善を続けています。
+
+step 1,500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんは!よろしくお願いします!`で、step 1,000より少し長い定型応答になりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
