@@ -55,6 +55,8 @@ step 600ではvalidation loss 3.945801、PPL 51.7177、step 700では3.927178、
 
 step 1,100ではvalidation loss 3.869417、PPL 47.9144、step 1,200では3.846312、PPL 46.8201、step 1,300では3.844671、PPL 46.7433、step 1,400では3.827139、PPL 45.9309となりました。step 1,500ではtrain loss 3.929037、SFT loss 3.874792、rehearsal loss 4.146019、validation loss 3.816231、PPL 45.4327、learning rate 2.8742e-5、経過時間783.48秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、1,500 step時点の成果物をコミット・pushします。固定promptへのstep 1,500生成は「よろしくお願いします。」となりました。ここまで異常はありません。
 
+step 1,600ではvalidation loss 3.796752、PPL 44.5562、step 1,700では3.796638、PPL 44.5512、step 1,800では3.790928、PPL 44.2975、step 1,900では3.782652、PPL 43.9324となりました。step 2,000ではtrain loss 2.982955、SFT loss 2.972044、rehearsal loss 3.026596、validation loss 3.775949、PPL 43.6389、learning rate 1.6982e-5、経過時間1,061.16秒となりました。step 1,600〜2,000の生成本文、step 2,000のcheckpoint metadata、metricsを保存し、2,000 step時点の成果物をコミット・pushします。固定promptへのstep 2,000生成は「こんにちは!」となりました。068の同step validation loss 3.785511より低いものの、長文層の効果は最終評価で判断します。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、最終train・validation loss、PPL、最良checkpoint、学習時間、5領域loss、EOS、長さ別F1、source別F1、生成例、成果物hash、実験068および067との差を追記します。失敗した場合も削除せず、原因不明ならそのまま記録します。
