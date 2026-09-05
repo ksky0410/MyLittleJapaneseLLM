@@ -33,6 +33,10 @@ python scripts/train_torch.py --config configs/issue1-mrmp-20m-colab-2p5k.toml -
 
 開始前のcommit、bundleのhash照合、Colab sessionの状態、各条件の開始・終了、GPUやPyTorchの情報、学習時間、NaNやOOMなどの異常、生成本文の回収状況を節目ごとに追記します。悪い生成、空に近い生成、文脈に合わない生成も削除しません。
 
+2026年9月5日、実験用bundleを`/tmp/small_llm-colab-062-b82b334.tar.gz`として作成しました。bundleのサイズは約3.8MB、SHA-256は`c02ec8a56756ea66fffca3864cd147d72977c67bd6e1797d21289a2779e26e30`です。設定、学習コード、Tokenizer、RPC/MRMP train Token列、general・RPC・MRMP validation Token列を含め、checkpoint本体は含めていません。
+
+Colab session `exp062-20m-rpc-mrmp`はT4でREADYになりました。まだbundleのuploadと学習開始前であり、既存sessionの成果物は変更していません。次にbundleをuploadし、wrapperによる必須ファイルと入力hashの照合を通過してから学習を開始します。
+
 ## 実験終了後の結果と解釈
 
 ここへ実測parameter数、runtime、peak memory、学習時間、最終および最良loss、5領域の比較、固定chat-testの集計、代表的な生成の観察を追記します。validation lossは次Token予測の指標であり、会話の自然さ、知識の正確さ、医学的安全性を直接意味しないことを明記します。RPCまたはMRMPのvalidationが良くなっても、そのsourceに含まれる表現を記憶した可能性があるため、held-out生成とsource別評価を分けて解釈します。
