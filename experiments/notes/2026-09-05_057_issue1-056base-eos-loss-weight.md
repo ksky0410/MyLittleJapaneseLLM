@@ -38,6 +38,8 @@
 
 評価の初回実行は、EOS 1.00条件のdomain評価開始後に終了コード1で停止しました。学習完了、checkpoint、入力uploadには影響していません。Colab wrapperが子プロセスstderrを表示しなかったため原因はこの時点では未確定で、stderrをそのまま表示する修正版へ更新して再実行します。
 
+修正版評価scriptでstderrを回収した結果、057の学習bundleには学習自体に不要なgeneral validation Token列を含めていなかったため、評価時の`FileNotFoundError`が発生していました。SFT学習とcheckpointは正常で、general Token列を追加uploadして評価を再実行します。bundleのhashや学習条件は変更しません。
+
 ## 結果と解釈
 
 実験終了直後に、両条件の実際のloss、PPL、学習時間、EOS到達率、生成例、055および056との差、仮説に対する判断を追記します。
