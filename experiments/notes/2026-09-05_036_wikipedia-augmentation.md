@@ -74,8 +74,18 @@ Wikipedia専用validationも作成しました。本文manifestは`artifacts/cor
 
 ## 結果と解釈
 
-データ混合、Wikipedia専用validationのToken化、5Mモデルのsmokeは成功しました。本学習と評価は未実施です。ここまでの結果は学習パイプラインの正常性を示すだけであり、Wikipedia追加によるlossや生成品質の効果はまだ判断できません。
+データ混合、Wikipedia専用validationのToken化、5Mモデルのsmoke、本学習、domain評価、固定chat評価まで完了しました。本学習はstep 2,500までNaN、shape error、データ長エラー、メモリ不足なく完走しました。step 2,400のgeneral validation lossが5.522978で最良だったため、domain・chat評価には`step_002400.npz`を使いました。step 2,500のtrain lossは4.190691、general validation lossは5.525606、perplexityは251.038、学習時間は404.60秒、summary上の経過時間は405.07秒でした。step 2,400のvalidation lossは5.522978、perplexityは250.380でした。実行中のRSSはおおむね88〜118MBでしたが、Apple Siliconのunified memory全体の最大使用量は未計測です。
+
+本学習の中間値は、step 500でvalidation loss 6.219234、step 1,000で5.777946、step 1,500で5.651157、step 2,000で5.550597、step 2,400で5.522978、step 2,500で5.525606でした。step 1,000からstep 2,000までvalidation lossは改善し、step 2,400で最小になった後、step 2,500でわずかに悪化しました。したがって最終stepだけでなく最良checkpointを評価した判断は妥当です。
+
+実験029の5Mモデルと比較すると、general validation lossは5.290503から5.522978へ0.232475悪化しました。会話validation lossは3.341280から3.455209、医療validation lossは3.883457から4.221654、FineWeb test lossは4.560703から4.596619へ悪化しました。Wikipedia専用validation lossは4.594581、perplexityは98.947でしたが、追加前のWikipedia評価はないため、これだけで改善とは判断しません。
+
+固定chat-test-v1の48例ではEOS到達数は48/48でしたが、平均生成Token数は5.0417、overlap precisionは0.123215、recallは0.045912、F1は0.056060でした。実験029のF1 0.072297より低く、short 0.087482、medium 0.042325、long 0.038373のすべてで悪化しました。生成は`今日ははなく、それは、何のもといれ、私は、もちなのかつつでのか、...`のように日本語らしい断片を含みますが、文法と意味の一貫性はまだ弱い状態です。悪い途中生成を含む全stepのTXTと固定chatの全文はGitで追跡します。
+
+今回の結果は、「Wikipediaを追加すれば同じ2,500 stepで既存domainも改善する」という仮説を支持しませんでした。ただし、学習Token列を約5Mから約10Mへ増やしてstepを固定したため、総学習window数は約5.12Mのままで、各データへの反復回数は下がっています。データの多様性が悪いのか、学習Token数が足りないのかを分離できていないため、Wikipedia自体が有害だとは結論づけません。今回の主な知見は、データを増やす場合はstepまたは総学習Token数も合わせて設計する必要があることです。
+
+成果物のSHA-256は、metricsが`58d7281a67b99a8a1b7e91eff8ef283a8fe28a4b2c2ee95b37a3f92a5e34ab12`、summaryが`0615be21cb1f57d42d19df688d19e283694482d4a00f5d887a3d9dea0c53b10a`、最良step2400 metadataが`545fc1fc0d8d27946559bfc998ed6b9e87233a3936eea154c9c3f556a8c716e5`、最良step2400生成TXTが`def912f257236a14df5ce4ff66a636e67d0e2327719dcd900b262734a904ba3b`です。domain評価JSONは`77463ca6984cffa52f3a1619e21db750ba992e6b1e6e80076dbaa0abea15b279`、fixed chat評価JSONは`06c760e76e5657636c3a516b6f710facb030b470ba331de49eb3b99bab00d739`、fixed chat生成TXTは`a1e62bc7ea7bee41d8ab855bb45efd2689c226e7da5b21483e37faf0742b1dfe`です。
 
 ## 次に試すこと
 
-Wikipedia追加でvalidation lossが改善した場合は、同じ10M Tokenで20Mモデルへ拡張し、容量とデータ量の交互作用を調べます。会話testが悪化した場合は、Wikipediaを一般sourceとして別の比率に下げ、会話と医療の比率を固定したsource ablationを行います。現代的な構造変更は、データ比較を終えてからRoPE、RMSNorm、SwiGLUの順に一要素ずつ導入します。
+Wikipedia追加でvalidation lossが改善しなかったため、次は同じ10M Token列でstepを5,000へ増やし、データへの反復不足が主因かを確認します。その後、Wikipediaなし5M Token列を5,000 stepへ学習する対照条件も作り、総学習Token数をそろえた比較へ進みます。会話testの悪化が続く場合は、Wikipediaのsource比率を下げるablationを行います。現代的な構造変更は、データ比較を終えてからRoPE、RMSNorm、SwiGLUの順に一要素ずつ導入します。

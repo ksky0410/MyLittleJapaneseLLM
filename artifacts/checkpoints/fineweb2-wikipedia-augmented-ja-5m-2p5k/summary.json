@@ -1,0 +1,6 @@
+{
+  "final_step": 2500,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-augmented-ja-5m-2p5k/step_002400.npz",
+  "best_validation_loss": 5.522977987925212,
+  "elapsed_seconds": 405.073965042131
+}
