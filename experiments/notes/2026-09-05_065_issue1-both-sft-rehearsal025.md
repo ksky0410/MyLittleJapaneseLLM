@@ -48,6 +48,8 @@ Colab session `exp065-both-rehearsal025`のT4割当を試みましたが、2026�
 
 Colab失敗後、同じ入力と条件でMPS学習を開始しました。step 1では総合loss 4.5820、SFT loss 4.3715、rehearsal loss 5.2134、validation loss 4.7236、PPL 112.57、学習率5e-7でした。step 100では総合loss 4.0665、SFT loss 4.2312、rehearsal loss 3.5727、validation loss 4.1039、PPL 60.58、step 200ではvalidation loss 4.0892、PPL 59.69、step 300ではvalidation loss 4.0258、PPL 56.03、step 400ではvalidation loss 4.0110、PPL 55.20となりました。step 500では総合loss 4.3170、SFT loss 4.2584、rehearsal loss 4.4925、validation loss 3.9958、PPL 54.37、学習率4.7931e-5、経過時間461.20秒でした。step 500までNaN、OOM、shape errorは発生しておらず、conversation形式の生成サンプルもstep 0から500まで保存されています。学習は継続中です。
 
+step 600では総合loss 3.6279、SFT loss 3.7110、rehearsal loss 3.3788、validation loss 3.9626、PPL 52.60、step 700では総合loss 4.4477、SFT loss 4.1754、rehearsal loss 5.2646、validation loss 3.9320、PPL 51.01、step 800ではvalidation loss 3.9208、PPL 50.44、step 900ではvalidation loss 3.9082、PPL 49.81となりました。step 1,000では総合loss 3.5265、SFT loss 3.3675、rehearsal loss 4.0036、validation loss 3.8836、PPL 48.60、学習率4.0147e-5、経過時間1,124.23秒でした。064の同step validation loss 3.8755との差は0.0081で、現時点ではrehearsalによる改善はまだ見えていません。NaN、OOM、shape errorは発生しておらず、step 600から1,000までの生成サンプルも保存されています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064との差、代表的な生成を追記します。general lossの改善だけで会話性能が保たれたとは判断せず、source別lossと生成本文を併せて確認します。生成本文は品質に関係なくGitHubへ保存します。
