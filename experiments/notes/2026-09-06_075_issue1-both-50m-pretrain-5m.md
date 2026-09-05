@@ -40,6 +40,8 @@ uv run python scripts/train_torch.py \
 
 同日、MPSで学習を開始しました。開始時の実測parameter数は50,207,616、PyTorch 2.14.0、AMP無効でした。step 1はtrain loss 8.895693、general validation loss 8.819042、PPL 6761.78、learning rate 1.0e-6、経過4.96秒でした。step 100はtrain loss 6.729032、general validation loss 7.089904、PPL 1199.79、learning rate 1.0e-4、経過60.74秒でした。NaN、OOM、shape error、警告は発生しておらず、学習を継続します。step 0とstep 100の生成文、metrics、step 100 metadataを保存しました。
 
+step 200はtrain loss 6.332452、general validation loss 6.819515、PPL 915.54、経過174.55秒、step 300は5.761728、6.478393、PPL 650.92、経過279.86秒、step 400は5.644550、6.151804、PPL 469.56、経過403.54秒でした。step 500ではtrain loss 5.254088、general validation loss 5.943526、PPL 381.28、learning rate 2.9459e-4、経過529.81秒となり、step 100からvalidation lossが1.146378低下しました。step 500のcheckpoint metadataにはweights SHA-256 `c9f6661ccb29c390346342024e2af1c24c5dd6c139385ce636b7fa9e022a29fa`を記録しています。固定promptの生成はstep 0の漢字断片中心の出力から、step 500では数字・記号の長い列へ変化しましたが、自然な返答ではありません。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
