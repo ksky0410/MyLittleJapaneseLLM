@@ -36,7 +36,7 @@ bootstrapは`/content/small_llm`へbundleを展開してから、`scripts/train_
 
 ## 実験中の記録
 
-未実施です。Colab session作成、bundle hash、GPU情報、学習ログ、回収状況、停止状況を節目ごとに追記します。
+2026-09-05、名前付きT4 session `torch20m-wikipedia-mid-colab-5k`を作成し、bundleを`/content/small_llm_bundle.tar.gz`へuploadしました。最初のbundle hashは`5316852dee7950a94cfda5d494e9bae4b56b1609a3899f0bdccf49286d6ad103`でした。`colab exec --session torch20m-wikipedia-mid-colab-5k --timeout 1800 --file scripts/colab_bootstrap_040.py`を実行しましたが、Colabがwrapperを一時ディレクトリから評価するため、`from colab_bootstrap_train import main`で`ModuleNotFoundError`が発生しました。bundle展開、PyTorch初期化、Token列読み込み、学習stepには到達していません。この失敗は削除せず記録し、wrapperがbundleを先に展開してからimportする修正版へ更新します。
 
 ## 結果と解釈
 
