@@ -41,6 +41,20 @@ ratio 0.10と0.50が同じ初期値から1,000 stepまで完走し、NaN、OOM�
 
 開始前、Colab割当、bundle hash検証、各ratioの開始・途中・終了、回収、評価をこのノートへ追記します。生成された文章は品質に関係なく全step保存し、空出力や特殊Token混入も削除しません。
 
+15:00 JST、新規session `exp052-20m-ratio`へT4を割り当て、051と同じbundleを使用して実行を開始しました。通常の259MB一括uploadは使わず、既着の5個の45MB partと、転送が停滞した最後のpartを17MB、17MB、136KBへ分割した3個のpartを連結しました。連結結果は271,720,679 bytesで、予定SHA-256 `94f28a741d6e3bebf922031ed8feafa1ecf2eaaacba54da8c38ab1e2950cbd35`と一致しました。最後のpartの転送停滞と再分割は失敗として隠さず記録し、bundleの内容変更はありません。ratio 0.10を先に実行し、その後ratio 0.50を同じT4上で実行しました。
+
+両条件とも1,000 stepまで完走し、NaN、OOM、shape error、mask対象不足、checkpoint reloadエラーは発生しませんでした。実測parameter数は各19,308,032です。Colab環境はPyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、AMP有効でした。ratio 0.10は経過89.68秒、peak allocated 764,613,632 bytes、peak reserved 843,055,104 bytesで、step 1,000がbestでした。bestのtrain lossは4.176839、SFT train lossは4.147194、rehearsal train lossは4.443645、SFT validation lossは3.902511、PPLは49.5266でした。ratio 0.50は経過86.42秒、peak allocated 750,051,840 bytes、peak reserved 817,889,280 bytesで、step 1,000がbestでした。bestのtrain lossは3.606019、SFT train lossは3.836696、rehearsal train lossは3.375341、SFT validation lossは3.923542、PPLは50.5793でした。
+
+ratio 0.10のbest weightは`artifacts/checkpoints/issue1-both-20m-rehearsal-ratio010-colab-1k/best.pt`、SHA-256 `3b097acdceebdc25c3c42666e611b391571b3111fb244e24d0eca03415f6dc23`です。ratio 0.50は`artifacts/checkpoints/issue1-both-20m-rehearsal-ratio050-colab-1k/best.pt`、SHA-256 `9920c1a78c1665c6ff93cc293b101824f565c1d582ea5fa66f0dd8f45c801b21`です。Colabの軽量archiveは32ファイル、5,909 bytes、SHA-256 `3fc58c4a8600405a4edbc6ebdb1a8150c9ce61227bb7918c0e63ec7b34c8d7fc`でした。metrics、summary、step 500/1,000のmetadata、step 0から1,000まで100 step間隔の生成TXTを回収し、学習終了後にsessionを停止して`colab sessions`が空であることを確認しました。
+
+学習中の固定生成は両条件で同じ挙動でした。step 0では「今日なにしてた？」に続いて長いものの崩れた文章が出ましたが、step 500以降は質問をそのまま繰り返した直後に終了する短い出力へ変化しました。この悪化した出力も含め、全22個の生成TXTを削除せず保存しています。自由生成の一例だけではSFT条件の優劣を決められないため、固定chat評価とdomain lossを併用します。
+
+回収後、ローカルPyTorch 2.14.0 CPUで同じbest checkpointをreloadし、general、conversation、medical、RealPersonaChat、MRMPの各validationを20 batchずつ評価しました。ratio 0.10は順にloss 5.8176、3.0274、3.3210、2.9891、2.5751（PPL 336.16、20.64、27.69、19.87、13.13）でした。ratio 0.50はloss 5.4677、2.9771、3.1897、2.9533、2.4980（PPL 236.91、19.63、24.28、19.17、12.16）でした。ratio 0.50は5領域すべてでratio 0.10より低いlossとなり、一般・医療・会話の通常Token評価では0.50が優勢でした。評価結果は`artifacts/evaluations/issue1-both-20m-rehearsal-ratio010-colab-1k-domains.json`と`artifacts/evaluations/issue1-both-20m-rehearsal-ratio050-colab-1k-domains.json`へ保存しました。
+
+固定chat-test v1は同じ48例、`max_new_tokens=64`、temperature 0.8、top-k 40、seed 42で評価しました。ratio 0.10はEOS 48/48、平均生成長9.60 Token、Token overlap precision 0.2658、recall 0.1870、F1 0.1849でした。ratio 0.50はEOS 48/48、平均生成長9.42 Token、precision 0.2776、recall 0.2070、F1 0.2020でした。ratio 0.50は全体F1で0.0171高く、short・medium・longのF1もそれぞれ0.3210、0.1478、0.1372となり、ratio 0.10の0.2790、0.1410、0.1348をすべて上回りました。ただしF1は参照応答とのToken重複に過ぎず、生成の自然さ・妥当性・医学的正確性を保証しません。生成本文を含むJSON/TXTは`artifacts/evaluations/issue1-both-20m-rehearsal-ratio010-colab-1k-chat-test-v1.json`・`.txt`とratio 0.50の同名ファイルへ保存し、人手レビュー用JSONは`experiments/evaluation/issue1-both-20m-rehearsal-ratio010-colab-1k-chat-review.json`と`experiments/evaluation/issue1-both-20m-rehearsal-ratio050-colab-1k-chat-review.json`へ保存しました。
+
+051のratio 0.25はSFT validation loss 3.9058、general 5.6421、conversation 2.9997、medical 3.2562、RealPersonaChat 2.9630、MRMP 2.5305、固定chat F1 0.1916でした。今回の3条件を並べると、SFT validationだけなら0.10（3.9025）が最も低く、通常5領域lossと固定chat F1では0.50が最も低くなりました。ratio 0.25はgeneral・conversation・medical・RealPersonaChat・MRMPの通常domain lossで0.50よりわずかに高く、固定chat F1では0.50より低い結果でした。したがって、この20M・1,000 stepの条件ではratio 0.50を次の長時間SFTの第一候補とします。ただし、0.10との差は小さく、自由生成がstep 500以降に短縮したことも含め、最適比率とは断定しません。学習量、評価データとの重複、Token overlapの限界を考慮し、人手レビューと長い学習で再確認します。
+
 ## 結果と解釈
 
 ratio 0.10、0.25、0.50について、SFT validationと通常domain lossのトレードオフ、固定chatのEOS・生成長・overlap、生成本文の人手レビューを分けて記録します。小規模な20Mモデルと1,000 stepの結果であり、一般的な最適ratioや会話性能を断定しません。
