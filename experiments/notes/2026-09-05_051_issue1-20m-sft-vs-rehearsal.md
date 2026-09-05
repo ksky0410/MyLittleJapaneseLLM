@@ -58,6 +58,10 @@
 
 開始前、コード実装、smoke開始・途中・終了、Colab割当、20M各条件の開始・途中・終了、回収、評価をこのノートへ追記します。学習中の生成文は品質に関係なく全step保存し、短い応答、空出力、特殊Token混入も削除しません。
 
+14:32 JST、5M smokeをSFT-onlyとrehearsal ratio 0.25で並列実行し、両条件が200 stepまで完走しました。実測parameter数は各5,205,120、PyTorch 2.14.0 CPU、AMP無効です。SFT validation lossはSFT-onlyがstep 1で5.890153、step 50で5.364355、step 100で5.208715、step 150で5.154748、step 200で5.132536となり、best stepは200、PPLは169.446でした。rehearsalはstep 1で5.890440、step 50で5.374157、step 100で5.227571、step 150で5.182860、step 200で5.163926となり、best stepは200、PPLは174.850でした。SFT-onlyがvalidation lossでは0.031391低いものの、これは会話応答validationへの適合を測る短いsmokeの結果であり、通常domainの忘却を含めた優劣ではありません。
+
+SFT-onlyの入力hashはconfig `0155c190c2c99a602f6083a63d4953c83beedae7f0521de997da968e1d3c46e6`、train NPZ `400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609`、validation NPZ `5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4`、base checkpoint `ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865`です。rehearsalはこれらに加えてrehearsal Token列 `d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`を使用しました。出力は`artifacts/checkpoints/issue1-both-5m-sft-torch-smoke/`、`artifacts/checkpoints/issue1-both-5m-rehearsal-torch-smoke/`、対応する`artifacts/samples/`へ保存しています。次に両best checkpointをreloadしてdomainと固定chatを評価します。
+
 ## 結果と解釈
 
 最終および最良checkpoint、SFT validation loss、通常domain loss、固定chatのEOS・生成長・overlap、生成本文の人手観察を条件別に記録します。SFT validationの改善は応答形式への適合を示すだけで、会話の事実性や医学的正確性を示さないことを明記します。
