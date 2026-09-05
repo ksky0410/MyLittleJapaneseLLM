@@ -45,6 +45,8 @@ both-SFTが3,000 stepまでNaN、OOM、shape errorなく完走し、RPC-SFT・MR
 
 step 1,100ではvalidation loss 3.8707（PPL 47.97）、step 1,200では3.8550（PPL 47.23）、step 1,300では3.8441（PPL 46.72）、step 1,400では3.8237（PPL 45.77）となり、step 1,500ではtrain loss 3.9224、validation loss 3.8088、PPL 45.10、学習率2.8742e-5、経過時間775.00秒でした。train lossにはbatchごとの揺れがありますが、validation lossは改善を続けています。step 1,100から1,500までの生成サンプルも保存されています。学習は継続中です。
 
+step 1,600ではvalidation loss 3.8012（PPL 44.75）、step 1,700では3.7862（PPL 44.09）、step 1,800では3.7731（PPL 43.51）、step 1,900では3.7683（PPL 43.31）となり、step 2,000ではtrain loss 4.2327、validation loss 3.7572、PPL 42.83、学習率1.6982e-5、経過時間1,064.71秒でした。step 2,000時点でvalidation lossは学習開始時から0.9663改善し、NaN、OOM、shape errorはありません。step 1,600から2,000までの生成サンプルも保存されています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへboth-SFTのbest step、validation loss、共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差、代表的な生成を追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
