@@ -46,6 +46,8 @@ Colab bundleは074専用の分割bundleとして作成します。50M base check
 
 準備時点ではColab sessionは空で、`colab sessions`でactive sessionがないことを確認しました。次に074専用bundleを作成し、GitHubへpushした後にT4割当を試します。割当がHTTP 503や上限エラーで失敗した場合は、エラー内容とsession状態を記録して、同じ入力・seed・出力先のMPS実行へ切り替えます。Colab upload、bundle hash検証、学習開始、500 stepごとの節目、成果物回収、session停止を時系列で追記します。
 
+2026年9月6日、基準commit `8c9822b`の内容から`/tmp/small_llm-colab-074-8c9822b.tar.gz`を作成しました。bundleは236,462,382 bytes、SHA-256は`4afb025504ca43fab266d5e44c7b64a9bf1cd8c8cfe396901aa7e2aca3b49bc6`です。50M base checkpointを含むため、過去のupload制約に合わせて45MiB単位で6個へ分割しました。part 00〜04は各47,185,920 bytes、part 05は532,782 bytesです。Colabへは各partと、bundle本体を含めずにhashだけを固定した[`scripts/colab_concat_074.py`](../../scripts/colab_concat_074.py)をuploadし、連結後のbytesとSHA-256が一致してからbootstrapを実行します。concat scriptのSHA-256は`1f6382895578213a7a58d49310f95c921800db1707564407eeda5d2c55f02ec4`です。bundleにはconfig、学習コード、074 wrapper・package、`src` package、50M base checkpoint、加工済みSFT/Tokenデータ、Tokenizerだけを含め、元JSONLや医師国家試験原本は含めていません。学習はまだ開始していません。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のruntime、parameter数、最良・最終loss、学習時間、最大メモリ、生成本文の代表例、checkpoint・入力・bundleのhash、20Mとの差を追記します。領域別lossとchat-testの自動指標が一致しない場合は、片方だけで容量効果を断定しません。人手レビュー未実施の場合はその状態を明記します。
