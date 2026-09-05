@@ -1,0 +1,6 @@
+{
+  "final_step": 250,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/layernorm-context512-mixed-ja-5m-token-budget-smoke/step_000250.npz",
+  "best_validation_loss": 5.964323202768962,
+  "elapsed_seconds": 63.155388250015676
+}

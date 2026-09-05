@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/layernorm-context512-mixed-ja-5m-token-budget-smoke/step_000250.npz
+checkpoint_step: 250
+config: /Users/koseki/projects/small_llm/configs/layernorm-context512-mixed-ja-5m-token-budget-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=81.50
+backchannel: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=158.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=158.00
+disagreement: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+は,5.iで,血小板IIIg/〜.0,.),84mg/.98,13..mmHgが,体重5/分...血圧.9.6..6.5;b:b 2282),2/dL,糖 6.2 .2mg/dL,GQg/L,0.28. 138322. 105.体温/dL,88g/dL.0.845. 4.6mg/dL,C. 69.13.8.10.,糖.44はどれか.血圧3.9mEg/dL,基準mg/L,C.2g/dL,AL
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+つてどれか.°CIIIoom 表e 尿e a ei at血液所見ttooieee ポイント:be ae 尿 e e be is血液所見ie elleeree d eae arrta 尿 ald tc ed eeaert eaetae Itid be etttt dd e e d 尿lr eoet-aethtTee bet e iid ei c
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+はは,やに後でたきた、また分も知ったも、もときんもそのしくきて、そのきるか、そんなべにしもきも、其いもおうのいくと、このりが、おで、少しもおかたに云つた。この、自覚にやまつてを、其うら、そのきなやって、私の気とろきも、私はこの知も、自分をかとつが、分るをやって、、その後もか、大きへかったと云いにした。それでいにの何をも、まだかに、私のもしたもうなさか、私のきろなない。
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+み!
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+は下の下性治療では, 現中の後内である.;c:c P Cl ee C 正解:ee e e e ポイント:e  心  ポイント:e ae l e 正解  ete e ポイント: 選択肢 6 a 正解 ポイント: 選択肢解説:ae a ,l〉8 ,〜68ge Arrst 正解:e 心 b、今は,単の後の原因をかに心のとするが,内に,スクトフ 低に食の間はしているのはではは,前をみられる.
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+0656666.99358歳の男性.9/0.1歳の男性6.2g/dL(),.2g/dL..0.6.322g(血圧25.3g),..6/dL.8g/dL..蛋白.680/),6.2mg/mg/dL. C,I358.),.8/L(g/L(基準mg/L(基準72218g/L1E〜6%-1. 8g/8mg/6mg/L.6.246. .28mg/dL.90.46.37Am4..6685.486.2
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+つがする.
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+

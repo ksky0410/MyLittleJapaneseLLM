@@ -29,14 +29,26 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 ## 実験中の記録
 
-2026-09-05 12:50 JST、学習開始前に設定、コードcommit、Tokenizer、学習Token列、general validation Token列のSHA-256を確認しました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。同じ出力先を使う別の学習プロセスがないことも確認しました。設定とノートはこの後のcommitで固定してから開始します。学習中は50 stepごとにloss、perplexity、生成文、所要時間を保存し、異常や予定変更があれば直ちに追記します。
+2026-09-05 12:50 JST、学習開始前に設定、コードcommit、Tokenizer、学習Token列、general validation Token列のSHA-256を確認しました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。同じ出力先を使う別の学習プロセスがないことも確認しました。ノートと設定はcommit `e9b0a17`でpush済みです。学習中は50 stepごとにloss、perplexity、生成文、所要時間を保存し、異常や予定変更があれば直ちに追記します。
+
+学習開始後、別プロセスとの競合、NaN、Metalエラー、OOM、Token列不足は発生しませんでした。step 1、50、100、150、200、250のvalidation lossは順に8.7620855967、7.1652158101、6.6710743904、6.4310317039、6.1675168673、5.9643232028でした。最終step 250まで完走し、所要時間は63.16秒でした。
 
 （ここへ開始時刻、実行環境、stepごとの記録、警告、停止理由を追記する。）
 
 ## 結果と解釈
 
-（ここへ実際の最終loss、最良checkpoint、学習時間、評価結果、生成例、実験014・042との差分を追記する。未実施または失敗の場合も、その事実と原因をそのまま記録する。）
+MLXでの学習は250 stepまで正常に完走し、step 250が最良checkpointでした。最終train lossは4.7627973557、general validation lossは5.9643232028、perplexityは389.2894688582でした。モデルの概算parameter数は5,136,480です。step 0から250まで50 step間隔で6件の生成文を保存し、step 250では医療問題の形式と英数字の断片が混ざる崩れた出力になりました。metrics、summary、checkpoint metadata、生成文は削除していません。
+
+Token予算を揃えた主比較では、context 256・500 stepの実験014のgeneral loss 5.5338133176に対して、context 512・250 stepの044は5.9643232028で0.4305098852高くなりました。perplexityも実験014の253.1072514355から389.2894688582へ上昇しました。context 512・500 stepの実験042はgeneral loss 5.3410979907でしたので、044は0.6232252121高くなっています。この結果は、実験042の改善が長いcontextだけで説明できず、約2.048M Tokenを処理した学習量と、500回のoptimizer更新が大きく寄与した可能性を示します。
+
+domain評価では、general loss 5.9643232028、conversation loss 3.9171713193、medical loss 4.9621599515、fineweb loss 6.3432046572、wikipedia loss 6.8143019676でした。詳細は`artifacts/evaluations/layernorm-context512-mixed-ja-5m-token-budget-smoke-domains.json`へ保存し、SHA-256は`d383ea9f1206a54083d84a46d81fd56d1d1ffe76d5dec1544834ba571b1c520e`です。実験014と比べるとconversationは3.5064193408から0.4107519785、medicalは4.5083060265から0.4538535295、それぞれ悪化しました。044は更新回数が半分で、同じToken数でも学習の進みが足りない可能性があります。finewebとwikipediaは044で追加測定しましたが、014では同じ条件の値を保存していないため、構造差の判定には使いません。
+
+Issue #1の固定会話prompt 8件は`artifacts/evaluations/layernorm-context512-mixed-ja-5m-token-budget-smoke-chat.json`と`artifacts/samples/layernorm-context512-mixed-ja-5m-token-budget-smoke/chat-issue-1.txt`へ保存しました。044では8件中5件がEOSへ到達し、空completionは1件、平均completion長は100.625 Tokenでした。`まじで`、`それな`、`いやそれは`では医学問題や数値の断片が最大長まで続き、短い会話応答としては崩れています。実験042の8件中8件EOS、平均4.75 Tokenと比べて停止挙動も悪化しましたが、この固定promptだけからモデル品質を断定しません。chat JSONのSHA-256は`c554f5c8e5d5871f1a1ad221099dca84e2aab6da98a25202577a87d0bc5e2074`、可読TXTのSHA-256は`a69811cbcf17b91599985e1613f4ebfc53c09eba3d07f9da3d93a45b6f62712c`です。
+
+checkpoint reload後の`今日は`、`吾輩は`、会話marker、`問題：`の生成はすべて成功し、それぞれ`reloaded-today.txt`、`reloaded-story.txt`、`reloaded-conversation.txt`、`reloaded-medical.txt`へ保存しました。会話markerでは「はい、小いっし」と返りましたが、他の出力には日本語らしい断片、英数字の連続、`G`の連続などの崩れが残っています。step 250 checkpointのSHA-256は`a2051cc9794a97171569e7f33831d03307d80d6808f9a75fabea95a4dec3c596`です。metricsのSHA-256は`2aed0060cb77dfd4148bfda6198a066a83e830bada0d2d03870518e0f4efa6fa`、summaryは`4cbd0ca5cfe0faec971362532f1ad07ef1993a7c1ebc3d90849dc0e81a10adff`、step 250 metadataは`f7d1e1ac33d84ef50713a94fe4b4afae38c9bf1e3ef6ee2f3ef0ff43b51e5d60`です。reload生成のSHA-256は順に、`d7ea714b090a4cfb671f2c3a9d7dd4ea69d86ef1f46d8754535eeabf4dc328f5`、`ede7e239df4ec33609d1a335cfc7e53d35cfba8aae0dd81f34d38a512386b64c`、`9354ac017af8e58e036ab3c0f69f0b39379b450fd6d51863beb9e0c69d4391b5`、`5f86e7f969646204300de5999fb9ea05c13433b43862099061403130bccf15b3`です。
+
+以上から、今回の仮説は支持されました。少なくともこの5Mモデル、混合日本語コーパス、seed 42、学習Token予算約1.024Mの条件では、context 512へ伸ばしただけではcontext 256・500 stepを上回れませんでした。ただし、context 512側はoptimizer更新回数が半分であり、context長の純粋な効果を完全に検証したわけではありません。次回は更新回数と総Token数を同時に揃える比較、または複数seedでの再試行が必要です。
 
 ## 次に試すこと
 
-（結果に基づいて、次に変更する条件を一つか二つだけ具体的に記録する。）
+次は、context 512・250 stepの044を基準に、SwiGLUを一つだけ導入してMLP構造の影響を測定します。ただし、SwiGLUだけの効果を見たい場合はnorm_typeをLayerNormに戻し、今回と同じToken予算・seed・評価手順を維持します。その後、RMSNormとSwiGLUを同時に使う現代的構成へ進みますが、変更を一度に増やしすぎないよう実験番号を分けて記録します。

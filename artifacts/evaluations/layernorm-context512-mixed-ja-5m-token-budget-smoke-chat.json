@@ -1,0 +1,148 @@
+{
+  "format": "chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/layernorm-context512-mixed-ja-5m-token-budget-smoke/step_000250.npz",
+  "checkpoint_step": 250,
+  "config": "/Users/koseki/projects/small_llm/configs/layernorm-context512-mixed-ja-5m-token-budget-smoke.toml",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 160,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "category_summary": {
+    "short-reply": {
+      "count": 2,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 81.5
+    },
+    "backchannel": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 160.0
+    },
+    "short-turn": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 158.0
+    },
+    "discourse-marker": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 158.0
+    },
+    "disagreement": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 160.0
+    },
+    "parting": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 5.0
+    },
+    "invitation": {
+      "count": 1,
+      "empty_count": 1,
+      "eos_count": 1,
+      "mean_completion_tokens": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "rendered_prompt": "まじで",
+      "completion_token_count": 160,
+      "eos_reached": false,
+      "completion": "は,5.iで,血小板IIIg/〜.0,.),84mg/.98,13..mmHgが,体重5/分...血圧.9.6..6.5;b:b 2282),2/dL,糖 6.2 .2mg/dL,GQg/L,0.28. 138322. 105.体温/dL,88g/dL.0.845. 4.6mg/dL,C. 69.13.8.10.,糖.44はどれか.血圧3.9mEg/dL,基準mg/L,C.2g/dL,AL"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "rendered_prompt": "それな",
+      "completion_token_count": 160,
+      "eos_reached": false,
+      "completion": "つてどれか.°CIIIoom 表e 尿e a ei at血液所見ttooieee ポイント:be ae 尿 e e be is血液所見ie elleeree d eae arrta 尿 ald tc ed eeaert eaetae Itid be etttt dd e e d 尿lr eoet-aethtTee bet e iid ei c"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "rendered_prompt": "今日なにしてた？",
+      "completion_token_count": 158,
+      "eos_reached": true,
+      "completion": "はは,やに後でたきた、また分も知ったも、もときんもそのしくきて、そのきるか、そんなべにしもきも、其いもおうのいくと、このりが、おで、少しもおかたに云つた。この、自覚にやまつてを、其うら、そのきなやって、私の気とろきも、私はこの知も、自分をかとつが、分るをやって、、その後もか、大きへかったと云いにした。それでいにの何をも、まだかに、私のもしたもうなさか、私のきろなない。"
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "rendered_prompt": "やば",
+      "completion_token_count": 3,
+      "eos_reached": true,
+      "completion": "み!"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "rendered_prompt": "なんかさ",
+      "completion_token_count": 158,
+      "eos_reached": true,
+      "completion": "は下の下性治療では, 現中の後内である.;c:c P Cl ee C 正解:ee e e e ポイント:e  心  ポイント:e ae l e 正解  ete e ポイント: 選択肢 6 a 正解 ポイント: 選択肢解説:ae a ,l〉8 ,〜68ge Arrst 正解:e 心 b、今は,単の後の原因をかに心のとするが,内に,スクトフ 低に食の間はしているのはではは,前をみられる."
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "rendered_prompt": "いやそれは",
+      "completion_token_count": 160,
+      "eos_reached": false,
+      "completion": "0656666.99358歳の男性.9/0.1歳の男性6.2g/dL(),.2g/dL..0.6.322g(血圧25.3g),..6/dL.8g/dL..蛋白.680/),6.2mg/mg/dL. C,I358.),.8/L(g/L(基準mg/L(基準72218g/L1E〜6%-1. 8g/8mg/6mg/L.6.246. .28mg/dL.90.46.37Am4..6685.486.2"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "rendered_prompt": "おつかれ",
+      "completion_token_count": 5,
+      "eos_reached": true,
+      "completion": "つがする."
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "rendered_prompt": "明日ひま？",
+      "completion_token_count": 1,
+      "eos_reached": true,
+      "completion": ""
+    }
+  ]
+}
