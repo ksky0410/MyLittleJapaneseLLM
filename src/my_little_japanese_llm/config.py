@@ -55,6 +55,7 @@ class TrainingConfig:
     warmup_steps: int
     weight_decay: float
     seed: int
+    checkpoint_interval: int | None = None
 
     def validate(self) -> None:
         fields = {
@@ -68,6 +69,10 @@ class TrainingConfig:
         for name, value in fields.items():
             if value <= 0:
                 raise ValueError(f"training.{name} は正の整数で指定してください")
+        if self.checkpoint_interval is not None and self.checkpoint_interval <= 0:
+            raise ValueError(
+                "training.checkpoint_interval は正の整数で指定してください"
+            )
         if self.learning_rate <= 0 or self.min_learning_rate < 0:
             raise ValueError("学習率は正数、最小学習率は0以上で指定してください")
 
@@ -148,6 +153,11 @@ def load_config(path: str | Path) -> ExperimentConfig:
             warmup_steps=int(training_raw["warmup_steps"]),
             weight_decay=float(training_raw["weight_decay"]),
             seed=int(training_raw["seed"]),
+            checkpoint_interval=(
+                int(training_raw["checkpoint_interval"])
+                if "checkpoint_interval" in training_raw
+                else None
+            ),
         ),
         generation=GenerationConfig(
             prompt=str(generation_raw["prompt"]),

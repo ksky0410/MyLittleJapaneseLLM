@@ -53,7 +53,16 @@ class PipelineTests(unittest.TestCase):
         config = load_config(ROOT / "configs/debug.toml")
         self.assertEqual(config.model.dim, 64)
         self.assertEqual(config.training.max_steps, 100)
+        self.assertIsNone(config.training.checkpoint_interval)
         self.assertEqual(config.paths.train_tokens, ROOT / "artifacts/tokens/train.bin")
+
+    def test_colab_long_run_can_separate_checkpoint_interval(self) -> None:
+        config = load_config(
+            ROOT / "configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml"
+        )
+        self.assertEqual(config.training.eval_interval, 100)
+        self.assertEqual(config.training.sample_interval, 100)
+        self.assertEqual(config.training.checkpoint_interval, 1000)
 
     def test_aozora_5m_config_targets_formal_corpus_and_model_size(self) -> None:
         config = load_config(ROOT / "configs/aozora-5m.toml")

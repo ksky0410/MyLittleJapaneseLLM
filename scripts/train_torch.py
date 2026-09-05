@@ -232,6 +232,10 @@ def main() -> None:
 
     config.paths.checkpoint_dir.mkdir(parents=True, exist_ok=True)
     config.paths.samples_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_interval = (
+        config.training.checkpoint_interval or config.training.eval_interval
+    )
+    decoupled_checkpoints = config.training.checkpoint_interval is not None
     metrics_path = config.paths.checkpoint_dir / "metrics.jsonl"
     metrics_path.write_text("", encoding="utf-8")
     started = time.monotonic()
@@ -266,6 +270,7 @@ def main() -> None:
 
     write_sample(0)
     best_validation_loss = float("inf")
+    best_checkpoint_step: int | None = None
     best_checkpoint: Path | None = None
     latest_metrics: dict = {}
     print(
@@ -310,13 +315,19 @@ def main() -> None:
             loss.backward()
             optimizer.step()
 
-        should_log = (
+        should_evaluate = (
             step == 1
             or step % min(config.training.eval_interval, 1000) == 0
             or step == max_steps
         )
+        should_checkpoint = (
+            step == max_steps
+            if decoupled_checkpoints
+            else should_evaluate
+        ) or (decoupled_checkpoints and step % checkpoint_interval == 0)
         should_sample = step % config.training.sample_interval == 0 or step == max_steps
-        if should_log:
+        validation_loss: float | None = None
+        if should_evaluate or should_checkpoint:
             validation_loss = _evaluate(
                 model,
                 val_tokens,
@@ -338,12 +349,17 @@ def main() -> None:
             }
             print(json.dumps(latest_metrics, ensure_ascii=False))
             _append_jsonl(metrics_path, latest_metrics)
-            checkpoint = config.paths.checkpoint_dir / f"step_{step:06d}.pt"
+        is_best = (
+            validation_loss is not None and validation_loss < best_validation_loss
+        )
+
+        def save_checkpoint(checkpoint: Path, role: str) -> None:
             torch.save(model.state_dict(), checkpoint)
             runtime = _runtime_info(torch, device, amp_enabled)
             metadata = {
                 "format_version": 1,
                 "backend": "pytorch-cuda" if device.type == "cuda" else "pytorch",
+                "checkpoint_role": role,
                 "weights_file": checkpoint.name,
                 "weights_bytes": checkpoint.stat().st_size,
                 "weights_sha256": _sha256_file(checkpoint),
@@ -356,9 +372,24 @@ def main() -> None:
                 json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            if validation_loss < best_validation_loss:
-                best_validation_loss = validation_loss
+
+        if should_checkpoint:
+            checkpoint = config.paths.checkpoint_dir / f"step_{step:06d}.pt"
+            save_checkpoint(checkpoint, "periodic")
+            if is_best:
+                best_checkpoint_step = step
+                best_validation_loss = float(validation_loss)
                 best_checkpoint = checkpoint
+        elif is_best:
+            best_checkpoint = config.paths.checkpoint_dir / "best.pt"
+            save_checkpoint(best_checkpoint, "best")
+            best_checkpoint_step = step
+            best_validation_loss = float(validation_loss)
+
+        if is_best and should_checkpoint and decoupled_checkpoints:
+            best_snapshot = config.paths.checkpoint_dir / "best.pt"
+            save_checkpoint(best_snapshot, "best")
+            best_checkpoint = best_snapshot
         if should_sample:
             write_sample(step)
 
@@ -371,7 +402,9 @@ def main() -> None:
         "best_checkpoint": (
             best_checkpoint.name if best_checkpoint is not None else None
         ),
+        "best_checkpoint_step": best_checkpoint_step,
         "best_validation_loss": best_validation_loss,
+        "checkpoint_interval": checkpoint_interval,
         "elapsed_seconds": time.monotonic() - started,
     }
     (config.paths.checkpoint_dir / "summary.json").write_text(
