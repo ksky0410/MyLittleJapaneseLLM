@@ -52,9 +52,19 @@ step 1,600では総合loss 3.6393、SFT loss 3.4193、rehearsal loss 5.6194、va
 
 step 2,100では総合loss 3.5137、SFT loss 3.5630、rehearsal loss 3.0702、validation loss 3.7571、PPL 42.82、step 2,200では3.7524、PPL 42.62、step 2,300では3.7485、PPL 42.46、step 2,400では3.7395、PPL 42.08となりました。step 2,500では総合loss 3.3925、SFT loss 3.2799、rehearsal loss 4.4065、validation loss 3.7280、PPL 41.60、学習率8.2333e-6、経過時間1,962.41秒でした。064のbest validation loss 3.7129、065の3.7166にはまだ届いていませんが、step 2,000以降も改善しています。step 2,100から2,500までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
 
+step 2,600では総合loss 3.3190、SFT loss 3.0404、rehearsal loss 5.8264、validation loss 3.7259、PPL 41.51、step 2,700では3.7232、PPL 41.40、step 2,800では3.7197、PPL 41.25、step 2,900では総合loss 3.6877、SFT loss 3.7743、rehearsal loss 2.9079、validation loss 3.7194、PPL 41.24となりました。最終step 3,000では総合loss 3.4973、SFT loss 3.4967、rehearsal loss 3.5025、validation loss 3.7192、PPL 41.23、学習率5.0000e-6、経過時間2,266.74秒でした。最良checkpointは最終step 3,000で、`best.pt`のSHA-256は`75ea59618415d5a4ec7d7baea9d9cf7566049edf5dd93a2b0aef0492917015fc`です。step 3,000までNaN、OOM、shape errorはなく、step 2,600から3,000までの生成サンプルも保存されました。
+
 ## 実験終了後の結果と解釈
 
-ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064・065との差、代表的な生成を追記します。general lossだけで成功とせず、chat-test F1の変化と長い文脈の生成を確認します。生成本文は品質に関係なくGitHubへ保存します。
+実際の学習は3,000 stepまで完走し、summary上の経過時間は2,267.23秒、`best.pt`のmetadata上は2,266.74秒でした。最良checkpointは最終step 3,000で、train lossは3.497286、SFT lossは3.496707、rehearsal lossは3.502495、validation lossは3.719231、validation perplexityは41.232684でした。`best.pt`は19,308,032 parameter、SHA-256は`75ea59618415d5a4ec7d7baea9d9cf7566049edf5dd93a2b0aef0492917015fc`です。MPS上でNaN、OOM、shape errorは発生しませんでした。
+
+共通の5領域評価はCPU上で20バッチずつ実行しました。generalはvalidation loss 5.635986（PPL 280.335）、conversationは2.915466（18.457）、medicalは3.293988（26.950）、RPCは2.914526（18.440）、MRMPは2.359963（10.591）でした。実験064のrehearsalなしと比べると、generalで-0.607227、conversationで-0.414784、medicalで-0.274782、RPCで-0.433665、MRMPで-0.422068となり、5領域すべてのlossが改善しました。一方、実験065のratio 0.25と比べると、generalで+0.226832、conversationで+0.029970、medicalで+0.103126、RPCで+0.025538、MRMPで+0.031818となり、全領域で065には届きませんでした。
+
+固定chat-testは48例すべてでEOSへ到達し、平均生成Token数は10.6875、Token overlapの平均precisionは0.294149、recallは0.216635、F1は0.207140でした。短文・中長文別のF1はそれぞれ0.331915、0.154904、0.134602でした。064はEOS 48/48、平均10.5625 Token、F1 0.229654、065はEOS 48/48、平均10.5625 Token、F1 0.186345でした。そのためratio 0.10は、065で落ちたchat-test F1を0.020795回復させましたが、064の水準には0.022514届きませんでした。生成長は064・065よりわずかに長く、EOSの崩れもありませんでした。なおToken overlap F1は正解文との表層一致を測る指標であり、会話としての自然さや文脈適合性を単独で保証するものではありません。
+
+代表的な生成では、固定サンプルの`<|speaker:DA|>こんにちは！`に対して`こんにちはー。`と返し、短い定型応答は成立しました。held-out例でも、`こんにちは`に`こんにちは`、`それは楽しみ`に`えー`のような短い相づちを出せる例がありました。一方で、長い会話では`笑いながら、大切です`、`カメラはカレー!`、`そうですね!やっぱりお子さんであっということあるんですか?`のように、EOSには到達しても直前の話題を維持できない例が残りました。したがって、ratio 0.10は一般文書を守りながら会話形式を保つ妥当な中間点ですが、現時点で会話性能の最良設定とは言えません。実験064・065との比較は、rehearsal ratioを増やすほど5領域lossが下がる一方、固定chat-test F1が単調には改善しないことを示しています。学習方式とデータ配分の効果を分けるには、今後は同じcheckpointからratio 0.15または0.20を追加し、同じ評価を行う必要があります。
+
+学習中の全stepの生成本文は[`artifacts/samples/issue1-both-20m-sft-source-rehearsal010-mps-3k/`](../../artifacts/samples/issue1-both-20m-sft-source-rehearsal010-mps-3k/)に保存しました。最終checkpointの生成は`step_003000.txt`、held-out 48例の全文は[`issue1-both-20m-sft-source-rehearsal010-mps-3k-chat-test-v1.txt`](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal010-mps-3k-chat-test-v1.txt)、5領域の機械可読結果は[`issue1-both-20m-sft-source-rehearsal010-mps-3k-domains.json`](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal010-mps-3k-domains.json)です。品質の悪い出力も含め、生成結果は削除していません。
 
 ## 次に試すこと
 
