@@ -1,0 +1,47 @@
+{
+  "format_version": 1,
+  "backend": "pytorch",
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 500,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 5.5065836906433105,
+  "weights_file": "step_000500.pt",
+  "weights_bytes": 20842747,
+  "weights_sha256": "0d7fe3d9530d7996a5bdf26842ee646ee5fa6d61e3a45b46424acd115305fcfd",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 240,
+    "layers": 6,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute",
+    "norm_type": "layernorm",
+    "ffn_type": "gelu"
+  },
+  "metrics": {
+    "step": 500,
+    "train_loss": 5.5065836906433105,
+    "validation_loss": 6.7525075276692705,
+    "validation_perplexity": 856.2030257805498,
+    "learning_rate": 3.000328985477171e-05,
+    "elapsed_seconds": 269.1427650419064
+  },
+  "inputs": {
+    "config_sha256": "9035314c385b42a47b76a6fb672ba14165c51fa8a03d499f03a9e65c2f47f061",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "24b61c79c6144e74e8e0598d54182c7a8f109ab75fda0e7d79eea90d68c268b7",
+    "val_tokens_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4"
+  },
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  }
+}

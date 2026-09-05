@@ -84,6 +84,23 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 13:55 JSTごろ、4条件の500 step学習を同時に開始し、すべて完走しました。実測parameter数は各条件5,205,120、PyTorch 2.14.0 CPU、AMP無効です。最終stepのgeneral validation lossはcore 6.7451613744（PPL 849.9363）、rpc 6.7525075277（PPL 856.2030）、mrmp 6.7579027812（PPL 860.8349）、both 6.7657705943（PPL 867.6345）でした。学習時間はcore 269.90秒、rpc 270.80秒、mrmp 264.04秒、both 267.81秒です。4条件ともNaN、OOM、shape error、Token列不足は発生せず、step 0と100 stepごとの生成文、step 1と500のcheckpoint metadata、metrics、summaryを保存しました。現時点のgeneral lossだけでは会話sourceの優劣を決めず、同じ最終checkpointをreloadしてdomain別・固定chat評価を続けます。
 
+13:59 JST、各条件のbest checkpoint（いずれもstep 500）をCPUでreloadし、general、conversation、medical、RealPersonaChat、MRMPの5領域を各20 batchで評価しました。実測値は次のとおりです。
+
+| 条件 | general loss / PPL | conversation loss / PPL | medical loss / PPL | RPC loss / PPL | MRMP loss / PPL |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| core | 6.7452 / 849.94 | 7.3873 / 1615.29 | 5.6119 / 273.67 | 7.3996 / 1635.28 | 7.7647 / 2355.94 |
+| rpc | 6.7525 / 856.20 | 4.2341 / 69.00 | 5.6601 / 287.17 | 4.2180 / 67.90 | 4.3625 / 78.46 |
+| mrmp | 6.7579 / 860.83 | 4.7176 / 111.90 | 5.5998 / 270.37 | 4.8038 / 121.98 | 3.6777 / 39.55 |
+| both | 6.7658 / 867.63 | 4.3479 / 77.32 | 5.6629 / 287.97 | 4.3678 / 78.87 | 3.8621 / 47.57 |
+
+会話領域では、会話データを含めなかったcoreが明確に高いlossになりました。RPCだけを加えたrpcはRPC validationで最も低いloss、MRMPだけを加えたmrmpはMRMP validationで最も低いlossとなり、sourceの違いが短い探索でも検出できています。bothはRPCとMRMPの両方でcoreより大幅に良くなりましたが、会話Tokenの総量が分割されるため、各source単独の条件ほど専門化しませんでした。general lossはcoreが最良でしたので、会話混合には一般文書側のわずかなトレードオフが見えます。medical lossはmrmpが最良でしたが、これは医学的正確性を意味せず、あくまで今回のvalidationコーパス上のnext-token lossです。
+
+固定chat-test v1の48例（short、medium、long各16例）も同じ条件で生成しました。coreはEOS到達4/48、平均生成長61.44 token、Token overlap F1 0.0864でした。rpcはEOS 47/48、平均7.67 token、F1 0.0332、mrmpはEOS 48/48、平均4.94 token、F1 0.0237、bothはEOS 48/48、平均6.10 token、F1 0.0380でした。会話を学習した条件で早くEOSに到達したことは、会話境界の形式を学んだ可能性と、短く打ち切る癖の可能性の両方があります。overlap F1はcoreが高かったため、これだけを自然さの指標として会話モデルの優劣を決めません。各例のプロンプト、正解、生成結果は条件ごとのJSONとTXTに全件保存しました。生成文には不自然な文字列や空出力も含まれますが、削除していません。
+
+評価に使ったbest checkpointのSHA-256はcore `bba237dc04eef66af07a325af5adbef029fb30f98be527c033b830cec1dd5801`、rpc `c88d09673e4c0f0c460bd37024998514811779141f5f0478ebfed18058785ada`、mrmp `aa6e3b6e04cc34abb4f3fecfa2851456033d7b322c9a315c259eacee50550f11`、both `ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865`です。評価は`.venv/bin/python scripts/evaluate_torch.py chat`および`domain`を使い、deviceはCPU、chatの`max_new_tokens`は64、temperatureは0.8、top-kは40、seedは42、domainのeval batch数は20に固定しました。
+
+実験049の主な結果は、「会話sourceを通常pretrainingへ同じ比率で混ぜるだけでも、sourceに対応したvalidation lossと出力停止挙動は変わる。ただし、RPCとMRMPの性質を同時に伸ばすには会話Tokenの配分と学習量が必要」というものです。500 step・約1M train Token・5M parameterの短い探索なので、自然さ、知識、事実性、汎化性能について強い結論は出しません。今回の結果をsource別pretrainingの候補選定に使い、次はboth条件を長く学習する比較、または同じpretraining checkpointから応答部分だけを学ぶSFT比較へ進めます。
+
 ## 成功条件
 
 4条件の混合とToken化が入力hashの検証つきで完了し、各500 step学習がNaN、OOM、shape error、Token列不足なしに完走することです。各条件について、metrics、checkpoint metadata、step 0・100・200・300・400・500の生成文、general・conversation・medical・RPC・MRMP評価、固定chat-test JSON/TXTを保存します。性能差が小さい場合も失敗とはせず、会話sourceの影響がこの規模では検出できなかった結果として記録します。
@@ -94,7 +111,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 結果と解釈
 
-core・rpc・mrmp・bothの各条件を、実測source別Token比率、一般・source別validation loss、固定chatのEOS・生成長・Token overlap、人手レビュー用の生成本文に分けて解釈します。医療validationが低くても医学的正確性を意味しないため、医師国家試験データ由来の見かけの専門性と一般会話能力を混同しません。
+core・rpc・mrmp・bothの各条件を、実測source別Token比率、一般・source別validation loss、固定chatのEOS・生成長・Token overlap、人手レビュー用の生成本文に分けて解釈します。医療validationが低くても医学的正確性を意味しないため、医師国家試験データ由来の見かけの専門性と一般会話能力を混同しません。今回の実測結果は上の実験中記録に追記し、domain評価は`artifacts/evaluations/issue1-*-5m-domains.json`、固定chat評価は`artifacts/evaluations/issue1-*-5m-chat-test-v1.json`および同名TXTに保存しました。学習中の生成は`artifacts/samples/issue1-*-5m-smoke/`、軽量なcheckpoint metadataとmetricsは`artifacts/checkpoints/issue1-*-5m-smoke/`に保存しています。重い`.pt`本体はGit管理対象外ですが、各評価JSONとノートにcheckpoint SHA-256を記録しています。
 
 ## 次に試すこと
 
