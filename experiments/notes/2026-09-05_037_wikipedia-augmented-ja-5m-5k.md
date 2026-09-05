@@ -30,7 +30,7 @@
 
 ## 実験中の記録
 
-step 2,000ではvalidation lossが5.512431、step 2,500では5.436808まで下がりました。実験036の同じstep 2,500のvalidation loss 5.525606より0.088798低く、現時点では学習期間を延長する仮説と一致する方向です。ただし、実験036とはlearning-rate scheduleの終点も異なるため、Wikipedia追加の効果だけとは解釈しません。step 2,900ではvalidation loss 5.395232、perplexity 220.353まで下がり、step 2,500以降も改善が続いています。step 2,900時点では学習時間553.13秒で、学習は継続中です。step 2,900までの生成結果も`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_002900.txt`に保存しています。
+step 2,000ではvalidation lossが5.512431、step 2,500では5.436808まで下がりました。実験036の同じstep 2,500のvalidation loss 5.525606より0.088798低く、現時点では学習期間を延長する仮説と一致する方向です。ただし、実験036とはlearning-rate scheduleの終点も異なるため、Wikipedia追加の効果だけとは解釈しません。step 2,900ではvalidation loss 5.395232、step 3,100では5.348437まで下がり、step 2,500以降も改善が続いています。step 3,200では5.348844とほぼ横ばいになりました。step 3,200時点では学習時間619.90秒で、学習は継続中です。step 3,200までの生成結果も`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_003200.txt`に保存しています。
 
 ## 結果と解釈
 
