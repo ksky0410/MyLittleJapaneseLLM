@@ -1,0 +1,36 @@
+[paths]
+prepared_dir = "artifacts/corpus/conversation-v1"
+tokenizer_model = "artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model"
+train_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-train.bin"
+val_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin"
+checkpoint_dir = "artifacts/checkpoints/issue1-both-5m-sft-torch-smoke"
+samples_dir = "artifacts/samples/issue1-both-5m-sft-torch-smoke"
+
+[model]
+dim = 240
+layers = 6
+heads = 6
+context_length = 256
+mlp_ratio = 4
+position_embedding = "absolute"
+norm_type = "layernorm"
+ffn_type = "gelu"
+
+[training]
+batch_size = 8
+max_steps = 200
+eval_interval = 50
+sample_interval = 50
+checkpoint_interval = 100
+eval_batches = 20
+learning_rate = 0.00005
+min_learning_rate = 0.000005
+warmup_steps = 50
+weight_decay = 0.01
+seed = 42
+
+[generation]
+prompt = "今日なにしてた？"
+max_new_tokens = 128
+temperature = 0.8
+top_k = 40
