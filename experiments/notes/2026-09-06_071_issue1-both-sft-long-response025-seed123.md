@@ -61,6 +61,8 @@ step 2,100ではvalidation loss 3.739756、PPL 42.0877、step 2,200では3.74728
 
 step 2,600ではvalidation loss 3.724659、PPL 41.4571、step 2,700では3.723881、PPL 41.4249、step 2,800では3.726536、PPL 41.5350、step 2,900では3.713784、PPL 41.0087となりました。最終step 3,000ではtrain loss 3.268579、SFT loss 3.373382、rehearsal loss 2.849367、validation loss 3.713886、PPL 41.0129、learning rate 5.0000e-6、経過時間1550.76秒となりました。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存しました。最良checkpointはstep 2,900で、学習はNaN、OOM、shape errorなく完走しました。step 3,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`で、EOSへ到達しています。評価用のcheckpointは最良の`best.pt`を使用します。
 
+学習完了後の評価はCPU上で行います。5領域については`evaluate_torch.py domains`へ`general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin`、`conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin`、`medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin`、`RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin`、`MRMP=artifacts/tokens/issue1-mrmp-validation.bin`を渡し、20バッチずつ測定します。固定chat-testは`artifacts/corpus/conversation-v1/test.jsonl`と`experiments/evaluation/chat-test-v1.json`を使い、48例、最大160 Token、temperature 0.8、top-k 40、評価seed 42で実行します。出力JSONと全文TXTを保存してから、067・068・070との比較を完成させます。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察を追記します。068との差分だけでなく、067と070を含む比較表を残し、2/6条件を採用・保留・棄却のいずれかに判断します。
