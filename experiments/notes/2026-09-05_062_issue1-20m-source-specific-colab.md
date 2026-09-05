@@ -37,10 +37,33 @@ python scripts/train_torch.py --config configs/issue1-mrmp-20m-colab-2p5k.toml -
 
 Colab session `exp062-20m-rpc-mrmp`はT4でREADYになりました。まだbundleのuploadと学習開始前であり、既存sessionの成果物は変更していません。次にbundleをuploadし、wrapperによる必須ファイルと入力hashの照合を通過してから学習を開始します。
 
+bundle upload後、wrapperは設定、学習コード、Tokenizer、RPC/MRMP train Token列、general・RPC・MRMP validation Token列のhashを照合しました。照合値は開始前に記録した値と一致し、RPC条件、MRMP条件の順に同じT4 runtimeで実行しました。RPC条件は155.06秒、MRMP条件は152.97秒で、いずれも2,500 stepまで完走しました。NaN、OOM、shape error、Token列不足は発生していません。Colab側の軽量archiveは68ファイル、17,403 bytes、SHA-256 `4274232224d586549fb4880b2641c8acbb5b37cb33ab3f9a77052c7d89b2a789`でした。
+
+両条件ともparameter数は19,308,032、PyTorchは2.11.0+cu128、CUDAは12.8、GPUはTesla T4です。GPU総メモリは15,637,086,208 bytes、peak allocatedは787,465,728 bytes、peak reservedは834,666,496 bytesでした。各条件でstep 0からstep 2,500まで100 step間隔の生成本文、500 step間隔のcheckpoint metadata、metrics、summaryを回収しました。best checkpointはいずれもstep 1,600でした。RPCのbest checkpointは77,267,142 bytes、SHA-256 `4a9bd751205626962508edb2e22cb62edb709c7e176764fc51884d8d9871426d`、MRMPは同サイズでSHA-256 `b55fb95638122b081b2d89c2c40c37929dadf6ef591e1a6622eec3e65e921426`です。回収manifestは`artifacts/checkpoints/exp062-manifest.json`、SHA-256 `e8ad4d4e4a269012fd903219292ac14a42e159af629be8e33a33315666c4902b`です。
+
+学習途中の固定prompt `今日なにしてた？` に対するstep 2,500の出力は、RPC条件では日本語に混じって英語風の技術語や崩れた固有名詞が連続し、MRMP条件では日本語の文らしい断片が増えた一方で、質問への直接的な応答にはなっていませんでした。具体的な全文は各条件の`artifacts/samples/`へ保存しており、品質が低い出力も削除していません。
+
+学習終了後、best checkpointをローカルCPUへ回収し、同じ5領域を20 batchずつ評価しました。validation lossとperplexityは次のとおりです。
+
+| 条件 | general | conversation | medical | RPC | MRMP |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| RPC | 6.2070 / 496.19 | 3.2924 / 26.91 | 3.4261 / 30.76 | 3.1567 / 23.49 | 4.0776 / 59.00 |
+| MRMP | 6.2120 / 498.71 | 3.9332 / 51.07 | 3.4176 / 30.50 | 3.9311 / 50.97 | 2.7290 / 15.32 |
+
+仮説どおり、RPC条件はRPC validationで、MRMP条件はMRMP validationで明確に低いlossになりました。RPC条件のRPC lossはMRMP条件より0.7744低く、MRMP条件のMRMP lossはRPC条件より1.3486低くなっています。これは、RPCの1対1会話・話題継続と、MRMPの複数話者・短い発話交替が、同じ「会話データ」として一括りではなく、異なる分布としてモデルに学習されたことを示します。RPC条件はconversation全体でも低く、MRMPのvalidationへも一定の転移がありました。MRMP条件はgeneralでわずかに不利でしたが、medicalではわずかに低く、今回の差だけから一般能力や医学知識の優劣を決めることはできません。
+
+固定chat-test v1の48例も、同じ選択manifest、seed 42、temperature 0.8、top-k 40、最大64 Tokenで評価しました。RPC条件はEOS到達48/48、平均生成長11.50 Token、Token overlap F1 0.0666でした。MRMP条件はEOS到達48/48、平均生成長8.29 Token、F1 0.0451でした。RPC条件のF1はMRMP条件より高いものの、両方とも早期EOSが多く、短く終わることでoverlapが変動しているため、自然な会話能力の証拠とは扱いません。各例のprompt、reference、completionは`artifacts/evaluations/issue1-rpc-20m-colab-2p5k-chat-test-v1.json`、同TXT、およびMRMPの同名ファイルへ保存しました。
+
+評価JSONのSHA-256は、RPC domainが`3271b6a7815ec4cbb7e04bd3ab9f42cc6cb7f30264a46f39a24cf19b4353b90b`、MRMP domainが`05f46d5b5517dd8ce0a75fb2fa2a68cc63649fbf00b137aea1d089b790164e7e`、RPC chatが`8969d2fa9eab8648dd277af5ca9118eca280beaa3935d6826276d082b33622b7`、MRMP chatが`843e137f2b1c0bc6c13b3b47cd072e7eda6c69a86647acf57f7c879deb7fca68`です。Colab session `exp062-20m-rpc-mrmp`は成果物回収後に停止し、停止後のactive sessionはありません。
+
 ## 実験終了後の結果と解釈
 
 ここへ実測parameter数、runtime、peak memory、学習時間、最終および最良loss、5領域の比較、固定chat-testの集計、代表的な生成の観察を追記します。validation lossは次Token予測の指標であり、会話の自然さ、知識の正確さ、医学的安全性を直接意味しないことを明記します。RPCまたはMRMPのvalidationが良くなっても、そのsourceに含まれる表現を記憶した可能性があるため、held-out生成とsource別評価を分けて解釈します。
 
+実験062では、同じ20M級モデルと学習量でも、RPC単独とMRMP単独で改善するvalidation領域が分かれました。この結果はIssue #1の「会話sourceの性質を分けて比較する」という方針を支持します。一方、固定chat-testは両条件とも短いEOS出力が中心で、自然な応答、話題適合、現代的な口語表現を十分に評価できる段階ではありません。今回はsource分布への適合性を示す探索結果として扱い、チャット品質の結論とは分けます。
+
 ## 次に試すこと
 
 結果に応じて、RPCとMRMPの配分を変えたboth条件、両sourceを同じToken数へ揃えたSFT、または同じpretraining checkpointから応答部分だけを学習するSFTを選びます。いずれの場合も、今回の5領域lossと固定chat-testを再利用し、比較条件を増やしすぎず一度に一つの仮説を検証します。
+
+今回の結果から、次はRPCとMRMPを同じToken比率で混ぜたboth条件を長く学習するより先に、両sourceを同じpretraining checkpointから応答部分だけ学習するSFT比較を優先します。pretrainingではsource固有の分布が明確に現れましたが、固定chat-testの早期EOSが残っているため、履歴を条件として応答を生成する学習がどこまで改善するかを確認する必要があります。SFTではsource別のデータ量を揃え、学習対象をassistant相当の応答Tokenに限定する条件を作ります。

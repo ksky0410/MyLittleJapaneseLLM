@@ -1,0 +1,69 @@
+{
+  "experiment": "062",
+  "lightweight_files": 68,
+  "lightweight_archive": "/content/exp062-lightweight.tar.gz",
+  "archive_bytes": 17403,
+  "archive_sha256": "4274232224d586549fb4880b2641c8acbb5b37cb33ab3f9a77052c7d89b2a789",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/best.pt",
+      "bytes": 77267142,
+      "sha256": "4a9bd751205626962508edb2e22cb62edb709c7e176764fc51884d8d9871426d"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/step_000500.pt",
+      "bytes": 77275917,
+      "sha256": "32e211bd7491acb41515d089e4bc2b3b8a1de652c51379966a3d5da5979ecd38"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "376939438201ff3b0591bbe044515216d1c70b2a2734c5208f10dd9390c6ea36"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/step_001500.pt",
+      "bytes": 77275917,
+      "sha256": "936bc845c35bfd968446a1430360cfb9f4e3f8df0e30b447c5f9b982ba5cd771"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/step_002000.pt",
+      "bytes": 77275917,
+      "sha256": "d61ebe7f860273268ad49abdbaf84779da1aa83c2be5b92edbc76b43ce24a89c"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-rpc-20m-colab-2p5k/step_002500.pt",
+      "bytes": 77275917,
+      "sha256": "edc96bd7c9048be207d2a9d34ee040d475a0526afb0516396dbeaf805a6faff0"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/best.pt",
+      "bytes": 77267142,
+      "sha256": "b55fb95638122b081b2d89c2c40c37929dadf6ef591e1a6622eec3e65e921426"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/step_000500.pt",
+      "bytes": 77275917,
+      "sha256": "606f381ab608e5cd3dbb6ffbc0447a3980ce11fd8608c3ff3e82a4034137574b"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "49fc5077c2a20b04f8fed217f873b178f20ef2ffac9ae1e02d0ec20fec6b8349"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/step_001500.pt",
+      "bytes": 77275917,
+      "sha256": "83fa30c6ade027155bde2f0469cf0859671b5b6ae074ea0ca0f217a9fd1bcdae"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/step_002000.pt",
+      "bytes": 77275917,
+      "sha256": "d60d6601010032a1e48355ddc505d6e517c42c688e0255ac4bae1ff408ac65b1"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-mrmp-20m-colab-2p5k/step_002500.pt",
+      "bytes": 77275917,
+      "sha256": "0910b326c2b75d3003c44f0b6d64c9fcba754d0746bd49c454af3a50de9170c1"
+    }
+  ]
+}
