@@ -55,6 +55,12 @@ wrapperはbundle展開先を`/content/small_llm_056`へ固定し、必要な実�
 
 開始前の計画、コードcommit、bundle hash、Colab割当、学習中の節目、回収結果をこの節へ時系列で追記します。途中停止、割当失敗、入力hash不一致、生成の崩れも削除せず記録します。
 
+2026-09-05、開始前にcommit `2819611`を基準としてbundleを作成し、bundleは9,989,309 bytes、SHA-256 `809026d7511a6ebb141e4ad7483f1c24ad7a806164082da7baae3e947dcc5066`で固定しました。Colab session `exp056-20m-modern-architecture`の新規T4割当に成功し、probeはPython 3.13.15、PyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、15,360 MiBを報告しました。matmul probeは0.1659891680秒、最大確保メモリは75,628,544 bytesでした。bootstrapはconfig、学習コード、モデル実装、Tokenizer、学習・検証Token列の11 hashを照合し、すべて一致してから学習を開始しました。
+
+学習は終了コード0で完走しました。Colab packageの軽量archiveには114ファイルが含まれ、archiveは31,938 bytes、SHA-256 `e02ac1cf35f7aba2f2448627d2536fbff97be3de4e219547f7dc82b6d2105e29`です。manifestのSHA-256は`a44be25e71902e0e9284d8d1f5c423216c04894f5081de97b3369841099e8fdb`、best checkpointは77,267,142 bytes、SHA-256 `476d848edd7566ff259ee74469912c5ad828a471a44bca1e53b20cd8bc571b21`です。学習終了後もbest checkpoint本体を`/tmp/exp056-best.pt`へ回収し、重い重みはGitへ追加せずhashだけを保持します。生成TXT、metrics、summary、checkpoint metadata、Colab manifestはリポジトリへ展開して追跡します。
+
+学習完了後、同じColab T4上でdomain評価とheld-out chat-test-v1評価を開始します。評価用に`evaluate_torch.py`、`evaluate_chat_dataset.py`、5種類のvalidation Token列、固定48例の会話入力とselection manifestを使用し、general・conversation・medical・RPC・MRMPのloss、EOS到達率、平均生成長、Token overlap F1を保存します。
+
 ## 結果と解釈
 
 実験終了直後に、実際のruntime、最終・最良loss、PPL、checkpoint、生成例、実験041との差、仮説と一致した点、次に試す変更を追記します。未実施の場合は、未実施の理由と次の確認方法を明記します。
