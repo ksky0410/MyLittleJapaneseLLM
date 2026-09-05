@@ -1,0 +1,164 @@
+{
+  "format": "torch-chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "prompt_template": "conversation",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-20m-rehearsal-ratio050-colab-1k/best.pt",
+  "checkpoint_sha256": "9920c1a78c1665c6ff93cc293b101824f565c1d582ea5fa66f0dd8f45c801b21",
+  "checkpoint_step": 1000,
+  "config": "/Users/koseki/projects/small_llm/configs/issue1-both-20m-sft-torch-colab-1k.toml",
+  "seed": 42,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "generation": {
+    "max_new_tokens": 64,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "category_summary": {
+    "short-reply": {
+      "count": 2,
+      "empty_count": 0,
+      "eos_count": 2,
+      "mean_completion_tokens": 4.5
+    },
+    "backchannel": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 6.0
+    },
+    "short-turn": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 4.0
+    },
+    "discourse-marker": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 4.0
+    },
+    "disagreement": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 4.0
+    },
+    "parting": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 4.0
+    },
+    "invitation": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 4.0
+    }
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "template": "conversation",
+      "seed": 42,
+      "prompt_token_count": 27,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>まじで<eos:3><|speaker:B|>",
+      "completion_token_count": 5,
+      "eos_reached": true,
+      "completion": "こんにちはぇ。"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "template": "conversation",
+      "seed": 43,
+      "prompt_token_count": 26,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>それな<eos:3><|speaker:B|>",
+      "completion_token_count": 6,
+      "eos_reached": true,
+      "completion": "よろしくお願いします、よろしくお願いします。"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "template": "conversation",
+      "seed": 44,
+      "prompt_token_count": 29,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>今日なにしてた？<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "こんにちは!"
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "template": "conversation",
+      "seed": 45,
+      "prompt_token_count": 26,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>やば<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "こんばんは!"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "template": "conversation",
+      "seed": 46,
+      "prompt_token_count": 26,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>なんかさ<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "こんばんは!"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "template": "conversation",
+      "seed": 47,
+      "prompt_token_count": 26,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>いやそれは<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "こんにちは!"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "template": "conversation",
+      "seed": 48,
+      "prompt_token_count": 28,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>おつかれ<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "おはようございます!"
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "template": "conversation",
+      "seed": 49,
+      "prompt_token_count": 29,
+      "rendered_prompt": "<|startofconversation|><|speaker:A|>明日ひま？<eos:3><|speaker:B|>",
+      "completion_token_count": 4,
+      "eos_reached": true,
+      "completion": "こんばんは!"
+    }
+  ]
+}

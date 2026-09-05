@@ -30,6 +30,18 @@ uv run python scripts/evaluate_torch_prompt_set.py \
 
 二つのcheckpointについてrawとconversationの計4評価が完了し、8 prompt分の生成本文、EOS数、平均completion Token数、カテゴリ別集計が保存されることです。checkpoint reload errorやpromptのToken化エラーが出た場合も、そのまま失敗として追記します。
 
+## 実施記録
+
+15:10 JST、実験052で得たratio 0.10とratio 0.50のbest checkpointをローカルPyTorch 2.14.0 CPUでreloadし、raw形式とconversation形式を各8 promptずつ評価しました。新しい評価scriptとテストをcommit `c212bec`として先にpushし、実行前の全体テストは76件通過しました。学習やcheckpointの変更は行っていません。
+
+ratio 0.10のraw形式はEOS 7/8、空completion 2/8、平均completion長16.00 Tokenでした。ratio 0.50のraw形式はEOS 8/8、空completion 1/8、平均17.13 Tokenでした。raw形式では「今日なにしてた？」や「明日ひま？」のような入力に空出力があり、その他にも医療や一般文書に近い無関係な続きが混ざりました。
+
+ratio 0.10のconversation形式はEOS 8/8、空completion 0/8、平均4.00 Tokenでした。ratio 0.50はEOS 8/8、空completion 0/8、平均4.38 Tokenでした。両条件とも、`<|startofconversation|><|speaker:A|>...<eos:3><|speaker:B|>`を付けると、raw形式の空出力は消えました。しかし内容は質問に対応する返答というより「こんにちは」「こんばんは」「よろしくお願いします」のような定型挨拶へ偏りました。評価用のA/B話者IDがSFT学習時の実データに現れる話者IDと一致しないため、conversation形式にしただけでは内容適合までは確認できませんでした。
+
+4評価のJSON/TXTは、ratio 0.10について`artifacts/evaluations/issue1-both-20m-rehearsal-ratio010-prompt-raw.json`・`.txt`と`issue1-both-20m-rehearsal-ratio010-prompt-conversation.json`・`.txt`へ、ratio 0.50について同じ命名のratio050ファイルへ保存しました。生成本文は短い挨拶や無関係な長文を含めて削除していません。
+
+今回の結果から、052の学習中サンプルがstep 500以降にpromptだけを残した現象は、モデル全体のEOS崩壊と断定できず、raw promptがSFT入力分布外だったことが主な説明候補となりました。一方、実在話者IDを含む固定会話での生成が短くても正しいとは限りません。次の学習では、train splitの実データから作った`<|speaker:DA|>`や`<|speaker:DC|>`のような話者markerと履歴をsample promptに使い、形式と内容の両方を確認します。
+
 ## 結果と解釈
 
 評価完了後に、rawとconversationのEOS・空出力・平均生成長・生成本文を比較し、学習中サンプルの早期終了がprompt形式で説明できるかを記録します。説明できない場合は、EOS lossの重み付け、response-only maskの構造、generation samplerの順に調べます。

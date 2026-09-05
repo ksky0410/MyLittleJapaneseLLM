@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-20m-rehearsal-ratio050-colab-1k/best.pt
+checkpoint_step: 1000
+config: /Users/koseki/projects/small_llm/configs/issue1-both-20m-sft-torch-colab-1k.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=9.00
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=40.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=16.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=49.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=9.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+きません。
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+き合った本は、その時間をつけないのをどうしてもつく。これもこの患者がそのような所にはあったと言うのは、まだちょっと気づけない。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+また、どうして、最近から、それに、何のか
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+しながらはそのままの方法をご覧ください。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+いよ 
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、今のものに、いくつきのようなものが、どうしてもいいだろうか。 そこへ、または、お父さんとどう違うところに、とって、、自分、それに違うんだ。
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+いもんもいね 笑
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+
