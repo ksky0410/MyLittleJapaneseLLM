@@ -48,6 +48,8 @@ Colab CLIでT4割当を先に試し、bundleには075 best checkpoint、加工�
 
 この節にはColab試行、bundleのhash、MPS切り替え、開始時のparameter数、100 stepごとのSFT・rehearsal・validation loss、生成本文、500 stepごとのmetadata、警告、途中停止を追記します。075のbest checkpointとデータhashを上書きせず、実行backendが変わった場合も時系列で残します。
 
+2026年9月6日、MPS学習前に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp076-both-50m-sft-from-5m --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返して終了しました。Colab側のbundle upload、入力hash検証、SFT初期化、学習stepは発生していません。この失敗を成功実験と混ぜず、同一条件のMPSへ切り替えます。
+
 ## 実験終了後の結果と解釈
 
 完走後に実際のruntime、最良・最終loss、SFTとrehearsalの損失、学習時間、best checkpoint hash、5領域評価、固定chat評価、生成本文を追記します。074との差は、初期checkpointとSFT条件を分けて記載し、075基盤の効果とSFT条件の効果を混同しません。
