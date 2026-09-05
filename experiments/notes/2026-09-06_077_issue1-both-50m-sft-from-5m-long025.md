@@ -110,6 +110,16 @@ uv run python scripts/evaluate_torch.py chat \
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
 
+学習はPyTorch 2.14.0のMPSで完走し、AMPは無効でした。parameter数は50,207,616、最良checkpointはstep 3,000、最良validation lossは3.534275（PPL 34.2702）、summary上の学習時間は3,666.15秒でした。Colab T4はassignment endpointのHTTP 503で開始できなかったため、MPSへ切り替えています。NaN、OOM、shape error、途中停止はありませんでした。
+
+5領域評価はCPU、20 batchで行いました。generalはvalidation loss 4.686238（PPL 108.4445）、conversationは2.724726（15.2522）、medicalは2.951301（19.1308）、RPCは2.709367（15.0198）、MRMPは2.268589（9.6657）でした。長文比率を指定しなかった076との差は、generalが+0.013635で悪化しましたが、conversationは-0.004947、medicalは-0.000942、RPCは-0.013726、MRMPは-0.003254で改善しました。したがって長文層化は会話系validationの損失を少し改善した一方、一般日本語の保持にはわずかな悪化があり、全領域で一方向の改善ではありません。
+
+固定chat-test-v1は48例すべてでEOSへ到達し、平均生成長は11.3750 Token、precisionは0.260861、recallは0.192361、全体Token overlap F1は0.191293でした。short・medium・longのF1はそれぞれ0.274013、0.124985、0.174881でした。076との差は、平均生成長-0.2292、precision-0.012357、recall-0.017470、全体F1-0.015958、short F1-0.026784、medium F1-0.017699、long F1-0.003391です。長文F1はほぼ維持されましたが、全体・short・mediumのF1は下がっており、50M・5M Token基盤では長文例をSFT部分の2/6へ増やすだけでは会話評価を改善しませんでした。075のpretrainingのみの全体F1 0.060641と比べると+0.130652ですが、SFT条件の効果と長文比率の効果は分けて扱います。
+
+生成本文には「こんばんは!」「よろしくお願いします!」「こんにちは!」のような短い定型応答が多く、EOS制御は安定しています。一方、長い履歴に対して「大人になっていてる!!!」や、話題を一部拾いながら無関係な語を混ぜる出力も残りました。YouTubeの話題に対して「もう、Youtubeで、iPadアプリを使ってました。」と返す例のように一部の語は合っていても、参照応答の内容を十分に再現しているとは限りません。Token overlapは表面一致の指標ですので、自然さ・話題継続・応答の妥当性を単独で証明するものではありません。人手レビュー用JSONは48例すべてを`pending_human_review`として保存し、意味的な判定は未完了です。
+
+成果物のSHA-256は、5領域評価JSONが`1c3f293a1367f1e542544e63f820ca421bd640ad4b85777ae537908427d914ea`、固定chat JSONが`141ccac97aaf5a83a75e15d1b8eac596dfbd91b82b7bbc99f24e2d57b8b72e56`、全文TXTが`7057aa901111316a4cf9ee801126271fe2c7a1f98d0edbf9f44659fe97479d70`、人手レビュー用JSONが`37006bdc7a1aa65012697ff11d65d5cfae805f53af0a212e7c281116aba17a2e`です。metricsは`fca06d67b7f986f027e945556be609d2a71841ecd78cf8384097c14512dfc3c7`、summaryは`7f9a36386334f4f7dcd7b44bcb70ddfe463e4641ead450156c59de35c831dad5`、best metadataは`fb18c3584b1d208feed2d10dcfdfb70cf32e24ba3257039bdb21be6fc4b39c32`です。生成本文は[学習中のサンプル](../../artifacts/samples/issue1-both-50m-sft-from-5m-long025-3k/)、[5領域評価](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-domains.json)、[固定chat評価](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-chat-test-v1.json)、[生成全文](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-chat-test-v1.txt)、[人手レビュー用JSON](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-3k-chat-review.json)から確認できます。
+
 ## 次に試すこと
 
 077の差が大きくても小さくても、単一seedの結論にしません。差が再現しそうならseedを変えた確認、差が小さければ長文比率よりデータ形式または人手評価へ進みます。その後、50Mモデルのcontext lengthを512へ伸ばす実験、データ量を増やす実験、現代的なinstruction・蒸留手法を順番に検証します。
