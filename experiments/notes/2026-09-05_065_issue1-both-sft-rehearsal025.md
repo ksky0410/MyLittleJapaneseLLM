@@ -56,9 +56,19 @@ step 1,600では総合loss 3.6617、SFT loss 3.4760、rehearsal loss 4.2189、va
 
 step 2,100では総合loss 3.4993、SFT loss 3.6193、rehearsal loss 3.1393、validation loss 3.7527、PPL 42.64、step 2,200では3.7484、PPL 42.45、step 2,300では3.7453、PPL 42.32、step 2,400では3.7353、PPL 41.90となりました。step 2,500では総合loss 3.5675、SFT loss 3.2803、rehearsal loss 4.4290、validation loss 3.7285、PPL 41.62、学習率8.2333e-6、経過時間2,892.35秒でした。064のbest validation loss 3.7129との差は0.0156です。step 2,100から2,500までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
 
+step 2,600では総合loss 3.6398、SFT loss 2.9995、rehearsal loss 5.5606、validation loss 3.7239、PPL 41.42、step 2,700では3.7225、PPL 41.37、step 2,800では3.7175、PPL 41.16、step 2,900では総合loss 4.0852、SFT loss 4.0473、rehearsal loss 4.1988、validation loss 3.7166、PPL 41.12となりました。step 3,000では総合loss 3.4468、SFT loss 3.4160、rehearsal loss 3.5392、validation loss 3.7183、PPL 41.20、学習率5.0000e-6、経過時間3,469.65秒でした。最良checkpointはstep 2,900で、best.ptのSHA-256は`2e02ba55b2b1f9d83fdc0e16841a9c1a135720b6f355c6e4de536a4f3f6993c8`です。step 3,000までNaN、OOM、shape errorはなく、step 2,600から3,000までの生成サンプルも保存されました。
+
 ## 実験終了後の結果と解釈
 
-ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064との差、代表的な生成を追記します。general lossの改善だけで会話性能が保たれたとは判断せず、source別lossと生成本文を併せて確認します。生成本文は品質に関係なくGitHubへ保存します。
+学習はMPSで完走しました。PyTorchは2.14.0、AMPは無効、parameter数は19,308,032、経過時間は3,469.99秒でした。best stepは2,900、best validation lossは3.7166076660、PPLは41.1246486678、最終step 3,000のvalidation lossは3.7183266044、PPLは41.1954001948でした。best.ptのSHA-256は`2e02ba55b2b1f9d83fdc0e16841a9c1a135720b6f355c6e4de536a4f3f6993c8`です。summaryは`artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal025-colab-3k/summary.json`、metricsは同ディレクトリの`metrics.jsonl`、step 500間隔のcheckpoint metadataとstep 0〜3,000の生成本文は同じcheckpoint・samplesディレクトリに保存しました。重い`.pt`本体はGit管理外ですが、metadataとhashは管理します。
+
+共通5領域をCPUで20 batchずつ評価した結果は、generalがvalidation loss 5.4092 / PPL 223.44、conversationが2.8855 / 17.91、medicalが3.1909 / 24.31、RPCが2.8890 / 17.98、MRMPが2.3281 / 10.26でした。064のboth-SFTと比べると、generalは0.8341、conversationは0.4448、medicalは0.3779、RPCは0.4592、MRMPは0.4539だけlossが下がりました。単純なrehearsalによるgeneral保持だけでなく、今回の5領域すべてで改善しています。これはrehearsalが会話SFTの更新を抑えたことに加え、064と065で同じbaseから別々に3,000 step学習したこと、評価が固定20 batchのサンプルであることの影響も含みます。したがって、rehearsalが全領域を必ず改善すると一般化せず、次の比率比較で再確認します。評価JSONのSHA-256は`2d4e07dd0ec90b569a36d3204ad70676e42e5c0a59413b1fef23f6f9a2539200`です。
+
+固定chat-test v1の48例では、EOS到達が48/48、平均生成長が10.5625 Token、Token overlapのprecisionが0.2321、recallが0.1943、F1が0.1863でした。stratum別F1はshort 0.2952、medium 0.1329、long 0.1310です。064のF1 0.2297から0.0433下がり、平均生成長は同じ10.5625 Tokenでした。source別ではMRMP 24例が平均9.17 Token・F1 0.2079、RPC 24例が平均11.96 Token・F1 0.1648でした。つまり、rehearsal ratio 0.25は一般・会話validation lossを大きく改善しましたが、今回の固定chat-testのToken overlap F1は低下しました。短い定型応答の一致と長い文脈の自然さを分離する必要があるため、F1だけで065を失敗とは判定しません。評価JSONのSHA-256は`567ae89a6efa2d3fd10f17641587679b10929fc6587bafee85ff9135790ad926`、TXTのSHA-256は`f7a6c7e105f418d63c3634a3fc09e2d30438b7f731f91e9a562907b0850f9ab3`です。
+
+代表例では、MRMPの`こんにちは`に`こんにちは`と返せましたが、`えー`への返答が`笑笑笑`、長いRPC文脈への返答が`お願いします! 私も一緒にお願いします、、そちらはどうですか?`や`スマホは、マスクを作っちゃうんですよね。でも、最近スパイスを使ったりするんですよね。`となるなど、文法的には日本語でも文脈適合が弱い出力が残っています。学習中のconversation形式サンプルは、064のraw形式より入力分布に近い条件で記録できました。全31個のstep別生成文は`artifacts/samples/issue1-both-20m-sft-source-rehearsal025-colab-3k/`に保存し、これらの崩れた出力も削除していません。
+
+事前の「rehearsal ratio 0.25でgeneralを改善し、会話性能をおおむね維持する」という仮説は、generalだけでなく全5領域のvalidation loss改善という点では支持されましたが、chat-test F1を維持するという点では外れました。今回の差は、rehearsalでモデル全体の次Token性能を回復できる一方、応答の表面的な一致やsource固有の短文適合を犠牲にする可能性を示しています。単一seed、20M級、3,000 step、固定48例という制約があるため、ratio 0.25を最適値とはせず、一般文書と会話の両方を確認できる基準条件として扱います。
 
 ## 次に試すこと
 
