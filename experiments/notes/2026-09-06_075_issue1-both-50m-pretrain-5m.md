@@ -26,6 +26,8 @@ uv run python scripts/train_torch.py \
 
 先にColab CLIで`colab new -s exp075-both-50m-pretrain-5m --gpu T4`を試します。bundleにはコード、設定、Tokenizer、加工済みToken列、general validationだけを含め、元JSONL、医師国家試験原本、`medilink_analysis`のディレクトリは含めません。Colabが503、割当上限、認証、uploadなどで失敗した場合は、そのエラーとsession状態を残して同一条件のMPSへ切り替えます。
 
+開始commitは`4824b09`で、GitHubの`origin/main`へpush済みです。設定ファイルのSHA-256は`74afeb79e08c1f96fa0954ccb1921fca767457536ab965170804f140151a61b4`、実験ノートのSHA-256は`e114706285e6897c74fbcd58fa1cb08d7759c7f55f77a865f6c57d4177ba9d50`です。Colab送信用bundleは`/tmp/small_llm-colab-075-XXXXXX.tar.gz`、6,989,615 bytes、SHA-256 `92c0862c64ca327b0b0e6930595af3afdc87b4be2c63c2fcd9cc95053e0d124c`です。bundleには`src`、PyTorch学習コード、075のbootstrapとpackage、設定、Tokenizer、約5M Tokenの学習列、general validationだけを含めています。bundle作成時にPython cacheは除外しました。
+
 ## 成功・失敗の判定基準
 
 2,500 stepをNaN、OOM、shape error、Token列不足なく完走し、step 0から2,500まで100 step間隔のmetricsと生成本文、500 step間隔のcheckpoint metadata、summaryを保存できれば学習実験として成功とします。性能面では、073の50M・約1M Token条件に対してgeneralを含む複数領域のvalidation lossが改善するかを確認します。失敗、悪い生成、途中停止、Colabの利用不能は削除せず記録します。
