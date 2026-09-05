@@ -71,8 +71,26 @@ step 1,600ではvalidation loss 3.811465、PPL 45.2166、step 1,700では3.80673
 
 ## 実験終了後の結果と解釈
 
-学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
+学習は2026年9月5日にMPS上で完走しました。実際のbackendはPyTorch 2.14.0、deviceは`mps`、AMPは無効、parameter数は19,308,032、学習時間はsummary上で1,683.35秒でした。Colab T4は開始前にHTTP 503で割り当てられなかったため、MPSへ切り替えました。NaN、OOM、shape error、checkpoint reload errorは発生していません。
+
+最終step 3,000のtrain lossは3.838269、SFT lossは3.928383、rehearsal lossは3.477811、validation lossは3.734906、PPLは41.8841でした。最良checkpointもstep 3,000で、`best.pt`のSHA-256は`953544f7be5bc35954ffd731f11cc906a0067a4067673685f40de7e0d28ccff9`です。step 2,800のvalidation loss 3.744378を下回って最終stepで更新されました。学習途中ではstep 2,200にvalidation loss 3.789005へ一時的に悪化しましたが、step 2,800以降に再び改善しましたので、異常停止ではなく通常のbatch揺らぎとして扱います。
+
+5領域のvalidation lossは、general 5.461471（PPL 235.4436）、conversation 2.884240（17.8900）、medical 3.232369（25.3396）、RPC 2.872909（17.6884）、MRMP 2.327911（10.2565）でした。実験067（rehearsal ratio 0.20、一様SFT sampling）との差は、general -0.008409、conversation -0.013348、medical +0.014136、RPC -0.027021、MRMP -0.013503です。長文例を増やしてもgeneralはほぼ維持され、medicalだけわずかに悪化しましたが、会話およびRPC・MRMPのvalidation lossは改善しました。ただし差は単一seedの結果ですので、長文層化が一般化したと断定せず、再現実験の候補とします。
+
+固定chat-test v1の48例では、EOS到達は48/48、平均生成Token数は11.2083、precisionは0.297795、recallは0.230276、Token overlap F1は0.220352でした。short・medium・long別F1はそれぞれ0.317120、0.181814、0.162121です。実験067との差は、平均生成長が+0.7292、precisionが+0.036389、recallが+0.014054、全体F1が+0.012598、short F1が-0.005548、medium F1が+0.014971、long F1が+0.028372となりました。特にlong F1は0.133749から0.162121へ改善し、今回の仮説を支持する方向です。一方、short F1は少し下がったため、すべての応答長に対して無条件に良くなったわけではありません。
+
+source別では、MRMP 24例のF1が0.228068、平均生成長が8.5833、RPC 24例のF1が0.212635、平均生成長が13.8333でした。全例でEOSへ到達しました。long例には、MRMPの「ソメイヨシノの寿命が近い」という話題へ「おー!いいですね!」と返すような短いが話題に触れる出力がある一方、RPCのSpotifyの話題へ「スマホはどうしてるんですが、スポーツを作ったりもします。」と返すような話題逸脱も残りました。したがって、長文層化は長い履歴への表層一致を改善した可能性がありますが、話題継続や意味の自然さを解決したとは扱いません。Token overlapは補助指標であり、生成TXTの目視確認と併用します。
+
+固定promptのstep 3,000生成は、`<|speaker:DA|>こんにちは！`に対し、`<|speaker:DC|>こんにちは!`でEOSへ到達しました。step 500の「こんにちは〜。」、step 1,000の「よろしくお願いします!」、step 1,500の「こんばんはー!」、step 2,000の「こんにちは!」を含め、学習途中の全31個の生成本文を保存しています。悪い生成を含む固定chat 48例の全文も削除せず保存しています。
+
+成果物のSHA-256は、metricsが`937ba0ec9599495fcda0e13065cb47275cb5153de365265ba8ffbcde58e7b1fc`、summaryが`60e21ed7c08ff509e4eeb7fcfe18f7cf9030b87f7856778dfbae9feedb162310`、best metadataが`101d0f4749e8a57e417edf1b6896563f1f9955a033cab583285a0471e36c7f6b`、step 3,000 metadataが`dd2e17e2937ad536bff8ac6c95fb19b79d204c18009dcea82546d4223ac2782c`、step 3,000生成TXTが`fffa73d93c4b9662dc906591a36597c336a723d8f0fd04c0785c28c51bff2f1b`です。5領域評価JSONは`b1889eb8138efd66fc8b1fe8cf4569a5f478f41d89deec3562d457da46afab95`、固定chat評価JSONは`386c57b4d827c80a20e760cb52a8ce4e953dca06e48fa5defeece97f5b910593`、固定chat全文TXTは`7272224de2c531909601ea704265259cd619e9c503dfbdca7a09cb35f1923dac`です。
+
+評価結果と生成本文は、[checkpoint metadata](../../artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k/)、[学習中の生成サンプル](../../artifacts/samples/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k/)、[5領域評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-domains.json)、[固定chat評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-chat-test-v1.json)、[固定chat全文TXT](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-chat-test-v1.txt)から確認できます。重い`.pt`本体はGit管理外ですが、checkpoint metadataとSHA-256をGitHubへ保存しています。
+
+## 結論
+
+実験068は実装上は成功し、長文応答の意図的な再サンプリングによってlong F1、medium F1、全体F1、conversation・RPC・MRMP lossが実験067より改善しました。したがって、「長い応答が少ないために長文会話の学習機会が不足している」という仮説は、今回の単一seed・48例の評価では支持する方向です。ただし、指定した長文比率25%はSFT部分のbatchサイズ6に丸められて2/6、実効33.3%になっており、厳密な25%比較ではありません。またmedical lossとshort F1は悪化し、長文出力にも話題逸脱があるため、現時点で標準条件を置き換えるのではなく、有力な候補として扱います。
 
 ## 次に試すこと
 
-今回の結果で長文層化が有効なら、次は長文層の割合を15%または50%へ変え、SFTとrehearsalのToken予算を分離して比較します。有効でなければ、Issue #1の会話データを追加することよりも、会話テンプレート、応答長、話題継続評価の設計を見直します。その後、20Mで得た条件を50Mへ拡大し、モデル容量を増やしたときにも効果が再現するかを確認します。
+次は今回の実効33.3%を基準に、SFT部分の長文行数を固定してlong層を1/6、2/6、3/6へ分け、指定比率の丸めによる影響を除いた比較を行います。その際、medical lossの悪化とshort F1の低下がどの程度再現するかを確認します。並行して、長文応答の話題適合を人手レビューできる評価表を追加し、Token overlapだけでは捉えられない改善を記録します。長文層化の効果が再現すれば、20Mで選んだ条件を50Mへ拡大し、Issue #1の会話データを含む一般日本語モデルで容量差を検証します。
