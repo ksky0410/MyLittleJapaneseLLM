@@ -185,7 +185,9 @@ class TorchJapaneseGPT(_ModuleBase):
                 for _ in range(layers)
             ]
         )
-        self.final_norm = nn.LayerNorm(dim) if norm_type == "layernorm" else nn.RMSNorm(dim)
+        self.final_norm = (
+            nn.LayerNorm(dim) if norm_type == "layernorm" else nn.RMSNorm(dim)
+        )
         # PyTorchのEmbedding既定値は標準偏差1の正規分布ですが、MLXの
         # 小型モデル実験で使っている初期スケールとは大きく異なります。
         # 入力とabsolute positionを同じ小さなスケールへ揃え、weight tying
