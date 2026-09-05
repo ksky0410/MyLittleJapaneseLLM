@@ -16,6 +16,8 @@
 
 Tokenizerはvocab 4,096の`mixed-ja-80-10-10-v2-unigram.model`、モデルはRoPE・LayerNorm・SwiGLU、dim 576、12層、9 heads、context length 256、約50M parametersです。設定上のseedは42、batch sizeは8、最大3,000 step、learning rateは5e-5から5e-6、warmup 100、weight decay 0.01、EOS loss weight 0.50です。SFT trainは64,423例、validationは49,045例です。SFTはresponse-only loss、rehearsalは`mixed-ja-80-10-10-v2-train.bin`を使います。
 
+Colab送信用bundleは`/tmp/small_llm-colab-077-XXXXXX.tar.gz`、236,435,505 bytes、SHA-256は`8fefb4f4b99afc8d685b83d282de6961f1caa215a99607d2d286d4569fcd90ef`です。bundleには077の実行コード、設定、075 best checkpoint、加工済みSFTデータ、rehearsal Token列、Tokenizerだけを含め、元JSONL、医師国家試験原本、`medilink_analysis`は含めていません。
+
 使用する入力のSHA-256は次のとおりです。
 
 - 設定ファイル：`d2f0ca2b98badcfbfbc9cbf6896d5d42afaf701e09fc35d7c8ca28880fc2af3f`
