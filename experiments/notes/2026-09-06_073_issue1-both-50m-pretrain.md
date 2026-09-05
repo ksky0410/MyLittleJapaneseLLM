@@ -44,6 +44,8 @@ uv run python scripts/train_torch.py \
 
 step 600ではvalidation loss 6.493899、PPL 661.0962、step 700では6.425177、PPL 617.1899、step 800では6.318794、PPL 554.9033、step 900では6.275675、PPL 531.4853となりました。step 1,000ではtrain loss 3.407382、validation loss 6.241747、PPL 513.7555、learning rate 2.3815e-4、経過時間1167.69秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存しました。step 1,000の固定prompt生成はprompt直後にEOSへ到達して本文が空であり、事前学習途中の会話応答能力はまだ成立していません。validation lossは継続して改善し、ここまでNaN、OOM、shape error、警告はありません。学習は継続中です。
 
+step 1,100ではvalidation loss 6.267543、PPL 527.1804、step 1,200では6.264282、PPL 525.4644、step 1,300では6.228799、PPL 507.1459、step 1,400では6.230421、PPL 507.9691となりました。step 1,500ではtrain loss 3.220841、validation loss 6.232976、PPL 509.2687、learning rate 1.4598e-4、経過時間1796.26秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存しました。step 1,500の固定prompt生成は`今日なにしてた? ここにも知りませんでした ⁇`で、学習途中として日本語の断片は増えましたが、質問への適切な応答にはなっていません。step 1,300でvalidationが一時改善した後、1,400〜1,500で横ばいとなっています。ここまでNaN、OOM、shape error、警告はありません。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、backend、Torchバージョン、device、AMP、parameter数、学習時間、最良checkpoint、最終および最良loss、生成本文、入力hash、成果物hashを追記します。20M基盤との差から容量の効果を評価し、次の50M SFT実験の初期checkpointを確定します。
