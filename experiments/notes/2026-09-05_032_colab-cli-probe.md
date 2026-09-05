@@ -22,11 +22,15 @@ colab run --gpu T4 scripts/colab_probe.py
 
 ## 実験中の記録
 
-未実施です。
+2026-09-05、`colab run --gpu T4 scripts/colab_probe.py`を実行しました。Colab CLIは`run-e5b449`セッションを作成し、スクリプト終了後に正常解放しました。セッションはLinux x86_64、Python 3.13.15でした。実行中のアクティブセッションを残していません。
 
 ## 結果と解釈
 
-未実施です。
+GPUランタイムの検証は成功しました。PyTorchは`2.11.0+cu128`、CUDAは`12.8`、GPUは`Tesla T4`、compute capabilityは7.5、`nvidia-smi`上のメモリは15,360MiBでした。2048×2048の行列積10回は0.195305秒、最大割当メモリは75,628,544 bytes（約72.2MiB）でした。`torch_available: true`と`cuda_available: true`を確認できたため、50M級または長時間学習ではColab GPUを使う価値があります。
+
+ただし、現在の学習コードはMLX専用であり、今回のT4でそのまま動くわけではありません。したがって、今回の結果は「Colabで学習が成功した」という意味ではなく、「PyTorch/CUDA版を追加すればColabで実行できる環境が確認できた」という意味です。MacBook側の20M学習は約1,408秒でしたが、行列積だけではモデル学習速度を推定できません。次の移行実験では、同じモデル構造・Token列・seed・学習条件をPyTorchへ実装し、stepあたりの時間、validation loss、生成結果、チェックポイントhashを比較します。
+
+今回の出力には、GPU名、CUDA・PyTorchのバージョン、処理時間、メモリ使用量が含まれています。実行ログ自体はターミナルで取得し、スクリプトは`scripts/colab_probe.py`としてcommitします。
 
 ## 次に試すこと
 
