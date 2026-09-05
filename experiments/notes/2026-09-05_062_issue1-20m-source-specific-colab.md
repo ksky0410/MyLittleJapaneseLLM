@@ -10,7 +10,7 @@
 
 ## 再現条件
 
-実験開始前の基準commitは`c6cfe6f2840608da3bbaf670b6519720752d35cf`です。実験用の設定とColab wrapperを追加した作業treeでは、RPC configのSHA-256が`ab4233f586500e067f351e90daac3b4c239d1a6a9d44f40f8e809d5602ef5a6b`、MRMP configが`3601571798dfe7c4cf57f03aeca6102e45e0a4f61d6515e3517c5b543b90f1c7`です。実行用wrapperは`scripts/colab_bootstrap_062.py`、回収用scriptは`scripts/colab_package_062.py`です。学習実行前にこれらをcommitし、そのcommitを実行条件として追記します。
+実験開始前の基準commitは`c6cfe6f2840608da3bbaf670b6519720752d35cf`です。実験用の設定とColab wrapperを追加した実行コードcommitは`f299cf7`（`exp: prepare 062 source-specific pretraining`）としてpush済みです。RPC configのSHA-256は`ab4233f586500e067f351e90daac3b4c239d1a6a9d44f40f8e809d5602ef5a6b`、MRMP configは`3601571798dfe7c4cf57f03aeca6102e45e0a4f61d6515e3517c5b543b90f1c7`です。実行用wrapperは`scripts/colab_bootstrap_062.py`、回収用scriptは`scripts/colab_package_062.py`です。学習はこのcommitのコードと設定で実行します。
 
 モデルは`dim=384`、10層、6 heads、context length 256、RoPE、LayerNorm、SwiGLUで、実測約19.3M parameterとなる構成です。学習はbatch size 8、2,500 step、AdamW、learning rate 3e-4から3e-5、warmup 300、weight decay 0.1、seed 42、validation・生成間隔100 step、checkpoint間隔500 stepです。Colabの同一T4 runtime上でRPC条件を先に、MRMP条件を後に実行します。GPUが割り当てられない場合や途中停止した場合も、停止理由と回収できた成果物をこのノートへ残します。
 
