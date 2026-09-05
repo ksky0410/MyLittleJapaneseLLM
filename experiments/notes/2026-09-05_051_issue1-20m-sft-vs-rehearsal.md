@@ -50,7 +50,7 @@
 
 20M本学習は5M smokeと同じ引数でconfig、base checkpoint、出力先だけを20M用へ置き換え、Colab T4で実行します。SFT-onlyとrehearsalの両条件を同じVM・同じseedで順番に走らせるか、割当が取れない場合は5M smokeの結果を先に確定します。
 
-20M Colab用wrapperは`scripts/colab_bootstrap_051.py`、軽量成果物の回収用archive作成は`scripts/colab_package_051.py`です。wrapperは`/content/small_llm_051`へ展開し、実験050のbase checkpointを上書きせず、SFT-onlyとrehearsalの出力先を分けます。20M configのSHA-256は`e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b`、wrapperは`ace9c0c7de89c6b3891e96158ad806b9e75bbc53cad97e49bb5dbb1ca9be560e`、package scriptは`52250b1c5e7b1dbfd4ab4c14cd4ba4a8bac4be0c253102927eac45d07b4daff3`です。予定コマンドは次のとおりです。
+20M Colab用wrapperは`scripts/colab_bootstrap_051.py`、軽量成果物の回収用archive作成は`scripts/colab_package_051.py`、分割bundleの連結・hash検証は`scripts/colab_concat_051.py`です。wrapperは`/content/small_llm_051`へ展開し、実験050のbase checkpointを上書きせず、SFT-onlyとrehearsalの出力先を分けます。20M configのSHA-256は`e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b`、wrapperは`ace9c0c7de89c6b3891e96158ad806b9e75bbc53cad97e49bb5dbb1ca9be560e`、package scriptは`52250b1c5e7b1dbfd4ab4c14cd4ba4a8bac4be0c253102927eac45d07b4daff3`、concat scriptは`70629ac7475e6905a49a69354d7761a042d030d67cfb3504e7cdc96b45f255b9`です。予定コマンドは次のとおりです。
 
 ```bash
 tar -czf /tmp/small_llm-colab-051.tar.gz \
@@ -64,7 +64,14 @@ tar -czf /tmp/small_llm-colab-051.tar.gz \
   artifacts/tokens/mixed-ja-80-10-10-v2-train.bin
 
 colab new --session exp051-20m-sft --gpu T4
-colab upload --session exp051-20m-sft /tmp/small_llm-colab-051.tar.gz /content/exp051_bundle.tar.gz
+split -b 45m -d -a 2 /tmp/small_llm-colab-051-c4076e0.tar.gz /tmp/exp051_bundle_part_
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_00 /content/exp051_bundle_part_00
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_01 /content/exp051_bundle_part_01
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_02 /content/exp051_bundle_part_02
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_03 /content/exp051_bundle_part_03
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_04 /content/exp051_bundle_part_04
+colab upload --session exp051-20m-sft /tmp/exp051_bundle_part_05 /content/exp051_bundle_part_05
+colab exec --session exp051-20m-sft --timeout 120 --file scripts/colab_concat_051.py
 colab exec --session exp051-20m-sft --timeout 1800 --file scripts/colab_bootstrap_051.py
 colab exec --session exp051-20m-sft --timeout 120 --file scripts/colab_package_051.py
 colab download --session exp051-20m-sft /content/exp051-lightweight.tar.gz /tmp/exp051-lightweight.tar.gz
@@ -77,6 +84,7 @@ colab stop --session exp051-20m-sft
 ## 成功条件
 
 5M smokeがmask対象Tokenのないbatch、NaN、shape error、checkpoint reloadエラーなく完走し、SFT-onlyとrehearsalのmetrics、summary、生成TXTを保存することです。20M比較では、同じ初期checkpointから両条件が完走し、general・medical・conversation・RPC・MRMPのdomain評価と48例の固定chat-testを実施することです。SFT loss対象Token、rehearsal Token、実際のoptimizer stepを分けて記録します。PyTorch版の不具合やColab割当失敗は成功結果へ混ぜず、原因と次の対策をこのノートへ残します。実行前に確定した20M bundleは`/tmp/small_llm-colab-051-c4076e0.tar.gz`、サイズ259MB、SHA-256 `94f28a741d6e3bebf922031ed8feafa1ecf2eaaacba54da8c38ab1e2950cbd35`です。実行用コードcommitは`c4076e0`です。
+14:39 JST、新規session `exp051-20m-sft`のT4割当は成功しましたが、259MBのbundleを一括uploadするとColab CLIがHTTP 400 `Bad Request`を返しました。bundleのローカルhashと内容は変更されておらず、学習も開始していません。upload上限またはruntime proxyの制約と考え、45MB単位へ分割してuploadし、Colab側で連結後に元bundleのSHA-256を照合する方式へ切り替えます。
 
 ## 実験中の記録
 
