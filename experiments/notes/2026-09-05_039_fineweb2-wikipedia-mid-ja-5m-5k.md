@@ -64,7 +64,7 @@ Token化も完了しました。Token列は`artifacts/tokens/mixed-ja-token-budg
 
 ## 実験中の記録
 
-データ混合とToken化は正常に完了しました。混合器のエラー、Token数不足、Tokenizer mismatchは発生していません。学習開始前の計画、実測source比率、本文とToken列のhashをこのノートへ記録済みです。2026-09-05に5,000 stepのMLX学習を開始しました。step 1ではtrain loss 8.781590、general validation loss 8.800259、perplexity 6635.964でした。warmup中のstep 300ではtrain loss 5.823933、validation loss 6.379888、perplexity 589.862、learning rate `3.000000e-4`、経過時間31.31秒でした。step 1,000ではtrain loss 4.936625、validation loss 5.706295、perplexity 300.755、learning rate `2.855307e-4`、経過時間123.05秒、step 1,300ではtrain loss 4.772246、validation loss 5.586837、perplexity 266.890でした。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。step 300から1,300までの生成結果は`artifacts/samples/fineweb2-wikipedia-mid-ja-5m-5k/`へ保存されています。学習は継続中です。
+データ混合とToken化は正常に完了しました。混合器のエラー、Token数不足、Tokenizer mismatchは発生していません。学習開始前の計画、実測source比率、本文とToken列のhashをこのノートへ記録済みです。2026-09-05に5,000 stepのMLX学習を開始しました。step 1ではtrain loss 8.781590、general validation loss 8.800259、perplexity 6635.964でした。warmup中のstep 300ではtrain loss 5.823933、validation loss 6.379888、perplexity 589.862、learning rate `3.000000e-4`、経過時間31.31秒でした。step 1,000ではtrain loss 4.936625、validation loss 5.706295、perplexity 300.755、learning rate `2.855307e-4`、経過時間123.05秒、step 1,300ではtrain loss 4.772246、validation loss 5.586837、perplexity 266.890、step 1,600ではtrain loss 4.473612、validation loss 5.485989、perplexity 241.287、step 1,700ではtrain loss 4.479951、validation loss 5.478712、perplexity 239.538でした。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。step 300から1,700までの生成結果は`artifacts/samples/fineweb2-wikipedia-mid-ja-5m-5k/`へ保存されています。学習は継続中です。
 
 ## 結果と解釈
 
