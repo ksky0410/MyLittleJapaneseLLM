@@ -55,6 +55,8 @@ step 2,600ではvalidation loss 3.7208（PPL 41.30）、step 2,700では3.7188�
 
 学習自体はMPSで完走しました。best stepは2,900、best validation lossは3.7129121780、PPLは40.9729534896、最終step 3,000のvalidation lossは3.7130285144、PPLは40.9777204105でした。summaryは`artifacts/checkpoints/issue1-both-20m-sft-source-colab-3k/summary.json`、metricsは同ディレクトリの`metrics.jsonl`、stepごとの生成は`artifacts/samples/issue1-both-20m-sft-source-colab-3k/`に保存しています。共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差は、評価スクリプト完了後にここへ追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
 
+共通5領域の評価はCPUで完了しました。会話評価は最初に`--output-json`と`--output-text`を指定して終了コード2となりましたが、これはスクリプトが要求する`--output`、`--text-output`、`--selection-file`と引数名が異なっていたためです。失敗時にはモデルやデータは変更されておらず、正しい引数で再実行します。
+
 ## 次に試すこと
 
 both-SFTでsource固有の改善が保たれるなら、次はboth-SFTへrehearsal lossを加えてgeneral lossの悪化を抑えます。混合で性能が落ちるなら、RPCとMRMPの配分、source別sampling、またはSFT前のpretraining量を一つずつ変えて再検証します。
