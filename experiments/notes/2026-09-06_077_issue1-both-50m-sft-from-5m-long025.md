@@ -50,6 +50,8 @@ uv run python scripts/train_sft_torch.py \
 
 この節には、Colab CLIの試行結果、セッション状態、MPSへの切り替え、step 1・500・1,000・1,500・2,000・2,500・3,000のloss・PPL・経過時間・学習率・固定prompt生成を時系列で追記します。悪い生成、警告、途中停止も削除せず記録します。
 
+2026年9月6日06:50台に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp077-both-50m-sft-long025 --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返しました。Colabセッションは作成されず、bundle upload、入力hash検証、モデル初期化、学習stepは発生していません。過去の075・076と同じ障害として明記し、同一条件をMPSへ切り替えます。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
