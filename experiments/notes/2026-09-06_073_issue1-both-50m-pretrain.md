@@ -38,6 +38,8 @@ uv run python scripts/train_torch.py \
 
 この節にはColab試行、MPS切り替え、開始時の実測parameter数、100 stepごとのmetrics、500 stepごとの生成本文とcheckpoint metadata、警告、メモリ問題、途中停止を時系列で追記します。原文データや医師国家試験の原本はbundleやGitへ追加しません。
 
+2026年9月6日、MPS学習の開始前に`colab new -s exp073-both-50m-pretrain --gpu T4`を実行しました。しかしColab CLIのassignment endpointがHTTP 503 `Service Unavailable`を返し、セッション作成に失敗しました。直後の`colab sessions`は`No active sessions found on server.`でした。bundle uploadやColab上の学習は発生していないため、同一条件をMPSで実行します。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、backend、Torchバージョン、device、AMP、parameter数、学習時間、最良checkpoint、最終および最良loss、生成本文、入力hash、成果物hashを追記します。20M基盤との差から容量の効果を評価し、次の50M SFT実験の初期checkpointを確定します。
