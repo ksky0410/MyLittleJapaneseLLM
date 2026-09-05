@@ -34,6 +34,22 @@ uv run python scripts/train_sft_torch.py \
 
 Colabへ送るbundleは`/tmp/exp067_bundle.tar.gz`で、作成日時は2026年9月5日、サイズは約117 MiB、SHA-256は`d15d5e45d887b2cc1a4d056898158ac88db0d20dd77415fff4028ac264ce63d0`です。bundle内には067のconfig、学習script、`src` package、base checkpointとmetadata、Tokenizer、balanced SFTのtrain・validation NPZ、rehearsal Token列だけを含め、原文データは含めていません。
 
+Colab割り当て失敗後のMPS実行では、次のコマンドを使います。Colab用configを読み込みますが、成果物の混同を避けるためcheckpointとsampleの出力先をMPS専用ディレクトリへ上書きします。
+
+```bash
+uv run python scripts/train_sft_torch.py \
+  --config configs/issue1-both-20m-sft-source-rehearsal020-colab-3k.toml \
+  --base-checkpoint artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt \
+  --train-data artifacts/sft/issue1-both-balanced-v1/train.npz \
+  --validation-data artifacts/sft/issue1-both-full-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-mps-3k \
+  --samples-dir artifacts/samples/issue1-both-20m-sft-source-rehearsal020-mps-3k \
+  --lr-schedule-steps 3000 --eos-loss-weight 0.5 \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 --sample-template conversation \
+  --sample-speaker-a DA --sample-speaker-b DC --device mps
+```
+
 ## 成功条件
 
 3,000 stepをNaN、OOM、shape errorなく完走し、best checkpoint metadata、metrics、summary、step 0〜3,000の生成本文、共通5領域評価、固定chat-test 48例を保存することです。Colabを使った場合はGPU情報と軽量成果物のmanifestを回収し、重いcheckpoint本体はGit管理外のままSHA-256を記録します。失敗した場合も、失敗理由と次の切り替えを削除せずに残します。
