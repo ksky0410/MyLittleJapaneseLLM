@@ -48,6 +48,8 @@ smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935
 
 13:35 JST、`colab new --session torch20m-swiglu-rope-colab-047 --gpu T4`で新規T4 sessionを作成しようとしましたが、HTTP 412 `Precondition Failed`、`TooManyAssignmentsError`で割り当てられませんでした。041の完走直後でColab側の割当上限に達した可能性があります。`colab sessions`に047 sessionは残らず、bundleのuploadや047のColab学習stepには到達していません。既存sessionの流用は行わず、失敗を記録したうえで、構造確認だけをローカルPyTorch CPU smokeへ切り分けます。
 
+13:37 JST、ColabのGPU割当失敗を性能結果と混同しないため、出力先を分離した`configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml`を作成しました。これは047のsmokeと同じモデル・データ・100 step条件を使い、CPUで構造、NaN、checkpoint reloadに相当する成果物、生成処理だけを確認する補助実験です。CPUの速度やlossをColab T4の本実験結果とは比較しません。設定SHA-256は`89074fe4299c3726ca142300fedec5c17cf98b37c0c65d30a9737c7f8217a4e3`です。実行コマンドは`.venv/bin/python scripts/train_torch.py --config configs/fineweb2-wikipedia-10m-20m-swiglu-rope-layernorm-cpu-smoke.toml --device cpu`です。この計画をcommitへ固定してから実行します。
+
 ## 結果と解釈
 
 実験終了後、smokeと本学習を混ぜずに、backend、最終および最良checkpoint、train・validation loss、domain評価、固定chat評価、reload生成、失敗・停止理由、成果物hashを追記します。20Mモデルの出力を医療助言や医学的正解として扱わず、医師国家試験データを含むことによる見かけの専門性と、一般日本語の生成能力を分けて評価します。
