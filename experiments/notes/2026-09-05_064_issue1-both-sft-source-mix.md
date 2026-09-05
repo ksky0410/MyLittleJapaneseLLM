@@ -10,7 +10,7 @@
 
 ## 再現条件
 
-実験開始前の基準commitは`86dd65e`です。実験064ではSFT NPZの連結用`scripts/concat_sft_npz.py`、sourceごとのresponse Token予算を均等にした混合用`scripts/mix_sft_npz.py`、both-SFT用configを追加します。これらをテストしてcommit・pushしてから、データ作成と学習を開始します。
+実験開始前の基準commitは`86dd65e`です。実験064ではSFT NPZの連結用`scripts/concat_sft_npz.py`、sourceごとのresponse Token予算を均等にした混合用`scripts/mix_sft_npz.py`、both-SFT用configを追加しました。`uv run pytest -q`で85件が通過し、準備変更は`59e12b9`としてcommit・push済みです。
 
 base checkpointは実験050の`artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt`で、SHA-256は`326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`です。Tokenizerはvocab 4,096の`mixed-ja-80-10-10-v2-unigram.model`、SHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。モデルはRoPE、LayerNorm、SwiGLU、dim 384、10層、6 heads、context length 256、19,308,032 parameterです。学習はbatch size 8、3,000 step、learning rate 5e-5から5e-6、warmup 100、weight decay 0.01、EOS loss weight 0.50、seed 42、学習率schedule終点3,000 stepで実行します。
 
@@ -19,7 +19,7 @@ base checkpointは実験050の`artifacts/checkpoints/issue1-both-20m-colab-2p5k/
 実行コマンドは次のとおりです。
 
 ```bash
-python scripts/train_sft_torch.py \
+uv run python scripts/train_sft_torch.py \
   --config configs/issue1-both-20m-sft-source-colab-3k.toml \
   --base-checkpoint artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt \
   --train-data artifacts/sft/issue1-both-balanced-v1/train.npz \
