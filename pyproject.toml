@@ -23,6 +23,9 @@ dev = [
 data = [
     "pyarrow>=14.0",
 ]
+torch = [
+    "torch>=2.2.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

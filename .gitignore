@@ -26,6 +26,7 @@ data/cache/
 *.zip
 *.bin
 *.npz
+*.pt
 *.safetensors
 *.ckpt
 *.pt
