@@ -28,6 +28,10 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 実験038を完了したcommitは`e84db48`です。config SHA-256は`e0673e6e44f8ac652e78d0b60ffec5cbb7e4e996a72c8be424b58e2425bd25c4`です。データ混合とToken化を先に実行し、manifestとToken列のhashを確認してから学習を開始します。
 
+2026-09-05、weight `8:8:4:1:1`、seed 42、target 7,500,000 Tokenで混合を完了しました。混合本文は`artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1.txt`、実際のToken数は7,499,997、本文SHA-256は`6a0ea02b8d0e5baf83c05e1d487c53fce6e9b8b1056d06c440caa546948aca31`です。manifestは`artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1.manifest.json`、SHA-256は`1206a38179282b5e9f271b73100bfc028c712de2cee67d7577d941cfab49a69f`です。実測Token比率は、青空文庫6.777%、FineWeb53.282%、Wikipedia26.632%、会話6.651%、医療6.657%でした。Wikipediaは037の42.189%と038の0%の中間に近い比率になりました。
+
+Token化も完了しました。Token列は`artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1-train.bin`、7,499,997 Token、SHA-256は`3bad9f5f9546d98fc598d602a053648679d6e7817161f0add7a219b020c7440a`です。Token metadataは`artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-mid-7p5m-v1-train.bin.json`、SHA-256は`0d187e0964b403d38d95d70fb82128f495e32e82beb23f0048a1dbf41ed20fd3`です。vocab size 4,096、EOS ID 3、Tokenizer SHA-256は計画どおりです。学習開始条件を満たしました。
+
 予定コマンドは次のとおりです。
 
 ```bash
@@ -60,7 +64,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 実験中の記録
 
-未実施です。データ作成、Token化、学習の各段階で実際の条件と失敗を追記します。
+データ混合とToken化は正常に完了しました。混合器のエラー、Token数不足、Tokenizer mismatchは発生していません。学習開始前の計画、実測source比率、本文とToken列のhashをこのノートへ記録済みです。これから5,000 stepのMLX学習を開始します。
 
 ## 結果と解釈
 
