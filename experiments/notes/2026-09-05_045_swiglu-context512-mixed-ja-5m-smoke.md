@@ -2,11 +2,11 @@
 
 ## 開始前の計画
 
-実施日は2026-09-05、担当者はCodexです。実験042のLayerNorm・RoPE・context 512条件を基準にし、実験044ではFFNだけをGELUからSwiGLUへ変更します。目的は、現代的なdecoder-only Transformerで広く使われるSwiGLUをこの日本語小型モデルへ導入したとき、同程度のparameter予算で学習の安定性、validation loss、生成結果、実行時間がどう変わるかを確認することです。
+実施日は2026-09-05、担当者はCodexです。実験042のLayerNorm・RoPE・context 512条件を基準にし、実験045ではFFNだけをGELUからSwiGLUへ変更します。目的は、現代的なdecoder-only Transformerで広く使われるSwiGLUをこの日本語小型モデルへ導入したとき、同程度のparameter予算で学習の安定性、validation loss、生成結果、実行時間がどう変わるかを確認することです。
 
 事前の仮説は、SwiGLUのgateによって表現力が増し、同じ学習条件でvalidation lossがGELU条件と同程度か少し低くなる可能性がある、というものです。ただし、500 stepの短いsmokeであり、モデルも約5M parameterにすぎないため、差がほとんど見えないか、初期化とsamplingの揺らぎに埋もれる可能性も高いと考えます。SwiGLUが常に優れるとは仮定せず、まず実装とcheckpoint reloadが成立するかを確認し、042との数値差は探索上の参考として扱います。
 
-今回の042との差分は`model.ffn_type = "swiglu"`だけです。LayerNorm、RoPE、dim 240、6層、6 heads、context length 512、MLP倍率4、batch size 8、最大500 step、評価・生成間隔100、AdamW、学習率3e-4から3e-5、warmup 300、weight decay 0.1、seed 42、学習・検証Token列、Tokenizerを固定します。SwiGLUはgate・up・downの3射影を使うため、中間次元を`2/3 × dim × mlp_ratio`として640にし、GELUのup・downの中間次元960とほぼ同じFFN parameter数に揃えます。RoPEでは位置Embeddingを持たないため、概算parameter数は042と同じ5,136,480です。
+今回の042との差分は`model.ffn_type = "swiglu"`だけです。LayerNorm、RoPE、dim 240、6層、6 heads、context length 512、MLP倍率4、batch size 8、最大500 step、評価・生成間隔100、AdamW、学習率3e-4から3e-5、warmup 300、weight decay 0.1、seed 42、学習・検証Token列、Tokenizerを固定します。SwiGLUはgate・up・downの3射影を使うため、中間次元を`2/3 × dim × mlp_ratio`として640にし、GELUのup・downの中間次元960とほぼ同じ重み行列parameter数に揃えます。biasを含む実際のparameter数はGELUが5,143,680、SwiGLUが5,145,600で、SwiGLUが1,920多くなります。RoPEでは位置Embeddingを持たないため、概算parameter数はどちらも5,136,480です。
 
 ## 使用するデータ、Tokenizer、コード
 
@@ -29,7 +29,7 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 ## 実験中の記録
 
-学習開始前に、設定・入力Token列・TokenizerのSHA-256、現在のGit commit、MLXのdeviceをこのノートへ追記します。学習中は少なくとも100 stepごとにtrain loss、validation loss、perplexity、生成文、所要時間を保存します。Metal deviceが見えず実行できない場合も失敗として記録し、CPUや別backendで実行した場合は主実験と混ぜません。
+2026-09-05 12:56 JST、学習開始前に設定・入力Token列・TokenizerのSHA-256と現在のGit commitを確認しました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。コードcommitは`540ba90`、設定のSHA-256は`3ba2fe173d9745e41d72f3142ecf98c3f9e001ed961adc04236a6569dffb0c31`です。学習中は100 stepごとにtrain loss、validation loss、perplexity、生成文、所要時間を保存します。Metal deviceが見えず実行できない場合も失敗として記録し、CPUや別backendで実行した場合は主実験と混ぜません。
 
 ## 結果と解釈
 
