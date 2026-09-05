@@ -1,0 +1,51 @@
+{
+  "format": "chat-sft-preparation-v1",
+  "generated_at_utc": "2026-09-05T09:10:39.384015+00:00",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp",
+  "input_sha256": "bd4ece1fdbdb864289246914ab43b8f8e5ae4100344522f81dc3cc3f39759c0d",
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "context_length": 256,
+  "sequence_length": 257,
+  "seed": 42,
+  "special_tokens": {
+    "conversation_start": "<|startofconversation|>",
+    "conversation_end": "<|endofconversation|>",
+    "eos_id": 3,
+    "pad_id": 0
+  },
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/train.jsonl",
+      "input_sha256": "93a85f6be0d300980f1c9bcc6cb65845ff7671cd0243390feee6df0a816e9c1e",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-full-v1/train.npz",
+      "npz_sha256": "49cab24b683f902a83a0d128d01adddfc69b947b97f0419fda545e4c55b5ddab",
+      "conversation_count": 784,
+      "short_conversation_count": 0,
+      "example_count": 81382,
+      "response_token_count": 770975,
+      "response_body_token_count": 689593,
+      "truncated_example_count": 70299,
+      "array_shape": [
+        81382,
+        256
+      ]
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/validation.jsonl",
+      "input_sha256": "8b4cf84ce787f7f641a89c96cc69c1d976312823ea956b11218efff40e20bd09",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-full-v1/validation.npz",
+      "npz_sha256": "3a045389072a14da8b5ffec1e309bf4918e78f16a318f24cd54334f23cdd4e7b",
+      "conversation_count": 89,
+      "short_conversation_count": 0,
+      "example_count": 9343,
+      "response_token_count": 89757,
+      "response_body_token_count": 80414,
+      "truncated_example_count": 8118,
+      "array_shape": [
+        9343,
+        256
+      ]
+    }
+  }
+}

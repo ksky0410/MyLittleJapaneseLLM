@@ -1,0 +1,32 @@
+{
+  "format": "conversation-source-filter-v1",
+  "input_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1",
+  "output_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp",
+  "source": "mrmp",
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/train.jsonl",
+      "input_sha256": "be28c0b9213de7e2ad8b3dcdf3f687369dd3bb2aead38213acb4885a6d75c6e7",
+      "input_record_count": 11635,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/train.jsonl",
+      "output_sha256": "93a85f6be0d300980f1c9bcc6cb65845ff7671cd0243390feee6df0a816e9c1e",
+      "output_record_count": 784
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/validation.jsonl",
+      "input_sha256": "bac9710f0e1ebbbc955debb7e6a773c450abd63f71869f97bd0da73740d8cdde",
+      "input_record_count": 1454,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/validation.jsonl",
+      "output_sha256": "8b4cf84ce787f7f641a89c96cc69c1d976312823ea956b11218efff40e20bd09",
+      "output_record_count": 89
+    },
+    "test": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl",
+      "input_sha256": "65f534a8e63acf056bcbcbc7c827d62ff7dedfd383be382cc299c056dec90ce5",
+      "input_record_count": 1454,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/test.jsonl",
+      "output_sha256": "794d0f2bdaeac1f89a08a74733d65f83417a2a47b9c2205544face30f993920a",
+      "output_record_count": 87
+    }
+  }
+}

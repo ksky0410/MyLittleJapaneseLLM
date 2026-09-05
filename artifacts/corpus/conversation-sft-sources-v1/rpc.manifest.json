@@ -1,0 +1,32 @@
+{
+  "format": "conversation-source-filter-v1",
+  "input_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1",
+  "output_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/rpc",
+  "source": "real-persona-chat",
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/train.jsonl",
+      "input_sha256": "be28c0b9213de7e2ad8b3dcdf3f687369dd3bb2aead38213acb4885a6d75c6e7",
+      "input_record_count": 11635,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/rpc/train.jsonl",
+      "output_sha256": "aba75dbbba72b2d1839c11cdc96e36ea5b87e4f3a8351175a1259dc21a3bb610",
+      "output_record_count": 10851
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/validation.jsonl",
+      "input_sha256": "bac9710f0e1ebbbc955debb7e6a773c450abd63f71869f97bd0da73740d8cdde",
+      "input_record_count": 1454,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/rpc/validation.jsonl",
+      "output_sha256": "8da8f29f0e942afeed0469f320a6d452a364515b3256bc363e05d3ea90a5e8ce",
+      "output_record_count": 1365
+    },
+    "test": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl",
+      "input_sha256": "65f534a8e63acf056bcbcbc7c827d62ff7dedfd383be382cc299c056dec90ce5",
+      "input_record_count": 1454,
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/rpc/test.jsonl",
+      "output_sha256": "e349b2203eefab8561b0b18520e583db53c0c26f694f34bf539136ef4f8e4ae8",
+      "output_record_count": 1367
+    }
+  }
+}

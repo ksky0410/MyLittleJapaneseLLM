@@ -1,0 +1,17 @@
+{
+  "format": "sft-npz-response-budget-selection-v1",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-full-v1/train.npz",
+  "input_sha256": "49cab24b683f902a83a0d128d01adddfc69b947b97f0419fda545e4c55b5ddab",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-balanced-v1/train.npz",
+  "output_sha256": "bce88dc2c7ef83093923c0e166e485360bafc6177b6be99813664610169cb7af",
+  "seed": 42,
+  "target_response_tokens": 770975,
+  "input_example_count": 81382,
+  "input_response_token_count": 770975,
+  "selected_example_count": 81382,
+  "selected_response_token_count": 770975,
+  "array_shape": [
+    81382,
+    256
+  ]
+}
