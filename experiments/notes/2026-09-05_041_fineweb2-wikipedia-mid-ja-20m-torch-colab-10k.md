@@ -35,6 +35,8 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 041 bundleのuploadは成功しましたが、実行要求から約20分経過しても、Colab側の041出力ディレクトリ、`metrics.jsonl`、step 1 checkpointはいずれも生成されませんでした。Colab CLIのログ取得もtimeoutし、既存kernelが実行要求を受け付けない状態と判断してローカルの実行待ちを中断しました。`colab download`で確認した際も`metrics.jsonl`と`summary.json`は存在せず、学習stepには到達していません。040の成果物を含む別ディレクトリは変更していません。sessionを停止し、停止後の`colab sessions`が空であることを確認しました。
 
+その後の確認で、既存sessionのkernel再利用時に041ではなく040の学習処理が再実行され、040のmetrics、checkpoint metadata、生成文、評価結果が一時的に上書きされていたことが判明しました。これは041の成果物ではなく、040と同じ条件を再度走らせた想定外の再実行結果です。生成文と評価結果を含む全108ファイルを削除せず、`artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k-unexpected-rerun-before-041-stall/`、`artifacts/samples/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k-unexpected-rerun-before-041-stall/`、および同名の`artifacts/evaluations/*unexpected-rerun-before-041-stall*`へ退避しました。040の正規記録はHEADの内容へ復元し、正規checkpointのSHA-256 `7f375a18adfbd55026711ad452320589296b0c3c399dd1887e354868c86e9667`と、元の最終validation loss 4.9294484456380205を再確認しました。041の結果としてこれらを扱わず、別の失敗・副産物として保存します。
+
 ## 結果と解釈
 
 041の学習結果は未実施です。新規T4割当の失敗と、既存sessionを再利用した際のkernel応答停止という二つの失敗を削除せず記録しました。回収できた041の学習成果物はなく、metrics、checkpoint metadata、生成文は生成されていません。したがって、040とのlossや生成品質の比較もまだ行えません。

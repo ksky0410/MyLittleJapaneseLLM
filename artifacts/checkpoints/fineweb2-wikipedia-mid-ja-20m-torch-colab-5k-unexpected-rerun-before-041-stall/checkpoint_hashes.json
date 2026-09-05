@@ -1,0 +1,263 @@
+{
+  "experiment": "040",
+  "lightweight_archive": "/content/exp040-lightweight.tar.gz",
+  "lightweight_files": 104,
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000001.pt",
+      "bytes": 77642279,
+      "sha256": "7e8d59953f603d383d8d090a24120593376ecd008288f0de32ce2e2c3ed8cbcc"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000100.pt",
+      "bytes": 77642279,
+      "sha256": "ce4d95537b7aec79c54371b8b3a65bc4882c49ba4fa6a083e7de8d78f845bbf1"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000200.pt",
+      "bytes": 77642279,
+      "sha256": "826bc8c80b4e9fbf25cf2d6e6ea83c628d0511cbc9525033a47285f8c058562c"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000300.pt",
+      "bytes": 77642279,
+      "sha256": "3a0725e6b1d4da5d92cab91687a5b660d14e96cc4a1e186e6f36d0e8ba907304"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000400.pt",
+      "bytes": 77642279,
+      "sha256": "2c8190f272d5e815cda9db9a950bdb5559f42c7c7655690665f3084ab7f8350e"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000500.pt",
+      "bytes": 77642279,
+      "sha256": "17b9269cb66b3ee361db7a8aad62be9deffe3b9c55ed06ba15557411b22a7049"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000600.pt",
+      "bytes": 77642279,
+      "sha256": "6ffcfdf31af3e8023bac4f3060968380664fa6ced9d0656590918713dcab1b12"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000700.pt",
+      "bytes": 77642279,
+      "sha256": "fa6331a92469748e638b86bc7582dca2a5ff97bc63e2b3d6277e3b59403e8199"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000800.pt",
+      "bytes": 77642279,
+      "sha256": "68ff59b1b85ec600a72efcf655295d4770fd20e0aae2c714be8acb3d7479830b"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_000900.pt",
+      "bytes": 77642279,
+      "sha256": "bce8895454aa2952d12d4e7d49206832f5e797e875421272e14704cb0793d6b2"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001000.pt",
+      "bytes": 77642279,
+      "sha256": "a396163fe5674237719e1e152726d58397f29a5b94608dcd156e461368a39499"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001100.pt",
+      "bytes": 77642279,
+      "sha256": "1635a2103b9cd77bb4f08b9266f35ff8f6141d2c299398f953a3bd6df454e06a"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001200.pt",
+      "bytes": 77642279,
+      "sha256": "ab49eeda7b87456b5faa66c34a83ef9487bf005f6c278ede9299bc9903d3b33d"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001300.pt",
+      "bytes": 77642279,
+      "sha256": "c11e2da6f9032ceaf67e0006d73dfbd186874bf3c58c6f23704e987240c93959"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001400.pt",
+      "bytes": 77642279,
+      "sha256": "8ed3e556d287f73895d3d9327f744214aee953a2ff4936a1fea59d54610f55d5"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001500.pt",
+      "bytes": 77642279,
+      "sha256": "0e2c55114e63be4567f45958e4a92a23587bf0fbcf093325d3360df69892e235"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001600.pt",
+      "bytes": 77642279,
+      "sha256": "0eb9cb99eb5e94c3d271c6584d0e1990033fea448034b2d2ca26f71683b98a4a"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001700.pt",
+      "bytes": 77642279,
+      "sha256": "0808db9915c24127f56de43c30f68f877e010f789e9d92c418165e726db251f1"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001800.pt",
+      "bytes": 77642279,
+      "sha256": "4efa125bd30cf2fe4714b5558fc83f471128db8e834374842692fd04fc144e0d"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_001900.pt",
+      "bytes": 77642279,
+      "sha256": "d31f8c4f5434a7bf51b8c2595ac3940c09538fca6a7028ccfa59b76a02e4121c"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002000.pt",
+      "bytes": 77642279,
+      "sha256": "c94c7fb01152e59b4768723c0459339648f51c8cb8166f4c97f30dad0fc7af9f"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002100.pt",
+      "bytes": 77642279,
+      "sha256": "ec8b95f3c681cf1a6c1d881f352e36a11d1959214e665561e06f580e8e86a26c"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002200.pt",
+      "bytes": 77642279,
+      "sha256": "8b5915950801e0c3ebbc52f636bd1dcb19b0e821c0efe33a64cfd291b23f4f7c"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002300.pt",
+      "bytes": 77642279,
+      "sha256": "c0d383780dd37bc53fbcbf1039c33d3eabb0212ec548b8c379bc8cb9c275fba3"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002400.pt",
+      "bytes": 77642279,
+      "sha256": "c89da2c7df29bd7b515e013cf8888b1e1ee25206a89d99008560fcb07e3b3e5d"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002500.pt",
+      "bytes": 77642279,
+      "sha256": "88d9bab62b07e3923292f0fa938786c664c52a173d41ccad18a7da5578d73c28"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002600.pt",
+      "bytes": 77642279,
+      "sha256": "b1ebacfc9643ca6a5da43aa54de2b4f4551462530a92a8550ed7fb2868ade38a"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002700.pt",
+      "bytes": 77642279,
+      "sha256": "5a938688448d18de5acf5cf1b28cbb7ea8d2816d5ca653f630cf1d546d524a92"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002800.pt",
+      "bytes": 77642279,
+      "sha256": "606c791e5bcc23688e7118de50860e1975705dcd2d49e6d925844b078e321769"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_002900.pt",
+      "bytes": 77642279,
+      "sha256": "5814e9c1153a73fc529a6cc976ebadfa43e046a44ffa3a43c02d49fe63f5684b"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003000.pt",
+      "bytes": 77642279,
+      "sha256": "00151403ae5acbd4e57833d81efd606f96f0ac5bff99fb21340f49d1da65c781"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003100.pt",
+      "bytes": 77642279,
+      "sha256": "83dc6aca23af916e3ca0e966b82ffdeca5276614f8bea6f13f637db1565f4d5d"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003200.pt",
+      "bytes": 77642279,
+      "sha256": "9694897f405473c3a9f62b7b4a4a5ea3de47afba30f8d99ae99bd2de5531e24a"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003300.pt",
+      "bytes": 77642279,
+      "sha256": "45dbe75f6463dbfe650f832822e4fcc346292bc02f57b7bdf3b2b81105777bab"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003400.pt",
+      "bytes": 77642279,
+      "sha256": "43275496b4a7f77e908aecc8287a10ffdc08e0b4a8a17de8488f8f2e24c188e4"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003500.pt",
+      "bytes": 77642279,
+      "sha256": "4dba589039a1c3e5a8a8589edd0efbc94d6217dd4d1f752f7437fca29083769c"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003600.pt",
+      "bytes": 77642279,
+      "sha256": "fc679ee9a3440a29e306e1c57b1312b5dfca9988f56102e1838e120a80d00387"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003700.pt",
+      "bytes": 77642279,
+      "sha256": "957780801c48a711b471d4b410ad696b7e9121cac5df20b94248c1a06bca856f"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003800.pt",
+      "bytes": 77642279,
+      "sha256": "e4bc151f8c27c24dec43050d5e968470ae588d03ec6a4bc3b87a5a7f78f14550"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_003900.pt",
+      "bytes": 77642279,
+      "sha256": "9c748a967cd5e8b2dad766c06fb32f163e75bc5bab2e1be61db0a6c418192274"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004000.pt",
+      "bytes": 77642279,
+      "sha256": "a643182ff161f1b433add31f56bb13dfac596cd28e6f6d3af7cc8a5d7a801274"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004100.pt",
+      "bytes": 77642279,
+      "sha256": "304da10e8bef7d144fd24e72e2dc96313be741034c79f293dc400554f7c70d45"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004200.pt",
+      "bytes": 77642279,
+      "sha256": "ba83156ec3b764f60ab59bb1a1670d36f706963c406c96da77b0ab4597c20f27"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004300.pt",
+      "bytes": 77642279,
+      "sha256": "b150fecfdf30ec0e6fa9f6a6044a8d7091675257916579dd89e286de6b8303e0"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004400.pt",
+      "bytes": 77642279,
+      "sha256": "2088757017ee8b3770fb2f25e12ba8a3ca0b5a2e7b2bcc8ed42f83c2842a7b0a"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004500.pt",
+      "bytes": 77642279,
+      "sha256": "75ea26e9bf3fb88e59bdb8ea70585d682f5e9b0b847d4e16c05667182b0431c9"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004600.pt",
+      "bytes": 77642279,
+      "sha256": "6960c8b031531ac7d2ccbabdb51a137b79b315f6467e7f290c0c21260127fea7"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004700.pt",
+      "bytes": 77642279,
+      "sha256": "d98331b5b7364f58e0f350c158a11a7112c3683cb308c58b239ce9d2dd2a1ee7"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004800.pt",
+      "bytes": 77642279,
+      "sha256": "ef9ba9a504af16b24498be686bdbc314f7a106b3ffa62026a4003469800b04be"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004900.pt",
+      "bytes": 77642279,
+      "sha256": "ac10171b0d10f93eaa8490d9c79781f5a7477de9c0868708d3db0890151bfefd"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_005000.pt",
+      "bytes": 77642279,
+      "sha256": "56b838cefd2d385e838d694f2ad02f65a0a5718bc9fc092802ab00afecd3ec20"
+    }
+  ],
+  "archive_sha256": "28b250acd761cdb05f4ed63ca9eb2fba2b7ab5f886814eb26f10c2a53faa1866"
+}
