@@ -78,6 +78,10 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 混合本文のSHA-256はcore `5a817e8d25af5f7e9d8e5ffbd27e1d482f50f3c544eed0e9fa4e5520418554f4`、rpc `a9b29e4f4ba813e35740f1cb3cdc8fd69ed0727048007b7b069c45325015e7c8`、mrmp `0add72482bcba2a8ec5d0319ec3812f1de47ccfdb60e10a2dd548472c92ea12f`、both `76d11a5259c83a6863f42bc330b7d0b3e93d63e9f310c38d3ad500663c19d71e`です。混合manifestは入力・Tokenizer・source別採用数とToken比率を保持し、学習前のデータ条件として保存します。続けて4条件をToken化します。
 
+13:53 JST、4条件のtrain Token列とsource別validation Token列を作成しました。train Token数とSHA-256はcore 999,987 / `ebca09587890bfbfb76b6a0d968b198be55943993fc011115a1736d88914e9a4`、rpc 999,974 / `24b61c79c6144e74e8e0598d54182c7a8f109ab75fda0e7d79eea90d68c268b7`、mrmp 999,978 / `9dacab60e0b483526f9f61f2f4254290c86c48a24a4c13abcb2922b38a1c100c`、both 999,970 / `758b46f6bb946afd7e2c3604714db71166d79564f8c652e8cc950b23d3338879`です。source別validationはRealPersonaChat 948,172 Token / `30f8b66828b7a5c1171024af220613cc79d066089a4c09896456112f8754491c`、MRMP 156,475 Token / `9431d4d7432f89f69d9656bf2c3eea7c18dbcb94e84467060cba3fa8d9445623`です。これらは学習・評価条件として記録し、元のJSONLは変更していません。
+
+次の実行は各configを同じseedで500 step学習するCPU探索です。予定コマンドは`.venv/bin/python scripts/train_torch.py --config configs/issue1-core-5m-smoke.toml --device cpu`、rpc・mrmp・bothも同じ形式です。4条件の学習前記録とToken hashを確定したため、ここから学習を開始します。
+
 ## 成功条件
 
 4条件の混合とToken化が入力hashの検証つきで完了し、各500 step学習がNaN、OOM、shape error、Token列不足なしに完走することです。各条件について、metrics、checkpoint metadata、step 0・100・200・300・400・500の生成文、general・conversation・medical・RPC・MRMP評価、固定chat-test JSON/TXTを保存します。性能差が小さい場合も失敗とはせず、会話sourceの影響がこの規模では検出できなかった結果として記録します。
