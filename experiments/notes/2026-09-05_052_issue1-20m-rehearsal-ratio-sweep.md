@@ -12,7 +12,7 @@
 
 初期値は実験050の`artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt`、SHA-256 `326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`です。モデルは19,308,032 parameters、dim 384、10層、6 heads、context 256、RoPE、LayerNorm、SwiGLUです。会話train NPZは`artifacts/sft/chat-v1-context256/train.npz`、validation NPZは同ディレクトリの`validation.npz`、rehearsal Token列は`artifacts/tokens/mixed-ja-80-10-10-v2-train.bin`です。これらのSHA-256は051の記録を参照し、元のJSONL、医師国家試験データ、`/Users/koseki/projects/medilink_analysis`は変更しません。
 
-設定は実験051と同じ`configs/issue1-both-20m-sft-torch-colab-1k.toml`、SHA-256 `e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b`です。実験開始時点の基準commitは051完了後の`c3b9574`です。Colab用wrapperは`scripts/colab_bootstrap_052.py`、成果物packageは`scripts/colab_package_052.py`、分割bundle連結とhash検証は`scripts/colab_concat_052.py`です。各SHA-256はwrapper `8f7d8bf4bbf6b6f33cf1f02ffd213671c6ae7efe4921ec2869122f28d8e58f31`、package `c16fe6caf80d97659fdac79c7f20885e1c7d90d5667dbf628c0055adbc72e63b`、concat `f4a8f02d941d40d29ace13a4022f9f6e150a524b1509b2592bf34617813cb425`です。052は051と同一のbundle（259MB、SHA-256 `94f28a741d6e3bebf922031ed8feafa1ecf2eaaacba54da8c38ab1e2950cbd35`）を使います。
+設定は実験051と同じ`configs/issue1-both-20m-sft-torch-colab-1k.toml`、SHA-256 `e2b01afa98a28ea7b863a7b1ffe02e86088cd73009fc3e5422a241fd2c3a177b`です。実験開始時点の基準commitは051完了後の`c3b9574`です。Colab用wrapperは`scripts/colab_bootstrap_052.py`、成果物packageは`scripts/colab_package_052.py`、分割bundle連結とhash検証は`scripts/colab_concat_052.py`です。各SHA-256はwrapper `8f7d8bf4bbf6b6f33cf1f02ffd213671c6ae7efe4921ec2869122f28d8e58f31`、package `c16fe6caf80d97659fdac79c7f20885e1c7d90d5667dbf628c0055adbc72e63b`、concat確定版 `77d996b28151a6c0d3777b300efd2c8cc586d77bf123b9d18a3ca4c98b49bfa1`です。052は051と同一のbundle（259MB、SHA-256 `94f28a741d6e3bebf922031ed8feafa1ecf2eaaacba54da8c38ab1e2950cbd35`）を使います。
 
 ## 実行コマンド
 
@@ -23,7 +23,9 @@ colab upload --session exp052-20m-ratio /tmp/exp052_bundle_part_01 /content/exp0
 colab upload --session exp052-20m-ratio /tmp/exp052_bundle_part_02 /content/exp052_bundle_part_02
 colab upload --session exp052-20m-ratio /tmp/exp052_bundle_part_03 /content/exp052_bundle_part_03
 colab upload --session exp052-20m-ratio /tmp/exp052_bundle_part_04 /content/exp052_bundle_part_04
-colab upload --session exp052-20m-ratio /tmp/exp052_bundle_part_05 /content/exp052_bundle_part_05
+colab upload --session exp052-20m-ratio /tmp/exp052_last_part_0 /content/exp052_last_part_0
+colab upload --session exp052-20m-ratio /tmp/exp052_last_part_1 /content/exp052_last_part_1
+colab upload --session exp052-20m-ratio /tmp/exp052_last_part_2 /content/exp052_last_part_2
 colab exec --session exp052-20m-ratio --timeout 120 --file scripts/colab_concat_052.py
 colab exec --session exp052-20m-ratio --timeout 1800 --file scripts/colab_bootstrap_052.py
 colab exec --session exp052-20m-ratio --timeout 120 --file scripts/colab_package_052.py

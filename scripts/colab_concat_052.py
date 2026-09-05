@@ -8,7 +8,10 @@ from pathlib import Path
 
 
 EXPECTED_SHA256 = "94f28a741d6e3bebf922031ed8feafa1ecf2eaaacba54da8c38ab1e2950cbd35"
-PARTS = [Path(f"/content/exp052_bundle_part_{index:02d}") for index in range(6)]
+PARTS = [
+    *(Path(f"/content/exp052_bundle_part_{index:02d}") for index in range(5)),
+    *(Path(f"/content/exp052_last_part_{index}") for index in range(3)),
+]
 BUNDLE = Path("/content/exp052_bundle.tar.gz")
 
 
