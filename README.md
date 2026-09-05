@@ -157,6 +157,23 @@ checkpointは重みファイルとJSON metadataに分けて保存します。生
 
 入力の既定文字コードは`shift_jis`です。作品によって異なる場合は`--encoding`で変更できます。manifestには入力・出力のSHA-256、文字数、行数、除去した行と注記の件数、ルビ件数、長文の分割件数、入力zip内のtxt名を保存します。変換後は`prepare_data.py`へUTF-8の出力を渡してください。
 
+## Wikimedia Wikipediaの日本語記事を取り込む
+
+Wikimediaの日本語Wikipediaは、百科事典本文と固有名詞を補う一般知識sourceとして追加できます。全シャードを一度に取得せず、必要なシャードを`data/downloads/`へ保存し、revision・入力hash・ライセンスをmanifestへ記録してください。Dataset cardでは本文の原典をWikimedia Dumpsとし、CC BY-SA 3.0およびGFDLを示しています。
+
+このリポジトリでは、取得済みの`20231101.ja/train-00000-of-00015.parquet`を最大5M Tokenだけ抽出する例を用意しています。入力parquetはGitへ追加せず、抽出したUTF-8本文と軽量manifestだけを記録します。
+
+```bash
+.venv/bin/python scripts/import_wikimedia_wikipedia_ja.py \
+  --input data/downloads/wikimedia-wikipedia-20231101-ja/train-00000-of-00015.parquet \
+  --output artifacts/corpus/wikimedia-wikipedia-ja-v1.txt \
+  --manifest artifacts/corpus/wikimedia-wikipedia-ja-v1.manifest.json \
+  --max-tokens 5000000 \
+  --tokenizer artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model
+```
+
+記事タイトルが本文に現れない記事ではタイトルを補い、空記事と同一本文の重複を除きます。Wikipediaは会話sourceではないため、固定chat-testの改善を前提にせず、domain validationとsource別比較で効果を確認します。
+
 正式Token列で5,000 stepの独立実験を行う場合は、`configs/aozora-5m-full.toml`を`train.py`の入口として使用します。checkpointとsampleは`aozora-5m-full`専用ディレクトリへ保存されます。
 
 ## 医師国家試験SQLiteを取り込む
