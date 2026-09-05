@@ -1,13 +1,13 @@
 {
   "format_version": 1,
   "backend": "pytorch",
-  "checkpoint_role": "best",
+  "checkpoint_role": "periodic",
   "checkpoint_step": 1000,
   "checkpoint_interval": 500,
   "checkpoint_train_loss": 3.3326034545898438,
-  "weights_file": "best.pt",
-  "weights_bytes": 200870286,
-  "weights_sha256": "1be1393d0394380af9e3c1cae4bca226e17a709ebcc79e829df24c5c6738601d",
+  "weights_file": "step_001000.pt",
+  "weights_bytes": 200880765,
+  "weights_sha256": "02c1aebd33edfced6fcbf26b1fd8314248f7fadd0451cb9b3c0eaa1f8ac861ca",
   "model": {
     "vocab_size": 4096,
     "dim": 576,

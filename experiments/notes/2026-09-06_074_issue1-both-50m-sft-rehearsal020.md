@@ -68,6 +68,8 @@ uv run python scripts/train_sft_torch.py \
 
 step 500の固定会話prompt生成は、`<|speaker:DA|>こんにちは！<eos:3><|speaker:DC|>`に対して`こんばんは～!`でした。会話形式の出力とEOSは成立しておりますが、入力への適切な応答か、SFTで期待する話題適合性があるかはまだ判断できません。ここまでNaN、OOM、shape errorは発生しておらず、学習は継続中です。
 
+step 600ではtrain loss 3.755345、SFT loss 3.858818、rehearsal loss 3.341453、validation loss 3.971436、PPL 53.0607、step 700では4.517968、4.303596、5.375452、3.935051、PPL 51.1648、step 800では3.732526、3.560674、4.419930、3.935361、PPL 51.1806となりました。step 900ではtrain loss 4.233017、SFT loss 4.098483、rehearsal loss 4.771152、validation loss 3.910690、PPL 49.9334でした。step 1,000ではtrain loss 3.332603、SFT loss 3.168874、rehearsal loss 3.987521、validation loss 3.886643、PPL 48.7470、learning rate 4.0147e-5、経過2091.44秒となりました。step 600〜1,000のmetrics、生成本文、step 1,000のcheckpoint metadataを保存しました。`step_001000.pt`のSHA-256は`02c1aebd33edfced6fcbf26b1fd8314248f7fadd0451cb9b3c0eaa1f8ac861ca`です。step 1,000の固定会話prompt生成は`こんにちは!`に対して`こんばんは!`でした。会話形式とEOSは維持されていますが、挨拶の対応としては不適合であり、validation lossの改善だけで応答品質の成立とは判断しません。ここまでNaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のruntime、parameter数、最良・最終loss、学習時間、最大メモリ、生成本文の代表例、checkpoint・入力・bundleのhash、20Mとの差を追記します。領域別lossとchat-testの自動指標が一致しない場合は、片方だけで容量効果を断定しません。人手レビュー未実施の場合はその状態を明記します。
