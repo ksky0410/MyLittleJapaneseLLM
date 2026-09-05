@@ -59,6 +59,8 @@ Colab CLIが利用可能ですので、学習前にT4 GPUの割り当てを一�
 
 この節には、学習開始前のColab試行、500 stepごとの状況、異常、生成サンプル保存状況を時系列で追記します。1,000 stepを超えて記録間隔を空けません。学習終了後に予定と実際の差分、停止理由、最良checkpoint、評価結果を追記します。
 
+2026年9月5日22:49:57 JSTに、Colab CLIで`colab new -s exp068-both-long025 --gpu T4`を実行しました。しかしColab APIのassignment endpointがHTTP 503 `Service Unavailable`を返し、sessionは作成されませんでした。直後の`colab sessions`でもactive sessionがないことを確認しました。したがってColab上のbundle uploadや学習は発生しておらず、予定どおり同じ条件をMPSで実行します。今回もColab割り当て失敗は成果の失敗ではなく、計算資源の切り替えとして扱います。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
