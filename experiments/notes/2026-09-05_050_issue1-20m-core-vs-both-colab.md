@@ -21,7 +21,7 @@ tar --exclude='*.pt' --exclude='*.npz' --exclude='*.vocab' \
   -czf /tmp/small_llm-colab-050.tar.gz \
   configs/issue1-core-20m-colab-2p5k.toml \
   configs/issue1-both-20m-colab-2p5k.toml \
-  scripts/train_torch.py scripts/colab_bootstrap_train.py \
+  scripts/train_torch.py scripts/_common.py scripts/colab_bootstrap_train.py \
   src artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model \
   artifacts/tokens/issue1-core-1m-fineweb-train.bin \
   artifacts/tokens/issue1-both-1m-fineweb-train.bin \
