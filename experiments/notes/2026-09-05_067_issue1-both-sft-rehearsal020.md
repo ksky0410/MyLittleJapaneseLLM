@@ -62,10 +62,11 @@ Colab失敗を記録したcommitは`a74c7ef`、MPS fallback commandを記録し�
 step 1,100ではvalidation loss 3.880987、PPL 48.4720、step 1,200では3.881512、PPL 48.4975となり、1,200 step付近では一時的に横ばいでした。その後、step 1,300ではvalidation loss 3.852098、PPL 47.0918、step 1,400では3.836734、PPL 46.3738、step 1,500ではtrain loss 3.767353、SFT loss 4.053902、rehearsal loss 2.621154、validation loss 3.824488、PPL 45.8094、learning rate 2.8742e-5、経過時間750.49秒となりました。step 1,100から1,500までの生成サンプルも保存され、NaN、OOM、shape errorは発生していません。学習は継続中です。
 step 1,600ではvalidation loss 3.810489、PPL 45.1725、step 1,700では3.802518、PPL 44.8139、step 1,800では3.788425、PPL 44.1867、step 1,900では3.775668、PPL 43.6266となりました。step 2,000ではtrain loss 4.446081、SFT loss 4.422170、rehearsal loss 4.541728、validation loss 3.765957、PPL 43.2051、learning rate 1.6982e-5、経過時間1,079.96秒でした。step 1,600から2,000までの生成サンプルも保存され、NaN、OOM、shape errorは発生していません。学習は継続中です。
 step 2,100ではvalidation loss 3.757586、PPL 42.8449、step 2,200では3.753502、PPL 42.6703、step 2,300では3.750029、PPL 42.5223、step 2,400では3.740185、PPL 42.1058となりました。step 2,500ではtrain loss 3.527466、SFT loss 3.285070、rehearsal loss 4.497049、validation loss 3.733409、PPL 41.8214、learning rate 8.2333e-6、経過時間1,410.93秒でした。step 2,100から2,500までの生成サンプルも保存され、NaN、OOM、shape errorは発生していません。学習は継続中です。
+step 2,600ではvalidation loss 3.728683、PPL 41.6243、step 2,700では3.726805、PPL 41.5462、step 2,800では3.722201、PPL 41.3553、step 2,900ではtrain loss 4.085155、SFT loss 4.047915、rehearsal loss 4.234115、validation loss 3.721274、PPL 41.3170となりました。最終step 3,000ではtrain loss 3.450162、SFT loss 3.414000、rehearsal loss 3.594808、validation loss 3.722987、PPL 41.3878、learning rate 5.0000e-6、経過時間1,744.54秒でした。最良checkpointはstep 2,900の`best.pt`で、SHA-256は`0e08765f841abd26445c9fc1160cc5cb7d7ff9c9d5f20f8aa16c9024d5ebeb2b`です。summary上の経過時間は1,744.84秒でした。step 3,000までNaN、OOM、shape errorは発生せず、step 2,600から3,000までの生成サンプルも保存されました。学習は完了し、これから評価へ移ります。
 
 ## 実験終了後の結果と解釈
 
-ここへ実際のruntime、学習時間、best step、SFT/rehearsal/validation loss、5領域loss、chat-test結果、064〜066との差、代表生成、ratio 0.20を次の標準条件として採用するかどうかを追記します。生成本文は品質に関係なくGitHubへ保存します。
+学習は完了しました。共通5領域評価と固定chat-testを実行した後、runtime、学習時間、best step、SFT/rehearsal/validation loss、064〜066との差、代表生成、ratio 0.20を次の標準条件として採用するかどうかを追記します。生成本文は品質に関係なくGitHubへ保存します。
 
 ## 次に試すこと
 
