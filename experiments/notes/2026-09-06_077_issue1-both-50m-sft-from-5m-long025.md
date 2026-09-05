@@ -52,6 +52,12 @@ uv run python scripts/train_sft_torch.py \
 
 2026年9月6日06:50台に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp077-both-50m-sft-long025 --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返しました。Colabセッションは作成されず、bundle upload、入力hash検証、モデル初期化、学習stepは発生していません。過去の075・076と同じ障害として明記し、同一条件をMPSへ切り替えます。
 
+同日06:52台に予定したMPSコマンドで学習を開始しました。step 1はtrain loss 4.229178、SFT loss 4.390550、rehearsal loss 3.583688、validation loss 4.342533、PPL 76.9020、learning rate 5e-7、経過時間4.12秒でした。step 100はtrain loss 4.563511、SFT loss 4.738965、rehearsal loss 3.861695、validation loss 3.863186、PPL 47.6168、learning rate 5e-5、経過時間64.32秒でした。warmup中のstep 1からstep 100でvalidationが大きく改善し、NaNや警告はありません。
+
+step 200はtrain loss 4.188022、SFT loss 4.457870、rehearsal loss 3.108630、validation loss 3.798900、PPL 44.6520、learning rate 4.9871e-5、経過時間191.19秒でした。step 300はtrain loss 3.820696、SFT loss 3.926565、rehearsal loss 3.397222、validation loss 3.792522、PPL 44.3681、learning rate 4.9479e-5、経過時間296.11秒でした。step 400はtrain loss 4.159787、SFT loss 4.355717、rehearsal loss 3.376069、validation loss 3.780246、PPL 43.8268、learning rate 4.8830e-5、経過時間412.72秒でした。step 500はtrain loss 3.149935、SFT loss 3.147950、rehearsal loss 3.157875、validation loss 3.803720、PPL 44.8678、learning rate 4.7931e-5、経過時間535.85秒でした。step 500のvalidationはstep 400からわずかに反発しましたが、学習は継続可能です。
+
+step 500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはぇ!`で、短い返答のまま終了しました。step 0〜500の生成本文、step 500のcheckpoint metadata、metricsを保存済みです。step 500時点で最良validationはstep 400の3.780246です。MPS学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
