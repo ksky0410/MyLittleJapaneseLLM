@@ -63,6 +63,8 @@ Colab CLIが利用可能ですので、学習前にT4 GPUの割り当てを一�
 
 2026年9月5日22:50台に、予定したMPSコマンドで学習を開始しました。step 1はtrain loss 5.056197、SFT loss 5.095090、rehearsal loss 4.900624、validation loss 4.723757、PPL 112.5905、経過時間2.33秒でした。step 100はvalidation loss 4.107846、PPL 60.8156、step 200は4.042297、PPL 56.9570、step 300は4.009820、PPL 55.1370、step 400は3.998523、PPL 54.5176でした。step 500ではtrain loss 3.321728、SFT loss 3.270458、rehearsal loss 3.526806、validation loss 3.974348、PPL 53.2154、learning rate 4.7931e-5、経過時間294.72秒となりました。step 0〜500の生成本文とstep 500までのmetrics・checkpoint metadataを保存済みです。固定promptへのstep 500生成は「こんにちは〜。」となり、少なくともEOS直後の会話形式を壊さず応答しています。学習は継続中で、ここまで異常はありません。
 
+step 600ではvalidation loss 3.944994、PPL 51.6760、step 700では3.926233、PPL 50.7156、step 800では3.922354、PPL 50.5192、step 900では3.900266、PPL 49.4156となりました。step 1,000ではtrain loss 3.740906、SFT loss 3.463129、rehearsal loss 4.852015、validation loss 3.891312、PPL 48.9751、learning rate 4.0147e-5、経過時間561.71秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。step 500の生成「こんにちは〜。」に対し、step 1,000は「よろしくお願いします!」となり、短い挨拶応答の表現が変化しました。長文層化の効果はまだ評価できないため、学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
