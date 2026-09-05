@@ -74,6 +74,10 @@ step 2,100はvalidation loss 3.589239、PPL 36.2065、learning rate 1.4893e-5、
 
 step 2,500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`でした。step 2,100〜2,500の生成本文、step 2,500のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は最終1,000 stepへ進みます。
 
+step 2,600はvalidation loss 3.558445、PPL 35.1086、learning rate 7.0898e-6、経過時間3,164.32秒でした。step 2,700は3.551516、PPL 34.8661、learning rate 6.1856e-6、経過時間3,288.87秒、step 2,800は3.537248、PPL 34.3722、learning rate 5.5313e-6、経過時間3,416.70秒でした。step 2,900は3.539166、PPL 34.4382、learning rate 5.1345e-6、経過時間3,539.94秒、最終step 3,000はtrain loss 3.475062、SFT loss 3.542551、rehearsal loss 3.205108、validation loss 3.534275、PPL 34.2702、learning rate 5.0000e-6、経過時間3,664.77秒でした。step 3,000で最良checkpointを更新し、学習はNaN、OOM、shape errorなく完走しました。
+
+step 3,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは`でした。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存済みです。最良`best.pt`のSHA-256は`dd73ce926e973b5c5dd7d0a8d4d1f2be1486347b19813f1841de43cf6d804ab9`、学習時間はsummary上3,666.15秒、実測の最終step到達は3,664.77秒でした。評価用にはこの最良checkpointを使います。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
