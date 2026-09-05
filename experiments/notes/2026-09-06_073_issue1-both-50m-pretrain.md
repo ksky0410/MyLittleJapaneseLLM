@@ -14,7 +14,7 @@
 
 実験072のseed sweepまで完了し、origin/mainへpush済みの基準commitは`c78a01e`です。本実験の設定ファイルは[`configs/issue1-both-50m-pretrain-mps-2p5k.toml`](../../configs/issue1-both-50m-pretrain-mps-2p5k.toml)です。モデル構造はRoPE・LayerNorm・SwiGLU、dim 576、12層、9 heads、context length 256、vocab 4,096、約50,163,840 parametersです。Tokenizerは`mixed-ja-80-10-10-v2-unigram.model`です。
 
-設定ファイルのSHA-256は`b16ed5b4b40c621658d3d60a31334fa33331d648fd4c4483c3d67bd2567ceede`です。`scripts/inspect_model.py`で概算parameter数を確認し、実測予定値は50,163,840です。
+設定ファイルのSHA-256は`b16ed5b4b40c621658d3d60a31334fa33331d648fd4c4483c3d67bd2567ceede`です。`scripts/inspect_model.py`の概算は50,163,840でしたが、PyTorchモデルを実際に生成して数えると50,207,616でした。差分はSwiGLUのLinear layerに含まれるbias分であり、学習時のcheckpoint metadataに記録された実測値50,207,616を正式値として扱います。
 
 学習データは`artifacts/tokens/issue1-both-1m-fineweb-train.bin`、general validationは`artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin`です。元データそのものではなく、実験050で作成済みのToken列を読み込みます。Token列のsource mixtureと約999,970 Tokenという規模を20M基盤と揃えます。入力のSHA-256は、Tokenizerが`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`、train Token列が`758b46f6bb946afd7e2c3604714db71166d79564f8c652e8cc950b23d3338879`、general validationが`c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4`です。
 
@@ -39,6 +39,8 @@ uv run python scripts/train_torch.py \
 この節にはColab試行、MPS切り替え、開始時の実測parameter数、100 stepごとのmetrics、500 stepごとの生成本文とcheckpoint metadata、警告、メモリ問題、途中停止を時系列で追記します。原文データや医師国家試験の原本はbundleやGitへ追加しません。
 
 2026年9月6日、MPS学習の開始前に`colab new -s exp073-both-50m-pretrain --gpu T4`を実行しました。しかしColab CLIのassignment endpointがHTTP 503 `Service Unavailable`を返し、セッション作成に失敗しました。直後の`colab sessions`は`No active sessions found on server.`でした。bundle uploadやColab上の学習は発生していないため、同一条件をMPSで実行します。
+
+同日、Colab失敗を記録したcommit `050572d`の後、MPSで学習を開始しました。開始時の実測parameter数は50,207,616でした。step 1はtrain loss 8.849134、validation loss 8.818872、PPL 6760.6331、learning rate 1.0000e-6、経過時間6.57秒でした。step 100はvalidation loss 7.162676、PPL 1290.3593、step 200は7.153232、PPL 1278.2307、step 300は6.894857、PPL 987.1843、step 400は6.770894、PPL 872.0912となりました。step 500ではtrain loss 4.698257、validation loss 6.559118、PPL 705.6490、learning rate 2.9459e-4、経過時間542.69秒となりました。step 0〜500のmetrics、checkpoint metadata、生成本文を保存しました。step 500の生成は日本語らしい助詞や語尾がまだ崩れており、`今日なにしてた?がちいてているだけです。`のような断片が多く見られますが、step 1よりlossは明確に下がっています。ここまでNaN、OOM、shape error、警告はありません。学習は継続中です。
 
 ## 実験終了後の結果と解釈
 
