@@ -56,10 +56,16 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 この節には、データ加工、Token化、各条件の開始・途中・終了、異常、実測metrics、生成文の変化、評価結果を作業中に追記します。失敗した条件や崩れた生成も削除しません。元の公開会話リポジトリ、`artifacts/corpus/conversation-v1/`、`/Users/koseki/projects/medilink_analysis`の原本は変更しません。
 
+13:45 JST、`scripts/split_conversation_sources.py`を実行し、train・validation・testの会話をsource別へ分離しました。入力train JSONLはSHA-256 `be28c0b9213de7e2ad8b3dcdf3f687369dd3bb2aead38213acb4885a6d75c6e7`、RealPersonaChat trainは10,851会話・326,435発話・7,464,681文字、MRMP trainは784会話・82,166発話・947,982文字でした。分離manifestのSHA-256は`aa4aba02c566a79aa49396252f39a365fa4aa912165410a73a2b89df0d5865f1`です。話者markerと会話境界は保持し、元JSONLは変更していません。
+
+13:47 JST、予定したcore・rpc・mrmp・bothの4条件をTokenizer固定・target 1,000,000 Tokenで混合しました。しかし、generalへ使った`aozora-general-v1.txt`の全unique単位を採用しても約508,278 Tokenにしかならず、sourceが先に枯渇しました。そのためcoreの実測Token比率はgeneral 50.8295%、medical 49.1705%となり、rpcはgeneral 50.8279%、medical 24.6197%、rpc 24.5523%、mrmpはgeneral 50.8290%、medical 24.7057%、mrmp 24.4653%、bothはgeneral 50.8308%、medical 24.6047%、rpc 12.2573%、mrmp 12.3071%となりました。4条件のselected token countはそれぞれ999,966、999,998、999,976、999,940です。
+
+この結果では、会話sourceを変えると同時にmedical比率まで変わるため、Issue #1のsource差を公平に比較できません。学習は開始せず、4つの混合manifestを設計診断の成果物として保存します。manifestのSHA-256はcore `840de861c143d8590108039d169c6f9a661d323009622064fe59d46227a036b7`、rpc `1f2a7cc4e6d34dfb5172d5b8a41d0e3474e306a3183e51f0f0a3adabe474368e`、mrmp `221b9734ec7089160b6fb1cd6deab0f560ac6a46e5a4f7287c72e1efad547ca5`、both `d051a2ea8aedea14ecb3f3edaf1ecedfa75054615b055264064d8161c50a8be9`です。次はFineWeb2 Edu Japaneseを共通general sourceへ置き、同じ4条件を作り直します。
+
 ## 結果と解釈
 
 4条件の結果を、一般言語モデリング、source別適応、会話の自然さ、医療validationの忘却または改善に分けて解釈します。Token overlapは意味的な正しさの代用ではないため、生成TXTの目視レビュー欄と併記します。医師国家試験データを含む出力を医学的助言や医学的正解として扱いません。
 
 ## 次に試すこと
 
-source差が確認できた場合は、最も有望な条件について学習stepまたはToken予算を増やし、容量や構造の影響と分けて追試します。source差が小さい場合は、通常pretrainingでの会話追加より、応答maskを使うSFTとrehearsalの比較を優先します。その後、Issue #1にある固定promptの人手レビューを入力し、自動指標では見えない文脈適合・役割適合・崩壊を条件別に比較します。
+まず、今回の設計診断で判明したsource枯渇を避けるため、FineWeb2 Edu Japaneseを共通general sourceにした修正版ablationを別実験として実施します。source差が確認できた場合は、最も有望な条件について学習stepまたはToken予算を増やし、容量や構造の影響と分けて追試します。source差が小さい場合は、通常pretrainingでの会話追加より、応答maskを使うSFTとrehearsalの比較を優先します。その後、Issue #1にある固定promptの人手レビューを入力し、自動指標では見えない文脈適合・役割適合・崩壊を条件別に比較します。

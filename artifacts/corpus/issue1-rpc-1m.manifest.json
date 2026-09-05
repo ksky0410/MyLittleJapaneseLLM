@@ -1,0 +1,98 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 42,
+  "target_units": null,
+  "target_tokens": 1000000,
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "general": 0.8,
+    "medical": 0.1,
+    "rpc": 0.1
+  },
+  "input_unit_count": 22751,
+  "unique_unit_count": 22746,
+  "output_unit_count": 6670,
+  "output_lines": 17916,
+  "output_character_count": 1472932,
+  "output_sha256": "911b7877f524c9b36bce93e72c437f4e8b278426b36f6edacb510025029ede04",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/issue1-rpc-1m.txt",
+  "selected_token_count": 999998,
+  "actual_adoption_share": {
+    "general": 0.8632683658170914,
+    "medical": 0.08245877061469266,
+    "rpc": 0.05427286356821589
+  },
+  "actual_adoption_character_share": {
+    "general": 0.49195641706598137,
+    "medical": 0.22086434757226198,
+    "rpc": 0.28717923536175666
+  },
+  "actual_adoption_token_share": {
+    "general": 0.5082790165580331,
+    "medical": 0.24619749239498478,
+    "rpc": 0.2455234910469821
+  },
+  "actual_token_share": {
+    "general": 0.5082790165580331,
+    "medical": 0.24619749239498478,
+    "rpc": 0.2455234910469821
+  },
+  "sources": [
+    {
+      "name": "general",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/aozora-general-v1.txt",
+      "input_sha256": "0b992488d310351f3f595b2cc7928661cc00dd9caff5a5932a359f2539372978",
+      "input_lines": 5758,
+      "input_characters": 727095,
+      "input_unit_count": 5758,
+      "unique_unit_count": 5758,
+      "duplicate_units_removed": 0,
+      "weight": 8.0,
+      "requested_weight_share": 0.8,
+      "adopted_unit_count": 5758,
+      "adopted_characters": 721337,
+      "adopted_token_count": 508278,
+      "actual_adoption_share": 0.8632683658170914,
+      "actual_token_share": 0.5082790165580331
+    },
+    {
+      "name": "medical",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt",
+      "input_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "input_lines": 6142,
+      "input_characters": 3674479,
+      "input_unit_count": 6142,
+      "unique_unit_count": 6142,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 550,
+      "adopted_characters": 323845,
+      "adopted_token_count": 246197,
+      "actual_adoption_share": 0.08245877061469266,
+      "actual_token_share": 0.24619749239498478
+    },
+    {
+      "name": "rpc",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/real-persona-chat-train.txt",
+      "input_sha256": "09e6db9fb871bdad8315293a812e06d9d64d1ddacfd4643eac98a9a8f2e7ebee",
+      "input_lines": 358987,
+      "input_characters": 12871202,
+      "input_unit_count": 10851,
+      "unique_unit_count": 10846,
+      "duplicate_units_removed": 5,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 362,
+      "adopted_characters": 421080,
+      "adopted_token_count": 245523,
+      "actual_adoption_share": 0.05427286356821589,
+      "actual_token_share": 0.2455234910469821
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "format": "conversation-source-split-v1",
+  "input_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1",
+  "output_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1",
+  "source_names": [
+    "mrmp",
+    "real-persona-chat"
+  ],
+  "splits": [
+    "train",
+    "validation",
+    "test"
+  ],
+  "inputs": {
+    "train": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/train.jsonl",
+      "bytes": 46973197,
+      "sha256": "be28c0b9213de7e2ad8b3dcdf3f687369dd3bb2aead38213acb4885a6d75c6e7",
+      "record_count": 11635
+    },
+    "validation": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/validation.jsonl",
+      "bytes": 5851250,
+      "sha256": "bac9710f0e1ebbbc955debb7e6a773c450abd63f71869f97bd0da73740d8cdde",
+      "record_count": 1454
+    },
+    "test": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl",
+      "bytes": 5830945,
+      "sha256": "65f534a8e63acf056bcbcbc7c827d62ff7dedfd383be382cc299c056dec90ce5",
+      "record_count": 1454
+    }
+  },
+  "outputs": {
+    "mrmp:train": {
+      "source": "mrmp",
+      "split": "train",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/mrmp-train.txt",
+      "bytes": 4703802,
+      "sha256": "9220f556356d68c60bb1af3d97c756e8d9c7daf3fde5623faad155c36bdd8c0c",
+      "conversation_count": 784,
+      "turn_count": 82166,
+      "character_count": 947982
+    },
+    "real-persona-chat:train": {
+      "source": "real-persona-chat",
+      "split": "train",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/real-persona-chat-train.txt",
+      "bytes": 27687500,
+      "sha256": "09e6db9fb871bdad8315293a812e06d9d64d1ddacfd4643eac98a9a8f2e7ebee",
+      "conversation_count": 10851,
+      "turn_count": 326435,
+      "character_count": 7464681
+    },
+    "mrmp:validation": {
+      "source": "mrmp",
+      "split": "validation",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/mrmp-validation.txt",
+      "bytes": 544710,
+      "sha256": "a3c28ef1c3848ab5da23f43c48ef50542051f0753a0abb9e87fae898f59e16d4",
+      "conversation_count": 89,
+      "turn_count": 9432,
+      "character_count": 110037
+    },
+    "real-persona-chat:validation": {
+      "source": "real-persona-chat",
+      "split": "validation",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/real-persona-chat-validation.txt",
+      "bytes": 3494698,
+      "sha256": "ed96db08fe2c39316ddf77a22899c37d8b80985ead2057cd70c6d2ef9eeabd93",
+      "conversation_count": 1365,
+      "turn_count": 41067,
+      "character_count": 943446
+    },
+    "mrmp:test": {
+      "source": "mrmp",
+      "split": "test",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/mrmp-test.txt",
+      "bytes": 519376,
+      "sha256": "371121e4adb5bd5b736a671ef85ab406a7e7d3dd1c94581f31c00e75161c4edb",
+      "conversation_count": 87,
+      "turn_count": 9082,
+      "character_count": 104987
+    },
+    "real-persona-chat:test": {
+      "source": "real-persona-chat",
+      "split": "test",
+      "path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/real-persona-chat-test.txt",
+      "bytes": 3518107,
+      "sha256": "3cae31f2263938a242784407162e4c5181c44940f56fc48a5679233ca10bc40f",
+      "conversation_count": 1367,
+      "turn_count": 41117,
+      "character_count": 950461
+    }
+  },
+  "unit_rule": "一会話をstart/end markerを含む一つの論理単位として保存する。",
+  "source_rule": "取り込み済みrecordのdatasetフィールドで分け、本文と話者markerを保持する。",
+  "raw_data_rule": "入力元の公開リポジトリやmedilink_analysisの原本は変更しない。"
+}

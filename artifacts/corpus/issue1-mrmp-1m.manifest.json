@@ -1,0 +1,98 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 42,
+  "target_units": null,
+  "target_tokens": 1000000,
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "general": 0.8,
+    "medical": 0.1,
+    "mrmp": 0.1
+  },
+  "input_unit_count": 12684,
+  "unique_unit_count": 12684,
+  "output_unit_count": 6454,
+  "output_lines": 21710,
+  "output_character_count": 1481786,
+  "output_sha256": "25c05875a4c89b7de2b3e04e7542a39cc987d8b2842d1bf4a446fa3b67160fec",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/issue1-mrmp-1m.txt",
+  "selected_token_count": 999976,
+  "actual_adoption_share": {
+    "general": 0.8921599008366904,
+    "medical": 0.08552835450883173,
+    "mrmp": 0.022311744654477845
+  },
+  "actual_adoption_character_share": {
+    "general": 0.4889319827672687,
+    "medical": 0.22025618640414496,
+    "mrmp": 0.29081183082858636
+  },
+  "actual_adoption_token_share": {
+    "general": 0.5082901989647751,
+    "medical": 0.2470569293663048,
+    "mrmp": 0.24465287166892005
+  },
+  "actual_token_share": {
+    "general": 0.5082901989647751,
+    "medical": 0.2470569293663048,
+    "mrmp": 0.24465287166892005
+  },
+  "sources": [
+    {
+      "name": "general",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/aozora-general-v1.txt",
+      "input_sha256": "0b992488d310351f3f595b2cc7928661cc00dd9caff5a5932a359f2539372978",
+      "input_lines": 5758,
+      "input_characters": 727095,
+      "input_unit_count": 5758,
+      "unique_unit_count": 5758,
+      "duplicate_units_removed": 0,
+      "weight": 8.0,
+      "requested_weight_share": 0.8,
+      "adopted_unit_count": 5758,
+      "adopted_characters": 721337,
+      "adopted_token_count": 508278,
+      "actual_adoption_share": 0.8921599008366904,
+      "actual_token_share": 0.5082901989647751
+    },
+    {
+      "name": "medical",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt",
+      "input_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "input_lines": 6142,
+      "input_characters": 3674479,
+      "input_unit_count": 6142,
+      "unique_unit_count": 6142,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 552,
+      "adopted_characters": 324951,
+      "adopted_token_count": 247051,
+      "actual_adoption_share": 0.08552835450883173,
+      "actual_token_share": 0.2470569293663048
+    },
+    {
+      "name": "mrmp",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/mrmp-train.txt",
+      "input_sha256": "9220f556356d68c60bb1af3d97c756e8d9c7daf3fde5623faad155c36bdd8c0c",
+      "input_lines": 84517,
+      "input_characters": 2332698,
+      "input_unit_count": 784,
+      "unique_unit_count": 784,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 144,
+      "adopted_characters": 429044,
+      "adopted_token_count": 244647,
+      "actual_adoption_share": 0.022311744654477845,
+      "actual_token_share": 0.24465287166892005
+    }
+  ]
+}
