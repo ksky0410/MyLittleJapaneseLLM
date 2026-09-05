@@ -1,0 +1,148 @@
+{
+  "format": "chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/rmsnorm-context512-mixed-ja-5m-smoke/step_000500.npz",
+  "checkpoint_step": 500,
+  "config": "/Users/koseki/projects/small_llm/configs/rmsnorm-context512-mixed-ja-5m-smoke.toml",
+  "seed": 42,
+  "generation": {
+    "max_new_tokens": 160,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "category_summary": {
+    "short-reply": {
+      "count": 2,
+      "empty_count": 0,
+      "eos_count": 2,
+      "mean_completion_tokens": 6.0
+    },
+    "backchannel": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 160.0
+    },
+    "short-turn": {
+      "count": 1,
+      "empty_count": 1,
+      "eos_count": 1,
+      "mean_completion_tokens": 1.0
+    },
+    "discourse-marker": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 25.0
+    },
+    "disagreement": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 5.0
+    },
+    "parting": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 80.0
+    },
+    "invitation": {
+      "count": 1,
+      "empty_count": 1,
+      "eos_count": 1,
+      "mean_completion_tokens": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "rendered_prompt": "まじで",
+      "completion_token_count": 3,
+      "eos_reached": true,
+      "completion": "ん」"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "rendered_prompt": "それな",
+      "completion_token_count": 160,
+      "eos_reached": false,
+      "completion": "お腹ポイント: 選択肢解説:a:×a 25は認めめたりの症状は,大部を起ずは,児体と同じ. IHariraom〉a;b:b 骨髄検査;c:c 尿中関節 糖尿病中球;d:d 糖尿病癌;e:e 胸部X線〈Houhros 正解:b ポイント: 選択肢解説:a:○a 肝 心電図 急性アンミン 脳炎の低下は高値のみられる.;b:×b 動脈管支皮症 2体症では,頭症 肺動脈癌,下肢に用ったことには,尿所見である.;c"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "rendered_prompt": "今日なにしてた？",
+      "completion_token_count": 1,
+      "eos_reached": true,
+      "completion": ""
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "rendered_prompt": "やば",
+      "completion_token_count": 9,
+      "eos_reached": true,
+      "completion": "んを出しきかす。"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "rendered_prompt": "なんかさ",
+      "completion_token_count": 25,
+      "eos_reached": true,
+      "completion": "っかりのとなのを開いてくん。ただまたはこれも一緒の方がある。"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "rendered_prompt": "いやそれは",
+      "completion_token_count": 5,
+      "eos_reached": true,
+      "completion": "おっか、"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "rendered_prompt": "おつかれ",
+      "completion_token_count": 80,
+      "eos_reached": true,
+      "completion": "の前からみられる.;b:×b 骨換骨髄 胸骨の頭痛がある.;c:×c 脳線維 頭覚神経症の症状の場合には,経過率の細胞である.;d:×d 腎症病院では酸 血清SA〉 腎症,心拍手の障害の炎は成人を次に示す."
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "rendered_prompt": "明日ひま？",
+      "completion_token_count": 1,
+      "eos_reached": true,
+      "completion": ""
+    }
+  ]
+}

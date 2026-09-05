@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/rmsnorm-context512-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/rmsnorm-context512-mixed-ja-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=6.00
+backchannel: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+short-turn: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=25.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=80.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+ん」
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+お腹ポイント: 選択肢解説:a:×a 25は認めめたりの症状は,大部を起ずは,児体と同じ. IHariraom〉a;b:b 骨髄検査;c:c 尿中関節 糖尿病中球;d:d 糖尿病癌;e:e 胸部X線〈Houhros 正解:b ポイント: 選択肢解説:a:○a 肝 心電図 急性アンミン 脳炎の低下は高値のみられる.;b:×b 動脈管支皮症 2体症では,頭症 肺動脈癌,下肢に用ったことには,尿所見である.;c
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+んを出しきかす。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+っかりのとなのを開いてくん。ただまたはこれも一緒の方がある。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+おっか、
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+の前からみられる.;b:×b 骨換骨髄 胸骨の頭痛がある.;c:×c 脳線維 頭覚神経症の症状の場合には,経過率の細胞である.;d:×d 腎症病院では酸 血清SA〉 腎症,心拍手の障害の炎は成人を次に示す.
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+

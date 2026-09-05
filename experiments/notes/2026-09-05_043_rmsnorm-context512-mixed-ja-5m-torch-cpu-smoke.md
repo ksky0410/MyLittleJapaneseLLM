@@ -32,10 +32,12 @@ RMSNorm実装を追加したcommitは`4d1b459`、PyTorch forwardテストを追�
 
 開始前に、MLXのMetal deviceがこのheadless実行環境から見えないことを確認しました。そのため、RMSNormのforwardと学習経路をPyTorch CPUで検証します。学習開始時刻、PyTorch version、CPU情報、stepごとのmetrics、異常の有無を完了後に追記します。
 
+このCPU試行は、同じRMSNorm設定・同じ出力先で進行していた実験043のMLX学習と競合しました。独立したCPU実験としての再現条件を保てないため、step 1・100・200のcheckpointとmetricsを確認した時点で停止し、主実験の出力へ混ぜないよう`artifacts/checkpoints/rmsnorm-context512-mixed-ja-5m-smoke-unexpected-concurrent-torch-before-stop/`へ退避しました。CPU側の生成文は主実験の生成文と分けて管理します。
+
 ## 結果と解釈
 
-未実施です。
+このノートのCPU試行は独立実験として完走していません。PyTorch 2.14.0 CPUでstep 1、100、200付近まで進みましたが、同じ出力先を使うMLX主実験との競合が発生したため、validation lossをRMSNormの主結果へ採用しません。CPUのpartial metricsとcheckpoint metadataは削除せず、標準043ノートから参照できるunexpected-concurrentディレクトリへ保存しました。主実験の結果は`experiments/notes/2026-09-05_043_rmsnorm-context512-mixed-ja-5m-smoke.md`に記録します。
 
 ## 次に試すこと
 
-未実施です。完了後、042のLayerNorm・RoPE・context 512結果と比較し、backend差を明記します。実装が安定していれば、同じRMSNorm条件でSwiGLUを一つだけ追加するか、PyTorch CPUでLayerNorm対照をそろえて構造差を切り分けます。
+同じ設定を再実行する場合は必ず専用の出力先を先に確保し、MLXとPyTorch CPUを同時に起動しません。構造比較は主実験043のMLX結果を基準に進め、次はSwiGLUを一つだけ追加します。CPU partial結果は性能比較には使用しません。
