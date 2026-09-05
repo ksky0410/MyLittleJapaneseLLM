@@ -44,6 +44,8 @@ smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935
 
 2026-09-05 13:32 JST、Metalが利用できないため、同じ047設定をPyTorch/CUDA bundleへまとめ、Colab T4でsmokeを実行する計画を追加しました。まず100 stepのsmokeでRoPE・LayerNorm・SwiGLUのshape、AMP、checkpoint、生成文を確認し、成功した場合だけ同じbundleを使って2,500 stepの本学習へ進みます。Colab側では041と異なる`047`専用出力先を使い、生成文は100 stepごと、重みcheckpointは500 stepごとに保存します。開始前のこの計画とbundleのhashをcommitした後にsessionを作成します。
 
+13:34 JST、commit `67e51f9`を基準に047 bundle `/tmp/small_llm-colab-047.tar.gz`を作成しました。bundleサイズは約12MB、SHA-256は`d93990206422225bbfff8dc13bc40c9753f12ec33d5628ca4adddbc80f745468`です。bundleには047のsmoke・本学習config、PyTorch学習コード、SwiGLU/RoPE対応のモデルコード、Tokenizer、10M Token列、general validation Token列を含め、Python cacheは除外しました。開始前の予定・hashをこのcommitへ固定してから、Colab sessionを作成します。
+
 ## 結果と解釈
 
 実験終了後、smokeと本学習を混ぜずに、backend、最終および最良checkpoint、train・validation loss、domain評価、固定chat評価、reload生成、失敗・停止理由、成果物hashを追記します。20Mモデルの出力を医療助言や医学的正解として扱わず、医師国家試験データを含むことによる見かけの専門性と、一般日本語の生成能力を分けて評価します。
