@@ -26,3 +26,8 @@ class TorchModelTests(unittest.TestCase):
         model = TorchJapaneseGPT(32, 16, 2, 4, 8, 2, "rope")
         logits = model(torch.tensor([[1, 2, 3, 4]]))
         self.assertEqual(tuple(logits.shape), (1, 4, 32))
+
+    def test_rmsnorm_forward_shape(self) -> None:
+        model = TorchJapaneseGPT(32, 16, 2, 4, 8, 2, "rope", "rmsnorm")
+        logits = model(torch.tensor([[1, 2, 3, 4]]))
+        self.assertEqual(tuple(logits.shape), (1, 4, 32))

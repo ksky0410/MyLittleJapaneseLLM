@@ -86,6 +86,14 @@ class FeedForward(_ModuleBase):
         return self.down(nn.gelu(self.up(x)))
 
 
+def _make_norm(dim: int, norm_type: str) -> Any:
+    if norm_type == "layernorm":
+        return nn.LayerNorm(dim)
+    if norm_type == "rmsnorm":
+        return nn.RMSNorm(dim)
+    raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
+
+
 class TransformerBlock(_ModuleBase):
     def __init__(
         self,
@@ -93,12 +101,13 @@ class TransformerBlock(_ModuleBase):
         heads: int,
         mlp_ratio: int,
         position_embedding: str = "absolute",
+        norm_type: str = "layernorm",
     ) -> None:
         require_mlx()
         super().__init__()
-        self.norm_1 = nn.LayerNorm(dim)
+        self.norm_1 = _make_norm(dim, norm_type)
         self.attention = CausalSelfAttention(dim, heads, position_embedding)
-        self.norm_2 = nn.LayerNorm(dim)
+        self.norm_2 = _make_norm(dim, norm_type)
         self.mlp = FeedForward(dim, mlp_ratio)
 
     def __call__(self, x: Any) -> Any:
@@ -118,6 +127,7 @@ class TinyJapaneseGPT(_ModuleBase):
         context_length: int,
         mlp_ratio: int = 4,
         position_embedding: str = "absolute",
+        norm_type: str = "layernorm",
     ) -> None:
         require_mlx()
         super().__init__()
@@ -135,6 +145,10 @@ class TinyJapaneseGPT(_ModuleBase):
             raise ValueError(
                 "position_embedding は absolute または rope で指定してください"
             )
+        if norm_type not in {"layernorm", "rmsnorm"}:
+            raise ValueError(
+                "norm_type はlayernormまたはrmsnormで指定してください"
+            )
         if position_embedding == "rope" and (dim // heads) % 2 != 0:
             raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
         self.vocab_size = vocab_size
@@ -144,14 +158,15 @@ class TinyJapaneseGPT(_ModuleBase):
         self.context_length = context_length
         self.mlp_ratio = mlp_ratio
         self.position_embedding_type = position_embedding
+        self.norm_type = norm_type
         self.token_embedding = nn.Embedding(vocab_size, dim)
         if position_embedding == "absolute":
             self.position_embedding = nn.Embedding(context_length, dim)
         self.blocks = [
-            TransformerBlock(dim, heads, mlp_ratio, position_embedding)
+            TransformerBlock(dim, heads, mlp_ratio, position_embedding, norm_type)
             for _ in range(layers)
         ]
-        self.final_norm = nn.LayerNorm(dim)
+        self.final_norm = _make_norm(dim, norm_type)
 
     def __call__(self, tokens: Any) -> Any:
         if len(tokens.shape) != 2:
@@ -182,6 +197,7 @@ def model_signature(
     context_length: int,
     mlp_ratio: int,
     position_embedding: str = "absolute",
+    norm_type: str = "layernorm",
 ) -> dict[str, int | str]:
     if position_embedding not in {"absolute", "rope"}:
         raise ValueError(
@@ -189,6 +205,8 @@ def model_signature(
         )
     if position_embedding == "rope" and (dim // heads) % 2 != 0:
         raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
+    if norm_type not in {"layernorm", "rmsnorm"}:
+        raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
     return {
         "vocab_size": int(vocab_size),
         "dim": int(dim),
@@ -197,6 +215,7 @@ def model_signature(
         "context_length": int(context_length),
         "mlp_ratio": int(mlp_ratio),
         "position_embedding": position_embedding,
+        "norm_type": norm_type,
     }
 
 
@@ -208,6 +227,7 @@ def estimate_parameter_count(
     context_length: int,
     mlp_ratio: int = 4,
     position_embedding: str = "absolute",
+    norm_type: str = "layernorm",
 ) -> int:
     """重み共有を反映した概算。MLXなしのinspectでも利用できる。"""
 
@@ -219,15 +239,16 @@ def estimate_parameter_count(
         )
     if position_embedding == "rope" and (dim // heads) % 2 != 0:
         raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
+    if norm_type not in {"layernorm", "rmsnorm"}:
+        raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
     token_embedding = vocab_size * dim
     position_embedding_parameters = (
         context_length * dim if position_embedding == "absolute" else 0
     )
     attention = dim * dim * 3 + dim * dim
     mlp = dim * (dim * mlp_ratio) + (dim * mlp_ratio) * dim
-    # LayerNormはscaleとbiasを持つため、各blockで4*dim。
-    block_norms = 4 * dim
-    final_norm = 2 * dim
+    block_norms = 2 * dim if norm_type == "rmsnorm" else 4 * dim
+    final_norm = dim if norm_type == "rmsnorm" else 2 * dim
     return (
         token_embedding
         + position_embedding_parameters

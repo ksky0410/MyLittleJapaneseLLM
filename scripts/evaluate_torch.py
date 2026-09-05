@@ -83,6 +83,7 @@ def _load_model(config: Any, checkpoint_path: Path, device: Any, torch: Any) -> 
         context_length=config.model.context_length,
         mlp_ratio=config.model.mlp_ratio,
         position_embedding=config.model.position_embedding,
+        norm_type=config.model.norm_type,
     ).to(device)
     metadata_path = checkpoint_path.with_suffix(".json")
     if not checkpoint_path.is_file():
@@ -92,8 +93,12 @@ def _load_model(config: Any, checkpoint_path: Path, device: Any, torch: Any) -> 
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     expected_signature = signature_from_config(config, vocab_size)
     actual_signature = metadata.get("model")
-    if isinstance(actual_signature, dict) and "position_embedding" not in actual_signature:
-        actual_signature = {**actual_signature, "position_embedding": "absolute"}
+    if isinstance(actual_signature, dict):
+        actual_signature = {
+            "position_embedding": "absolute",
+            "norm_type": "layernorm",
+            **actual_signature,
+        }
     if metadata.get("format_version") != 1 or metadata.get("weights_file") != checkpoint_path.name:
         raise ValueError(f"checkpoint metadataの形式が不正です: {metadata_path}")
     if actual_signature != expected_signature:

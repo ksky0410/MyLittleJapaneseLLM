@@ -141,11 +141,12 @@ def load_checkpoint(
     ):
         raise ValueError(f"checkpoint metadataの形式が不正です: {metadata_path}")
     actual_signature = metadata.get("model")
-    if (
-        isinstance(actual_signature, dict)
-        and "position_embedding" not in actual_signature
-    ):
-        actual_signature = {**actual_signature, "position_embedding": "absolute"}
+    if isinstance(actual_signature, dict):
+        actual_signature = {
+            "position_embedding": "absolute",
+            "norm_type": "layernorm",
+            **actual_signature,
+        }
     if actual_signature != expected_signature:
         raise ValueError(
             "checkpointと現在の設定が一致しません。"
@@ -165,4 +166,5 @@ def signature_from_config(config: Any, vocab_size: int) -> dict[str, int | str]:
         config.model.context_length,
         config.model.mlp_ratio,
         config.model.position_embedding,
+        config.model.norm_type,
     )

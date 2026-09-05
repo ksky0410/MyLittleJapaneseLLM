@@ -235,6 +235,7 @@ def main() -> None:
         context_length=config.model.context_length,
         mlp_ratio=config.model.mlp_ratio,
         position_embedding=config.model.position_embedding,
+        norm_type=config.model.norm_type,
     ).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(),

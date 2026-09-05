@@ -25,6 +25,7 @@ class ModelConfig:
     context_length: int
     mlp_ratio: int
     position_embedding: str
+    norm_type: str = "layernorm"
 
     def validate(self) -> None:
         if self.dim <= 0 or self.layers <= 0 or self.heads <= 0:
@@ -40,6 +41,10 @@ class ModelConfig:
         if self.position_embedding not in {"absolute", "rope"}:
             raise ValueError(
                 "model.position_embedding はabsoluteまたはropeで指定してください"
+            )
+        if self.norm_type not in {"layernorm", "rmsnorm"}:
+            raise ValueError(
+                "model.norm_type はlayernormまたはrmsnormで指定してください"
             )
 
 
@@ -141,6 +146,7 @@ def load_config(path: str | Path) -> ExperimentConfig:
             context_length=int(model_raw["context_length"]),
             mlp_ratio=int(model_raw.get("mlp_ratio", 4)),
             position_embedding=str(model_raw.get("position_embedding", "absolute")),
+            norm_type=str(model_raw.get("norm_type", "layernorm")),
         ),
         training=TrainingConfig(
             batch_size=int(training_raw["batch_size"]),

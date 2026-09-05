@@ -66,6 +66,7 @@ def main() -> None:
         context_length=config.model.context_length,
         mlp_ratio=config.model.mlp_ratio,
         position_embedding=config.model.position_embedding,
+        norm_type=config.model.norm_type,
     )
     optimizer = optimizers.AdamW(
         learning_rate=config.training.learning_rate,

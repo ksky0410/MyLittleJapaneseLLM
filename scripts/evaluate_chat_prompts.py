@@ -208,6 +208,7 @@ def evaluate_chat_prompts(
         config.model.context_length,
         config.model.mlp_ratio,
         config.model.position_embedding,
+        config.model.norm_type,
     )
     metadata = load_checkpoint(
         model, checkpoint_file, signature_from_config(config, vocab_size)

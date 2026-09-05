@@ -112,12 +112,19 @@ class TorchTransformerBlock(_ModuleBase):
         heads: int,
         mlp_ratio: int,
         position_embedding: str = "absolute",
+        norm_type: str = "layernorm",
     ) -> None:
         require_torch()
         super().__init__()
-        self.norm_1 = nn.LayerNorm(dim)
+        if norm_type == "layernorm":
+            norm = nn.LayerNorm
+        elif norm_type == "rmsnorm":
+            norm = nn.RMSNorm
+        else:
+            raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
+        self.norm_1 = norm(dim)
         self.attention = TorchCausalSelfAttention(dim, heads, position_embedding)
-        self.norm_2 = nn.LayerNorm(dim)
+        self.norm_2 = norm(dim)
         self.mlp = TorchFeedForward(dim, mlp_ratio)
 
     def forward(self, x: Any) -> Any:
@@ -137,6 +144,7 @@ class TorchJapaneseGPT(_ModuleBase):
         context_length: int,
         mlp_ratio: int = 4,
         position_embedding: str = "absolute",
+        norm_type: str = "layernorm",
     ) -> None:
         require_torch()
         super().__init__()
@@ -154,6 +162,8 @@ class TorchJapaneseGPT(_ModuleBase):
             raise ValueError(
                 "position_embedding は absolute または rope で指定してください"
             )
+        if norm_type not in {"layernorm", "rmsnorm"}:
+            raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
         if position_embedding == "rope" and (dim // heads) % 2 != 0:
             raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
         self.vocab_size = vocab_size
@@ -163,16 +173,19 @@ class TorchJapaneseGPT(_ModuleBase):
         self.context_length = context_length
         self.mlp_ratio = mlp_ratio
         self.position_embedding_type = position_embedding
+        self.norm_type = norm_type
         self.token_embedding = nn.Embedding(vocab_size, dim)
         if position_embedding == "absolute":
             self.position_embedding = nn.Embedding(context_length, dim)
         self.blocks = nn.ModuleList(
             [
-                TorchTransformerBlock(dim, heads, mlp_ratio, position_embedding)
+                TorchTransformerBlock(
+                    dim, heads, mlp_ratio, position_embedding, norm_type
+                )
                 for _ in range(layers)
             ]
         )
-        self.final_norm = nn.LayerNorm(dim)
+        self.final_norm = nn.LayerNorm(dim) if norm_type == "layernorm" else nn.RMSNorm(dim)
         # PyTorchのEmbedding既定値は標準偏差1の正規分布ですが、MLXの
         # 小型モデル実験で使っている初期スケールとは大きく異なります。
         # 入力とabsolute positionを同じ小さなスケールへ揃え、weight tying

@@ -4,6 +4,7 @@ import importlib.util
 import json
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 from typing import ClassVar
@@ -131,10 +132,23 @@ class PipelineTests(unittest.TestCase):
         debug = load_config(ROOT / "configs/debug.toml")
         rope = load_config(ROOT / "configs/rope-mixed-ja-5m-smoke.toml")
         self.assertEqual(debug.model.position_embedding, "absolute")
+        self.assertEqual(debug.model.norm_type, "layernorm")
         self.assertEqual(rope.model.position_embedding, "rope")
         absolute = estimate_parameter_count(4096, 240, 6, 6, 256, 4, "absolute")
         rope_parameters = estimate_parameter_count(4096, 240, 6, 6, 256, 4, "rope")
         self.assertEqual(absolute - rope_parameters, 256 * 240)
+
+        rmsnorm = replace(debug.model, norm_type="rmsnorm")
+        rmsnorm.validate()
+        layernorm_parameters = estimate_parameter_count(
+            4096, 240, 6, 6, 256, 4, "rope", "layernorm"
+        )
+        rmsnorm_parameters = estimate_parameter_count(
+            4096, 240, 6, 6, 256, 4, "rope", "rmsnorm"
+        )
+        self.assertEqual(layernorm_parameters - rmsnorm_parameters, 13 * 240)
+        with self.assertRaisesRegex(ValueError, "norm_type"):
+            replace(debug.model, norm_type="unknown").validate()
 
     def test_corpus_normalization_and_deterministic_split(self) -> None:
         self.assertEqual(normalize_line("  ＡＩ\tの  実験  "), "AI の 実験")
@@ -241,6 +255,15 @@ class PipelineTests(unittest.TestCase):
         import mlx.core as mx
 
         model = TinyJapaneseGPT(32, 16, 2, 4, 8, 2, "rope")
+        logits = model(mx.array([[1, 2, 3, 4], [4, 3, 2, 1]]))
+        mx.eval(logits)
+        self.assertEqual(tuple(logits.shape), (2, 4, 32))
+
+    @unittest.skipUnless(HAS_MLX, "MLX未導入")
+    def test_mlx_rmsnorm_forward_shape(self) -> None:
+        import mlx.core as mx
+
+        model = TinyJapaneseGPT(32, 16, 2, 4, 8, 2, "rope", "rmsnorm")
         logits = model(mx.array([[1, 2, 3, 4], [4, 3, 2, 1]]))
         mx.eval(logits)
         self.assertEqual(tuple(logits.shape), (2, 4, 32))
