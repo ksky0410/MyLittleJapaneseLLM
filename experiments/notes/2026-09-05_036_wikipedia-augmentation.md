@@ -60,6 +60,8 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 学習開始前の公開commitは`79cfda1`です。smoke configのSHA-256は`37868d1dded50b3d3c2310a2acf720fb005b22e45b71fa53c632aed147625ae3`、本学習configは`667a6752cbf9565aa50d0737a383cc1fc17cb7c09547431403a8871c4166a6d0`、`scripts/train.py`は`e8f600df408f53772b3f0729c1d8047a656e1f63b0e8907e04d6502eae612ee0`です。実行環境はPython 3.13.1、既存の`.venv`へ導入済みのMLXです。smokeを先に完走させ、成功後に本学習を開始します。
 
+smokeは同日実行し、100 stepまで正常に完走しました。step 1のtrain lossは8.755156、general validation lossは8.782042、perplexityは6516.169、step 100のtrain lossは6.232876、validation lossは6.992349、perplexityは1088.274でした。学習時間は10.93秒で、NaN、shape error、データ長エラー、メモリ不足は発生していません。smokeのmetrics SHA-256は`432560367eb735e47e74c1c8b84110d5cb19cedb4cbd28b4610d37552f408606`、summaryは`659da2566aff563350791638dd25dedf87c67d885ddc062588d48cb83efd1f71`、step100 metadataは`88107bc091742b59415ccac47e50b6594f61bfac1cd8d8f5cbeac8dd6dc89ab0`、生成TXTは`a065624550faf46186704fb52d05fdef6d3ba2280447c8570f65ecbb241dfe02`です。本学習へ進む条件を満たしました。
+
 ## 実験中の記録
 
 2026-09-05、実験031で抽出したWikipedia本文と既存4 sourceを用いた混合Token列を準備しました。混合manifestは`artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1.manifest.json`、出力本文のSHA-256は`4ddbc8da19ab87663a3d94e44db2d5a881993679f38c19c42df41c813fd8b305`、実際のToken数は9,999,973です。Token列は`artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1-train.bin`、SHA-256は`d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4`です。Token metadataではvocab size 4,096、EOS ID 3を確認しました。
@@ -70,7 +72,7 @@ Wikipedia専用validationも作成しました。本文manifestは`artifacts/cor
 
 ## 結果と解釈
 
-データ混合とWikipedia専用validationのToken化は成功しました。モデル学習と評価は未実施です。学習前処理だけであり、Wikipedia追加によるlossや生成品質の効果はまだ判断できません。
+データ混合、Wikipedia専用validationのToken化、5Mモデルのsmokeは成功しました。本学習と評価は未実施です。ここまでの結果は学習パイプラインの正常性を示すだけであり、Wikipedia追加によるlossや生成品質の効果はまだ判断できません。
 
 ## 次に試すこと
 
