@@ -1,0 +1,75 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 6000,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 2.6033926010131836,
+  "weights_file": "step_006000.pt",
+  "weights_bytes": 77275917,
+  "weights_sha256": "6d9f15014b11236945802b6d951ae6e5ca35233255231bd8bb2bf7119ac2f1da",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 6000,
+    "train_loss": 2.6033926010131836,
+    "sft_train_loss": 2.492093324661255,
+    "validation_loss": 3.261640954017639,
+    "validation_perplexity": 26.092318326528034,
+    "learning_rate": 5e-06,
+    "elapsed_seconds": 489.94183827999996,
+    "rehearsal_ratio": 0.25,
+    "eos_loss_weight": 0.5,
+    "lr_schedule_steps": 3000,
+    "rehearsal_train_loss": 2.9372897148132324
+  },
+  "inputs": {
+    "config_sha256": "fbc654df1a77c4847524de87f295341641753435693e13dd6d45aaa9f66d3729",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "476d848edd7566ff259ee74469912c5ad828a471a44bca1e53b20cd8bc571b21",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 737864192,
+    "peak_memory_reserved_bytes": 805306368
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "lr_schedule_steps": 3000,
+  "base_checkpoint": {
+    "path": "/content/small_llm_061/artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/best.pt",
+    "weights_sha256": "476d848edd7566ff259ee74469912c5ad828a471a44bca1e53b20cd8bc571b21"
+  },
+  "sft": {
+    "train_examples": 396966,
+    "validation_examples": 49045,
+    "rehearsal_ratio": 0.25,
+    "rehearsal_tokens": "/content/small_llm_061/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin",
+    "exclude_eos_from_sft_loss": false,
+    "eos_loss_weight": 0.5
+  }
+}

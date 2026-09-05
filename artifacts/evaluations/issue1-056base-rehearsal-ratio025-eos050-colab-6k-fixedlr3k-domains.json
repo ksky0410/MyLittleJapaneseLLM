@@ -1,0 +1,65 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch-cuda",
+  "config": "/content/small_llm_061/configs/issue1-056base-rehearsal-ratio050-eos050-colab-6k.toml",
+  "checkpoint": "/content/small_llm_061/artifacts/checkpoints/issue1-056base-rehearsal-ratio025-eos050-colab-6k-fixedlr3k/best.pt",
+  "checkpoint_sha256": "9efb30c8b3480449fe3eaae3fb756225ecb89265f0360921eb362dbf99ae56a3",
+  "checkpoint_step": 5800,
+  "parameter_count": 19308032,
+  "seed": 42,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/content/small_llm_061/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.324203332265218,
+      "perplexity": 75.50533622734244
+    },
+    {
+      "name": "conversation",
+      "token_path": "/content/small_llm_061/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 2.454584757486979,
+      "perplexity": 11.641598458481917
+    },
+    {
+      "name": "medical",
+      "token_path": "/content/small_llm_061/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 2.447326103846232,
+      "perplexity": 11.557402073324281
+    },
+    {
+      "name": "rpc",
+      "token_path": "/content/small_llm_061/artifacts/tokens/issue1-real-persona-chat-validation.bin",
+      "token_sha256": "30f8b66828b7a5c1171024af220613cc79d066089a4c09896456112f8754491c",
+      "token_count": 948172,
+      "validation_loss": 2.3677238623301187,
+      "perplexity": 10.673071236090687
+    },
+    {
+      "name": "mrmp",
+      "token_path": "/content/small_llm_061/artifacts/tokens/issue1-mrmp-validation.bin",
+      "token_sha256": "9431d4d7432f89f69d9656bf2c3eea7c18dbcb94e84467060cba3fa8d9445623",
+      "token_count": 156475,
+      "validation_loss": 2.090989669164022,
+      "perplexity": 8.09292051620847
+    }
+  ]
+}
