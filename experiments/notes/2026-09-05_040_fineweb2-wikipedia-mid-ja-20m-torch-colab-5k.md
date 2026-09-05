@@ -42,6 +42,8 @@ bootstrapは`/content/small_llm`へbundleを展開してから、`scripts/train_
 
 学習成果物を回収した後にPyTorch用の`evaluate_torch.py`を使い、同じcheckpointをgeneral、conversation、medical、FineWeb、Wikipediaの5 domainで評価し、既存の固定manifest `experiments/evaluation/chat-test-v1.json`にあるshort・medium・long各16例、合計48例のheld-out会話を生成評価します。MacBook側にはPyTorchがないため、評価もColab T4で行い、生成JSON/TXTと実行環境情報を回収します。評価用コードの追加とテストを完了した時点のGit commitは`a2ad887`、Colab評価wrapperを固定したcommitは`9aa4f7f`です。
 
+2026-09-05、学習用T4 session停止後に評価専用T4 session `torch20m-wikipedia-mid-colab-eval`の作成を試みましたが、Colab CLIが`TooManyAssignmentsError`（HTTP 412 `Precondition Failed`）を返し、GPU割当前に停止しました。評価セッションは作成されておらず、入力データやcheckpointは変更していません。この失敗は削除せず、まずローカル仮想環境へのPyTorch追加が可能か確認し、可能ならCPU評価へ切り替えます。追加できない場合はColab割当上限が解消してから同じwrapperを再実行します。
+
 ## 結果と解釈
 
 未実施です。
