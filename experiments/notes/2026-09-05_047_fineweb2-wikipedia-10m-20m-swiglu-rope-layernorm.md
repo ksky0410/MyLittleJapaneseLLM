@@ -52,6 +52,8 @@ smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935
 
 13:38 JST、CPU smokeを上記コマンドで開始し、step 100まで完走しました。PyTorch 2.14.0、CPU、AMP無効、実測parameter数19,308,032でした。step 1のtrain/validation lossは8.835138/8.837431、step 100では6.477190/7.108960、PPL 1,222.876まで低下しました。NaN、OOM、shape errorは発生せず、`step_000001.pt`、`step_000100.pt`、metadata、metrics、step 0/100の生成文が専用出力先に保存されています。学習時間は123.99秒でした。これは構造確認の成功であり、Colab T4本学習の性能結果ではありません。続けてstep 100 checkpointのreload評価を行い、評価JSONと生成結果を保存します。
 
+2026-09-05、047 bundleをColab T4セッションへuploadし、`scripts/colab_bootstrap_047.py`のwrapper検証までは成功しました。しかし、`colab exec`の戻り値にはwrapperの入力hash検証JSONしか含まれず、T4側の学習metricsやcheckpointは生成されませんでした。続けてリモート出力先を確認したところ、smokeのcheckpointディレクトリ自体が存在せず、セッションも`not found`になりました。したがって、047のCUDA smokeは学習stepへ到達しないままColab runtimeが消失した失敗として扱い、成功結果へ混ぜません。bundleは`/tmp/exp047_bundle.tar.gz`、サイズ約12MB、SHA-256は`4a535623612d25c3898c6486f8bc8f1732237a97d9bdd05060b4540fc77f5fa4`です。
+
 ## 結果と解釈
 
 Colab T4の047 smokeおよび本学習は、041完走直後のGPU割当上限により開始できていません。この失敗は13:35 JSTの記録どおりで、既存sessionの流用は行っていません。
