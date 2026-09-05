@@ -32,6 +32,8 @@ uv run python scripts/train_sft_torch.py \
   --sample-speaker-a DA --sample-speaker-b DC --device auto
 ```
 
+Colabへ送るbundleは`/tmp/exp067_bundle.tar.gz`で、作成日時は2026年9月5日、サイズは約117 MiB、SHA-256は`d15d5e45d887b2cc1a4d056898158ac88db0d20dd77415fff4028ac264ce63d0`です。bundle内には067のconfig、学習script、`src` package、base checkpointとmetadata、Tokenizer、balanced SFTのtrain・validation NPZ、rehearsal Token列だけを含め、原文データは含めていません。
+
 ## 成功条件
 
 3,000 stepをNaN、OOM、shape errorなく完走し、best checkpoint metadata、metrics、summary、step 0〜3,000の生成本文、共通5領域評価、固定chat-test 48例を保存することです。Colabを使った場合はGPU情報と軽量成果物のmanifestを回収し、重いcheckpoint本体はGit管理外のままSHA-256を記録します。失敗した場合も、失敗理由と次の切り替えを削除せずに残します。
