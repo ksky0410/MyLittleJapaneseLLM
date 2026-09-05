@@ -58,6 +58,10 @@ step 200はtrain loss 4.188022、SFT loss 4.457870、rehearsal loss 3.108630、v
 
 step 500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはぇ!`で、短い返答のまま終了しました。step 0〜500の生成本文、step 500のcheckpoint metadata、metricsを保存済みです。step 500時点で最良validationはstep 400の3.780246です。MPS学習を継続します。
 
+step 600はvalidation loss 3.785381、PPL 44.0525、learning rate 4.6792e-5、経過時間657.29秒でした。step 700は3.760246、PPL 42.9590、learning rate 4.5427e-5、経過時間778.53秒、step 800は3.734533、PPL 41.8685、learning rate 4.3852e-5、経過時間899.71秒でした。step 900は3.715428、PPL 41.0762、learning rate 4.2085e-5、経過時間1,027.30秒、step 1,000はtrain loss 3.625619、SFT loss 3.498374、rehearsal loss 4.134598、validation loss 3.695819、PPL 40.2786、learning rate 4.0147e-5、経過時間1,154.53秒でした。step 500以降はvalidationが継続して改善しています。
+
+step 1,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> よろしくお願いします!`で、step 500より自然な定型応答へ変化しました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別・source別集計、生成本文の質的観察、076との差分を追記します。設定変更や失敗があった場合は、予定との差分と原因を明記します。
