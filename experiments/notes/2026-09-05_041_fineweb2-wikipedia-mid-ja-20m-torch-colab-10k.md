@@ -16,7 +16,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 設定は`configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml`です。040から変えるのは最大step数と出力先だけで、batch size 8、evaluation/sample interval 100、evaluation batches 20、PyTorch標準AdamW、learning rate 3e-4、minimum learning rate 3e-5、warmup 300、weight decay 0.1、seed 42、CUDA float16 autocastとGradScalerを維持します。学習中の総Token exposureは、batch size 8とcontext length 256を掛けて、10,000 stepで約20.48M Tokenです。
 
-開始前のGit commitは、このconfig・wrapper・ノートをpushしたcommitとして記録します。設定ファイルのSHA-256、実際に使用したbundleのSHA-256、ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
+開始前のGit commitは`473b816`です。設定ファイルのSHA-256は`3c3bd9a07a303d50f6ca17a9d29a02dd36f265671d9501f16596dc3532b90bab`です。実際に使用したbundleのSHA-256、ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
 
 ```bash
 colab new --session torch20m-wikipedia-mid-colab-10k --gpu T4
