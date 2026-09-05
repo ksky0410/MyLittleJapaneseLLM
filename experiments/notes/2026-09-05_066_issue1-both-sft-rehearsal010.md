@@ -46,6 +46,8 @@ uv run python scripts/train_sft_torch.py \
 
 step 600では総合loss 3.5601、SFT loss 3.4857、rehearsal loss 4.2295、validation loss 3.9568、PPL 52.29、step 700ではvalidation loss 3.9386、PPL 51.35、step 800では3.9252、PPL 50.66、step 900では3.9144、PPL 50.12となりました。step 1,000では総合loss 3.3239、SFT loss 3.1979、rehearsal loss 4.4573、validation loss 3.8831、PPL 48.57、学習率4.0147e-5、経過時間1,086.86秒でした。064の同step validation loss 3.8755、065の3.8836と近い値で、現時点ではratio 0.10の明確な優位は確認できません。step 600から1,000までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
 
+step 1,100では総合loss 3.5773、SFT loss 3.7043、rehearsal loss 2.4339、validation loss 3.8784、PPL 48.35、step 1,200では3.8651、PPL 47.71、step 1,300では3.8445、PPL 46.74、step 1,400では3.8277、PPL 45.96となりました。step 1,500では総合loss 3.8229、SFT loss 3.9315、rehearsal loss 2.8450、validation loss 3.8159、PPL 45.42、学習率2.8742e-5、経過時間1,378.91秒でした。064の同step validation loss 3.8088、065の3.8200の間に位置しており、step 1,500までのvalidation推移は事前の予想と整合します。step 1,100から1,500までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064・065との差、代表的な生成を追記します。general lossだけで成功とせず、chat-test F1の変化と長い文脈の生成を確認します。生成本文は品質に関係なくGitHubへ保存します。
