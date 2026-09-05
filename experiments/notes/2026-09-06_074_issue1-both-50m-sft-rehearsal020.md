@@ -48,6 +48,22 @@ Colab bundleは074専用の分割bundleとして作成します。50M base check
 
 2026年9月6日、基準commit `8c9822b`の内容から`/tmp/small_llm-colab-074-8c9822b.tar.gz`を作成しました。bundleは236,462,382 bytes、SHA-256は`4afb025504ca43fab266d5e44c7b64a9bf1cd8c8cfe396901aa7e2aca3b49bc6`です。50M base checkpointを含むため、過去のupload制約に合わせて45MiB単位で6個へ分割しました。part 00〜04は各47,185,920 bytes、part 05は532,782 bytesです。Colabへは各partと、bundle本体を含めずにhashだけを固定した[`scripts/colab_concat_074.py`](../../scripts/colab_concat_074.py)をuploadし、連結後のbytesとSHA-256が一致してからbootstrapを実行します。concat scriptのSHA-256は`1f6382895578213a7a58d49310f95c921800db1707564407eeda5d2c55f02ec4`です。bundleにはconfig、学習コード、074 wrapper・package、`src` package、50M base checkpoint、加工済みSFT/Tokenデータ、Tokenizerだけを含め、元JSONLや医師国家試験原本は含めていません。学習はまだ開始していません。
 
+2026年9月6日、`colab new -s exp074-both-50m-sft-r020 --gpu T4`でT4割当を試しましたが、Colab assignment endpointがHTTP 503 `Service Unavailable`を返して終了コード1となりました。直後の`colab sessions`は`No active sessions found on server.`で、074のsessionは残りませんでした。bundleのupload、concat、bootstrap、Colab上の学習は発生していません。これまでの実験073などと同じ失敗のため、074は同一条件のMPS fallbackへ切り替えます。MPS用コマンドは次のとおりです。
+
+```bash
+uv run python scripts/train_sft_torch.py \
+  --config configs/issue1-both-50m-sft-source-rehearsal020-colab-3k.toml \
+  --base-checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-mps-2p5k/best.pt \
+  --train-data artifacts/sft/issue1-both-balanced-v1/train.npz \
+  --validation-data artifacts/sft/issue1-both-full-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-both-50m-sft-source-rehearsal020-mps-3k \
+  --samples-dir artifacts/samples/issue1-both-50m-sft-source-rehearsal020-mps-3k \
+  --lr-schedule-steps 3000 --eos-loss-weight 0.5 \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 --sample-template conversation \
+  --sample-speaker-a DA --sample-speaker-b DC --device mps
+```
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のruntime、parameter数、最良・最終loss、学習時間、最大メモリ、生成本文の代表例、checkpoint・入力・bundleのhash、20Mとの差を追記します。領域別lossとchat-testの自動指標が一致しない場合は、片方だけで容量効果を断定しません。人手レビュー未実施の場合はその状態を明記します。
