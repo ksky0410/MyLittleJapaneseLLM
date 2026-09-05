@@ -49,6 +49,8 @@ uv run python scripts/train_sft_torch.py \
 
 2026年9月6日、MPS学習の開始前に`colab new -s exp071-both-long025-seed123 --gpu T4`を実行しました。しかしColab CLIのassignment endpointがHTTP 503 `Service Unavailable`を返し、セッション作成に失敗しました。直後の`colab sessions`は`No active sessions found on server.`でした。bundle uploadやColab上の学習は発生していないため、同一条件をMPSで実行します。
 
+同日、Colab失敗を記録したcommit `1e62bdb`の後、MPSで学習を開始しました。step 1はtrain loss 4.342813、SFT loss 4.578291、rehearsal loss 3.400899、validation loss 4.723621、PPL 112.5752、経過時間2.34秒でした。step 100はvalidation loss 4.109018、PPL 60.8869、step 200は4.040311、PPL 56.8440、step 300は4.008517、PPL 55.0651、step 400は3.991986、PPL 54.1623でした。step 500ではtrain loss 4.036089、SFT loss 4.275889、rehearsal loss 3.076891、validation loss 3.935468、PPL 51.1861、learning rate 4.7931e-5、経過時間214.19秒となりました。step 0〜500のmetrics、checkpoint metadata、生成本文を保存しました。step 500の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは。`で、EOSへ到達しています。ここまでNaN、OOM、shape error、警告はありません。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察を追記します。068との差分だけでなく、067と070を含む比較表を残し、2/6条件を採用・保留・棄却のいずれかに判断します。
