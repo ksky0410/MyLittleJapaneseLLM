@@ -14,9 +14,9 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 学習条件と再現情報
 
-設定は`configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml`です。040から変えるのは最大step数と出力先だけで、batch size 8、evaluation/sample interval 100、evaluation batches 20、PyTorch標準AdamW、learning rate 3e-4、minimum learning rate 3e-5、warmup 300、weight decay 0.1、seed 42、CUDA float16 autocastとGradScalerを維持します。学習中の総Token exposureは、batch size 8とcontext length 256を掛けて、10,000 stepで約20.48M Tokenです。
+設定は`configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml`です。当初の計画では040から最大step数と出力先だけを変え、それ以外のbatch size 8、evaluation/sample interval 100、evaluation batches 20、PyTorch標準AdamW、learning rate 3e-4、minimum learning rate 3e-5、warmup 300、weight decay 0.1、seed 42、CUDA float16 autocastとGradScalerを維持する予定でした。再試行用設定では、これらに加えてcheckpoint保存間隔だけを1,000 stepへ分離します。学習中の総Token exposureは、batch size 8とcontext length 256を掛けて、10,000 stepで約20.48M Tokenです。
 
-開始前のGit commitは`7e4cc13`です。設定ファイルのSHA-256は`3c3bd9a07a303d50f6ca17a9d29a02dd36f265671d9501f16596dc3532b90bab`です。checkpoint保存間隔を分離したコードcommitは`22cafd6`、その方針をノートへ固定したcommitは`7e4cc13`です。学習bundleは`/tmp/small_llm-colab-041-v2.tar.gz`、サイズ9.6MB、SHA-256は`5f7f3144ce582ac93ca1b6ea0122230f463fbb608184cbdfaef8cc9bc0846607`です。ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
+計画を更新したGit commitは`7e4cc13`です。最初の失敗試行で用いた設定ファイルのSHA-256は`3c3bd9a07a303d50f6ca17a9d29a02dd36f265671d9501f16596dc3532b90bab`です。checkpoint保存間隔を分離したコードcommitは`22cafd6`、評価stepと実際のcheckpoint stepをmetadataで分けた再試行用commitは`666d1f3`です。再試行用設定ファイルのSHA-256は`8b79fac4389c8bc781dafe1076e4083d19ca9c81543f15bfddf414b33ec01d95`、bundleは`/tmp/small_llm-colab-041-666d1f3.tar.gz`、サイズ9.5MB、SHA-256は`926bc4aaacd7bdecd2eb043ad98595d3644a005f6607e4807cf8be50f265bfb3`です。bundleからPythonのcacheは除外しています。ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
 
 ```bash
 colab new --session torch20m-wikipedia-mid-colab-10k --gpu T4
@@ -35,6 +35,8 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 041の長時間実験に向け、`training.checkpoint_interval`を追加しました。`eval_interval`と`sample_interval`は100のまま維持し、checkpointだけを1,000 step間隔で保存します。validation lossが更新された場合は`best.pt`を保存し、periodic checkpointとbest checkpointの役割をmetadataへ記録します。既存configでこの項目を省略した場合は従来どおりevaluation intervalをcheckpoint間隔として扱う後方互換実装です。変更は実験開始前にテストし、commitへ固定します。
 
+再試行用コードでは、評価stepとcheckpoint保存stepが一致しない場合に備え、metadataの`checkpoint_step`を独立して保存し、評価スクリプトもこの値を優先して読むようにしました。ローカルの小型CPU統合確認では、evaluationがstep 1・3・6・7、periodic checkpointがstep 5・7、生成文がstep 0・4・7となり、step 5 metadataの保存step 5と直近validation step 3も区別できました。全テストは63件成功しました。
+
 041 bundleのuploadは成功しましたが、実行要求から約20分経過しても、Colab側の041出力ディレクトリ、`metrics.jsonl`、step 1 checkpointはいずれも生成されませんでした。Colab CLIのログ取得もtimeoutし、既存kernelが実行要求を受け付けない状態と判断してローカルの実行待ちを中断しました。`colab download`で確認した際も`metrics.jsonl`と`summary.json`は存在せず、学習stepには到達していません。040の成果物を含む別ディレクトリは変更していません。sessionを停止し、停止後の`colab sessions`が空であることを確認しました。
 
 その後の確認で、既存sessionのkernel再利用時に041ではなく040の学習処理が再実行され、040のmetrics、checkpoint metadata、生成文、評価結果が一時的に上書きされていたことが判明しました。これは041の成果物ではなく、040と同じ条件を再度走らせた想定外の再実行結果です。生成文と評価結果を含む全108ファイルを削除せず、`artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k-unexpected-rerun-before-041-stall/`、`artifacts/samples/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k-unexpected-rerun-before-041-stall/`、および同名の`artifacts/evaluations/*unexpected-rerun-before-041-stall*`へ退避しました。040の正規記録はHEADの内容へ復元し、正規checkpointのSHA-256 `7f375a18adfbd55026711ad452320589296b0c3c399dd1887e354868c86e9667`と、元の最終validation loss 4.9294484456380205を再確認しました。041の結果としてこれらを扱わず、別の失敗・副産物として保存します。
@@ -43,8 +45,8 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 041の学習結果は未実施です。新規T4割当の失敗と、既存sessionを再利用した際のkernel応答停止という二つの失敗を削除せず記録しました。回収できた041の学習成果物はなく、metrics、checkpoint metadata、生成文は生成されていません。したがって、040とのlossや生成品質の比較もまだ行えません。
 
-今回の失敗から、長時間実験を始める前に、sessionが新しいkernelとして実行可能かを短いprobeで確認し、probeの出力と最初のmetrics生成を検証する手順が必要だと分かりました。また、10,000 stepを100 step間隔で重み保存すると約100個、合計約7.7GBの`.pt`を書き込むため、次回の再実行ではmetricsと生成文の記録間隔を維持しつつ、重みcheckpointの保存間隔を別に制御できるようにして、Colab一時環境の保存負荷も抑えます。
+今回の失敗から、長時間実験を始める前に、sessionが新しいkernelとして実行可能かを短いprobeで確認し、probeの出力と最初のmetrics生成を検証する手順が必要だと分かりました。また、10,000 stepを100 step間隔で重み保存すると約100個、合計約7.7GBの`.pt`を書き込むため、再試行用コードではmetricsと生成文の記録間隔を維持しつつ、重みcheckpointを1,000 step間隔と最良重み`best.pt`へ分離しました。保存stepと直近のvalidation stepもmetadataで別々に記録します。
 
 ## 次に試すこと
 
-Colabの新規kernelが確保できたら、まずPython・PyTorch・T4のprobeを実行し、その後に041を再試行します。再試行前にcheckpoint保存間隔を設定から分離し、生成文とmetricsは100 step間隔、重み本体は必要な節目と最良checkpointだけを保存できるよう改善します。完走後は040との同一条件比較を行い、10,000 stepの延長効果が確認できなければ、データ量を増やす実験またはRoPE・RMSNorm・SwiGLU・GQAを一つずつ比較する実験へ進みます。
+Colabの新規kernelが確保できたら、まずPython・PyTorch・T4のprobeを実行し、実行コードcommitとbundle hashを検証した後に041を再試行します。生成文とmetricsは100 step間隔、periodicな重み本体は1,000 step間隔、最良重みは`best.pt`へ上書き保存する方式です。完走後は040との同一条件比較を行い、10,000 stepの延長効果が確認できなければ、データ量を増やす実験またはRoPE・RMSNorm・SwiGLU・GQAを一つずつ比較する実験へ進みます。
