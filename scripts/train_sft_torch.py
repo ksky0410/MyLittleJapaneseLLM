@@ -33,7 +33,6 @@ from my_little_japanese_llm.training import (
     signature_from_config,
 )
 
-
 CONVERSATION_START = "<|startofconversation|>"
 
 
@@ -96,9 +95,7 @@ def encode_generation_prompt(
     return prompt_ids, rendered
 
 
-def exclude_eos_from_loss(
-    targets: Any, loss_mask: Any, eos_id: int, torch: Any
-) -> Any:
+def exclude_eos_from_loss(targets: Any, loss_mask: Any, eos_id: int, torch: Any) -> Any:
     """response末尾EOSをSFTのloss対象から除いたmaskを返す。"""
 
     if targets.shape != loss_mask.shape:
@@ -106,6 +103,34 @@ def exclude_eos_from_loss(
     return loss_mask * (targets != eos_id).to(
         dtype=loss_mask.dtype, device=loss_mask.device
     )
+
+
+def validate_eos_loss_weight(value: float) -> float:
+    """EOSをSFT lossへ反映する重みを検証する。"""
+
+    if not np.isfinite(value) or value < 0:
+        raise ValueError("eos_loss_weightは有限の0以上で指定してください")
+    return float(value)
+
+
+def weight_eos_in_loss(
+    targets: Any,
+    loss_mask: Any,
+    eos_id: int,
+    eos_loss_weight: float,
+    torch: Any,
+) -> Any:
+    """マスク済みEOSのloss寄与だけを指定倍率へ変更する。"""
+
+    if targets.shape != loss_mask.shape:
+        raise ValueError("targetsとloss_maskのshapeが一致していません")
+    weight = validate_eos_loss_weight(float(eos_loss_weight))
+    eos_multiplier = torch.where(
+        targets == eos_id,
+        torch.as_tensor(weight, dtype=loss_mask.dtype, device=loss_mask.device),
+        torch.ones((), dtype=loss_mask.dtype, device=loss_mask.device),
+    )
+    return loss_mask * eos_multiplier
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -137,6 +162,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="response末尾EOSをSFT lossの対象から除く",
     )
     parser.add_argument(
+        "--eos-loss-weight",
+        type=float,
+        default=1.0,
+        help="SFT lossにおけるマスク済みEOSの重み（既定値1.0）",
+    )
+    parser.add_argument(
         "--rehearsal-tokens",
         default=None,
         help="通常のraw uint32 Token列。rehearsal-ratioと同時に指定する",
@@ -150,7 +181,9 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _masked_cross_entropy(logits: Any, targets: Any, loss_mask: Any, functional: Any) -> Any:
+def _masked_cross_entropy(
+    logits: Any, targets: Any, loss_mask: Any, functional: Any
+) -> Any:
     """loss_maskが1の位置だけで平均したcross entropyを返す。"""
 
     if logits.ndim != 3:
@@ -216,7 +249,9 @@ def _evaluation_sft_batches(
     count = arrays["input_ids"].shape[0]
     if count == 0:
         raise ValueError("SFTデータが空です")
-    indices = np.linspace(0, count - 1, num=min(count, batches * batch_size), dtype=np.int64)
+    indices = np.linspace(
+        0, count - 1, num=min(count, batches * batch_size), dtype=np.int64
+    )
     result = []
     for offset in range(0, len(indices), batch_size):
         selected = indices[offset : offset + batch_size]
@@ -299,7 +334,9 @@ def _load_base_checkpoint(
         )
     recorded_hash = metadata.get("weights_sha256")
     if recorded_hash is not None and recorded_hash != _sha256_file(checkpoint_path):
-        raise ValueError(f"base checkpointのSHA-256がmetadataと一致しません: {checkpoint_path}")
+        raise ValueError(
+            f"base checkpointのSHA-256がmetadataと一致しません: {checkpoint_path}"
+        )
     model_device = next(model.parameters()).device
     state_dict = torch.load(
         checkpoint_path, map_location=model_device, weights_only=True
@@ -330,6 +367,14 @@ def main() -> None:
         )
     except ValueError as error:
         parser.error(str(error))
+    try:
+        eos_loss_weight = validate_eos_loss_weight(args.eos_loss_weight)
+    except ValueError as error:
+        parser.error(str(error))
+    if args.exclude_eos_from_sft_loss and eos_loss_weight != 1.0:
+        parser.error(
+            "--exclude-eos-from-sft-lossと--eos-loss-weightは同時に指定できません"
+        )
 
     torch = require_torch()
     from torch.nn import functional
@@ -350,7 +395,9 @@ def main() -> None:
     rehearsal_tokens = (
         load_rehearsal_tokens(rehearsal_path) if rehearsal_path is not None else None
     )
-    max_steps = args.max_steps if args.max_steps is not None else config.training.max_steps
+    max_steps = (
+        args.max_steps if args.max_steps is not None else config.training.max_steps
+    )
     if max_steps <= 0 or max_steps > 1_000_000:
         raise ValueError("max_stepsは1以上1,000,000以下で指定してください")
 
@@ -462,6 +509,14 @@ def main() -> None:
             sft_loss_mask = exclude_eos_from_loss(
                 sft_targets, sft_loss_mask, int(processor.eos_id()), torch
             )
+        elif eos_loss_weight != 1.0:
+            sft_loss_mask = weight_eos_in_loss(
+                sft_targets,
+                sft_loss_mask,
+                int(processor.eos_id()),
+                eos_loss_weight,
+                torch,
+            )
         if rehearsal_active:
             rehearsal_inputs, rehearsal_targets = _batch_for_rehearsal(
                 rehearsal_tokens,
@@ -492,7 +547,9 @@ def main() -> None:
                 rehearsal_loss = full_causal_lm_loss(
                     model, rehearsal_inputs, rehearsal_targets, functional
                 )
-                loss = (1.0 - rehearsal_ratio) * sft_loss + rehearsal_ratio * rehearsal_loss
+                loss = (
+                    1.0 - rehearsal_ratio
+                ) * sft_loss + rehearsal_ratio * rehearsal_loss
             else:
                 loss = sft_loss
         if amp_enabled:
@@ -531,6 +588,7 @@ def main() -> None:
                 "learning_rate": lr,
                 "elapsed_seconds": time.monotonic() - started,
                 "rehearsal_ratio": rehearsal_ratio,
+                "eos_loss_weight": eos_loss_weight,
             }
             if rehearsal_loss is not None:
                 latest_metrics["rehearsal_train_loss"] = float(
@@ -538,9 +596,7 @@ def main() -> None:
                 )
             print(json.dumps(latest_metrics, ensure_ascii=False))
             _append_jsonl(metrics_path, latest_metrics)
-        is_best = (
-            validation_loss is not None and validation_loss < best_validation_loss
-        )
+        is_best = validation_loss is not None and validation_loss < best_validation_loss
 
         def save_checkpoint(
             checkpoint: Path,
@@ -556,9 +612,7 @@ def main() -> None:
                 "checkpoint_role": role,
                 "checkpoint_step": checkpoint_step,
                 "checkpoint_interval": checkpoint_interval,
-                "checkpoint_train_loss": float(
-                    checkpoint_loss.detach().float().item()
-                ),
+                "checkpoint_train_loss": float(checkpoint_loss.detach().float().item()),
                 "weights_file": checkpoint.name,
                 "weights_bytes": checkpoint.stat().st_size,
                 "weights_sha256": _sha256_file(checkpoint),
@@ -577,14 +631,13 @@ def main() -> None:
                 },
                 "sft": {
                     "train_examples": int(train_arrays["input_ids"].shape[0]),
-                    "validation_examples": int(
-                        validation_arrays["input_ids"].shape[0]
-                    ),
+                    "validation_examples": int(validation_arrays["input_ids"].shape[0]),
                     "rehearsal_ratio": rehearsal_ratio,
                     "rehearsal_tokens": str(rehearsal_path)
                     if rehearsal_path is not None
                     else None,
                     "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
+                    "eos_loss_weight": eos_loss_weight,
                 },
             }
             checkpoint.with_suffix(".json").write_text(
@@ -627,7 +680,9 @@ def main() -> None:
             "checkpoint_interval": checkpoint_interval,
         },
         "final_step": max_steps,
-        "best_checkpoint": best_checkpoint.name if best_checkpoint is not None else None,
+        "best_checkpoint": best_checkpoint.name
+        if best_checkpoint is not None
+        else None,
         "best_checkpoint_step": best_checkpoint_step,
         "best_validation_loss": best_validation_loss,
         "base_checkpoint": str(base_checkpoint),
@@ -643,6 +698,7 @@ def main() -> None:
             "speaker_b": args.sample_speaker_b,
         },
         "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
+        "eos_loss_weight": eos_loss_weight,
     }
     (output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

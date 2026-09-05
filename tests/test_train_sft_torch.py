@@ -21,7 +21,9 @@ from train_sft_torch import (
     build_parser,
     encode_generation_prompt,
     exclude_eos_from_loss,
+    validate_eos_loss_weight,
     validate_rehearsal_options,
+    weight_eos_in_loss,
 )
 
 from my_little_japanese_llm.config import load_config
@@ -88,6 +90,25 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         )
         self.assertTrue(args.exclude_eos_from_sft_loss)
 
+    def test_parser_accepts_eos_loss_weight(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--base-checkpoint",
+                "base.pt",
+                "--train-data",
+                "train.npz",
+                "--validation-data",
+                "validation.npz",
+                "--output-dir",
+                "checkpoints",
+                "--samples-dir",
+                "samples",
+                "--eos-loss-weight",
+                "0.5",
+            ]
+        )
+        self.assertEqual(args.eos_loss_weight, 0.5)
+
     def test_generation_prompt_supports_raw_and_conversation_templates(self) -> None:
         class Processor:
             def encode(self, text: str, out_type: type[int] = int) -> list[int]:
@@ -130,6 +151,21 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         actual = exclude_eos_from_loss(targets, loss_mask, 3, torch)
         expected = torch.tensor([[1.0, 0.0, 0.0, 0.0]])
         self.assertTrue(torch.equal(actual, expected))
+
+    def test_eos_loss_weight_only_changes_masked_eos(self) -> None:
+        targets = torch.tensor([[1, 3, 2, 3]])
+        loss_mask = torch.tensor([[1.0, 1.0, 0.0, 1.0]])
+        actual = weight_eos_in_loss(targets, loss_mask, 3, 0.5, torch)
+        expected = torch.tensor([[1.0, 0.5, 0.0, 0.5]])
+        self.assertTrue(torch.equal(actual, expected))
+
+    def test_eos_loss_weight_is_nonnegative_and_finite(self) -> None:
+        self.assertEqual(validate_eos_loss_weight(0.0), 0.0)
+        self.assertEqual(validate_eos_loss_weight(1.0), 1.0)
+        with self.assertRaises(ValueError):
+            validate_eos_loss_weight(-0.1)
+        with self.assertRaises(ValueError):
+            validate_eos_loss_weight(float("nan"))
 
 
 @unittest.skipUnless(torch is not None, "PyTorch未導入")
