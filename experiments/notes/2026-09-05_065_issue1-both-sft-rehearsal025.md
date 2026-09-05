@@ -44,6 +44,8 @@ python scripts/train_sft_torch.py \
 
 準備変更はcommit `d570f4a`としてpush済みです。Colabへ送るbundleは`/tmp/exp065_bundle_v2.tar.gz`、115MB、SHA-256 `0e6d751ba4f8bcdf11f1a098e41dc96f03f719795c5d58387f0ac200961133d9`です。bundleにはbase checkpoint、Tokenizer、both-SFTのtrain/validation NPZ、rehearsal Token列、config、学習script、Colab wrapper、必要なPython packageを含め、元のJSONLや医師国家試験の原本は含めていません。
 
+Colab session `exp065-both-rehearsal025`のT4割当を試みましたが、2026年9月5日にHTTP 503 `Service Unavailable`で失敗しました。sessionは作成されず、bundle upload、Colab上の学習、既存成果物の変更は発生していません。`colab sessions`でもactive sessionがないことを確認しました。実験063でも同じT4割当失敗が続いているため、今回はこの失敗を記録したうえで同じ条件のローカルMPSへ切り替えます。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064との差、代表的な生成を追記します。general lossの改善だけで会話性能が保たれたとは判断せず、source別lossと生成本文を併せて確認します。生成本文は品質に関係なくGitHubへ保存します。
