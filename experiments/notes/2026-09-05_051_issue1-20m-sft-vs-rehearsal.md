@@ -62,9 +62,15 @@
 
 SFT-onlyの入力hashはconfig `0155c190c2c99a602f6083a63d4953c83beedae7f0521de997da968e1d3c46e6`、train NPZ `400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609`、validation NPZ `5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4`、base checkpoint `ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865`です。rehearsalはこれらに加えてrehearsal Token列 `d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`を使用しました。出力は`artifacts/checkpoints/issue1-both-5m-sft-torch-smoke/`、`artifacts/checkpoints/issue1-both-5m-rehearsal-torch-smoke/`、対応する`artifacts/samples/`へ保存しています。次に両best checkpointをreloadしてdomainと固定chatを評価します。
 
+14:35 JST、両best checkpointをローカルCPUでreloadし、general、conversation、medical、RPC、MRMPの5領域を20 batchずつ評価しました。SFT-onlyはgeneral 6.7647（PPL 866.68）、conversation 4.5359（PPL 93.31）、medical 5.7838（PPL 325.00）、RPC 4.5439（PPL 94.05）、MRMP 4.1275（PPL 62.02）でした。rehearsalはgeneral 6.6009（PPL 735.76）、conversation 4.3145（PPL 74.78）、medical 5.6680（PPL 289.45）、RPC 4.3129（PPL 74.66）、MRMP 3.9734（PPL 53.17）でした。今回のdomain評価ではrehearsalが5領域すべてで低いlossとなり、SFT-onlyより一般・医療の忘却を抑えながら、会話領域も改善しました。
+
+同じ48例の固定chat-testでは、SFT-onlyがEOS 48/48、平均生成長8.90 Token、Token overlap F1 0.1881、rehearsalがEOS 48/48、平均11.06 Token、F1 0.1681でした。SFT-onlyはshort・medium・longのF1がそれぞれ0.2925・0.1604・0.1115、rehearsalは0.2243・0.1498・0.1303でした。overlapだけではSFT-onlyが高く、domain lossと逆の結果でした。生成本文には、SFT-onlyの「私もし、「コレスキリースマーが」や「お??」、rehearsalの「それはに、今後していがらもけます?」や「おさでも、、そが、最おりかり。」のような文脈不一致・崩れた応答が残っています。自然さの判定は未実施のため、レビュー用JSONを`experiments/evaluation/issue1-both-5m-sft-torch-smoke-chat-review.json`と`issue1-both-5m-rehearsal-torch-smoke-chat-review.json`へ保存し、人手ラベルは空欄のままにしました。
+
+5M smokeの範囲では、rehearsal ratio 0.25は通常domain lossを改善し、会話validation lossもSFT-onlyより低くなりました。一方、固定chatのToken overlap F1はSFT-onlyが高く、指標間の不一致が確認されました。現在の差は200 stepの短いCPU探索であり、SFT-onlyが自然な会話に優れる、またはrehearsalが常に優れるとは結論しません。20Mで同じ初期値・低い学習率・1,000 stepを比較し、応答mask、通常domain、実際の生成、人手レビューを併せて再検証します。
+
 ## 結果と解釈
 
-最終および最良checkpoint、SFT validation loss、通常domain loss、固定chatのEOS・生成長・overlap、生成本文の人手観察を条件別に記録します。SFT validationの改善は応答形式への適合を示すだけで、会話の事実性や医学的正確性を示さないことを明記します。
+最終および最良checkpoint、SFT validation loss、通常domain loss、固定chatのEOS・生成長・overlap、生成本文の人手観察を条件別に記録します。5M smokeの実測結果は上の実験中記録へ追記し、domain評価JSON、固定chatのJSON/TXT、レビュー用JSON、学習中の全生成TXT、metrics、checkpoint metadataをGitの追跡対象にします。SFT validationの改善は応答形式への適合を示すだけで、会話の事実性や医学的正確性を示さないことを明記します。
 
 ## 次に試すこと
 

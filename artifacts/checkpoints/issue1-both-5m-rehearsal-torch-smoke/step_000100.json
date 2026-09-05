@@ -1,0 +1,62 @@
+{
+  "format_version": 1,
+  "backend": "pytorch",
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 100,
+  "checkpoint_interval": 100,
+  "checkpoint_train_loss": 5.1612043380737305,
+  "weights_file": "step_000100.pt",
+  "weights_bytes": 20842747,
+  "weights_sha256": "ebbe2fd2b8f7cf46f3977b870bc38251d4c4e8373713b87818c3ced5f3110eaa",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 240,
+    "layers": 6,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute",
+    "norm_type": "layernorm",
+    "ffn_type": "gelu"
+  },
+  "metrics": {
+    "step": 100,
+    "train_loss": 5.1612043380737305,
+    "sft_train_loss": 5.337926387786865,
+    "validation_loss": 5.227571511268616,
+    "validation_perplexity": 186.33972966675856,
+    "learning_rate": 3.9155607710895434e-05,
+    "elapsed_seconds": 33.58728166599758,
+    "rehearsal_ratio": 0.25,
+    "rehearsal_train_loss": 4.631039619445801
+  },
+  "inputs": {
+    "config_sha256": "0155c190c2c99a602f6083a63d4953c83beedae7f0521de997da968e1d3c46e6",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "training_intervals": {
+    "eval_interval": 50,
+    "sample_interval": 50,
+    "checkpoint_interval": 100
+  },
+  "base_checkpoint": {
+    "path": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-5m-smoke/best.pt",
+    "weights_sha256": "ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865"
+  },
+  "sft": {
+    "train_examples": 396966,
+    "validation_examples": 49045,
+    "rehearsal_ratio": 0.25,
+    "rehearsal_tokens": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin"
+  }
+}

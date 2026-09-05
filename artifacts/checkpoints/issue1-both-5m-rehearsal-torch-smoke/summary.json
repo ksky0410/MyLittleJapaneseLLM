@@ -1,0 +1,34 @@
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch",
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "inputs": {
+    "config_sha256": "0155c190c2c99a602f6083a63d4953c83beedae7f0521de997da968e1d3c46e6",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "parameter_count": 5205120,
+  "training_intervals": {
+    "eval_interval": 50,
+    "sample_interval": 50,
+    "checkpoint_interval": 100
+  },
+  "final_step": 200,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 200,
+  "best_validation_loss": 5.1639261722564695,
+  "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-5m-smoke/best.pt",
+  "train_examples": 396966,
+  "validation_examples": 49045,
+  "rehearsal_tokens": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin",
+  "rehearsal_ratio": 0.25,
+  "elapsed_seconds": 62.340393624966964
+}
