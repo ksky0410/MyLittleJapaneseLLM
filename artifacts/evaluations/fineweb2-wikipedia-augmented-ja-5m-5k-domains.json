@@ -1,0 +1,50 @@
+{
+  "format": "domain-evaluation-v1",
+  "config": "/Users/koseki/projects/small_llm/configs/fineweb2-wikipedia-augmented-ja-5m-5k.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-augmented-ja-5m-5k/step_005000.npz",
+  "checkpoint_step": 5000,
+  "seed": 42,
+  "eval_batches": 20,
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 5.216578324635823,
+      "perplexity": 184.30248068733135
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 3.187662442525228,
+      "perplexity": 24.231718154407776
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 3.6265006065368652,
+      "perplexity": 37.581075275070205
+    },
+    {
+      "name": "fineweb_test",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 4.250460783640544,
+      "perplexity": 70.13772321739943
+    },
+    {
+      "name": "wikipedia_test",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/wikimedia-wikipedia-ja-validation-v1.bin",
+      "token_sha256": "2898e8ab7385dc7beb26e4ba956639eaa791b059a1a7e763ae9d4b958e09d269",
+      "token_count": 998845,
+      "validation_loss": 4.275203704833984,
+      "perplexity": 71.89478313296205
+    }
+  ]
+}

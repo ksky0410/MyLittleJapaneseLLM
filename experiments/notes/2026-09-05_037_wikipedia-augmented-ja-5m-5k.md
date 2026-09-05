@@ -18,7 +18,7 @@
 
 実験036の結果commitは`575c02d`です。実験037のconfig SHA-256は`a0efd68cb9b1f4d895129359697c382fe3975038209974f3df5a99d7e6753a1f`です。学習はMacBook上の既存MLX環境で行い、smokeは省略します。実験036で同じモデル・Token列の100 step smokeと2,500 step本学習が成功済みであるため、今回は5,000 step本学習のみを実行します。
 
-本学習は同日開始し、step 2,500まで正常に進行しています。step 500ではtrain loss 5.263340、validation loss 6.219744、perplexity 502.574、step 1,000ではtrain loss 4.764680、validation loss 5.774941、perplexity 322.125、step 1,200ではtrain loss 4.705955、validation loss 5.739346、perplexity 310.861、step 2,000ではtrain loss 4.340868、validation loss 5.512431、perplexity 247.753、step 2,500ではtrain loss 4.080081、validation loss 5.436808、perplexity 229.708でした。step 2,500時点の学習率は`1.786027e-4`、経過時間は470.15秒です。step 2,500までNaN、shape error、データ長エラー、メモリ不足は発生しておらず、学習は継続中です。
+本学習は同日開始し、実行中は100 stepごとにmetrics、checkpoint metadata、生成TXTを保存しました。最終的に5,000 stepまで完走し、途中でNaN、shape error、データ長エラー、メモリ不足は発生しませんでした。実行中の中間値は「実験中の記録」に時系列で追記しています。
 
 予定コマンドは次のとおりです。
 
@@ -31,11 +31,24 @@
 ## 実験中の記録
 
 step 2,000ではvalidation lossが5.512431、step 2,500では5.436808まで下がりました。実験036の同じstep 2,500のvalidation loss 5.525606より0.088798低く、現時点では学習期間を延長する仮説と一致する方向です。ただし、実験036とはlearning-rate scheduleの終点も異なるため、Wikipedia追加の効果だけとは解釈しません。step 2,900ではvalidation loss 5.395232、step 3,100では5.348437、step 3,500では5.325272、step 3,800では5.294717、step 4,000では5.274800、step 4,200では5.265985、step 4,400では5.243676、step 4,700では5.233565まで下がり、延長後の改善が続いています。step 4,500の5.245535のような小さな反発はありましたが、全体としては下降傾向です。step 4,700時点では学習時間979.11秒で、学習は継続中です。step 4,700までの生成結果も`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_004700.txt`に保存しています。
+step 5,000で学習が完了しました。最終validation lossは5.216578、perplexityは184.302、metrics上の経過時間は1,042.91秒でした。最終生成結果は`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_005000.txt`に保存し、完走後にdomain評価とfixed chat評価を実行しました。
 
 ## 結果と解釈
 
-未実施です。
+2026-09-05、5,000 stepを正常に完走しました。最終stepがそのまま最良checkpointで、train lossは4.305170、general validation lossは5.216578、perplexityは184.302でした。学習時間はmetrics上で1,042.91秒、summary上で1,043.57秒です。学習率は最終的に`3.000003e-5`となりました。成功基準としていた異常なしの完走、1,000 step以下の記録間隔、checkpoint metadataと生成TXTの保存を満たしています。最良checkpointは`artifacts/checkpoints/fineweb2-wikipedia-augmented-ja-5m-5k/step_005000.npz`です。
+
+実験036の同じWikipedia追加Token列による2,500 step条件と比べると、general validation lossは5.525606から5.216578へ0.309028改善し、perplexityは251.038から184.302へ下がりました。実験029のWikipediaなし約5M Token列・2,500 step条件のgeneral loss 5.290503も0.073925下回っています。ただし037は学習stepを2倍にし、cosine scheduleの終点も5,000 stepへ変更しています。したがって、この差はWikipedia追加単独の効果ではなく、「10M Token列を長いscheduleで学習した条件」の結果です。今回の主仮説である、データ量を増やした場合に学習期間を延長すれば反復不足による悪化を回復できるという見立ては、general lossについて支持されました。
+
+最良checkpointのドメイン別評価では、general loss 5.216578（PPL 184.302）、conversation loss 3.187662（PPL 24.232）、medical loss 3.626501（PPL 37.581）、FineWeb test loss 4.250461（PPL 70.138）、Wikipedia test loss 4.275204（PPL 71.895）でした。Wikipedia専用validationも学習中の混合比率に対応して低下し、Wikipedia文体への適応が確認できます。ただし、Wikipedia testは今回初めて追加した評価なので、追加前との差分を因果的な改善とは扱いません。
+
+固定chat-test-v1の48例では、EOS到達が48/48、平均生成Token数は4.875、overlap precisionは0.129099、recallは0.052964、F1は0.063502でした。実験036のF1 0.056060からは改善しましたが、Wikipediaなしの実験029のF1 0.072297には届いていません。層別F1はshort 0.099901、medium 0.076449、long 0.014157で、longの意味対応は特に弱いままです。生成は「こんにちは!」「ですよね。そう」のような短い自然な返答が一部で見られる一方、話題と無関係な「最近!」「お酒はいい!」や空文字もあり、自然な日本語会話モデルとしては未達です。固定chat評価は自動Token overlapであり、意味的な正しさを完全には測れないため、結果JSONと全文TXTをそのまま保存しました。
+
+固定prompt `今日は`への最終生成は、冒頭こそ日本語断片を含むものの、後半で句読点や中黒が連続し、文法と意味の一貫性が崩れています。この出力は品質が悪いものとして削除せず、`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_005000.txt`に保存しています。学習中のstep 0から5,000までの生成結果も100 step間隔で同じディレクトリへ保存しており、改善と崩れの両方を追跡できます。
+
+以上から、今回の延長学習はlanguage modeling lossと短い会話の自動指標を回復させましたが、会話の内容理解や長い履歴への応答品質までは回復させませんでした。次の対照では、Wikipediaなしの約5M Token列を同じ5,000 step・同じscheduleで学習し、037との差がデータ源によるものか、単に学習期間によるものかを分離します。
+
+成果物のSHA-256は、metricsが`8f88a02129c2bd383318f7e63ce3598e551a6abe3832162344ac9ba42451f90e`、summaryが`77800dabb414ccc0dc9d4e377eae135bf44b69deed1687b7f215f4a5754b2710`、step 5,000 metadataが`c2185ef80a27c6231139bbb2a3abe49e154515a6cf524583d4badef83cc43109`、step 5,000生成TXTが`c5b1620e1c4258f2812755e868ee7e9396c5dd3bbbba378cabf6696841f445f9`です。domain評価JSONは`4b56b2a7b9a354775f5670d42642fa85c8de08c484a526eafbdf80ef1385a69a`、fixed chat評価JSONは`3885c27ecbc0899f346d9f7ed5d580f53d8078b78f34decde0481bd55dc38f8a`、fixed chat生成TXTは`0e134b9cfc8b64b541e7ccc640351bd027d2f151c8b202a574e92c26466fe622`です。
 
 ## 次に試すこと
 
-lossとchatが回復した場合は、Wikipediaなし5M Token列を5,000 step学習する対照を追加します。回復しない場合は、Wikipediaのsource比率を下げたablationへ進みます。データの反復条件を確認した後、Colab PyTorch側でも10M Token・20Mまたは50Mモデルを試し、backendとデータ量を混同しないようにします。
+Wikipedia追加による2,500 step時の悪化は、5,000 stepの延長でgeneral lossと短いchat指標がかなり回復しました。次はWikipediaなし約5M Token列を同じ5,000 step・同じscheduleで学習し、データ量を増やしたことと学習時間を延長したことを分離します。その対照後、会話・医療・Wikipediaのsource比率を変えるablationへ進みます。データ条件の比較を終えてから、RoPE、RMSNorm、SwiGLU、GQAなど現代的な構造要素を一つずつ導入し、各変更を独立した実験として記録します。Colabは、20M以上のモデルや大量Tokenの学習でMacBookより有利ですが、まずはデータ対照をMLXでそろえ、backend差を混ぜない方針です。
