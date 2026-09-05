@@ -12,7 +12,7 @@
 
 学習Token列は`artifacts/tokens/mixed-ja-80-10-10-v2-train.bin`で、Token数は1,336,619、SHA-256は`d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`です。検証Token列は`artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin`で、11,780 Token、SHA-256は`c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4`です。会話validationは`artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin`、医療validationは`artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin`を使用します。一般80%、会話10%、医療10%の混合コーパスから作った既存Token列を読み取り専用で使用し、元の医師国家試験データや`medilink_analysis`の原本には変更を加えません。
 
-TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。実験設定は`configs/layernorm-context512-mixed-ja-5m-token-budget-smoke.toml`、SHA-256は`1c4542676a4732df465949a62d9cc177f0b18b6276ecd174d522284301d0a5a3`です。使用コードの基準commitは`c9098c5`で、RMSNorm対応とcheckpoint互換性の実装は`4d1b459`です。
+TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。実験設定は`configs/layernorm-context512-mixed-ja-5m-token-budget-smoke.toml`、SHA-256は`1c4542676a4732df465949a62d9cc177f0b18b6276ecd174d522284301d0a5a3`です。実験準備時点の基準commitは`c9098c5`で、RMSNorm対応とcheckpoint互換性の実装は`4d1b459`です。実行時の作業ツリーには、既存のGELU挙動を変えない`ffn_type`互換実装が未コミットで含まれていたため、厳密な再現には現在のコード差分も必要です。この差分は実験045の準備変更として別途commitします。
 
 予定している学習コマンドは次のとおりです。
 
