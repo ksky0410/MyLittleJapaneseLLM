@@ -50,6 +50,8 @@ step 1,100では総合loss 3.5773、SFT loss 3.7043、rehearsal loss 2.4339、va
 
 step 1,600では総合loss 3.6393、SFT loss 3.4193、rehearsal loss 5.6194、validation loss 3.8068、PPL 45.01、step 1,700ではvalidation loss 3.7946、PPL 44.46、step 1,800では3.7857、PPL 44.07、step 1,900では3.7772、PPL 43.69となりました。step 2,000では総合loss 4.2741、SFT loss 4.3951、rehearsal loss 3.1844、validation loss 3.7682、PPL 43.30、学習率1.6982e-5、経過時間1,675.32秒でした。064の同step validation loss 3.7572、065の3.7605より高いものの、step 1,500から改善は継続しています。step 1,600から2,000までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
 
+step 2,100では総合loss 3.5137、SFT loss 3.5630、rehearsal loss 3.0702、validation loss 3.7571、PPL 42.82、step 2,200では3.7524、PPL 42.62、step 2,300では3.7485、PPL 42.46、step 2,400では3.7395、PPL 42.08となりました。step 2,500では総合loss 3.3925、SFT loss 3.2799、rehearsal loss 4.4065、validation loss 3.7280、PPL 41.60、学習率8.2333e-6、経過時間1,962.41秒でした。064のbest validation loss 3.7129、065の3.7166にはまだ届いていませんが、step 2,000以降も改善しています。step 2,100から2,500までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064・065との差、代表的な生成を追記します。general lossだけで成功とせず、chat-test F1の変化と長い文脈の生成を確認します。生成本文は品質に関係なくGitHubへ保存します。
