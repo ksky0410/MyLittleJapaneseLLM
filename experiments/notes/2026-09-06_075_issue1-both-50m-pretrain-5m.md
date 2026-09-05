@@ -36,6 +36,8 @@ uv run python scripts/train_torch.py \
 
 この節には、Colab試行、bundleのbytesとSHA-256、session状態、MPSへの切り替え、開始時の実測parameter数、100 stepごとのmetricsと生成文、500 stepごとのcheckpoint metadata、警告、メモリ問題、途中停止を時系列で追記します。実験開始前の設定変更や、ColabとMPSで実行backendが変わった場合も上書きせず残します。
 
+2026年9月6日、MPS学習の前に`colab sessions`を実行し、`No active sessions found on server.`を確認しました。その後、`colab new --session exp075-both-50m-pretrain-5m --gpu T4`を実行しましたが、assignment endpointがHTTP 503 `Service Unavailable`を返して終了しました。Colab側のbundle upload、入力検証、Python初期化、学習stepは発生していません。今回のColab失敗を成功実験と混ぜず、同じcommit・config・入力・seedでMPSへ切り替えます。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
