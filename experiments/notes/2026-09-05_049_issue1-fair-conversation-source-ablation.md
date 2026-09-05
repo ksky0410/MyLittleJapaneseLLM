@@ -74,6 +74,10 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 残り3条件もconfigだけを置き換えて実行します。学習開始前に、入力source、target token数、Token列hash、config hash、基準Git commitを記録します。学習後は最終および最良checkpointをreloadし、全domain評価と固定chat-testを実行します。
 
+13:51 JST、4条件の混合を実行しました。FineWeb2をgeneral sourceにしたことでsource枯渇は起きず、selected token countはcore 999,987、rpc 999,974、mrmp 999,978、both 999,970でした。実測Token比率はcoreがgeneral 90.0095%・medical 9.9905%、rpcがgeneral 80.0237%・medical 9.9907%・rpc 9.9857%、mrmpがgeneral 80.1349%・medical 9.9906%・mrmp 9.8745%、bothがgeneral 80.1587%・medical 10.0079%・rpc 4.9710%・mrmp 4.8623%でした。048で見つかったgeneral枯渇とmedical比率の交絡は解消できています。
+
+混合本文のSHA-256はcore `5a817e8d25af5f7e9d8e5ffbd27e1d482f50f3c544eed0e9fa4e5520418554f4`、rpc `a9b29e4f4ba813e35740f1cb3cdc8fd69ed0727048007b7b069c45325015e7c8`、mrmp `0add72482bcba2a8ec5d0319ec3812f1de47ccfdb60e10a2dd548472c92ea12f`、both `76d11a5259c83a6863f42bc330b7d0b3e93d63e9f310c38d3ad500663c19d71e`です。混合manifestは入力・Tokenizer・source別採用数とToken比率を保持し、学習前のデータ条件として保存します。続けて4条件をToken化します。
+
 ## 成功条件
 
 4条件の混合とToken化が入力hashの検証つきで完了し、各500 step学習がNaN、OOM、shape error、Token列不足なしに完走することです。各条件について、metrics、checkpoint metadata、step 0・100・200・300・400・500の生成文、general・conversation・medical・RPC・MRMP評価、固定chat-test JSON/TXTを保存します。性能差が小さい場合も失敗とはせず、会話sourceの影響がこの規模では検出できなかった結果として記録します。

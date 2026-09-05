@@ -1,0 +1,120 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 42,
+  "target_units": null,
+  "target_tokens": 1000000,
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "general": 0.8,
+    "medical": 0.1,
+    "rpc": 0.05,
+    "mrmp": 0.05
+  },
+  "input_unit_count": 27573,
+  "unique_unit_count": 27568,
+  "output_unit_count": 1896,
+  "output_lines": 7044,
+  "output_character_count": 1319409,
+  "output_sha256": "76d11a5259c83a6863f42bc330b7d0b3e93d63e9f310c38d3ad500663c19d71e",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/issue1-both-1m-fineweb.txt",
+  "selected_token_count": 999970,
+  "actual_adoption_share": {
+    "general": 0.834915611814346,
+    "medical": 0.11445147679324895,
+    "rpc": 0.035864978902953586,
+    "mrmp": 0.014767932489451477
+  },
+  "actual_adoption_character_share": {
+    "general": 0.7709715198256109,
+    "medical": 0.10042936957737798,
+    "rpc": 0.06380582202983956,
+    "mrmp": 0.06479328856717163
+  },
+  "actual_adoption_token_share": {
+    "general": 0.8015870476114283,
+    "medical": 0.1000790023700711,
+    "rpc": 0.049710491314739445,
+    "mrmp": 0.04862345870376111
+  },
+  "actual_token_share": {
+    "general": 0.8015870476114283,
+    "medical": 0.1000790023700711,
+    "rpc": 0.049710491314739445,
+    "mrmp": 0.04862345870376111
+  },
+  "sources": [
+    {
+      "name": "general",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/fineweb2-edu-japanese-v1/train.txt",
+      "input_sha256": "471869caa73aa5987a52a2dbcfa28846441d0729ff03bb0c05db0fa461e3890f",
+      "input_lines": 9796,
+      "input_characters": 6347666,
+      "input_unit_count": 9796,
+      "unique_unit_count": 9796,
+      "duplicate_units_removed": 0,
+      "weight": 8.0,
+      "requested_weight_share": 0.8,
+      "adopted_unit_count": 1583,
+      "adopted_characters": 1015765,
+      "adopted_token_count": 801563,
+      "actual_adoption_share": 0.834915611814346,
+      "actual_token_share": 0.8015870476114283
+    },
+    {
+      "name": "medical",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt",
+      "input_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "input_lines": 6142,
+      "input_characters": 3674479,
+      "input_unit_count": 6142,
+      "unique_unit_count": 6142,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.1,
+      "adopted_unit_count": 217,
+      "adopted_characters": 132317,
+      "adopted_token_count": 100076,
+      "actual_adoption_share": 0.11445147679324895,
+      "actual_token_share": 0.1000790023700711
+    },
+    {
+      "name": "rpc",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/real-persona-chat-train.txt",
+      "input_sha256": "09e6db9fb871bdad8315293a812e06d9d64d1ddacfd4643eac98a9a8f2e7ebee",
+      "input_lines": 358987,
+      "input_characters": 12871202,
+      "input_unit_count": 10851,
+      "unique_unit_count": 10846,
+      "duplicate_units_removed": 5,
+      "weight": 0.5,
+      "requested_weight_share": 0.05,
+      "adopted_unit_count": 68,
+      "adopted_characters": 84065,
+      "adopted_token_count": 49709,
+      "actual_adoption_share": 0.035864978902953586,
+      "actual_token_share": 0.049710491314739445
+    },
+    {
+      "name": "mrmp",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sources-v1/mrmp-train.txt",
+      "input_sha256": "9220f556356d68c60bb1af3d97c756e8d9c7daf3fde5623faad155c36bdd8c0c",
+      "input_lines": 84517,
+      "input_characters": 2332698,
+      "input_unit_count": 784,
+      "unique_unit_count": 784,
+      "duplicate_units_removed": 0,
+      "weight": 0.5,
+      "requested_weight_share": 0.05,
+      "adopted_unit_count": 28,
+      "adopted_characters": 85366,
+      "adopted_token_count": 48622,
+      "actual_adoption_share": 0.014767932489451477,
+      "actual_token_share": 0.04862345870376111
+    }
+  ]
+}
