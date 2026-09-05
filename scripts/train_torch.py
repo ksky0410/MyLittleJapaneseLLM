@@ -107,6 +107,28 @@ def _loss(model: object, inputs: object, targets: object, F: object) -> object:
     return F.cross_entropy(logits.reshape(-1, logits.shape[-1]).float(), targets.reshape(-1))
 
 
+def _schedule_steps(
+    step: int,
+    max_steps: int,
+    eval_interval: int,
+    sample_interval: int,
+    checkpoint_interval: int | None,
+) -> tuple[bool, bool, bool]:
+    """評価・生成・checkpointの節目を独立に決める。"""
+
+    should_evaluate = (
+        step == 1
+        or step % min(eval_interval, 1000) == 0
+        or step == max_steps
+    )
+    if checkpoint_interval is None:
+        should_checkpoint = should_evaluate
+    else:
+        should_checkpoint = step % checkpoint_interval == 0 or step == max_steps
+    should_sample = step % sample_interval == 0 or step == max_steps
+    return should_evaluate, should_checkpoint, should_sample
+
+
 def _evaluate(
     model: object,
     tokens: np.ndarray,
@@ -235,7 +257,6 @@ def main() -> None:
     checkpoint_interval = (
         config.training.checkpoint_interval or config.training.eval_interval
     )
-    decoupled_checkpoints = config.training.checkpoint_interval is not None
     metrics_path = config.paths.checkpoint_dir / "metrics.jsonl"
     metrics_path.write_text("", encoding="utf-8")
     started = time.monotonic()
@@ -315,19 +336,15 @@ def main() -> None:
             loss.backward()
             optimizer.step()
 
-        should_evaluate = (
-            step == 1
-            or step % min(config.training.eval_interval, 1000) == 0
-            or step == max_steps
+        should_evaluate, should_checkpoint, should_sample = _schedule_steps(
+            step,
+            max_steps,
+            config.training.eval_interval,
+            config.training.sample_interval,
+            config.training.checkpoint_interval,
         )
-        should_checkpoint = (
-            step == max_steps
-            if decoupled_checkpoints
-            else should_evaluate
-        ) or (decoupled_checkpoints and step % checkpoint_interval == 0)
-        should_sample = step % config.training.sample_interval == 0 or step == max_steps
         validation_loss: float | None = None
-        if should_evaluate or should_checkpoint:
+        if should_evaluate:
             validation_loss = _evaluate(
                 model,
                 val_tokens,
@@ -360,6 +377,9 @@ def main() -> None:
                 "format_version": 1,
                 "backend": "pytorch-cuda" if device.type == "cuda" else "pytorch",
                 "checkpoint_role": role,
+                "checkpoint_step": step,
+                "checkpoint_interval": checkpoint_interval,
+                "checkpoint_train_loss": float(loss.detach().float().item()),
                 "weights_file": checkpoint.name,
                 "weights_bytes": checkpoint.stat().st_size,
                 "weights_sha256": _sha256_file(checkpoint),
@@ -367,6 +387,11 @@ def main() -> None:
                 "metrics": latest_metrics,
                 "inputs": input_hashes,
                 "runtime": runtime,
+                "training_intervals": {
+                    "eval_interval": config.training.eval_interval,
+                    "sample_interval": config.training.sample_interval,
+                    "checkpoint_interval": checkpoint_interval,
+                },
             }
             checkpoint.with_suffix(".json").write_text(
                 json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
@@ -386,7 +411,11 @@ def main() -> None:
             best_checkpoint_step = step
             best_validation_loss = float(validation_loss)
 
-        if is_best and should_checkpoint and decoupled_checkpoints:
+        if (
+            is_best
+            and should_checkpoint
+            and config.training.checkpoint_interval is not None
+        ):
             best_snapshot = config.paths.checkpoint_dir / "best.pt"
             save_checkpoint(best_snapshot, "best")
             best_checkpoint = best_snapshot
@@ -398,6 +427,11 @@ def main() -> None:
         "runtime": _runtime_info(torch, device, amp_enabled),
         "inputs": input_hashes,
         "parameter_count": parameter_count(model),
+        "training_intervals": {
+            "eval_interval": config.training.eval_interval,
+            "sample_interval": config.training.sample_interval,
+            "checkpoint_interval": checkpoint_interval,
+        },
         "final_step": max_steps,
         "best_checkpoint": (
             best_checkpoint.name if best_checkpoint is not None else None

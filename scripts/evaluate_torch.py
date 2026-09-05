@@ -170,7 +170,9 @@ def evaluate_domains(args: argparse.Namespace) -> dict[str, Any]:
         "config": str(config.source_path),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": _sha256_file(checkpoint),
-        "checkpoint_step": metadata.get("metrics", {}).get("step"),
+        "checkpoint_step": metadata.get(
+            "checkpoint_step", metadata.get("metrics", {}).get("step")
+        ),
         "parameter_count": parameter_count(model),
         "seed": config.training.seed,
         "eval_batches": batches,
@@ -252,7 +254,9 @@ def evaluate_chat(args: argparse.Namespace) -> dict[str, Any]:
         "input_sha256": _sha256_file(input_path),
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": _sha256_file(checkpoint),
-        "checkpoint_step": metadata.get("metrics", {}).get("step"),
+        "checkpoint_step": metadata.get(
+            "checkpoint_step", metadata.get("metrics", {}).get("step")
+        ),
         "config": str(config.source_path),
         "seed": args.seed,
         "max_examples": args.examples if selection_path is None else None,
