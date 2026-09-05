@@ -84,6 +84,7 @@ def _load_model(config: Any, checkpoint_path: Path, device: Any, torch: Any) -> 
         mlp_ratio=config.model.mlp_ratio,
         position_embedding=config.model.position_embedding,
         norm_type=config.model.norm_type,
+        ffn_type=config.model.ffn_type,
     ).to(device)
     metadata_path = checkpoint_path.with_suffix(".json")
     if not checkpoint_path.is_file():
@@ -97,6 +98,7 @@ def _load_model(config: Any, checkpoint_path: Path, device: Any, torch: Any) -> 
         actual_signature = {
             "position_embedding": "absolute",
             "norm_type": "layernorm",
+            "ffn_type": "gelu",
             **actual_signature,
         }
     if metadata.get("format_version") != 1 or metadata.get("weights_file") != checkpoint_path.name:

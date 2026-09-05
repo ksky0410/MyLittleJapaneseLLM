@@ -145,6 +145,7 @@ def load_checkpoint(
         actual_signature = {
             "position_embedding": "absolute",
             "norm_type": "layernorm",
+            "ffn_type": "gelu",
             **actual_signature,
         }
     if actual_signature != expected_signature:
@@ -167,4 +168,5 @@ def signature_from_config(config: Any, vocab_size: int) -> dict[str, int | str]:
         config.model.mlp_ratio,
         config.model.position_embedding,
         config.model.norm_type,
+        config.model.ffn_type,
     )

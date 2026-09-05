@@ -27,6 +27,7 @@ def main() -> None:
         config.model.mlp_ratio,
         config.model.position_embedding,
         config.model.norm_type,
+        config.model.ffn_type,
     )
     print(f"vocab_size={vocab_size}")
     print(f"token_embedding_shape=({vocab_size}, {config.model.dim})")
@@ -36,6 +37,7 @@ def main() -> None:
     print(f"context_length={config.model.context_length}")
     print(f"position_embedding={config.model.position_embedding}")
     print(f"norm_type={config.model.norm_type}")
+    print(f"ffn_type={config.model.ffn_type}")
     print(f"estimated_parameters={parameters:,}")
 
 

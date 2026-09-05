@@ -341,6 +341,7 @@ def evaluate_chat_dataset(
         config.model.mlp_ratio,
         config.model.position_embedding,
         config.model.norm_type,
+        config.model.ffn_type,
     )
     metadata = load_checkpoint(
         model, checkpoint_file, signature_from_config(config, vocab_size)

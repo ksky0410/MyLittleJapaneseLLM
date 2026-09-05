@@ -75,15 +75,33 @@ class CausalSelfAttention(_ModuleBase):
 
 
 class FeedForward(_ModuleBase):
-    def __init__(self, dim: int, mlp_ratio: int) -> None:
+    def __init__(self, dim: int, mlp_ratio: int, ffn_type: str = "gelu") -> None:
         require_mlx()
         super().__init__()
-        hidden_dim = dim * mlp_ratio
+        if ffn_type not in {"gelu", "swiglu"}:
+            raise ValueError("ffn_type はgeluまたはswigluで指定してください")
+        self.ffn_type = ffn_type
+        hidden_dim = _ffn_hidden_dim(dim, mlp_ratio, ffn_type)
+        if ffn_type == "swiglu":
+            self.gate = nn.Linear(dim, hidden_dim)
         self.up = nn.Linear(dim, hidden_dim)
         self.down = nn.Linear(hidden_dim, dim)
 
     def __call__(self, x: Any) -> Any:
+        if self.ffn_type == "swiglu":
+            gate = self.gate(x)
+            return self.down(mx.sigmoid(gate) * gate * self.up(x))
         return self.down(nn.gelu(self.up(x)))
+
+
+def _ffn_hidden_dim(dim: int, mlp_ratio: int, ffn_type: str) -> int:
+    if ffn_type == "gelu":
+        return dim * mlp_ratio
+    if ffn_type == "swiglu":
+        # SwiGLUはgate/up/downの3射影を使うため、GELUの2射影と
+        # 近いparameter予算になるよう2/3倍の中間次元にする。
+        return max(1, (2 * dim * mlp_ratio) // 3)
+    raise ValueError("ffn_type はgeluまたはswigluで指定してください")
 
 
 def _make_norm(dim: int, norm_type: str) -> Any:
@@ -102,13 +120,14 @@ class TransformerBlock(_ModuleBase):
         mlp_ratio: int,
         position_embedding: str = "absolute",
         norm_type: str = "layernorm",
+        ffn_type: str = "gelu",
     ) -> None:
         require_mlx()
         super().__init__()
         self.norm_1 = _make_norm(dim, norm_type)
         self.attention = CausalSelfAttention(dim, heads, position_embedding)
         self.norm_2 = _make_norm(dim, norm_type)
-        self.mlp = FeedForward(dim, mlp_ratio)
+        self.mlp = FeedForward(dim, mlp_ratio, ffn_type)
 
     def __call__(self, x: Any) -> Any:
         x = x + self.attention(self.norm_1(x))
@@ -128,6 +147,7 @@ class TinyJapaneseGPT(_ModuleBase):
         mlp_ratio: int = 4,
         position_embedding: str = "absolute",
         norm_type: str = "layernorm",
+        ffn_type: str = "gelu",
     ) -> None:
         require_mlx()
         super().__init__()
@@ -149,6 +169,10 @@ class TinyJapaneseGPT(_ModuleBase):
             raise ValueError(
                 "norm_type はlayernormまたはrmsnormで指定してください"
             )
+        if ffn_type not in {"gelu", "swiglu"}:
+            raise ValueError(
+                "ffn_type はgeluまたはswigluで指定してください"
+            )
         if position_embedding == "rope" and (dim // heads) % 2 != 0:
             raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
         self.vocab_size = vocab_size
@@ -159,11 +183,14 @@ class TinyJapaneseGPT(_ModuleBase):
         self.mlp_ratio = mlp_ratio
         self.position_embedding_type = position_embedding
         self.norm_type = norm_type
+        self.ffn_type = ffn_type
         self.token_embedding = nn.Embedding(vocab_size, dim)
         if position_embedding == "absolute":
             self.position_embedding = nn.Embedding(context_length, dim)
         self.blocks = [
-            TransformerBlock(dim, heads, mlp_ratio, position_embedding, norm_type)
+            TransformerBlock(
+                dim, heads, mlp_ratio, position_embedding, norm_type, ffn_type
+            )
             for _ in range(layers)
         ]
         self.final_norm = _make_norm(dim, norm_type)
@@ -198,6 +225,7 @@ def model_signature(
     mlp_ratio: int,
     position_embedding: str = "absolute",
     norm_type: str = "layernorm",
+    ffn_type: str = "gelu",
 ) -> dict[str, int | str]:
     if position_embedding not in {"absolute", "rope"}:
         raise ValueError(
@@ -207,6 +235,8 @@ def model_signature(
         raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
     if norm_type not in {"layernorm", "rmsnorm"}:
         raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
+    if ffn_type not in {"gelu", "swiglu"}:
+        raise ValueError("ffn_type はgeluまたはswigluで指定してください")
     return {
         "vocab_size": int(vocab_size),
         "dim": int(dim),
@@ -216,6 +246,7 @@ def model_signature(
         "mlp_ratio": int(mlp_ratio),
         "position_embedding": position_embedding,
         "norm_type": norm_type,
+        "ffn_type": ffn_type,
     }
 
 
@@ -228,6 +259,7 @@ def estimate_parameter_count(
     mlp_ratio: int = 4,
     position_embedding: str = "absolute",
     norm_type: str = "layernorm",
+    ffn_type: str = "gelu",
 ) -> int:
     """重み共有を反映した概算。MLXなしのinspectでも利用できる。"""
 
@@ -241,12 +273,16 @@ def estimate_parameter_count(
         raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
     if norm_type not in {"layernorm", "rmsnorm"}:
         raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
+    if ffn_type not in {"gelu", "swiglu"}:
+        raise ValueError("ffn_type はgeluまたはswigluで指定してください")
     token_embedding = vocab_size * dim
     position_embedding_parameters = (
         context_length * dim if position_embedding == "absolute" else 0
     )
     attention = dim * dim * 3 + dim * dim
-    mlp = dim * (dim * mlp_ratio) + (dim * mlp_ratio) * dim
+    hidden_dim = _ffn_hidden_dim(dim, mlp_ratio, ffn_type)
+    projection_count = 3 if ffn_type == "swiglu" else 2
+    mlp = projection_count * dim * hidden_dim
     block_norms = 2 * dim if norm_type == "rmsnorm" else 4 * dim
     final_norm = dim if norm_type == "rmsnorm" else 2 * dim
     return (

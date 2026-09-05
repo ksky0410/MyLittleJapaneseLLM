@@ -94,15 +94,30 @@ class TorchCausalSelfAttention(_ModuleBase):
 
 
 class TorchFeedForward(_ModuleBase):
-    def __init__(self, dim: int, mlp_ratio: int) -> None:
+    def __init__(self, dim: int, mlp_ratio: int, ffn_type: str = "gelu") -> None:
         require_torch()
         super().__init__()
-        hidden_dim = dim * mlp_ratio
+        if ffn_type not in {"gelu", "swiglu"}:
+            raise ValueError("ffn_type はgeluまたはswigluで指定してください")
+        self.ffn_type = ffn_type
+        hidden_dim = _ffn_hidden_dim(dim, mlp_ratio, ffn_type)
+        if ffn_type == "swiglu":
+            self.gate = nn.Linear(dim, hidden_dim)
         self.up = nn.Linear(dim, hidden_dim)
         self.down = nn.Linear(hidden_dim, dim)
 
     def forward(self, x: Any) -> Any:
+        if self.ffn_type == "swiglu":
+            return self.down(F.silu(self.gate(x)) * self.up(x))
         return self.down(F.gelu(self.up(x)))
+
+
+def _ffn_hidden_dim(dim: int, mlp_ratio: int, ffn_type: str) -> int:
+    if ffn_type == "gelu":
+        return dim * mlp_ratio
+    if ffn_type == "swiglu":
+        return max(1, (2 * dim * mlp_ratio) // 3)
+    raise ValueError("ffn_type はgeluまたはswigluで指定してください")
 
 
 class TorchTransformerBlock(_ModuleBase):
@@ -113,6 +128,7 @@ class TorchTransformerBlock(_ModuleBase):
         mlp_ratio: int,
         position_embedding: str = "absolute",
         norm_type: str = "layernorm",
+        ffn_type: str = "gelu",
     ) -> None:
         require_torch()
         super().__init__()
@@ -125,7 +141,7 @@ class TorchTransformerBlock(_ModuleBase):
         self.norm_1 = norm(dim)
         self.attention = TorchCausalSelfAttention(dim, heads, position_embedding)
         self.norm_2 = norm(dim)
-        self.mlp = TorchFeedForward(dim, mlp_ratio)
+        self.mlp = TorchFeedForward(dim, mlp_ratio, ffn_type)
 
     def forward(self, x: Any) -> Any:
         x = x + self.attention(self.norm_1(x))
@@ -145,6 +161,7 @@ class TorchJapaneseGPT(_ModuleBase):
         mlp_ratio: int = 4,
         position_embedding: str = "absolute",
         norm_type: str = "layernorm",
+        ffn_type: str = "gelu",
     ) -> None:
         require_torch()
         super().__init__()
@@ -164,6 +181,8 @@ class TorchJapaneseGPT(_ModuleBase):
             )
         if norm_type not in {"layernorm", "rmsnorm"}:
             raise ValueError("norm_type はlayernormまたはrmsnormで指定してください")
+        if ffn_type not in {"gelu", "swiglu"}:
+            raise ValueError("ffn_type はgeluまたはswigluで指定してください")
         if position_embedding == "rope" and (dim // heads) % 2 != 0:
             raise ValueError("RoPEではattentionのhead_dimが偶数である必要があります")
         self.vocab_size = vocab_size
@@ -174,13 +193,14 @@ class TorchJapaneseGPT(_ModuleBase):
         self.mlp_ratio = mlp_ratio
         self.position_embedding_type = position_embedding
         self.norm_type = norm_type
+        self.ffn_type = ffn_type
         self.token_embedding = nn.Embedding(vocab_size, dim)
         if position_embedding == "absolute":
             self.position_embedding = nn.Embedding(context_length, dim)
         self.blocks = nn.ModuleList(
             [
                 TorchTransformerBlock(
-                    dim, heads, mlp_ratio, position_embedding, norm_type
+                    dim, heads, mlp_ratio, position_embedding, norm_type, ffn_type
                 )
                 for _ in range(layers)
             ]

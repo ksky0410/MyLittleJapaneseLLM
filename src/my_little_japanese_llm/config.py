@@ -26,6 +26,7 @@ class ModelConfig:
     mlp_ratio: int
     position_embedding: str
     norm_type: str = "layernorm"
+    ffn_type: str = "gelu"
 
     def validate(self) -> None:
         if self.dim <= 0 or self.layers <= 0 or self.heads <= 0:
@@ -45,6 +46,10 @@ class ModelConfig:
         if self.norm_type not in {"layernorm", "rmsnorm"}:
             raise ValueError(
                 "model.norm_type はlayernormまたはrmsnormで指定してください"
+            )
+        if self.ffn_type not in {"gelu", "swiglu"}:
+            raise ValueError(
+                "model.ffn_type はgeluまたはswigluで指定してください"
             )
 
 
@@ -147,6 +152,7 @@ def load_config(path: str | Path) -> ExperimentConfig:
             mlp_ratio=int(model_raw.get("mlp_ratio", 4)),
             position_embedding=str(model_raw.get("position_embedding", "absolute")),
             norm_type=str(model_raw.get("norm_type", "layernorm")),
+            ffn_type=str(model_raw.get("ffn_type", "gelu")),
         ),
         training=TrainingConfig(
             batch_size=int(training_raw["batch_size"]),

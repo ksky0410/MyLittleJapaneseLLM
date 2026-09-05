@@ -38,6 +38,7 @@ def main() -> None:
         config.model.mlp_ratio,
         config.model.position_embedding,
         config.model.norm_type,
+        config.model.ffn_type,
     )
     load_checkpoint(
         model, repo_path(args.checkpoint), signature_from_config(config, vocab_size)
