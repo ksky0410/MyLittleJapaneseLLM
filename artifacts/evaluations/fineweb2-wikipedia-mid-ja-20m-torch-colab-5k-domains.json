@@ -1,0 +1,59 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch",
+  "config": "/Users/koseki/projects/small_llm/configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-5k/step_004900.pt",
+  "checkpoint_sha256": "7f375a18adfbd55026711ad452320589296b0c3c399dd1887e354868c86e9667",
+  "checkpoint_step": 4900,
+  "parameter_count": 19401216,
+  "seed": 42,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.924783070882161,
+      "perplexity": 137.65947605491516
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 3.028521776199341,
+      "perplexity": 20.666660049663143
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 3.2350622018178306,
+      "perplexity": 25.407952150507956
+    },
+    {
+      "name": "fineweb",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 4.044750054677327,
+      "perplexity": 57.09691314411874
+    },
+    {
+      "name": "wikipedia",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/wikimedia-wikipedia-ja-validation-v1.bin",
+      "token_sha256": "2898e8ab7385dc7beb26e4ba956639eaa791b059a1a7e763ae9d4b958e09d269",
+      "token_count": 998845,
+      "validation_loss": 4.151952266693115,
+      "perplexity": 63.55796134725862
+    }
+  ]
+}

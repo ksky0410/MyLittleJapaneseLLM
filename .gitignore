@@ -56,6 +56,7 @@ data/cache/
 !artifacts/tokenizer/**/*report*.json
 !artifacts/evaluations/
 !artifacts/evaluations/**/*.json
+!artifacts/evaluations/**/*.txt
 !artifacts/sft/
 !artifacts/sft/*.manifest.json
 

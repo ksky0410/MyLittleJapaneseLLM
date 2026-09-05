@@ -1,0 +1,44 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "weights_file": "step_002100.pt",
+  "weights_bytes": 77642279,
+  "weights_sha256": "b15dab976ca04af8e5c43501fdafdbf618aab9e814615a118ead7c5b273c3e95",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute"
+  },
+  "metrics": {
+    "step": 2100,
+    "train_loss": 4.4556684494018555,
+    "validation_loss": 5.313945929209392,
+    "validation_perplexity": 203.15026547164794,
+    "learning_rate": 0.00021360424612648052,
+    "elapsed_seconds": 87.27820637800005
+  },
+  "inputs": {
+    "config_sha256": "93e2e1a970fb8c520aee259f19b72050cfc73f34fbb63f9eb35008bf65d9509a",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "3bad9f5f9546d98fc598d602a053648679d6e7817161f0add7a219b020c7440a",
+    "val_tokens_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 689949184,
+    "peak_memory_reserved_bytes": 723517440
+  }
+}
