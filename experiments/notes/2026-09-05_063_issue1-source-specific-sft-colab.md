@@ -47,6 +47,8 @@ source抽出とfull SFT preparationは2026年9月5日に完了しました。元
 
 Colab session `exp063-source-sft`の新規T4割当は、2026年9月5日にHTTP 503 `Service Unavailable`で失敗しました。upload、bundle展開、学習、出力変更は発生していません。失敗直後に`colab sessions`を確認し、active sessionがないことを確認しました。Colabサービスの一時的な割当失敗として残し、再試行します。
 
+`exp063-source-sft-retry`としてT4割当を再試行しましたが、同じHTTP 503 `Service Unavailable`で失敗しました。2回ともactive sessionは作られておらず、bundle uploadと学習は未実施です。T4側の一時障害か割当制限かを切り分けるため、対応GPUのL4を一度試します。
+
 ## 実験終了後の結果と解釈
 
 ここへデータ件数、SFTの実測parameter数、runtime、学習時間、best step、source別loss、固定chat-testのEOS・生成長・Token overlap、代表生成の観察を追記します。SFT validation lossは応答マスク部分の次Token予測であり、一般知識、医学的正確性、安全性、会話の人間らしさを直接保証しません。source別のvalidationが良くても、抽出元への過適合や定型表現の記憶を切り分けます。
