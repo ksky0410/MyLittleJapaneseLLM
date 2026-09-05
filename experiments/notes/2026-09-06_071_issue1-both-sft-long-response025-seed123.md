@@ -51,6 +51,8 @@ uv run python scripts/train_sft_torch.py \
 
 同日、Colab失敗を記録したcommit `1e62bdb`の後、MPSで学習を開始しました。step 1はtrain loss 4.342813、SFT loss 4.578291、rehearsal loss 3.400899、validation loss 4.723621、PPL 112.5752、経過時間2.34秒でした。step 100はvalidation loss 4.109018、PPL 60.8869、step 200は4.040311、PPL 56.8440、step 300は4.008517、PPL 55.0651、step 400は3.991986、PPL 54.1623でした。step 500ではtrain loss 4.036089、SFT loss 4.275889、rehearsal loss 3.076891、validation loss 3.935468、PPL 51.1861、learning rate 4.7931e-5、経過時間214.19秒となりました。step 0〜500のmetrics、checkpoint metadata、生成本文を保存しました。step 500の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは。`で、EOSへ到達しています。ここまでNaN、OOM、shape error、警告はありません。学習は継続中です。
 
+step 600ではvalidation loss 3.915794、PPL 50.1889、step 700では3.908716、PPL 49.8349、step 800では3.894884、PPL 49.1504、step 900では3.869629、PPL 47.9246となりました。step 1,000ではtrain loss 4.113091、SFT loss 4.459245、rehearsal loss 2.728475、validation loss 3.832691、PPL 46.1867、learning rate 4.0147e-5、経過時間472.66秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存しました。step 1,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`で、EOSへ到達しています。step 800付近にvalidationの改善が少し緩む揺らぎはありましたが、step 900〜1,000では改善し、ここまで異常はありません。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察を追記します。068との差分だけでなく、067と070を含む比較表を残し、2/6条件を採用・保留・棄却のいずれかに判断します。
