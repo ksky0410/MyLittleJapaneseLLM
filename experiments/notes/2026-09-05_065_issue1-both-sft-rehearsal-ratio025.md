@@ -44,6 +44,8 @@ Colab用bundleは122,165,022 bytes、SHA-256 `b19323b378fbc718619eb5becd3c91d6b7
 
 2026年9月5日、M3 MacBookのローカルMPSで実行を開始しようとしましたが、PyTorchが`MPSが利用できません`を返して学習開始前に終了しました。device確認の前に出力ディレクトリを作る処理へ到達していないため、065のcheckpoint、metrics、生成文はまだ作成されていません。これは現在の実行環境がheadlessでMetal deviceを利用できないためで、入力データやbase checkpointには変更がありません。Colabが復旧した場合はT4で同じbundleを実行し、復旧しない場合はCPU smokeでコードとmaskの動作だけを確認してから本学習を再試行します。
 
+その後、`exp065-both-rehearsal025`としてColab T4割当を再試行しましたが、APIが再び`Service Unavailable`を返しました。active sessionは作成されず、bundle upload、学習、checkpoint生成は発生していません。065の本学習は未実施のままです。Colabサービスが復旧するまで、074の50M級実験など既に開始済みの処理を優先し、065は同じ固定bundleで再試行します。
+
 ## 結果と解釈
 
 学習終了直後に、実測parameter数、best step、validation loss、domain loss、EOS到達率、平均生成長、Token overlap F1、代表生成、064との差、次に変える条件を追記します。短い固定promptの出力だけで会話能力を判断しません。
