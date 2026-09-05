@@ -46,6 +46,8 @@ Colab用bundleは122,165,022 bytes、SHA-256 `b19323b378fbc718619eb5becd3c91d6b7
 
 その後、`exp065-both-rehearsal025`としてColab T4割当を再試行しましたが、APIが再び`Service Unavailable`を返しました。active sessionは作成されず、bundle upload、学習、checkpoint生成は発生していません。065の本学習は未実施のままです。Colabサービスが復旧するまで、074の50M級実験など既に開始済みの処理を優先し、065は同じ固定bundleで再試行します。
 
+本学習とは分けて、CPUの2 step smokeを`.venv/bin/python`で実行しました。最初にsystem Pythonで同じコマンドを試したところ、SentencePiece未導入のため学習開始前に終了しました。環境を`.venv/bin/python`へ固定して再実行した結果、step 1・2までNaN、shape error、checkpoint reload errorなく完走し、実測parameter数は19,308,032、学習時間は32.62秒、best validation lossは4.7213679314でした。rehearsal loss、EOS weight、lr schedule、入力hashがsummaryとmetricsへ保存され、step 0とstep 2の生成TXTも追跡対象へ追加します。これは本学習の品質結果ではなく、065のコード・mask・MPS代替環境の動作確認です。
+
 ## 結果と解釈
 
 学習終了直後に、実測parameter数、best step、validation loss、domain loss、EOS到達率、平均生成長、Token overlap F1、代表生成、064との差、次に変える条件を追記します。短い固定promptの出力だけで会話能力を判断しません。
