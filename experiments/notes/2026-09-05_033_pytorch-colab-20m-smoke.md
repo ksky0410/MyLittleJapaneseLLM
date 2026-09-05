@@ -39,7 +39,9 @@ T4 sessionを`colab new --session torch20m-smoke --gpu T4`で作成し、bundle�
 
 ## 実験中の記録
 
-未実施です。
+2026-09-05、T4セッション`torch20m-smoke`を作成し、bundleを`/content/small_llm_bundle.tar.gz`へuploadしました。bundleのローカルSHA-256は`1068893f2139929181d1d2a5aea756cde232d8a0f1b34c5049f01921bdb8b28f`です。
+
+最初の`colab exec --session torch20m-smoke --timeout 300 --file scripts/colab_bootstrap_train.py`は、学習開始前に失敗しました。`colab exec -f`がJupyter kernel用の`-f /root/.local/share/jupyter/runtime/kernel-....json`を実行対象へ渡し、bootstrapの`argparse.parse_args()`が未知引数として終了しました。PyTorch、CUDA、Token列、モデルの検証までは到達していません。この失敗は削除せず、bootstrapを`parse_known_args()`へ修正して再実行します。
 
 ## 結果と解釈
 

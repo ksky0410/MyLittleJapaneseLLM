@@ -17,7 +17,9 @@ def main() -> None:
     parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--no-amp", action="store_true")
-    args = parser.parse_args()
+    # colab exec -fはJupyter kernelの起動引数（-f runtime json）を
+    # 実行対象へ引き継ぐため、bootstrap固有でない引数は無視する。
+    args, _unknown = parser.parse_known_args()
 
     bundle = Path(args.bundle)
     project_dir = Path(args.project_dir)
