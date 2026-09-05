@@ -45,6 +45,8 @@ source抽出とfull SFT preparationは2026年9月5日に完了しました。元
 
 実行コードと設定はcommit `c6bab65`（`exp: prepare 063 source-specific sft`）としてpush済みです。Colab用bundleは`/tmp/small_llm-colab-063-c6bab65.tar.gz`、サイズ約144MB、SHA-256 `4d34971c7ac3c4fad1640888484e82edb51b4e255a5722a478c4aba775d6ea0f`です。bundleにはSFT用の4つのNPZ、base checkpoint本体とmetadata、Tokenizer、モデル実装、学習script、2つのconfigを含め、元のJSONLは含めていません。
 
+Colab session `exp063-source-sft`の新規T4割当は、2026年9月5日にHTTP 503 `Service Unavailable`で失敗しました。upload、bundle展開、学習、出力変更は発生していません。失敗直後に`colab sessions`を確認し、active sessionがないことを確認しました。Colabサービスの一時的な割当失敗として残し、再試行します。
+
 ## 実験終了後の結果と解釈
 
 ここへデータ件数、SFTの実測parameter数、runtime、学習時間、best step、source別loss、固定chat-testのEOS・生成長・Token overlap、代表生成の観察を追記します。SFT validation lossは応答マスク部分の次Token予測であり、一般知識、医学的正確性、安全性、会話の人間らしさを直接保証しません。source別のvalidationが良くても、抽出元への過適合や定型表現の記憶を切り分けます。
