@@ -29,6 +29,8 @@ batch size 8、最大10,000 step、evaluation interval 100、sample interval 100
 
 開始前にこのノート、config、Colab wrapper、成果物package scriptをcommit・pushし、そのcommitのファイルからbundleを作成します。入力bundleは次のコマンドで作成し、bytesとSHA-256を実行前にノートへ追記します。
 
+学習前の基準commitは`2819611`です。configのSHA-256は`b382e890e0cda18db24754662d6a30b8e4fb802092e58b20cc3c3654dd65007d`、`scripts/train_torch.py`は`c8fb40406ec74635ba63159f86fcd55ef71724edc7cb8ffda53453222640203e`、wrapperは`d57e2141c097229d8528a7e28f1661552e104a1c6380e4c2edf50f8acac48691`、package scriptは`8b9917f0e5a98787f3013c127cfdd0b4bcfe248f72847e651b4c78c61c4162a6`です。送信用bundleは`/tmp/exp056_bundle.tar.gz`、9,989,309 bytes、SHA-256 `809026d7511a6ebb141e4ad7483f1c24ad7a806164082da7baae3e947dcc5066`です。bundleにはPython cacheを含めていません。wrapper内では、これらに加えてモデル実装・入力Token列・Tokenizerのhashを照合します。
+
 ```bash
 tar -czf /tmp/exp056_bundle.tar.gz \
   src/my_little_japanese_llm \
