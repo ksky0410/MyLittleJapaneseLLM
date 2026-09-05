@@ -45,6 +45,8 @@ source抽出とfull SFT preparationは2026年9月5日に完了しました。元
 
 実行コードと設定はcommit `c6bab65`（`exp: prepare 063 source-specific sft`）としてpush済みです。Colab用bundleは`/tmp/small_llm-colab-063-c6bab65.tar.gz`、サイズ約144MB、SHA-256 `4d34971c7ac3c4fad1640888484e82edb51b4e255a5722a478c4aba775d6ea0f`です。bundleにはSFT用の4つのNPZ、base checkpoint本体とmetadata、Tokenizer、モデル実装、学習script、2つのconfigを含め、元のJSONLは含めていません。
 
+この最初のbundleは、後述するbase構造の不一致を発見する前に作成したため、uploadせず破棄せずに履歴として残します。base修正後のwrapper更新はcommit `8e7b414`、MPS対応はcommit `8dea1c4`としてpush済みです。Colabの割当がT4 3回の503、L4 1回のquota拒否となったため、修正版bundleはuploadせず、同じ条件をローカルMPSで実行します。
+
 Colab session `exp063-source-sft`の新規T4割当は、2026年9月5日にHTTP 503 `Service Unavailable`で失敗しました。upload、bundle展開、学習、出力変更は発生していません。失敗直後に`colab sessions`を確認し、active sessionがないことを確認しました。Colabサービスの一時的な割当失敗として残し、再試行します。
 
 `exp063-source-sft-retry`としてT4割当を再試行しましたが、同じHTTP 503 `Service Unavailable`で失敗しました。2回ともactive sessionは作られておらず、bundle uploadと学習は未実施です。T4側の一時障害か割当制限かを切り分けるため、対応GPUのL4を一度試します。
@@ -53,11 +55,13 @@ L4も試しましたが、Colab CLIから「accountのquotaまたはentitlement�
 
 その後のT4最終再試行もHTTP 503 `Service Unavailable`で失敗し、Colab sessionは作成されませんでした。T4 3回、L4 1回の割当失敗ではbundle upload、学習、既存成果物の上書きは発生していません。ローカルではPyTorch 2.14.0、MPS build有効、`torch.backends.mps.is_available()`が`True`であることを確認したため、実験条件を揃えたままM3 MacBookのMPSへ切り替えます。Colab T4での実行ができなかった事実は失敗記録として残し、RPCとMRMPは同じローカルMPS runtimeで順番に実行します。
 
-MPSでの初回起動は、既存`train_sft_torch.py`が`mps`をdeviceとして受け付けず、学習前の引数検証で終了しました。checkpointや生成物は作られていません。SFT scriptへMPSの可用性検証と、`auto`時にCUDAがなければMPSを選ぶ処理を追加し、parserテストを含む全85テストが通過しました。この修正commitは実行前に追記します。
+MPSでの初回起動は、既存`train_sft_torch.py`が`mps`をdeviceとして受け付けず、学習前の引数検証で終了しました。checkpointや生成物は作られていません。SFT scriptへMPSの可用性検証と、`auto`時にCUDAがなければMPSを選ぶ処理を追加し、parserテストを含む全85テストが通過しました。この修正はcommit `8dea1c4`としてpush済みです。
 
 MPS対応後の再実行では、当初指定していた`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt`がabsolute position・GELUの別モデルであることをcheckpoint metadataが検出しました。さらに、実験056のRoPE・SwiGLU重み本体はローカルに存在せずmetadataだけが残っていたため、そのまま使いません。代わりに、ローカルで重み本体とmetadataの両方が揃い、構造が一致する実験050の`issue1-both-20m-colab-2p5k/best.pt`を両条件共通のbaseへ変更します。この変更はSFT開始前の条件変更であり、実験050の会話混合pretrainingからsource別SFTを比較する実験としてノートとwrapperを更新します。初回の不一致検出により、誤ったbaseで学習を進めずに済みました。
 
 base変更後のRPC条件をMPSで実行し、3,000 stepまで完走しました。PyTorchは2.14.0、deviceはMPS、AMPは無効、parameter数は19,308,032です。学習時間は1,471.26秒、best stepは3,000、best validation lossは3.7303827763、perplexityは41.69506499、final train lossは3.5903432369でした。RPC best checkpointのSHA-256は`e38e59f56ba552bf28dda974cb539e1f9207dd4fc32b7016f731172faf20dee8`です。step 0から3,000まで100 step間隔の31個の生成本文と、step 500間隔のcheckpoint metadataを保存しました。NaN、OOM、shape errorは発生していません。RPC validationはSFT応答maskを含むsource-specific validationであり、実験062のpretraining lossと直接同じ意味ではない点に注意します。続けてMRMP条件を同じMPS runtimeで実行します。
+
+続けてMRMP条件も同じbase、MPS、seed、SFT条件で3,000 stepまで完走しました。学習時間は1,781.18秒、best stepは2,900、best validation lossは3.4864130974、perplexityは32.66855836、final stepのtrain lossは3.3756878376、validation lossは3.4869752169でした。MRMP best checkpointのSHA-256は`a5f3d69b5d682a2b9d056660b04c0202165139b4cab82e379670b85cab26caa2`です。step 0から3,000まで100 step間隔の31個の生成本文と、step 500間隔のcheckpoint metadataを保存しました。NaN、OOM、shape errorは発生していません。ここまでのsource-specific validation lossは、RPCがRPC validation、MRMPがMRMP validationで計算されているため、次に同じ5領域と固定chat-testを両条件へ適用して比較します。
 
 ## 実験終了後の結果と解釈
 
