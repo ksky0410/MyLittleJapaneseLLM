@@ -51,6 +51,8 @@ Colab CLIでT4割り当てを試します。失敗時はHTTP応答とsession状�
 
 23:56台に、予定したMPSコマンドで学習を開始しました。step 1はtrain loss 5.055552、SFT loss 5.094285、rehearsal loss 4.900624、validation loss 4.723784、PPL 112.5935、経過時間2.26秒でした。step 100はvalidation loss 4.105484、PPL 60.6721、step 200は4.048785、PPL 57.3277、step 300は4.010555、PPL 55.1775、step 400は4.000342、PPL 54.6168でした。step 500ではtrain loss 3.673428、SFT loss 3.714670、rehearsal loss 3.508461、validation loss 3.978557、PPL 53.4399、learning rate 4.7931e-5、経過時間227.39秒となりました。step 0〜500の生成本文とstep 500までのmetrics・checkpoint metadataを保存し、500 step時点の成果物をコミット・pushします。固定promptへのstep 500生成は「よろしくお願いしますー!」となり、EOSへ到達しました。ここまで異常はありません。
 
+step 600ではvalidation loss 3.933197、PPL 51.0700、step 700では3.925920、PPL 50.6997、step 800では3.954736、PPL 52.1819、step 900では3.889577、PPL 48.8902となりました。step 1,000ではtrain loss 3.772419、SFT loss 3.502555、rehearsal loss 4.851875、validation loss 3.899693、PPL 49.3873、learning rate 4.0147e-5、経過時間498.44秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。step 800で一時的なvalidation loss悪化があり、step 900で改善しました。固定promptへのstep 1,000生成は「よろしくお願いします!」となりました。ここまで異常はありません。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、最終train・validation loss、PPL、最良checkpoint、学習時間、5領域loss、EOS、長さ別F1、source別F1、生成例、成果物hash、実験067〜069との差を追記します。
