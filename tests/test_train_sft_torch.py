@@ -19,6 +19,7 @@ from train_sft_torch import (
     _load_base_checkpoint,
     _masked_cross_entropy,
     build_parser,
+    encode_generation_prompt,
     validate_rehearsal_options,
 )
 
@@ -67,6 +68,42 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         self.assertEqual(args.device, "cpu")
         self.assertTrue(args.no_amp)
         self.assertEqual(args.rehearsal_ratio, 0.25)
+
+    def test_generation_prompt_supports_raw_and_conversation_templates(self) -> None:
+        class Processor:
+            def encode(self, text: str, out_type: type[int] = int) -> list[int]:
+                del out_type
+                return [len(text)]
+
+            def eos_id(self) -> int:
+                return 3
+
+        processor = Processor()
+        raw_ids, raw_rendered = encode_generation_prompt(
+            processor, "こんにちは", "raw", "A", "B"
+        )
+        conversation_ids, conversation_rendered = encode_generation_prompt(
+            processor, "こんにちは", "conversation", "DA", "DC"
+        )
+        self.assertEqual(raw_ids, [5])
+        self.assertEqual(raw_rendered, "こんにちは")
+        self.assertEqual(conversation_ids, [23, 14, 5, 3, 14])
+        self.assertEqual(
+            conversation_rendered,
+            "<|startofconversation|><|speaker:DA|>こんにちは<eos:3><|speaker:DC|>",
+        )
+
+    def test_generation_prompt_rejects_unknown_template(self) -> None:
+        class Processor:
+            def encode(self, text: str, out_type: type[int] = int) -> list[int]:
+                del text, out_type
+                return [1]
+
+            def eos_id(self) -> int:
+                return 3
+
+        with self.assertRaises(ValueError):
+            encode_generation_prompt(Processor(), "こんにちは", "unknown", "A", "B")
 
 
 @unittest.skipUnless(torch is not None, "PyTorch未導入")

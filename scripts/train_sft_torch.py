@@ -34,6 +34,9 @@ from my_little_japanese_llm.training import (
 )
 
 
+CONVERSATION_START = "<|startofconversation|>"
+
+
 def _append_jsonl(path: Path, value: dict[str, Any]) -> None:
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(value, ensure_ascii=False) + "\n")
@@ -61,6 +64,38 @@ def validate_rehearsal_options(
     return rehearsal_tokens, validate_rehearsal_ratio(rehearsal_ratio)
 
 
+def encode_generation_prompt(
+    processor: Any,
+    prompt: str,
+    template: str,
+    speaker_a: str,
+    speaker_b: str,
+) -> tuple[list[int], str]:
+    """学習中サンプル用のrawまたは会話形式promptをToken化する。"""
+
+    if not prompt.strip():
+        raise ValueError("生成promptは空にできません")
+    if template == "raw":
+        return processor.encode(prompt, out_type=int), prompt
+    if template != "conversation":
+        raise ValueError("sample templateはrawまたはconversationで指定してください")
+    if not speaker_a.strip() or not speaker_b.strip():
+        raise ValueError("会話形式の話者IDは空にできません")
+    eos_id = int(processor.eos_id())
+    prompt_ids = (
+        processor.encode(CONVERSATION_START, out_type=int)
+        + processor.encode(f"<|speaker:{speaker_a}|>", out_type=int)
+        + processor.encode(prompt, out_type=int)
+        + [eos_id]
+        + processor.encode(f"<|speaker:{speaker_b}|>", out_type=int)
+    )
+    rendered = (
+        f"{CONVERSATION_START}<|speaker:{speaker_a}|>{prompt}"
+        f"<eos:{eos_id}><|speaker:{speaker_b}|>"
+    )
+    return prompt_ids, rendered
+
+
 def build_parser() -> argparse.ArgumentParser:
     """train_sft_torchのCLI parserを作る。"""
 
@@ -76,6 +111,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument("--device", default="auto", help="auto、cuda、cpuのいずれか")
     parser.add_argument("--no-amp", action="store_true", help="CUDAでもfloat32で実行")
+    parser.add_argument(
+        "--sample-template",
+        choices=("raw", "conversation"),
+        default="raw",
+        help="学習中サンプルのprompt形式",
+    )
+    parser.add_argument("--sample-speaker-a", default="A")
+    parser.add_argument("--sample-speaker-b", default="B")
     parser.add_argument(
         "--rehearsal-tokens",
         default=None,
@@ -354,7 +397,13 @@ def main() -> None:
         input_hashes["rehearsal_tokens_sha256"] = _sha256_file(rehearsal_path)
 
     def write_sample(step: int) -> str:
-        prompt_ids = processor.encode(config.generation.prompt, out_type=int)
+        prompt_ids, rendered_prompt = encode_generation_prompt(
+            processor,
+            config.generation.prompt,
+            args.sample_template,
+            args.sample_speaker_a,
+            args.sample_speaker_b,
+        )
         ids = _generate(
             model,
             prompt_ids,
@@ -369,7 +418,7 @@ def main() -> None:
         )
         generated = processor.decode(ids)
         (samples_dir / f"step_{step:06d}.txt").write_text(
-            f"prompt: {config.generation.prompt}\n\n{generated}\n", encoding="utf-8"
+            f"prompt: {rendered_prompt}\n\n{generated}\n", encoding="utf-8"
         )
         return generated
 
@@ -565,6 +614,12 @@ def main() -> None:
         "rehearsal_tokens": str(rehearsal_path) if rehearsal_path is not None else None,
         "rehearsal_ratio": rehearsal_ratio,
         "elapsed_seconds": time.monotonic() - started,
+        "sample_prompt": {
+            "text": config.generation.prompt,
+            "template": args.sample_template,
+            "speaker_a": args.sample_speaker_a,
+            "speaker_b": args.sample_speaker_b,
+        },
     }
     (output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
