@@ -173,6 +173,19 @@ class TorchJapaneseGPT(_ModuleBase):
             ]
         )
         self.final_norm = nn.LayerNorm(dim)
+        # PyTorchのEmbedding既定値は標準偏差1の正規分布ですが、MLXの
+        # 小型モデル実験で使っている初期スケールとは大きく異なります。
+        # 入力とabsolute positionを同じ小さなスケールへ揃え、weight tying
+        # された出力logitsが初期状態で過大にならないようにします。
+        with torch.no_grad():
+            embedding_std = 1.0 / math.sqrt(dim)
+            nn.init.normal_(self.token_embedding.weight, mean=0.0, std=embedding_std)
+            if position_embedding == "absolute":
+                nn.init.normal_(
+                    self.position_embedding.weight,
+                    mean=0.0,
+                    std=embedding_std,
+                )
 
     def forward(self, tokens: Any) -> Any:
         if tokens.ndim != 2:

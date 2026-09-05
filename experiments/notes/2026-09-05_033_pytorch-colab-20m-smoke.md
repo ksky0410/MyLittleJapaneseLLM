@@ -45,7 +45,11 @@ T4 sessionを`colab new --session torch20m-smoke --gpu T4`で作成し、bundle�
 
 ## 結果と解釈
 
-未実施です。
+初回のPyTorch smokeは失敗しました。step 1のtrain lossは242.321198、general validation lossは243.464452で、perplexityは上限値として485,165,195.410になりました。step 100でもtrain loss 22.603041、validation loss 23.189871と異常に高く、生成は「今日は」を同じ文字列として繰り返しました。Colab T4上の学習自体は6.15秒で終了し、checkpoint metadataと生成TXTは保存されましたが、これは成功基準を満たしません。
+
+原因はPyTorchの`nn.Embedding`既定初期化です。PyTorchのEmbedding重みが標準偏差1程度で初期化され、MLX側で安定していた小さな初期スケールと一致していませんでした。weight tyingにより過大なEmbeddingがそのまま出力logitsへ使われ、step 1からlossが大きくなったと判断します。この原因を確認するため、失敗時のmetrics、metadata、summary、step 0/100生成TXTは`artifacts/checkpoints/fineweb2-mixed-ja-20m-torch-smoke/`と`artifacts/samples/fineweb2-mixed-ja-20m-torch-smoke/`へ残します。失敗を成功扱いにはしません。
+
+Embeddingとabsolute position embeddingを標準偏差`1/sqrt(dim)`の正規分布で明示初期化し、出力先を分けた実験034で再検証します。なお、初回実行ではPyTorch標準AdamWとAMPを使っており、MLXのoptimizer挙動との完全一致はまだ確認していません。
 
 ## 次に試すこと
 
