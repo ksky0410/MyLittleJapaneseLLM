@@ -59,6 +59,8 @@ step 1,600ではvalidation loss 3.827727、PPL 45.9580、step 1,700では3.80425
 
 step 2,100ではvalidation loss 3.769490、PPL 43.3580、step 2,200では3.752380、PPL 42.6224、step 2,300では3.758008、PPL 42.8630、step 2,400では3.752293、PPL 42.6187となりました。step 2,500ではtrain loss 3.252185、SFT loss 3.300621、rehearsal loss 3.058444、validation loss 3.752914、PPL 42.6452、learning rate 8.2333e-6、経過時間1288.42秒となりました。step 2,100〜2,500の生成本文、step 2,500のcheckpoint metadata、metricsを保存しました。step 2,500の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`で、EOSへ到達しています。step 2,300〜2,500は3.75前後で推移しており、ここまで異常はありません。学習は継続中です。
 
+step 2,600ではvalidation loss 3.747470、PPL 42.4136、step 2,700では3.740566、PPL 42.1218、step 2,800では3.735013、PPL 41.8886、step 2,900では3.737728、PPL 42.0024となりました。最終step 3,000ではtrain loss 3.996266、SFT loss 3.713623、rehearsal loss 5.126836、validation loss 3.736047、PPL 41.9319、learning rate 5.0000e-6、経過時間1562.35秒となりました。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存しました。最良checkpointはstep 2,800で、学習はNaN、OOM、shape errorなく完走しました。step 3,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`で、EOSへ到達しています。評価用のcheckpointは最良の`best.pt`を使用します。
+
 step 600ではvalidation loss 3.929026、PPL 50.8574、step 700では3.920575、PPL 50.4294、step 800では3.902041、PPL 49.5034、step 900では3.879163、PPL 48.3837となりました。step 1,000ではtrain loss 3.661442、SFT loss 3.639277、rehearsal loss 3.750103、validation loss 3.883222、PPL 48.5805、learning rate 4.0147e-5、経過時間484.01秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存しました。step 1,000の固定prompt生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんはー`で、EOSへ到達しています。step 900から1,000でvalidationが小さく反発しましたが、ここまで異常はありません。学習は継続中です。
 
 ## 実験終了後の結果と解釈
