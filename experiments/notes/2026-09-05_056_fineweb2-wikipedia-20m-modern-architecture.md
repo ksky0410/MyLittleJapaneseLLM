@@ -69,6 +69,18 @@ best checkpointの評価に加え、実験041との学習stepをそろえた比�
 
 実験終了直後に、実際のruntime、最終・最良loss、PPL、checkpoint、生成例、実験041との差、仮説と一致した点、次に試す変更を追記します。未実施の場合は、未実施の理由と次の確認方法を明記します。
 
+2026-09-05、学習は10,000 stepまで終了しました。実測parameter数は19,308,032、最良checkpointは`best.pt`のstep 8,800、general validation lossは4.3458760579、perplexityは77.159604です。最終step 10,000のgeneral validation lossは4.3502650261、perplexityは77.498999です。学習時間は637.072926秒、Colab runtimeはPython 3.13.15、PyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、AMP有効でした。peak memory allocatedは787,465,728 bytes、reservedは834,666,496 bytesです。実験041のabsolute+GELU条件は19,401,216 parameters、学習時間428.795688秒、peak allocated 689,949,184 bytesでしたので、056は約1.49倍の時間と約1.14倍のpeak memoryを使いました。RoPEの位置計算を各attention層で行う現在の実装が速度差の一因である可能性があり、性能だけでなく実装効率も今後の改善対象です。
+
+best checkpointのdomain評価では、general 4.345876、conversation 2.610106、medical 2.482179、RPC 2.504567、MRMP 2.254911でした。実験041の同じToken列に対するgeneral 4.529341、conversation 2.703211、medical 2.641884と比べると、それぞれ0.183465、0.093106、0.159705低下しました。RPCとMRMPも評価可能にした今回の結果では、Issue #1で追加した会話sourceへ対応するlossがRPC 2.504567、MRMP 2.254911となりました。ただし、このloss低下は会話内容の正確な応答や医学的正確性を意味しません。best domain評価JSONは`artifacts/evaluations/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k-domains.json`、SHA-256は`307f0b6cc05887e77745fe609440132ecfe2ca660b259b4170f9976b57100f0e`です。
+
+固定chat-test-v1のbest checkpointは48/48例でEOSへ到達し、平均生成Token数9.6042、Token overlap F1は0.101295でした。実験041の48/48、平均8.5417、F1 0.086434よりF1は0.014861高くなりました。short・medium・longのF1はそれぞれ0.128008、0.104347、0.071531です。一方、step 10,000へそろえたcheckpointではEOS 48/48、平均9.3542、F1 0.085153となり、041のF1をわずかに下回りました。したがって、RoPEとSwiGLUは今回の条件でvalidation lossを明確に改善し、best checkpointの固定chat F1も改善しましたが、最終stepのchat F1まで一貫して改善したとは言えません。評価JSONはbestが`artifacts/evaluations/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k-chat-test-v1.json`、finalが`artifacts/evaluations/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k-final-chat-test-v1.json`です。
+
+固定prompt `今日は`の生成は、step 0では「媒可能性格ブ…」のような記号・文字の崩れが目立ち、step 5,000でも特殊記号が多く残りました。bestのstep 8,800では「お客さま」「お問い合わせ」など日本語のまとまりは現れましたが、Web広告・URL風の断片が混ざりました。step 10,000では`Phone`、`Photo`、`WordPress`、`Ruby`など英数字を含む技術文書風の断片となり、自然な短い物語や安定した会話にはなっていません。これらを含むstep 0からstep 10,000までの生成TXTは`artifacts/samples/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/`にすべて保存しています。良く見える出力だけを選別していない点を明記します。
+
+事前の仮説のうち、同じデータと学習予算でRoPE・SwiGLUへ変更するとgeneral、conversation、medicalのlossが下がるという部分は支持されました。反対に、lossの改善が自然な生成へそのままつながるとは確認できず、速度とmemoryには明確なコストがありました。構造変更は有望な基盤候補として採用しますが、今回一回のseedだけでRoPE・SwiGLU全般の優位性を結論づけません。Colab評価後にsession `exp056-20m-modern-architecture`を停止し、`colab sessions`が空であることも確認しました。初回の評価入力upload失敗はノートへ残し、ディレクトリ作成後に再送して評価を完了しました。
+
 ## 次に試すこと
 
 この実験でRoPE・SwiGLUが有望なら、同じ構造のまま学習Token予算を増やすか、RMSNormまたはGQAを一要素ずつ追加します。構造差が小さい場合は、Issue #1の会話source比率とSFTのデータ形式へ戻り、一般日本語・会話・医療を混ぜるpretrainingと会話SFTを別々に比較します。安定した基盤ができた時点で、50M級への拡大と日本語reasoning蒸留へ進みます。
+
+今回の結果を受けた次の第一候補は、056のbest checkpointを初期値として、Issue #1の会話データへresponse-only SFTとrehearsal lossを適用する実験です。EOS loss weightも含めて、会話F1だけでなくgeneral・medical・RPC・MRMP lossと生成の過剰継続を比較します。その後、RoPEの位置計算をcacheして速度を改善し、同一seedで再実行するか、RMSNormまたはGQAを一つだけ追加します。データ量を増やす場合も、まず一般日本語・会話・医療のsource比率と重複を固定してから、50M級へ拡大します。

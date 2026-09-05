@@ -1,0 +1,64 @@
+{
+  "experiment": "056",
+  "lightweight_files": 114,
+  "lightweight_archive": "/content/exp056-lightweight.tar.gz",
+  "archive_bytes": 31938,
+  "archive_sha256": "e02ac1cf35f7aba2f2448627d2536fbff97be3de4e219547f7dc82b6d2105e29",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/best.pt",
+      "bytes": 77267142,
+      "sha256": "476d848edd7566ff259ee74469912c5ad828a471a44bca1e53b20cd8bc571b21"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_001000.pt",
+      "bytes": 77275917,
+      "sha256": "4e7d4fb1496ceda2fe9f7a16b2aeab1b36414bae9fec53d2659095a1690a5fb6"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_002000.pt",
+      "bytes": 77275917,
+      "sha256": "d02acb8ae3d516431f0d948761b439c543f7eb3cdb384c4dbdc165ff2f8ea355"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_003000.pt",
+      "bytes": 77275917,
+      "sha256": "72ac049a45f4a37054ceca2304868838aa445f023990b86fe08a7d9690949af4"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_004000.pt",
+      "bytes": 77275917,
+      "sha256": "9b8d3e7b8a4b73f439f289fc00ca760867ad60e3f2d93e3af51575b1e80c3c6d"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_005000.pt",
+      "bytes": 77275917,
+      "sha256": "4cdd92e227a7ecfea99ed9794c26d80464ff9c75136be6f8b8d981072e9c7058"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_006000.pt",
+      "bytes": 77275917,
+      "sha256": "cc3ccfdceddb1ddec6868d44f8b321c1e1a3a367fa4c73c3e5ff65e19a506f18"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_007000.pt",
+      "bytes": 77275917,
+      "sha256": "fc9b6d649e8a9243325ac84321614eb6d3c2c7cfa6fd505d55ef422ac81766bf"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_008000.pt",
+      "bytes": 77275917,
+      "sha256": "ee8cfaab411e80137a883f884c871408b805ce9a188103b77d3cc592c90fe118"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_009000.pt",
+      "bytes": 77275917,
+      "sha256": "209da52498feb69ecae6d782a1b72ffaf016c6df9cf6622789e022a331979812"
+    },
+    {
+      "path": "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-swiglu-rope-torch-colab-10k/step_010000.pt",
+      "bytes": 77275917,
+      "sha256": "84bc993389e5cd8748dbe78ce49212f463ec3750986e1429be73ba3ab6c41811"
+    }
+  ]
+}
