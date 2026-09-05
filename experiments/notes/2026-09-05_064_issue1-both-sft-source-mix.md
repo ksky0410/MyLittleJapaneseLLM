@@ -49,9 +49,11 @@ step 1,600ではvalidation loss 3.8012（PPL 44.75）、step 1,700では3.7862�
 
 step 2,100ではvalidation loss 3.7495（PPL 42.50）、step 2,200では3.7442（PPL 42.28）、step 2,300では3.7436（PPL 42.25）、step 2,400では3.7313（PPL 41.73）となり、step 2,500ではtrain loss 3.3536、validation loss 3.7223、PPL 41.36、学習率8.2333e-6、経過時間1,530.36秒でした。step 2,000以降の改善幅は小さくなっていますが、validation lossは悪化していません。step 2,100から2,500までの生成サンプルも保存されています。学習は継続中です。
 
+step 2,600ではvalidation loss 3.7208（PPL 41.30）、step 2,700では3.7188（PPL 41.21）、step 2,800では3.7147（PPL 41.04）、step 2,900では3.7129（PPL 40.97）となりました。step 3,000ではtrain loss 3.3795、validation loss 3.7130、PPL 40.98、学習率5.0000e-6、経過時間2,007.41秒でした。最良checkpointはstep 2,900で、best.ptのSHA-256は`8af16460abb94efc34b448b53f0f0199510941b4fe57c52daabbebfc274ab784`です。step 3,000までNaN、OOM、shape errorはなく、step 2,600から3,000までの生成サンプルも保存されました。
+
 ## 実験終了後の結果と解釈
 
-ここへboth-SFTのbest step、validation loss、共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差、代表的な生成を追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
+学習自体はMPSで完走しました。best stepは2,900、best validation lossは3.7129121780、PPLは40.9729534896、最終step 3,000のvalidation lossは3.7130285144、PPLは40.9777204105でした。summaryは`artifacts/checkpoints/issue1-both-20m-sft-source-colab-3k/summary.json`、metricsは同ディレクトリの`metrics.jsonl`、stepごとの生成は`artifacts/samples/issue1-both-20m-sft-source-colab-3k/`に保存しています。共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差は、評価スクリプト完了後にここへ追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
 
 ## 次に試すこと
 
