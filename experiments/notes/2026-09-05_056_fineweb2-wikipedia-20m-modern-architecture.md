@@ -61,6 +61,8 @@ wrapperはbundle展開先を`/content/small_llm_056`へ固定し、必要な実�
 
 学習完了後、同じColab T4上でdomain評価とheld-out chat-test-v1評価を開始します。評価用に`evaluate_torch.py`、`evaluate_chat_dataset.py`、5種類のvalidation Token列、固定48例の会話入力とselection manifestを使用し、general・conversation・medical・RPC・MRMPのloss、EOS到達率、平均生成長、Token overlap F1を保存します。
 
+会話JSONLとselection manifestの初回uploadは、Colab側の親ディレクトリが未作成だったためHTTP 500で失敗しました。Token列4種類のuploadや学習成果物には影響しておらず、専用の`colab_prepare_eval_056.py`で保存先を作成してから再送します。
+
 ## 結果と解釈
 
 実験終了直後に、実際のruntime、最終・最良loss、PPL、checkpoint、生成例、実験041との差、仮説と一致した点、次に試す変更を追記します。未実施の場合は、未実施の理由と次の確認方法を明記します。
