@@ -30,6 +30,10 @@
 
 開始前、bundle作成、part upload、連結hash、各条件の開始・途中・完了、成果物回収、評価、session停止を時系列で追記します。片方だけ完走した場合や、EOS weightの差が見えない場合も削除せず記録します。
 
+2026-09-05、bundleは271,784,268 bytes、SHA-256 `66b9105cdce3a8169bb586ef176971c188c146b9595131b6d73b0bfa2d38e59a`で固定し、6個のpartをColabへuploadしました。連結scriptはbytesとSHA-256の両方を検証し、12個の入力hash照合後にEOS weight 1.00を開始しました。weight 1.00、続くweight 0.50はいずれも終了コード0で3,000 stepを完走しました。packageは80ファイル、archive 11,676 bytes、SHA-256 `91bc92d08890e51abd6fd6e6d49157e3cc2e64d1be6b8b811f079b78e3cf6725`でした。best checkpointのhashはEOS 1.00が`3f5cbe4bcf64e9186f6249dbd24ccb48b5f39fcd1e278144f81bd6e37d2fc903`、EOS 0.50が`9a28d6145a0d38ca4e6d5227ac3cdcf74836b8f6c488fe527e66586fecebe394`です。軽量成果物と両best重みはローカルへ回収済みです。
+
+次に同じColab T4で、両条件をgeneral・conversation・medical・RPC・MRMPのdomain lossと固定chat-test-v1へ評価します。評価用Token列と会話入力のuploadは、056で確認済みの親ディレクトリ作成手順を使います。
+
 ## 結果と解釈
 
 実験終了直後に、両条件の実際のloss、PPL、学習時間、EOS到達率、生成例、055および056との差、仮説に対する判断を追記します。
