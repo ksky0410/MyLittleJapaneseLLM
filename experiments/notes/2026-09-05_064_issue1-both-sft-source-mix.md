@@ -39,6 +39,8 @@ both-SFTが3,000 stepまでNaN、OOM、shape errorなく完走し、RPC-SFT・MR
 
 データ入力hash、source別選択数、response Token数、base hash、コードcommit、MPS runtime、学習のstep・loss・学習率・経過時間、異常、生成本文の回収状況を節目ごとに追記します。混合後の低品質な生成や早期EOSも削除しません。
 
+2026年9月5日、MPSで学習を開始しました。step 1ではtrain loss 4.3992、validation loss 4.7235、PPL 112.56、学習率5e-7でした。step 100ではtrain loss 4.2407、validation loss 4.0921、PPL 59.87、step 200ではvalidation loss 4.0726、PPL 58.71、step 300ではvalidation loss 4.0218、PPL 55.80、step 400ではvalidation loss 4.0022、PPL 54.72、step 500ではtrain loss 4.1351、validation loss 3.9869、PPL 53.89まで低下しました。step 500時点の学習率は4.7931e-5、経過時間は216.43秒です。NaN、OOM、shape errorは発生しておらず、step 0から500までの生成サンプルも保存されています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへboth-SFTのbest step、validation loss、共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差、代表的な生成を追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
