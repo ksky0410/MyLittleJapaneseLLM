@@ -38,6 +38,8 @@ colab stop --session exp050-20m-core-both
 
 Colab割当に失敗した場合は、失敗時刻、CLIのエラー、session状態を記録し、重い学習を開始しません。学習途中に停止した場合も、回収できたmetrics・生成文・metadataを失敗成果物として残します。
 
+14:07 JST、新規session `exp050-20m-core-both`へT4を割り当てようとしましたが、Colab CLIがHTTP 412 `Precondition Failed`を返し、`TooManyAssignmentsError`で停止しました。学習、bundle upload、入力データ変更は発生していません。`colab sessions`には既存の047用T4 session `exp047-20m-swiglu`が`IDLE`で残っているため、まずその047出力を上書きしないことを確認し、050専用の`/content/small_llm_050`へ分離して代替実行できるかを調べます。新規割当失敗は削除せず、この記録を残します。
+
 ## 成功条件
 
 2条件が同じGPU・seed・モデル構造・学習stepで完走し、NaN、OOM、shape error、Token列不足がないことです。各条件について、step 0と100 stepごとの生成TXT、metrics、summary、checkpoint metadata、best checkpointのhash一覧を保存します。完走後はgeneral、conversation、medical、RPC、MRMPのdomain評価と、48例の固定chat-testを同じseedで実行します。GPU割当や学習が失敗しても、その事実自体を実験結果として記録します。
