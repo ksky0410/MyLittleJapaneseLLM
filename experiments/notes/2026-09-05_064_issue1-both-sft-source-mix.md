@@ -53,9 +53,19 @@ step 2,600ではvalidation loss 3.7208（PPL 41.30）、step 2,700では3.7188�
 
 ## 実験終了後の結果と解釈
 
-学習自体はMPSで完走しました。best stepは2,900、best validation lossは3.7129121780、PPLは40.9729534896、最終step 3,000のvalidation lossは3.7130285144、PPLは40.9777204105でした。summaryは`artifacts/checkpoints/issue1-both-20m-sft-source-colab-3k/summary.json`、metricsは同ディレクトリの`metrics.jsonl`、stepごとの生成は`artifacts/samples/issue1-both-20m-sft-source-colab-3k/`に保存しています。共通5領域のloss、固定chat-testのEOS・生成長・Token overlap、RPC-SFT・MRMP-SFTとの差は、評価スクリプト完了後にここへ追記します。bothの総合validationが低くても、source別の改善を失っていないかを分けて確認します。F1とEOSは短い定型応答の影響を受けるため、自然な会話能力の証拠とは断定しません。
+学習自体はMPSで完走しました。PyTorchは2.14.0、parameter数は19,308,032、AMPは無効、学習時間は2,007.83秒でした。best stepは2,900、best validation lossは3.7129121780、PPLは40.9729534896、最終step 3,000のvalidation lossは3.7130285144、PPLは40.9777204105でした。best.ptのSHA-256は`8af16460abb94efc34b448b53f0f0199510941b4fe57c52daabbebfc274ab784`です。summaryは`artifacts/checkpoints/issue1-both-20m-sft-source-colab-3k/summary.json`、metricsは同ディレクトリの`metrics.jsonl`、step 500ごとのcheckpoint metadataとstep 0〜3,000の生成本文は同じcheckpoint・samplesディレクトリに保存しています。重い`.pt`本体はGit管理外ですが、metadataとhashは管理します。
 
-共通5領域の評価はCPUで完了しました。会話評価は最初に`--output-json`と`--output-text`を指定して終了コード2となりましたが、これはスクリプトが要求する`--output`、`--text-output`、`--selection-file`と引数名が異なっていたためです。失敗時にはモデルやデータは変更されておらず、正しい引数で再実行します。
+共通5領域をCPUで20 batchずつ評価した結果は、generalがvalidation loss 6.2432 / PPL 514.51、conversationが3.3302 / 27.95、medicalが3.5688 / 35.47、RPCが3.3482 / 28.45、MRMPが2.7820 / 16.15でした。実験063のRPC-SFTと比べると、both-SFTはgeneralで0.0188低く、conversationで0.0188高く、medicalで0.0008高く、RPCで0.0680高く、MRMPで0.2224低くなりました。MRMP-SFTと比べると、generalで0.0515低く、conversationで0.0510低く、medicalで0.0279低く、RPCで0.0610低く、MRMPで0.0220高くなりました。したがってboth-SFTは、RPC単独のRPC適合を完全には維持しない一方、MRMP単独よりはRPCへ移り、MRMP単独のMRMP適合もほぼ保っています。比較結果は`artifacts/evaluations/issue1-both-20m-sft-source-colab-3k-domains.json`に保存し、SHA-256は`0816c6cfb5214b5b90a921a4fb04d90719cfc9e4ceae3b240638ca41e6d87dc9`です。
+
+固定chat-test v1の48例では、EOS到達が48/48、平均生成長が10.5625 Token、Token overlapのprecisionが0.3036、recallが0.2291、F1が0.2297でした。stratum別F1はshort 0.3821、medium 0.1526、long 0.1542です。実験063と比べると、F1はRPC-SFTの0.1815から0.2297、MRMP-SFTの0.2027から0.2297へ改善し、平均生成長はRPC-SFTの10.98とMRMP-SFTの9.23の中間となりました。ただしEOSは全条件で48/48であり、短い応答や定型句でも高くなり得る指標です。source別に分けるとMRMP 24例は平均7.79 Token・F1 0.2488、RPC 24例は平均13.33 Token・F1 0.2105でした。これは短いMRMP応答と長めのRPC応答を同時に扱う兆候としては整合しますが、48例だけの結果なので自然な会話能力の証拠とは断定しません。全例のprompt、reference、completionはJSONとTXTへ保存し、評価JSONのSHA-256は`edea6561e72b309f06dad8e5fe82f7f606df5c217a332a1589e45a52de69bee9`、TXTのSHA-256は`5fc87b02277200aea8ac5863bf00aaa8c66b02653b4f62a27827e6868afeae2e`です。
+
+固定chat-testの実行は、最初の誤った引数指定で終了コード2となりましたが、モデルやデータは変更されておりません。`--output`、`--text-output`、`--selection-file`へ修正して再実行し、48例のJSON/TXTを正常に保存しました。学習中のraw prompt `今日なにしてた？`はstep 0〜2,900ではEOS直後のようにpromptだけが残る短い出力が続き、step 3,000では「今日なにしてた?って、また、どうやってたりしているり。 笑」となりました。この崩れた出力も削除せず、すべてのstepファイルを保存しています。
+
+事前の「both-SFTはRPC-SFTとMRMP-SFTの中間になる」という予想は、概ね一部だけ支持されました。RPC領域ではbothがRPC-SFTより0.0680高いlossでしたが、MRMP-SFTより0.0610低く、MRMP領域ではMRMP-SFTより0.0220高いものの、RPC-SFTより0.2224低くなりました。つまり、両sourceを混ぜることで片方への完全な専門化は弱まる一方、相手sourceへの転移を保った中間条件になっています。general lossは両単独条件より低く、会話データを混ぜたことによる一般文書性能の単純な悪化は今回の評価では見られませんでした。固定chat-testのF1も両単独条件を上回りましたが、短い定型応答の影響を受ける指標なので、仮説の確認はsource別validationと生成本文を重視します。
+
+代表例として、MRMPの`こんにちは`には`こんにちは`、`えー`には`えー!`と返せました。一方、RPCの長い文脈では`私もです、最近はバイトに行くとマシーとか!`や`アイスが苦手ですが、そのことのないような気がしますか?`のように、語彙や文脈が崩れる例も残っています。これらは評価TXTに全文を保存しており、短い相づちの再現と長い話題継続の不足が同居していることを確認できます。
+
+この結果は単一seed、20M級モデル、SFT 3,000 stepの探索結果です。sourceの配分を増やすだけで「自然な会話」が得られたとは解釈せず、次はboth-SFTへgeneral pretrainingのrehearsal lossを加え、会話適合を保ったままgeneral lossと長文生成を改善できるかを検証します。
 
 ## 次に試すこと
 
