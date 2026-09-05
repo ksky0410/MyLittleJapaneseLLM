@@ -48,6 +48,10 @@ step 1,100はtrain loss 3.920229、general validation loss 5.250916、PPL 190.74
 
 step 1,600はtrain loss 3.962660、general validation loss 4.914219、PPL 136.21、経過1923.12秒、step 1,700は3.697206、4.889252、PPL 132.85、経過2052.33秒、step 1,800は3.518451、4.849867、PPL 127.72、経過2181.83秒、step 1,900は3.627597、4.798238、PPL 121.30、経過2312.05秒でした。step 2,000ではtrain loss 3.981688、general validation loss 4.775174、PPL 118.53、learning rate 6.3100e-5、経過2444.92秒となりました。step 1,500からvalidation lossは0.167540低下し、step 2,000のcheckpoint weights SHA-256は`9b7846c34d0711ded3867505cbf9aa0ae5911c8d580e36e60ac3ed1e6a7f16df`です。固定promptの出力は、日本語の単語・助詞・敬語風の連続が増えましたが、「お金」「お客様」の反復が強く、質問への適切な会話応答にはなっていません。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
 
+step 2,100はtrain loss 3.520096、general validation loss 4.746451、PPL 115.17、経過2577.62秒、step 2,200は3.713841、4.736478、PPL 114.03、経過2711.09秒、step 2,300は3.483684、4.719119、PPL 112.07、経過2840.55秒、step 2,400は3.440668、4.707030、PPL 110.72、経過2971.79秒でした。step 2,500ではtrain loss 3.295709、general validation loss 4.689170、PPL 108.76、learning rate 3.0000e-5、step処理時間3099.86秒、summary上の総時間3105.20秒で完走しました。step 2,000からvalidation lossは0.086004低下し、best checkpointはstep 2,500です。step 2,500のweights SHA-256は`f1e5654851c971fcb5435a551fc288be3157f25dc0219b14280dcd2def681a83`、`best.pt`のSHA-256は`71931b2c689c2fbaa31c8c92c022a21fac571894ec2993a59be48644794e5e17`です。固定promptは日本語風の連続と「お客様」「お金」などの反復が増えましたが、会話応答としては未成立です。NaN、OOM、shape error、途中停止、警告はありませんでした。
+
+学習完走時点では、前回073の約1M Token条件のbest validation loss 6.228799に対して、本実験は4.689170で1.539629低下しました。学習中のvalidation曲線も、073がstep 1,300以降に悪化したのに対し、本実験はstep 2,500まで改善を続けました。このため「50Mモデルに約1M Tokenではデータ不足が強く、約5M Tokenへ増やすと少なくともgeneral language modelingは改善する」という仮説は支持されます。ただし、同じ学習Token列ではなく混合データの構成も変わっているため、約5倍のToken数だけの効果とは断定せず、領域別評価と固定chat-testを実行してから結論を確定します。次にbest checkpointをconversation・medical・RPC・MRMPを含むdomain評価へ回し、生成サンプルはGitHubへ追加します。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
