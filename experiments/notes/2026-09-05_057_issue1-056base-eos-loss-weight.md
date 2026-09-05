@@ -44,6 +44,20 @@
 
 実験終了直後に、両条件の実際のloss、PPL、学習時間、EOS到達率、生成例、055および056との差、仮説に対する判断を追記します。
 
+2026-09-05、EOS weight 1.00と0.50の両条件は、同じ056 best checkpointから3,000 stepを完走しました。EOS 1.00はbest validation loss 3.3022805929、PPL 27.174542、学習時間251.415580秒、EOS 0.50はbest validation loss 3.3050837040、PPL 27.250822、学習時間243.238908秒でした。両方ともbestは最終step 3,000で、runtimeはPyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、AMP有効、peak allocatedは750,051,840 bytes、reservedは817,889,280 bytesでした。validation lossだけを見るとEOS 1.00が0.002803低く、明確な差ではないものの通常のEOS重みがわずかに優れました。
+
+best checkpointのdomain評価は、EOS 1.00でgeneral 4.292177、conversation 2.474263、medical 2.401388、RPC 2.391475、MRMP 2.109496でした。EOS 0.50ではgeneral 4.293598、conversation 2.474770、medical 2.402780、RPC 2.392305、MRMP 2.109348でした。056 baseのgeneral 4.345876、conversation 2.610106、medical 2.482179、RPC 2.504567、MRMP 2.254911からは、両条件とも全domainでlossが下がりました。EOS 0.50はEOS 1.00よりgeneral、conversation、medical、RPCで0.0005〜0.0014ほど高く、MRMPだけ0.000148低くなりましたので、EOS weight変更によるdomain lossの差は小さいと解釈します。
+
+固定chat-test-v1では、EOS 1.00が48/48 EOS到達、平均生成9.8958 Token、Token overlap F1 0.189769でした。EOS 0.50は48/48 EOS到達、平均生成10.1250 Token、F1 0.218087でした。EOS 0.50は平均長が0.2292 Token増えただけでEOS停止率を維持し、F1は0.028318上がりました。precisionは0.284815から0.287747、recallは0.183930から0.225777へ上昇しました。層別F1はEOS 1.00のshort 0.260931、medium 0.160753、long 0.147623に対し、EOS 0.50はshort 0.328198、medium 0.181341、long 0.144724でした。longだけはわずかに下がるため、すべての会話長で優れるとは言えません。評価JSON/TXTは各条件の`artifacts/evaluations/issue1-056base-rehearsal-ratio050-eos100-colab-3k-*`と`artifacts/evaluations/issue1-056base-rehearsal-ratio050-eos050-colab-3k-*`に保存しています。
+
+生成例では、EOS 1.00が「こんにちは」「それは」「うんうん」など短い応答を出した箇所で、EOS 0.50は「こんにちは!」「え!」「そうそう!」のように参照発話と一部重なる応答を出しました。一方、EOS 0.50でも文脈から外れた「楽しくない・・・」や「えい!」のような出力は残っています。学習中の固定conversation promptでは両条件ともstep 0からstep 3,000までEOSで停止し、EOS除外だった055のような64 token近い過剰継続は観測されませんでした。全生成TXTは両条件の`artifacts/samples/`へ保存し、良い出力だけを選別していません。
+
+回収したColab manifestのSHA-256は`abb08f98ab3b5007f54358ddf8bba478a501a10f69a5ba908bd92db430a6e031`です。EOS 1.00のdomain JSON、chat JSON、chat TXTのSHA-256はそれぞれ`c5435411aa1e0ccad79901600841751795317432a0f0d398f9d7600a125e1f9e`、`ce03299084d18040cb74b1009644669e87f478d26db4732f87d0942cc9a2c4ec`、`eeced3569868dd943993f69fe0511dbbdac98025073282a54f5a5addf4be4eda`です。EOS 0.50はそれぞれ`aec90d04ffccd80446ca0180379f64a62c6303aeccf4022e27cd93e79a3083ce`、`fcb61dd8cb4b99311d1df96be4d8705a9ab65c6406f28b2997ff62b4aaa1d649`、`193fdb1a9953f0d6e9dfe288ca67b6ee5940fa78e81849af79399ebdbd30c59d`です。
+
+事前の予想どおり、EOSを少し弱めると平均応答長とchat-test F1が改善する候補が得られました。EOS停止率は低下せず、domain lossの悪化も小さいため、今回の3,000 step・seed 42ではEOS weight 0.50を次の候補として採用します。ただし、validation lossはEOS 1.00がわずかに低く、long層別F1はEOS 1.00が高いため、0.50を全面的な勝者とは認定しません。055のEOS除外で見られた過剰生成とは異なる挙動を確認できたことが今回の主な成果です。評価用の初回general Token列不足は修正し、最終評価は終了コード0で完了しました。
+
 ## 次に試すこと
 
 EOS weight 0.50が有望なら0.25または0.75を追加し、会話長と停止安定性の曲線を調べます。weight 1.00が優れるならEOSを弱めず、会話データのsource比率、speaker marker、rehearsal ratioを一つずつ比較します。SFTが安定した後に、056の20M構造を50Mへ拡大し、同じ日本語混合比率とIssue #1の会話データを保ったまま蒸留・reasoning SFTへ進みます。
+
+今回の差は0.50対1.00の二点比較にとどまるため、次はEOS weight 0.75を追加し、0.50・0.75・1.00の間でF1、long会話、EOS停止を確認します。その後は、会話SFTのbaseを056で固定したままrehearsal ratioを0.25または0.75へ一つだけ変える実験へ進みます。短いSFTで有望な設定が固まったら、学習Token数を増やした長時間SFT、50Mモデル、reasoning蒸留を順に試します。
