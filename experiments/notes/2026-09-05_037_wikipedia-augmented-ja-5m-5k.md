@@ -18,6 +18,8 @@
 
 実験036の結果commitは`575c02d`です。実験037のconfig SHA-256は`a0efd68cb9b1f4d895129359697c382fe3975038209974f3df5a99d7e6753a1f`です。学習はMacBook上の既存MLX環境で行い、smokeは省略します。実験036で同じモデル・Token列の100 step smokeと2,500 step本学習が成功済みであるため、今回は5,000 step本学習のみを実行します。
 
+本学習は同日開始し、step 1,200まで正常に進行しています。step 500ではtrain loss 5.263340、validation loss 6.219744、perplexity 502.574、step 1,000ではtrain loss 4.764680、validation loss 5.774941、perplexity 322.125、step 1,200ではtrain loss 4.705955、validation loss 5.739346、perplexity 310.861でした。step 1,200時点の学習率は`2.763507e-4`、経過時間は206.81秒です。step 1,200までNaN、shape error、データ長エラー、メモリ不足は発生しておらず、学習は継続中です。
+
 予定コマンドは次のとおりです。
 
 ```bash
