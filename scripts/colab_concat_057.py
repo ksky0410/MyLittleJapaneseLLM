@@ -6,10 +6,10 @@ import hashlib
 from pathlib import Path
 
 
-PARTS = tuple(Path(f"/content/exp057_bundle_part_{index:02d}") for index in range(11))
+PARTS = tuple(Path(f"/content/exp057_bundle_part_{index:02d}") for index in range(6))
 BUNDLE = Path("/content/exp057_bundle.tar.gz")
-EXPECTED_BYTES = 0
-EXPECTED_SHA256 = ""
+EXPECTED_BYTES = 271784268
+EXPECTED_SHA256 = "66b9105cdce3a8169bb586ef176971c188c146b9595131b6d73b0bfa2d38e59a"
 
 
 def sha256(path: Path) -> str:

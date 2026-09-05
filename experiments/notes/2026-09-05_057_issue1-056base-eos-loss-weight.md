@@ -24,6 +24,8 @@
 
 学習前の基準commitは、EOS weight機能を固定した`8c92220`の後に、この実験のconfig・wrapper・package・concat・noteを追加したcommitとして記録します。bundleは77MBのbase checkpointとSFT/Tokenデータを含むため、45MB以下のpartへ分割してuploadし、Colab側でbytesとSHA-256を検証してから展開します。重い`.pt`本体はGitへ追加せず、Colab manifestとmetadataのhashを保存します。
 
+実行前bundleは271,784,268 bytes、SHA-256 `66b9105cdce3a8169bb586ef176971c188c146b9595131b6d73b0bfa2d38e59a`です。6個の45MB以下のpartへ分割し、連結scriptにはこのbytesとhashを固定します。configのSHA-256は`73043053375a67210663684a999bc67340017936fd8486807374a933be7e4c2f`、`train_sft_torch.py`は`100c654d28fdd2817d8ea377588333802817f05c28a4a049aaf03942723fbbfc`です。base checkpointのhash、会話NPZ、rehearsal Token列、Tokenizerのhashはwrapperに固定済みです。
+
 ## 実験中の記録
 
 開始前、bundle作成、part upload、連結hash、各条件の開始・途中・完了、成果物回収、評価、session停止を時系列で追記します。片方だけ完走した場合や、EOS weightの差が見えない場合も削除せず記録します。
