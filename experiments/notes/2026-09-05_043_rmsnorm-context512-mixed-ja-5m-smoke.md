@@ -29,7 +29,9 @@ TokenizerはSentencePiece Unigram、語彙数4,096、`artifacts/tokenizer/mixed-
 
 ## 実験中の記録
 
-2026-09-05 12:34 JST、学習開始前の確認を行いました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。ノートと設定はcommit `59bf4d9`でpush済みで、設定、入力Token列、TokenizerのSHA-256は前節の値と一致しました。学習中は設定の評価間隔に従って少なくとも100 stepごとにloss、perplexity、生成文、所要時間を保存します。異常や予定変更があれば、その時点で追記します。
+2026-09-05 12:34 JST、学習開始前の確認を行いました。実行環境はPython 3.13.1、macOS 15.5 arm64、MLXのdeviceは`Device(gpu, 0)`です。ノートと設定はcommit `cacf2de`でpush済みで、設定、入力Token列、TokenizerのSHA-256は前節の値と一致しました。学習中は設定の評価間隔に従って少なくとも100 stepごとにloss、perplexity、生成文、所要時間を保存します。異常や予定変更があれば、その時点で追記します。
+
+12:38 JST、MLX学習終了後に、私が予定していないPyTorch CPUプロセスが同じ設定と出力先で動作していることを確認しました。コマンドは`/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python scripts/train_torch.py --config configs/rmsnorm-context512-mixed-ja-5m-smoke.toml --device cpu --no-amp`でした。これはMLX実験043の計画には含めていないため、一部のMLX metricsとstep 100・200 metadataへ上書きが生じた時点でプロセスを停止しました。CPU側が生成した`step_000001.pt`、`step_000100.pt`、`step_000200.pt`と対応するmetrics・metadataは`artifacts/checkpoints/rmsnorm-context512-mixed-ja-5m-smoke-unexpected-concurrent-torch-before-stop/`へ退避し、削除していません。MLX側のmetricsとstep 100・200 metadataは、学習時の標準出力と残存するMLX checkpointをもとに復元しました。この予定外のCPU実行は、RMSNormの主結果には混ぜません。
 
 （ここへ開始時刻、実行環境、stepごとの記録、警告、停止理由を追記する。）
 

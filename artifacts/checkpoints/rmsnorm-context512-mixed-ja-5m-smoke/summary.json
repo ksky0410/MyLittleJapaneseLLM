@@ -1,0 +1,6 @@
+{
+  "final_step": 500,
+  "best_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/rmsnorm-context512-mixed-ja-5m-smoke/step_000500.npz",
+  "best_validation_loss": 5.340077559153239,
+  "elapsed_seconds": 170.1733761250507
+}
