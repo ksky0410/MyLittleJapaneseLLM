@@ -44,6 +44,8 @@ uv run python scripts/train_sft_torch.py \
 
 準備変更はcommit `94b84f1`としてpush済みです。`uv run pytest -q`は85件が通過しました。MPS学習は2026年9月5日に開始し、step 1では総合loss 4.3071、SFT loss 4.2788、rehearsal loss 4.5618、validation loss 4.7235、PPL 112.56、学習率5e-7でした。step 100では総合loss 4.0017、SFT loss 4.1391、rehearsal loss 2.7650、validation loss 4.0899、PPL 59.73、step 200ではvalidation loss 4.0793、PPL 59.10、step 300ではvalidation loss 4.0233、PPL 55.89、step 400ではvalidation loss 4.0057、PPL 54.91となりました。step 500では総合loss 4.3503、SFT loss 4.2190、rehearsal loss 5.5322、validation loss 3.9868、PPL 53.88、学習率4.7931e-5、経過時間578.25秒でした。第065の同step validation loss 3.9958より0.0090低い値です。step 500までNaN、OOM、shape errorは発生しておらず、conversation形式の生成サンプルもstep 0から500まで保存されています。学習は継続中です。
 
+step 600では総合loss 3.5601、SFT loss 3.4857、rehearsal loss 4.2295、validation loss 3.9568、PPL 52.29、step 700ではvalidation loss 3.9386、PPL 51.35、step 800では3.9252、PPL 50.66、step 900では3.9144、PPL 50.12となりました。step 1,000では総合loss 3.3239、SFT loss 3.1979、rehearsal loss 4.4573、validation loss 3.8831、PPL 48.57、学習率4.0147e-5、経過時間1,086.86秒でした。064の同step validation loss 3.8755、065の3.8836と近い値で、現時点ではratio 0.10の明確な優位は確認できません。step 600から1,000までの生成サンプルも保存されています。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、総合validation loss、SFT/rehearsal loss、5領域のloss、固定chat-testのEOS・生成長・Token overlap、064・065との差、代表的な生成を追記します。general lossだけで成功とせず、chat-test F1の変化と長い文脈の生成を確認します。生成本文は品質に関係なくGitHubへ保存します。
