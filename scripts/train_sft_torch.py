@@ -96,6 +96,18 @@ def encode_generation_prompt(
     return prompt_ids, rendered
 
 
+def exclude_eos_from_loss(
+    targets: Any, loss_mask: Any, eos_id: int, torch: Any
+) -> Any:
+    """response末尾EOSをSFTのloss対象から除いたmaskを返す。"""
+
+    if targets.shape != loss_mask.shape:
+        raise ValueError("targetsとloss_maskのshapeが一致していません")
+    return loss_mask * (targets != eos_id).to(
+        dtype=loss_mask.dtype, device=loss_mask.device
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     """train_sft_torchのCLI parserを作る。"""
 
@@ -119,6 +131,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--sample-speaker-a", default="A")
     parser.add_argument("--sample-speaker-b", default="B")
+    parser.add_argument(
+        "--exclude-eos-from-sft-loss",
+        action="store_true",
+        help="response末尾EOSをSFT lossの対象から除く",
+    )
     parser.add_argument(
         "--rehearsal-tokens",
         default=None,
@@ -441,6 +458,10 @@ def main() -> None:
         sft_inputs, sft_targets, sft_loss_mask = _sft_batch(
             train_arrays, sft_batch_size, rng, device, torch
         )
+        if args.exclude_eos_from_sft_loss:
+            sft_loss_mask = exclude_eos_from_loss(
+                sft_targets, sft_loss_mask, int(processor.eos_id()), torch
+            )
         if rehearsal_active:
             rehearsal_inputs, rehearsal_targets = _batch_for_rehearsal(
                 rehearsal_tokens,
@@ -563,6 +584,7 @@ def main() -> None:
                     "rehearsal_tokens": str(rehearsal_path)
                     if rehearsal_path is not None
                     else None,
+                    "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
                 },
             }
             checkpoint.with_suffix(".json").write_text(
@@ -620,6 +642,7 @@ def main() -> None:
             "speaker_a": args.sample_speaker_a,
             "speaker_b": args.sample_speaker_b,
         },
+        "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
     }
     (output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

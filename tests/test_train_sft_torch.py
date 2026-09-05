@@ -20,6 +20,7 @@ from train_sft_torch import (
     _masked_cross_entropy,
     build_parser,
     encode_generation_prompt,
+    exclude_eos_from_loss,
     validate_rehearsal_options,
 )
 
@@ -69,6 +70,24 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         self.assertTrue(args.no_amp)
         self.assertEqual(args.rehearsal_ratio, 0.25)
 
+    def test_parser_accepts_eos_exclusion(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--base-checkpoint",
+                "base.pt",
+                "--train-data",
+                "train.npz",
+                "--validation-data",
+                "validation.npz",
+                "--output-dir",
+                "checkpoints",
+                "--samples-dir",
+                "samples",
+                "--exclude-eos-from-sft-loss",
+            ]
+        )
+        self.assertTrue(args.exclude_eos_from_sft_loss)
+
     def test_generation_prompt_supports_raw_and_conversation_templates(self) -> None:
         class Processor:
             def encode(self, text: str, out_type: type[int] = int) -> list[int]:
@@ -104,6 +123,13 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             encode_generation_prompt(Processor(), "こんにちは", "unknown", "A", "B")
+
+    def test_exclude_eos_from_loss_only_removes_masked_eos(self) -> None:
+        targets = torch.tensor([[1, 3, 2, 3]])
+        loss_mask = torch.tensor([[1.0, 1.0, 0.0, 1.0]])
+        actual = exclude_eos_from_loss(targets, loss_mask, 3, torch)
+        expected = torch.tensor([[1.0, 0.0, 0.0, 0.0]])
+        self.assertTrue(torch.equal(actual, expected))
 
 
 @unittest.skipUnless(torch is not None, "PyTorch未導入")
