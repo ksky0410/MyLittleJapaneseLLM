@@ -1,0 +1,70 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "best",
+  "checkpoint_step": 2900,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 3.3478307723999023,
+  "weights_file": "best.pt",
+  "weights_bytes": 77267142,
+  "weights_sha256": "e187fe087f5a6b3f508403fa2abc475c9a243be36778f8a93d5e7ac554096efd",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 2900,
+    "train_loss": 3.3478307723999023,
+    "sft_train_loss": 2.991391181945801,
+    "validation_loss": 3.740505051612854,
+    "validation_perplexity": 42.11925719284895,
+    "learning_rate": 5.134544427607333e-06,
+    "elapsed_seconds": 236.381980743,
+    "rehearsal_ratio": 0.5,
+    "rehearsal_train_loss": 3.704270601272583
+  },
+  "inputs": {
+    "config_sha256": "21d71a92f3dca17f96334c81724ecc55fa21c1023991d4e849bd8169427c671c",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "400b8ffbc5b3752eaa16e003dab168c75e0a77046ac61c39630ef2409a73e609",
+    "validation_data_sha256": "5f52b3f4269e914184834d6e13d800604827abfd96f2b4c1ff5f665cd3f8f7b4",
+    "base_checkpoint_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 750051840,
+    "peak_memory_reserved_bytes": 817889280
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "base_checkpoint": {
+    "path": "/content/small_llm_054/artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt",
+    "weights_sha256": "326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751"
+  },
+  "sft": {
+    "train_examples": 396966,
+    "validation_examples": 49045,
+    "rehearsal_ratio": 0.5,
+    "rehearsal_tokens": "/content/small_llm_054/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin"
+  }
+}
