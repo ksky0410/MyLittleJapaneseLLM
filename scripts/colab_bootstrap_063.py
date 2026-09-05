@@ -12,7 +12,7 @@ from pathlib import Path
 
 BUNDLE = Path("/content/exp063_bundle.tar.gz")
 PROJECT = Path("/content/small_llm_063")
-BASE = "artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt"
+BASE = "artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt"
 JOBS = (
     {
         "name": "rpc",

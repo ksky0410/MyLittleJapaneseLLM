@@ -12,7 +12,7 @@
 
 実験開始前の基準commitは`fe1f96f`です。実験063では、source抽出用`scripts/filter_conversation_sources.py`と、response Token予算を固定する`scripts/select_sft_npz.py`を追加します。実行コードと準備記録をcommit・pushしてから、データ生成と学習へ進みます。
 
-モデルは実験056の20M級基盤モデルを初期値にします。現在ローカルにあるbase checkpointは`artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt`で、SHA-256は`f554bb5b6b2b1fe20b9318d1558465c0bb4407ddfa971593b853dc7f2aab868e`です。モデルはvocab 4,096、dim 384、10層、6 heads、context length 256、RoPE、LayerNorm、SwiGLU、19,308,032 parameterです。SFTはbatch size 8、3,000 step、learning rate 5e-5から5e-6、warmup 100、weight decay 0.01、seed 42、EOS loss weight 0.50、学習率scheduleの終点3,000 stepで実行します。RPCとMRMPを同じColab T4 runtime上で順番に実行します。
+モデルは、RPCとMRMPを同じ条件で含む実験050の20M級pretraining checkpointを初期値にします。使用するbase checkpointは`artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt`、best step 1,700、SHA-256 `326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`です。モデルはvocab 4,096、dim 384、10層、6 heads、context length 256、RoPE、LayerNorm、SwiGLU、19,308,032 parameterです。SFTはbatch size 8、3,000 step、learning rate 5e-5から5e-6、warmup 100、weight decay 0.01、seed 42、EOS loss weight 0.50、学習率scheduleの終点3,000 stepで実行します。RPCとMRMPを同じruntime上で順番に実行します。
 
 train NPZのresponse Token予算は、source別full preparation後に少ない側の総response Token数を採用します。RPCはこの予算までseed 42の決定的なsubsetを抽出し、MRMPも同じ予算で抽出します。抽出後のexample数とresponse Token数、NPZ hashはmanifestへ保存します。validationはRPC 1,365会話、MRMP 89会話のsource別JSONLから作成し、評価時にはgeneral、conversation、medical、RPC、MRMPの同じ5領域を使います。
 
@@ -23,7 +23,7 @@ SFTの実行コマンドは、準備したsource別NPZに対して次の形式�
 ```bash
 python scripts/train_sft_torch.py \
   --config configs/issue1-rpc-20m-sft-source-colab-3k.toml \
-  --base-checkpoint artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt \
+  --base-checkpoint artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt \
   --train-data artifacts/sft/issue1-rpc-balanced-v1/train.npz \
   --validation-data artifacts/sft/issue1-rpc-full-v1/validation.npz \
   --output-dir artifacts/checkpoints/issue1-rpc-20m-sft-source-colab-3k \
@@ -54,6 +54,8 @@ L4も試しましたが、Colab CLIから「accountのquotaまたはentitlement�
 その後のT4最終再試行もHTTP 503 `Service Unavailable`で失敗し、Colab sessionは作成されませんでした。T4 3回、L4 1回の割当失敗ではbundle upload、学習、既存成果物の上書きは発生していません。ローカルではPyTorch 2.14.0、MPS build有効、`torch.backends.mps.is_available()`が`True`であることを確認したため、実験条件を揃えたままM3 MacBookのMPSへ切り替えます。Colab T4での実行ができなかった事実は失敗記録として残し、RPCとMRMPは同じローカルMPS runtimeで順番に実行します。
 
 MPSでの初回起動は、既存`train_sft_torch.py`が`mps`をdeviceとして受け付けず、学習前の引数検証で終了しました。checkpointや生成物は作られていません。SFT scriptへMPSの可用性検証と、`auto`時にCUDAがなければMPSを選ぶ処理を追加し、parserテストを含む全85テストが通過しました。この修正commitは実行前に追記します。
+
+MPS対応後の再実行では、当初指定していた`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt`がabsolute position・GELUの別モデルであることをcheckpoint metadataが検出しました。さらに、実験056のRoPE・SwiGLU重み本体はローカルに存在せずmetadataだけが残っていたため、そのまま使いません。代わりに、ローカルで重み本体とmetadataの両方が揃い、構造が一致する実験050の`issue1-both-20m-colab-2p5k/best.pt`を両条件共通のbaseへ変更します。この変更はSFT開始前の条件変更であり、実験050の会話混合pretrainingからsource別SFTを比較する実験としてノートとwrapperを更新します。初回の不一致検出により、誤ったbaseで学習を進めずに済みました。
 
 ## 実験終了後の結果と解釈
 
