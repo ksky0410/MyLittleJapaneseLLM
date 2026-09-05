@@ -1,0 +1,3 @@
+prompt: <|startofconversation|><|speaker:DA|>こんにちは！<eos:3><|speaker:DC|>
+
+<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> 最近、最近は夏も、私も私
