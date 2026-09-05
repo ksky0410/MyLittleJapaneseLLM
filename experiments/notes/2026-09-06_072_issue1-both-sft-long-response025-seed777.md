@@ -69,6 +69,20 @@ step 600ではvalidation loss 3.929026、PPL 50.8574、step 700では3.920575、
 
 学習終了直後に、実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、stratum別およびsource別集計、生成本文の質的観察、071・068との差分を追記します。三つの学習seedをまとめ、2/6条件の採用・保留・棄却を判断します。
 
+学習はMPS上で完走し、PyTorch 2.14.0、AMP無効、19,308,032 parametersでした。summary上の経過時間は1562.70秒、最良checkpointはstep 2800、`best.pt`のSHA-256は`4dc2f936c2a4e8405e28e72baa17b670fa0807e0721e854f464c4259addebd09`です。最良validation lossは3.735013（PPL 41.8886）、最終step 3000はvalidation loss 3.736047、PPL 41.9319でした。step 0〜3,000の全31個の生成本文と500 stepごとのcheckpoint metadataを保存し、NaN、OOM、shape errorは発生していません。
+
+5領域評価はCPU上で20バッチずつ行いました。generalはvalidation loss 5.452847（PPL 233.4217）、conversationは2.892302（18.0348）、medicalは3.223219（25.1088）、RPCは2.897691（18.1322）、MRMPは2.342144（10.4035）でした。実験071との差はgeneral -0.020804、conversation -0.002160、medical +0.008388、RPC +0.017996、MRMP +0.012675です。実験068との差はgeneral -0.008625、conversation +0.008062、medical -0.009149、RPC +0.024782、MRMP +0.014234となり、条件間で領域ごとの優劣が分かれました。
+
+固定chat-test v1は48例すべてでEOSへ到達しました。平均生成Token数は12.8542、precisionは0.216566、recallは0.215918、全体Token overlap F1は0.172237でした。short・medium・long別F1はそれぞれ0.239232、0.160429、0.117051です。実験071との差は、平均生成長-0.6250、全体F1-0.005191、short F1-0.024205、medium F1+0.023173、long F1-0.014541です。実験068との差は、平均生成長+1.6458、precision-0.081229、recall-0.014358、全体F1-0.048115、short F1-0.077888、medium F1-0.021385、long F1-0.045071です。seed 777でも068のlong層改善は再現せず、生成長だけを伸ばす効果も確認できませんでした。
+
+source別では、MRMP 24例のF1が0.194036、平均生成Token数が9.0000、RPC 24例のF1が0.150438、平均生成Token数が16.7083でした。両sourceとも24/24でEOSへ到達しています。出力には話題に関連する短い相づちもありますが、長い会話では料理や時刻など直前文脈にない内容へ移る出力、語句の反復、役割に合わない一般的な返答も残っています。人手レビュー用テンプレートは生成しましたが、`review_status`は`pending_human_review`のままであり、意味的な品質評価を完了したとは扱いません。
+
+実験068（seed 42）・071（seed 123）・072（seed 777）の3 seedを同じ評価JSONから集計した結果は、全体F1の平均0.190006、母標準偏差0.021562、long F1の平均0.136921、母標準偏差0.018782でした。全体F1は0.172237〜0.220352、long F1は0.117051〜0.162121の範囲にあり、3点の分散は5領域lossの分散より大きくなっています。seed 42の068だけが全体F1で実験067の0.207753を上回り、seed 123と777は下回りました。したがって、SFT部分2/6の長文層化は現時点で再現性が確認できず、標準条件として採用せず保留します。3 seedの集計は[seed sweep JSON](../../experiments/results/2026-09-06_072_issue1-long025-seed-sweep.json)に保存しました。
+
+成果物のSHA-256は、metricsが`95a60ae0e8621a73e62f06abb9e425056aeb4b97d0c32abb0da33ea3d2cfa923`、summaryが`eae35242be03f3f50e43c406b9fc70b6d1726230f4881e2dd5ac784004807bea`、best metadataが`c99b71e3077e596ffafbc29f8aa4d100e6e386af85ab6a2f14229836069ba71b`、5領域評価JSONが`84eefd05261a1646a33744241a07864d9434895f924e619a491355fe1b2e99df`、固定chat評価JSONが`4ecbac663d68d028614d0392583ad00e50410bd15d8f6c4cfcf6421e80eaf280`、固定chat全文TXTが`8214455bf40184a5d739e36453d72c8b67a09d539ea75d6fa4fa2bcdf6023e6d`、人手レビュー用JSONが`b58c0d73e57f1f777335257eef17549a7d49d4a079eeffeabe16ab74015c532f`です。
+
+評価結果は[checkpoint metadata](../../artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777/)、[学習中の生成サンプル](../../artifacts/samples/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777/)、[5領域評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-domains.json)、[固定chat評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-chat-test-v1.json)、[固定chat全文TXT](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-chat-test-v1.txt)、[人手レビュー用テンプレート](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-chat-review.json)から確認できます。重い`.pt`本体はGit管理外ですが、metadataにSHA-256を保存しています。
+
 ## 次に試すこと
 
-三つのseedで再現性が確認できれば、Issue #1の会話データを含む20M条件を50Mへ拡張します。再現性が弱ければ、長文割合の最適化を続ける前に人手レビューの入力を整え、話題適合・役割適合・崩壊を評価します。その後、必要に応じてSFTとrehearsalのToken予算を独立制御する実装を検討します。
+三つのseedで再現性が弱いことが分かったため、長文割合2/6を採用条件にせず、人手レビューを先に実施できる形式へ整えます。その後、現在の標準候補である実験067相当の条件を20Mで再確認するか、会話データの話題適合を改善するデータ形式を試します。人手評価と基準条件が固まった後、Issue #1の会話データを含む一般日本語モデルを50Mへ拡張し、容量を増やすことで話題継続が改善するかを検証します。

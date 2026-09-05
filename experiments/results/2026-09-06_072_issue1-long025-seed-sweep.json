@@ -1,0 +1,64 @@
+{
+  "format": "issue1-long-response-seed-sweep-v1",
+  "created": "2026-09-06",
+  "hypothesis": "SFT部分6例のうち長文2例という条件が学習seedを変えても会話性能を改善するか確認する",
+  "conditions": [
+    {
+      "training_seed": 42,
+      "experiment": "068",
+      "config": "configs/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k.toml",
+      "evaluation": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-chat-test-v1.json",
+      "domains": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-domains.json"
+    },
+    {
+      "training_seed": 123,
+      "experiment": "071",
+      "config": "configs/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed123.toml",
+      "evaluation": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed123-chat-test-v1.json",
+      "domains": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed123-domains.json"
+    },
+    {
+      "training_seed": 777,
+      "experiment": "072",
+      "config": "configs/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777.toml",
+      "evaluation": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-chat-test-v1.json",
+      "domains": "artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long025-mps-3k-seed777-domains.json"
+    }
+  ],
+  "evaluation_seed": 42,
+  "population_statistics": {
+    "overall_mean_generated_tokens": {
+      "values": [11.208333333333334, 13.479166666666666, 12.854166666666666],
+      "mean": 12.513888888888888,
+      "sd": 0.9577796307020219
+    },
+    "overall_f1": {
+      "values": [0.22035179774459687, 0.17742804921745478, 0.17223699855393815],
+      "mean": 0.19000561517199657,
+      "sd": 0.0215623877665871
+    },
+    "short_f1": {
+      "values": [0.31712015415140415, 0.26343697273769423, 0.23923167512173676],
+      "mean": 0.2732629340036117,
+      "sd": 0.03254807651754793
+    },
+    "medium_f1": {
+      "values": [0.18181378858518282, 0.13725585688805492, 0.16042859120813763],
+      "mean": 0.15983274556045846,
+      "sd": 0.01819557809484443
+    },
+    "long_f1": {
+      "values": [0.16212145049720386, 0.13159131802661536, 0.11705072933194022],
+      "mean": 0.1369211659519198,
+      "sd": 0.01878204702669354
+    }
+  },
+  "domain_loss_population_statistics": {
+    "general": {"values": [5.461471398671468, 5.473650614420573, 5.452846686045329], "mean": 5.462656233045791, "sd": 0.008534390558945884},
+    "conversation": {"values": [2.884239991505941, 2.8944615523020425, 2.892301638921102], "mean": 2.8903343942430286, "sd": 0.0043986827571140625},
+    "medical": {"values": [3.2323686281840005, 3.2148310343424478, 3.223219394683838], "mean": 3.223473019070095, "sd": 0.007161938445252921},
+    "RPC": {"values": [2.8729087511698403, 2.8796945412953696, 2.897690773010254], "mean": 2.883431355158488, "sd": 0.010456576399942744},
+    "MRMP": {"values": [2.3279105027516684, 2.329469601313273, 2.3421444098154702], "mean": 2.333174837960137, "sd": 0.006374303179361904}
+  },
+  "interpretation": "長文2例条件の固定chat-test F1はseed間で0.172237〜0.220352に分散し、long F1も0.117051〜0.162121に分散した。5領域lossの分散より生成評価の分散が大きく、seed 42の改善だけで長文層化の効果を採用する根拠は不足している。"
+}
