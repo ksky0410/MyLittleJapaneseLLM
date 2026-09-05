@@ -53,14 +53,36 @@ Colab CLIでT4割り当てを試します。失敗時はHTTP応答とsession状�
 
 step 600ではvalidation loss 3.945801、PPL 51.7177、step 700では3.927178、PPL 50.7635、step 800では3.923494、PPL 50.5769、step 900では3.888334、PPL 48.8294となりました。step 1,000ではtrain loss 3.927993、SFT loss 3.691380、rehearsal loss 4.874445、validation loss 3.880866、PPL 48.4662、learning rate 4.0147e-5、経過時間508.48秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。固定promptへのstep 1,000生成は「こんにちは!」となり、step 500の不自然な続きから変化しました。ここまで異常はありません。
 
+step 600ではvalidation loss 3.945801、PPL 51.7177、step 700では3.927178、PPL 50.7635、step 800では3.923494、PPL 50.5769、step 900では3.888334、PPL 48.8294となりました。step 1,000ではtrain loss 3.927993、SFT loss 3.691380、rehearsal loss 4.874445、validation loss 3.880866、PPL 48.4662、learning rate 4.0147e-5、経過時間508.48秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。固定promptへのstep 1,000生成は「こんにちは!」となり、step 500の不自然な続きから変化しました。ここまで異常はありません。
+
 step 1,100ではvalidation loss 3.869417、PPL 47.9144、step 1,200では3.846312、PPL 46.8201、step 1,300では3.844671、PPL 46.7433、step 1,400では3.827139、PPL 45.9309となりました。step 1,500ではtrain loss 3.929037、SFT loss 3.874792、rehearsal loss 4.146019、validation loss 3.816231、PPL 45.4327、learning rate 2.8742e-5、経過時間783.48秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、1,500 step時点の成果物をコミット・pushします。固定promptへのstep 1,500生成は「よろしくお願いします。」となりました。ここまで異常はありません。
 
 step 1,600ではvalidation loss 3.796752、PPL 44.5562、step 1,700では3.796638、PPL 44.5512、step 1,800では3.790928、PPL 44.2975、step 1,900では3.782652、PPL 43.9324となりました。step 2,000ではtrain loss 2.982955、SFT loss 2.972044、rehearsal loss 3.026596、validation loss 3.775949、PPL 43.6389、learning rate 1.6982e-5、経過時間1,061.16秒となりました。step 1,600〜2,000の生成本文、step 2,000のcheckpoint metadata、metricsを保存し、2,000 step時点の成果物をコミット・pushします。固定promptへのstep 2,000生成は「こんにちは!」となりました。068の同step validation loss 3.785511より低いものの、長文層の効果は最終評価で判断します。
 
+step 2,100ではvalidation loss 3.767005、PPL 43.2503、step 2,200では3.764137、PPL 43.1265、step 2,300では3.747430、PPL 42.4119、step 2,400では3.747834、PPL 42.4291となりました。step 2,500ではtrain loss 3.669346、SFT loss 3.616761、rehearsal loss 3.879684、validation loss 3.741541、PPL 42.1629、learning rate 8.2333e-6、経過時間1,332.80秒でした。step 2,600ではvalidation loss 3.742669、PPL 42.2105、step 2,700では3.738292、PPL 42.0261、step 2,800では3.731720、PPL 41.7508、step 2,900では3.731568、PPL 41.7445となりました。最終step 3,000ではtrain loss 3.958955、SFT loss 4.074616、rehearsal loss 3.496309、validation loss 3.723846、PPL 41.4234、learning rate 5.0000e-6、経過時間1,605.73秒となりました。step 2,100〜3,000の生成本文、step 2,500・3,000のcheckpoint metadata、metrics、summaryを保存し、学習はNaN、OOM、shape errorなく完走しました。
+
 ## 実験終了後の結果と解釈
 
-学習終了直後に、最終train・validation loss、PPL、最良checkpoint、学習時間、5領域loss、EOS、長さ別F1、source別F1、生成例、成果物hash、実験068および067との差を追記します。失敗した場合も削除せず、原因不明ならそのまま記録します。
+学習はMPS上で完走しました。実際のbackendはPyTorch 2.14.0、deviceは`mps`、AMPは無効、parameter数は19,308,032、summary上の学習時間は1,606.35秒でした。Colab T4は開始前のassignment endpointでHTTP 503となったため、予定どおりMPSへ切り替えました。NaN、OOM、shape error、checkpoint reload errorは発生していません。最良checkpointはstep 3,000で、`best.pt`のSHA-256は`e6fc24d55dad637e75eb5e4f691a7fcf3c9ebb29a6311209a5ddc2f0389c6d96`です。
+
+5領域のvalidation lossは、general 5.456032（PPL 234.1664）、conversation 2.878196（17.7822）、medical 3.233512（25.3686）、RPC 2.868983（17.6191）、MRMP 2.311286（10.0874）でした。実験067との差はgeneral -0.013848、conversation -0.019392、medical +0.015280、RPC -0.030946、MRMP -0.030127です。068との差はgeneral -0.005439、conversation -0.006044、medical +0.001144、RPC -0.003926、MRMP -0.016625です。1/6条件でも一般・会話・RPC・MRMPのlossは一様samplingより下がりましたが、medical lossは067・068より高くなりました。validationだけではlong samplingの最適値は決められません。
+
+固定chat-test v1の48例では、EOS到達は48/48、平均生成Token数は11.9792、precisionは0.278684、recallは0.220230、Token overlap F1は0.215316でした。short・medium・long別F1はそれぞれ0.324356、0.168507、0.153085です。実験067との差は、平均生成長+1.5000、precision+0.017277、recall+0.004008、全体F1+0.007563、short F1+0.001687、medium F1+0.001664、long F1+0.019336です。実験068との差は、平均生成長+0.7708、precision-0.019112、recall-0.010046、全体F1-0.005036、short F1+0.007235、medium F1-0.013307、long F1-0.009036です。
+
+この結果から、long F1は0行の一様sampling（0.133749）から1行（0.153085）、2行（0.162121）へ増えるにつれて改善しました。全体F1も0.207753、0.215316、0.220352と同じ順序で上がりましたので、今回の3条件では長文応答のoversamplingが会話の表層一致と平均生成長を改善する傾向が確認できました。ただし、1行から2行への増加でshort F1は0.324356から0.317120へ下がり、medical lossも1/6の3.233512、2/6の3.232369と一様条件の3.218233より悪いため、長文を増やすほど全領域で有利になるわけではありません。なお、3条件は同じseedでもbatchごとの乱数系列が条件変更によって変わるため、差は厳密なpaired ablationではなく、単一seedの比較候補として扱います。
+
+source別の集計では、MRMP 24例のF1が0.225914、平均生成長が8.3333、RPC 24例のF1が0.204719、平均生成長が15.6250で、両sourceともEOS到達は24/24でした。068のMRMP F1 0.228068、RPC F1 0.212635よりは低いものの、個々の長文生成には、文脈に応じた返答に近いものと、話題を外した不自然なものが混在しています。たとえば「Spotify」の話題に対してスポーツへ逸れる出力や、長い履歴に対して短い相づちだけを返す出力が残っています。そのため、long F1の上昇を話題継続能力の証明とは扱いません。
+
+固定promptのstep 3,000生成は、`<|speaker:DA|>こんにちは！`に対して`<|speaker:DC|>こんにちは!`でEOSへ到達しました。step 500の「そうですね!あなたは。」、step 1,000の「こんにちは!」、step 1,500の「よろしくお願いします。」、step 2,000の「こんにちは!」を含むstep 0〜3,000の全31個の生成本文を保存しています。悪い生成を含む48例の評価全文も削除せず保存しています。
+
+成果物のSHA-256は、metricsが`902ac3081beb9c1d9cb5a555c90f845e09fcdf7311c7dc335c9dcaf987430ce6`、summaryが`0602f56402bd527243784fd9e8fe067c17444f4e9c45fba2d1c793f0b1ac9b43`、best metadataが`f46ac938addd03ba5e2f2d1d8fc79e2da6ad0ba65a895db7577c096557aa5905`、step 3,000 metadataが`7b181da9d068384496637d4b6f1dbb2db19413693f968fbc5c2ae24412a59584`、step 3,000生成TXTが`fffa73d93c4b9662dc906591a36597c336a723d8f0fd04c0785c28c51bff2f1b`です。5領域評価JSONは`33efb06fdf64e90a677740191deb37f966b02e84aee5c4640f71af211996c801`、固定chat評価JSONは`fac7e0b2f1576e614864182c7d23e9464949a9e9028c96c64ce514c45a4a8a72`、固定chat全文TXTは`715379f2b7a2b1fd93a3b90eb64defea3d68909d86e3d601a00595482800bd3b`です。
+
+評価結果と生成本文は、[checkpoint metadata](../../artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-long0167-mps-3k/)、[学習中の生成サンプル](../../artifacts/samples/issue1-both-20m-sft-source-rehearsal020-long0167-mps-3k/)、[5領域評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long0167-mps-3k-domains.json)、[固定chat評価JSON](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long0167-mps-3k-chat-test-v1.json)、[固定chat全文TXT](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-long0167-mps-3k-chat-test-v1.txt)から確認できます。重い`.pt`本体はGit管理外ですが、checkpoint metadataへSHA-256を記録しています。
+
+## 結論
+
+実験069は実装上成功しました。SFT部分の長文例を1/6へ増やすと、一様samplingの067よりlong F1と全体F1が改善し、068の2/6条件との間に入る結果になりました。これは、長文応答を増やす効果が今回の範囲では段階的に現れるという仮説を支持します。一方、068より全体F1とlong F1が低く、medical lossも一様条件より悪いため、現時点の標準条件を1/6へ決めるのではなく、1/6を低コストな候補、2/6を高い会話適合候補として記録します。自然さ・話題継続については、Token overlapのみでは判断できません。
 
 ## 次に試すこと
 
-結果が068と同じ方向なら、SFT部分3/6の長文条件を追加して効果の飽和点を探します。結果が067に近ければ、長文oversamplingより会話テンプレートや話題継続評価の改善を優先します。段階比較が固まった後、20Mで選んだ条件を50Mへ拡大します。
+次はSFT部分3/6の長文条件を追加し、0/6・1/6・2/6・3/6の段階比較を完成させます。その後、長文のoversampling比率だけでなく、SFTとrehearsalのToken予算を独立に制御する実験へ進みます。長文層化の有効性が再現すれば、20Mで選んだ条件を50Mへ拡大し、Issue #1の会話データを含む一般日本語モデルで容量差を確認します。並行して、人手レビュー用に話題適合、応答の自然さ、話者marker維持、反復の評価欄を追加し、Token overlapと意味的品質を分離します。

@@ -1,13 +1,13 @@
 {
   "format_version": 1,
   "backend": "pytorch",
-  "checkpoint_role": "best",
-  "checkpoint_step": 3000,
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 2500,
   "checkpoint_interval": 500,
-  "checkpoint_train_loss": 3.9589550495147705,
-  "weights_file": "best.pt",
-  "weights_bytes": 77265478,
-  "weights_sha256": "e6fc24d55dad637e75eb5e4f691a7fcf3c9ebb29a6311209a5ddc2f0389c6d96",
+  "checkpoint_train_loss": 3.6693458557128906,
+  "weights_file": "step_002500.pt",
+  "weights_bytes": 77274253,
+  "weights_sha256": "318a3c2e2cc9c720c0e175cf2216b1beda019bcf108eee59d478e33cb9521dd6",
   "model": {
     "vocab_size": 4096,
     "dim": 384,
@@ -20,19 +20,19 @@
     "ffn_type": "swiglu"
   },
   "metrics": {
-    "step": 3000,
-    "train_loss": 3.9589550495147705,
-    "sft_train_loss": 4.074616432189941,
-    "validation_loss": 3.7238456130027773,
-    "validation_perplexity": 41.42338651483757,
-    "learning_rate": 5.0000132025016246e-06,
-    "elapsed_seconds": 1605.7252398328856,
+    "step": 2500,
+    "train_loss": 3.6693458557128906,
+    "sft_train_loss": 3.6167612075805664,
+    "validation_loss": 3.7415409684181213,
+    "validation_perplexity": 42.16291184659121,
+    "learning_rate": 8.23329117564698e-06,
+    "elapsed_seconds": 1332.796982999891,
     "rehearsal_ratio": 0.2,
     "eos_loss_weight": 0.5,
     "lr_schedule_steps": 3000,
     "long_response_ratio": 0.1666666667,
     "long_response_min_tokens": 24,
-    "rehearsal_train_loss": 3.496309280395508
+    "rehearsal_train_loss": 3.8796842098236084
   },
   "inputs": {
     "config_sha256": "84fc7601372d4e9f9b507d55c7da73024bbe2d4a6b498b1fd42020250945474e",
