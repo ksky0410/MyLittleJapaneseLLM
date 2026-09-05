@@ -63,6 +63,8 @@ wrapperはbundle展開先を`/content/small_llm_056`へ固定し、必要な実�
 
 会話JSONLとselection manifestの初回uploadは、Colab側の親ディレクトリが未作成だったためHTTP 500で失敗しました。Token列4種類のuploadや学習成果物には影響しておらず、専用の`colab_prepare_eval_056.py`で保存先を作成してから再送します。
 
+best checkpointの評価に加え、実験041との学習stepをそろえた比較が必要なため、step 10,000の`step_010000.pt`も同じdomain・chat評価へ通します。bestがstep 8,800であること自体を隠さず、両方の結果を別ファイルに保存します。
+
 ## 結果と解釈
 
 実験終了直後に、実際のruntime、最終・最良loss、PPL、checkpoint、生成例、実験041との差、仮説と一致した点、次に試す変更を追記します。未実施の場合は、未実施の理由と次の確認方法を明記します。
