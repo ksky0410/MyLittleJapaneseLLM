@@ -16,7 +16,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 設定は`configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml`です。当初の計画では040から最大step数と出力先だけを変え、それ以外のbatch size 8、evaluation/sample interval 100、evaluation batches 20、PyTorch標準AdamW、learning rate 3e-4、minimum learning rate 3e-5、warmup 300、weight decay 0.1、seed 42、CUDA float16 autocastとGradScalerを維持する予定でした。再試行用設定では、これらに加えてcheckpoint保存間隔だけを1,000 stepへ分離します。学習中の総Token exposureは、batch size 8とcontext length 256を掛けて、10,000 stepで約20.48M Tokenです。
 
-計画を更新したGit commitは`7e4cc13`です。最初の失敗試行で用いた設定ファイルのSHA-256は`3c3bd9a07a303d50f6ca17a9d29a02dd36f265671d9501f16596dc3532b90bab`です。checkpoint保存間隔を分離したコードcommitは`22cafd6`、評価stepと実際のcheckpoint stepをmetadataで分けた再試行用commitは`666d1f3`です。再試行用設定ファイルのSHA-256は`8b79fac4389c8bc781dafe1076e4083d19ca9c81543f15bfddf414b33ec01d95`、bundleは`/tmp/small_llm-colab-041-666d1f3.tar.gz`、サイズ9.5MB、SHA-256は`926bc4aaacd7bdecd2eb043ad98595d3644a005f6607e4807cf8be50f265bfb3`です。bundleからPythonのcacheは除外しています。ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
+計画を更新したGit commitは`7e4cc13`です。最初の失敗試行で用いた設定ファイルのSHA-256は`3c3bd9a07a303d50f6ca17a9d29a02dd36f265671d9501f16596dc3532b90bab`です。checkpoint保存間隔を分離したコードcommitは`22cafd6`、評価stepと実際のcheckpoint stepをmetadataで分けたcommitは`666d1f3`、新規kernelとbundleのhashを検証する再試行用commitは`5ff0463`です。再試行用設定ファイルのSHA-256は`8b79fac4389c8bc781dafe1076e4083d19ca9c81543f15bfddf414b33ec01d95`、bundleは`/tmp/small_llm-colab-041-5ff0463.tar.gz`、サイズ9.5MB、SHA-256は`27d776f394b73140e3aa901f7095add90eb0bf7ad7ebd6de10bddaa226e25b93`です。bundleからPythonのcacheは除外しています。ColabのPyTorch/CUDA/T4情報は、学習開始後に追記します。予定コマンドは次のとおりです。
 
 ```bash
 colab new --session torch20m-wikipedia-mid-colab-10k --gpu T4
