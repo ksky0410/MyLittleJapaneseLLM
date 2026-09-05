@@ -10,7 +10,7 @@
 
 ## 再現条件
 
-実験開始前の基準commitは`d737a1b`です。configのSHA-256は`e657c439f4297e7339a4f14339254385e785be89c2ce8dfa056272a855dbaf6d`、base checkpointのSHA-256は`326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`、TokenizerのSHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。会話SFT trainは64,423例・response 770,990 TokenでSHA-256は`645febae8fc8d471a78822027c3b693da346cf605c5cdf435a84902dffb73a44`、validationは49,045例・response 738,660 TokenでSHA-256は`fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1`、rehearsal Token列のSHA-256は`d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`です。今回のColab bundleには元の会話JSONLや医師国家試験の原本を含めず、取得済みの加工済みNPZ・Token列と実行に必要なコードだけを含めます。元の`/Users/koseki/projects/medilink_analysis`と医師国家試験データは変更しません。
+実験開始前の実行コードとconfigの基準commitは`8d0bd5d`です。bundle hashと入力hashを記録したノート更新のみ、その後のcommit `3a74740`へ分離しています。configのSHA-256は`e657c439f4297e7339a4f14339254385e785be89c2ce8dfa056272a855dbaf6d`、base checkpointのSHA-256は`326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`、TokenizerのSHA-256は`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。会話SFT trainは64,423例・response 770,990 TokenでSHA-256は`645febae8fc8d471a78822027c3b693da346cf605c5cdf435a84902dffb73a44`、validationは49,045例・response 738,660 TokenでSHA-256は`fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1`、rehearsal Token列のSHA-256は`d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`です。今回のColab bundleには元の会話JSONLや医師国家試験の原本を含めず、取得済みの加工済みNPZ・Token列と実行に必要なコードだけを含めます。元の`/Users/koseki/projects/medilink_analysis`と医師国家試験データは変更しません。
 
 モデルはRoPE・LayerNorm・SwiGLU、dim 384、10層、6 heads、context length 256、19,308,032 parameterです。Tokenizerはvocab 4,096の`mixed-ja-80-10-10-v2-unigram.model`、baseは実験050の`artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt`です。会話SFT trainは`artifacts/sft/issue1-both-balanced-v1/train.npz`、validationは`artifacts/sft/issue1-both-full-v1/validation.npz`、rehearsal Token列は`artifacts/tokens/mixed-ja-80-10-10-v2-train.bin`です。
 
@@ -40,7 +40,7 @@ Colabへ送るbundleは`/tmp/exp067_bundle.tar.gz`で、作成日時は2026年9�
 
 ## 実験中の記録
 
-準備時点ではColab sessionは存在せず、`colab sessions`でactive sessionがないことを確認しました。学習開始前にbundle hash、入力hash、Git commit、Colab session名またはMPS runtime、学習開始時刻をここへ追記します。学習中は1,000 step以内の間隔でloss、PPL、learning rate、経過時間、生成本文、警告、途中停止を追記します。
+準備時点ではColab sessionは存在せず、`colab sessions`でactive sessionがないことを確認しました。22:06:44 JSTにsession `exp067-both-rehearsal020`のT4割り当てを試みましたが、Colab APIがHTTP 503 `Service Unavailable`を返し、sessionは作成されませんでした。bundle uploadとColab上の学習は発生していません。これまでのT4割り当て失敗と同じため、予定どおり同じbundleを用いたMPSへ切り替えます。学習中は1,000 step以内の間隔でloss、PPL、learning rate、経過時間、生成本文、警告、途中停止を追記します。
 
 ## 実験終了後の結果と解釈
 
