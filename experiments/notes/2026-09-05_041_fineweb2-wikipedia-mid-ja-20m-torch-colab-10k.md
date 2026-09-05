@@ -31,6 +31,8 @@ colab stop --session torch20m-wikipedia-mid-colab-10k
 
 2026-09-05 12:15 JST、前回のsession再利用事故を避けるため、`torch20m-wikipedia-mid-colab-10k-r2`という新規sessionで`colab run --gpu T4 --keep scripts/colab_probe.py`を実行し、probe成功後に同じfresh kernelへbundleをuploadする計画を開始します。probeまたは新規GPU割当に失敗した場合は、学習を開始せず、CLI出力とsession状態をこのノートへ追記します。
 
+12:15 JSTのfresh probeは、`colab run --session torch20m-wikipedia-mid-colab-10k-r2 --gpu T4 --keep --timeout 180 scripts/colab_probe.py`で実行しましたが、HTTP 412 `Precondition Failed`、`TooManyAssignmentsError`により割当できませんでした。コマンド終了後の`colab sessions`には、想定していなかった既存名`torch20m-wikipedia-mid-colab-10k`のT4 sessionが表示されたため、古いkernelを再利用しないよう直ちに`colab stop --session torch20m-wikipedia-mid-colab-10k`で停止し、その後`colab sessions`が空であることを確認しました。probeは実行されず、041の学習も開始しておりません。
+
 2026-09-05、041専用の新規T4 session `torch20m-wikipedia-mid-colab-10k`の作成を試みましたが、Colab CLIがHTTP 412 `Precondition Failed`を返し、`TooManyAssignmentsError`で割当できませんでした。入力bundleやリポジトリは変更されていません。この失敗は、040の評価用session作成失敗と同様に削除せず記録します。
 
 新規割当の代わりに`colab sessions`を再確認したところ、040で使用した既存session `torch20m-wikipedia-mid-colab-5k`がサーバー上に残っていることが分かりました。040の学習出力は別ディレクトリに保存済みで、041の出力先は`fineweb2-wikipedia-mid-ja-20m-torch-colab-10k`と分離されているため、同じT4 sessionへ041 bundleを上書きuploadして再利用します。再利用後は041の成果物回収を確認してから、明示的にsessionを停止し、もう一度`colab sessions`を確認します。
