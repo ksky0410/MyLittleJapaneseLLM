@@ -42,6 +42,8 @@ uv run python scripts/train_torch.py \
 
 step 200はtrain loss 6.332452、general validation loss 6.819515、PPL 915.54、経過174.55秒、step 300は5.761728、6.478393、PPL 650.92、経過279.86秒、step 400は5.644550、6.151804、PPL 469.56、経過403.54秒でした。step 500ではtrain loss 5.254088、general validation loss 5.943526、PPL 381.28、learning rate 2.9459e-4、経過529.81秒となり、step 100からvalidation lossが1.146378低下しました。step 500のcheckpoint metadataにはweights SHA-256 `c9f6661ccb29c390346342024e2af1c24c5dd6c139385ce636b7fa9e022a29fa`を記録しています。固定promptの生成はstep 0の漢字断片中心の出力から、step 500では数字・記号の長い列へ変化しましたが、自然な返答ではありません。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
 
+step 600はtrain loss 4.860228、general validation loss 5.724469、PPL 306.27、経過654.43秒、step 700は4.535986、5.590585、PPL 267.89、経過779.78秒、step 800は4.461191、5.477937、PPL 239.35、経過907.17秒、step 900は4.317969、5.388396、PPL 218.85、経過1033.59秒でした。step 1,000ではtrain loss 4.366850、general validation loss 5.297207、PPL 199.78、learning rate 2.3815e-4、経過1165.51秒となりました。step 500からvalidation lossは0.646319低下し、step 1,000のcheckpoint weights SHA-256は`47bf32482a4d6552783c17e00faaeaecbc1d5bcd8a93672b9c77bf69b8ec5666`です。固定promptは、step 500の記号列から、step 1,000では助詞や文末表現を含む長い日本語風の断片へ変わりましたが、「今日なにしてた？」への一貫した返答にはなっていません。ここまでNaN、OOM、shape error、警告はありません。学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
