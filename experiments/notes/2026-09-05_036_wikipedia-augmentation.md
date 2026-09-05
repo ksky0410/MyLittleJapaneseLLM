@@ -62,6 +62,8 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 smokeは同日実行し、100 stepまで正常に完走しました。step 1のtrain lossは8.755156、general validation lossは8.782042、perplexityは6516.169、step 100のtrain lossは6.232876、validation lossは6.992349、perplexityは1088.274でした。学習時間は10.93秒で、NaN、shape error、データ長エラー、メモリ不足は発生していません。smokeのmetrics SHA-256は`432560367eb735e47e74c1c8b84110d5cb19cedb4cbd28b4610d37552f408606`、summaryは`659da2566aff563350791638dd25dedf87c67d885ddc062588d48cb83efd1f71`、step100 metadataは`88107bc091742b59415ccac47e50b6594f61bfac1cd8d8f5cbeac8dd6dc89ab0`、生成TXTは`a065624550faf46186704fb52d05fdef6d3ba2280447c8570f65ecbb241dfe02`です。本学習へ進む条件を満たしました。
 
+本学習は同日開始し、step 1,000まで正常に進行しています。step 500ではtrain loss 5.263438、general validation loss 6.219234、perplexity 502.318、step 700ではtrain loss 4.915477、validation loss 6.002453、perplexity 404.420、step 1,000ではtrain loss 4.763634、validation loss 5.777946、perplexity 323.095でした。step 1,000時点の学習率は`2.381486e-4`、経過時間は112.93秒です。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。学習は継続中です。
+
 ## 実験中の記録
 
 2026-09-05、実験031で抽出したWikipedia本文と既存4 sourceを用いた混合Token列を準備しました。混合manifestは`artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1.manifest.json`、出力本文のSHA-256は`4ddbc8da19ab87663a3d94e44db2d5a881993679f38c19c42df41c813fd8b305`、実際のToken数は9,999,973です。Token列は`artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1-train.bin`、SHA-256は`d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4`です。Token metadataではvocab size 4,096、EOS ID 3を確認しました。
