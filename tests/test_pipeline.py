@@ -95,6 +95,27 @@ class PipelineTests(unittest.TestCase):
         )
         self.assertEqual(parameters, 19_382_016)
 
+    def test_wikipedia_augmentation_keeps_5m_model_and_uses_new_paths(self) -> None:
+        config = load_config(
+            ROOT / "configs/fineweb2-wikipedia-augmented-ja-5m-2p5k.toml"
+        )
+        self.assertEqual(config.model.dim, 240)
+        self.assertEqual(config.model.layers, 6)
+        self.assertEqual(config.model.context_length, 256)
+        self.assertEqual(config.training.max_steps, 2500)
+        self.assertIn("wikipedia", str(config.paths.train_tokens))
+        self.assertIn("wikipedia", str(config.paths.checkpoint_dir))
+        parameters = estimate_parameter_count(
+            4096,
+            config.model.dim,
+            config.model.layers,
+            config.model.heads,
+            config.model.context_length,
+            config.model.mlp_ratio,
+            config.model.position_embedding,
+        )
+        self.assertEqual(parameters, 5_197_920)
+
     def test_position_embedding_defaults_to_absolute_and_rope_config_is_valid(
         self,
     ) -> None:
