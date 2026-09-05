@@ -30,7 +30,7 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、vocab siz
 
 ## 実験中の記録
 
-2026-09-05、学習を開始しました。step 1ではtrain loss 8.721458、general validation loss 8.801644、perplexity 6645.158でした。warmup中のstep 300ではtrain loss 5.494156、validation loss 6.306765、perplexity 548.269、learning rate `3.000000e-4`、経過時間32.85秒でした。step 1,000ではtrain loss 4.797681、validation loss 5.606802、perplexity 272.272、learning rate `2.855307e-4`、経過時間173.07秒、step 1,100ではtrain loss 4.449255、validation loss 5.548042、perplexity 256.734、step 1,400ではtrain loss 4.247522、validation loss 5.433506、perplexity 228.951でした。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。step 300から1,400までの生成結果は`artifacts/samples/fineweb2-mixed-ja-5m-5k/`へ保存されています。学習は継続中です。
+2026-09-05、学習を開始しました。step 1ではtrain loss 8.721458、general validation loss 8.801644、perplexity 6645.158でした。warmup中のstep 300ではtrain loss 5.494156、validation loss 6.306765、perplexity 548.269、learning rate `3.000000e-4`、経過時間32.85秒でした。step 1,000ではtrain loss 4.797681、validation loss 5.606802、perplexity 272.272、learning rate `2.855307e-4`、経過時間173.07秒、step 1,100ではtrain loss 4.449255、validation loss 5.548042、perplexity 256.734、step 1,400ではtrain loss 4.247522、validation loss 5.433506、perplexity 228.951、step 1,600ではtrain loss 4.552619、validation loss 5.383194、perplexity 217.717でした。ここまでNaN、shape error、データ長エラー、メモリ不足は発生していません。step 300から1,600までの生成結果は`artifacts/samples/fineweb2-mixed-ja-5m-5k/`へ保存されています。学習は継続中です。
 
 ## 結果と解釈
 
