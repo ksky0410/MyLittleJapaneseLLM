@@ -32,6 +32,8 @@ python3 scripts/train_sft_torch.py \
 
 元の`/Users/koseki/projects/medilink_analysis`と医師国家試験の原本は変更しません。rehearsalへ使うToken列は既存の加工済み混合列であり、一般日本語・会話・医療を含む構成と出所は既存manifestへ記録されています。重いcheckpoint本体はGitへ追加せず、metadataとSHA-256を追跡し、metrics、生成TXT、評価JSON/TXTはGitHubへ保存します。
 
+Colab用bundleは122,165,022 bytes、SHA-256 `b19323b378fbc718619eb5becd3c91d6b7c643163d1dad3ba52f927bf448df35`です。45MB以下の3 partへ分割し、`scripts/colab_concat_065.py`で結合後のbytesとhashを検証します。bundle内の実行コード、config、base checkpoint、Tokenizer、SFT train/validation、rehearsal Token列はwrapperで個別hashも照合します。
+
 ## 成功基準
 
 3,000 stepをNaN、OOM、shape error、checkpoint reload errorなく完走し、step 0から3,000まで100 step間隔の生成TXT、metrics、best metadataを保存することです。完走後、064と同じ5 domain、固定chat-test v1の48例、short・medium・long別F1を評価します。general・medical lossが064より改善し、EOS到達率を維持できれば仮説を支持する候補としますが、F1低下が大きい場合はrehearsal比率が強すぎると判断します。

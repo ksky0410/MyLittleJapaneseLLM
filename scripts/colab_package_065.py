@@ -1,4 +1,4 @@
-"""実験065の軽量成果物とcheckpoint hashをColab上でarchive化する。"""
+"""実験065の軽量成果物をColab側でarchive化する。"""
 
 from __future__ import annotations
 
@@ -7,14 +7,12 @@ import json
 import tarfile
 from pathlib import Path
 
-
 PROJECT = Path("/content/small_llm_065")
+CONDITION = "issue1-both-20m-sft-rehearsal-ratio025-colab-3k"
+CHECKPOINT_ROOT = PROJECT / "artifacts/checkpoints" / CONDITION
+SAMPLES_ROOT = PROJECT / "artifacts/samples" / CONDITION
 ARCHIVE = Path("/content/exp065-lightweight.tar.gz")
 MANIFEST = Path("/content/exp065-manifest.json")
-ROOTS = (
-    PROJECT / "artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal025-colab-3k",
-    PROJECT / "artifacts/samples/issue1-both-20m-sft-source-rehearsal025-colab-3k",
-)
 
 
 def sha256(path: Path) -> str:
@@ -26,9 +24,10 @@ def sha256(path: Path) -> str:
 
 
 def main() -> None:
+    roots = (CHECKPOINT_ROOT, SAMPLES_ROOT)
     files = sorted(
         path
-        for root in ROOTS
+        for root in roots
         if root.exists()
         for path in root.iterdir()
         if path.is_file() and path.suffix in {".json", ".jsonl", ".txt"}
@@ -44,11 +43,11 @@ def main() -> None:
             "bytes": path.stat().st_size,
             "sha256": sha256(path),
         }
-        for root in ROOTS[:1]
-        for path in sorted(root.glob("*.pt"))
+        for path in sorted(CHECKPOINT_ROOT.glob("*.pt"))
     ]
     manifest = {
         "experiment": "065",
+        "condition": CONDITION,
         "lightweight_files": len(files),
         "lightweight_archive": str(ARCHIVE),
         "archive_bytes": ARCHIVE.stat().st_size,
@@ -56,7 +55,7 @@ def main() -> None:
         "checkpoints": checkpoints,
     }
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-    print(json.dumps(manifest, ensure_ascii=False, indent=2))
+    print(json.dumps(manifest, ensure_ascii=False, indent=2), flush=True)
 
 
 if __name__ == "__main__":
