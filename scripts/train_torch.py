@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import random
 import time
@@ -21,6 +22,35 @@ from my_little_japanese_llm.training import learning_rate, perplexity, signature
 def _append_jsonl(path: Path, value: dict) -> None:
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(value, ensure_ascii=False) + "\n")
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _runtime_info(torch: object, device: object, amp_enabled: bool) -> dict[str, object]:
+    info: dict[str, object] = {
+        "torch": torch.__version__,
+        "cuda": torch.version.cuda,
+        "device": str(device),
+        "amp_enabled": amp_enabled,
+    }
+    if device.type == "cuda":
+        properties = torch.cuda.get_device_properties(device)
+        info.update(
+            {
+                "gpu_name": torch.cuda.get_device_name(device),
+                "gpu_capability": list(torch.cuda.get_device_capability(device)),
+                "gpu_total_memory_bytes": properties.total_memory,
+                "peak_memory_allocated_bytes": torch.cuda.max_memory_allocated(device),
+                "peak_memory_reserved_bytes": torch.cuda.max_memory_reserved(device),
+            }
+        )
+    return info
 
 
 def _batch(
@@ -206,6 +236,12 @@ def main() -> None:
     metrics_path.write_text("", encoding="utf-8")
     started = time.monotonic()
     signature = signature_from_config(config, vocab_size)
+    input_hashes = {
+        "config_sha256": _sha256_file(config.source_path),
+        "tokenizer_sha256": _sha256_file(config.paths.tokenizer_model),
+        "train_tokens_sha256": _sha256_file(config.paths.train_tokens),
+        "val_tokens_sha256": _sha256_file(config.paths.val_tokens),
+    }
 
     def write_sample(step: int) -> str:
         prompt_ids = processor.encode(config.generation.prompt, out_type=int)
@@ -304,14 +340,17 @@ def main() -> None:
             _append_jsonl(metrics_path, latest_metrics)
             checkpoint = config.paths.checkpoint_dir / f"step_{step:06d}.pt"
             torch.save(model.state_dict(), checkpoint)
+            runtime = _runtime_info(torch, device, amp_enabled)
             metadata = {
                 "format_version": 1,
-                "backend": "pytorch",
+                "backend": "pytorch-cuda" if device.type == "cuda" else "pytorch",
                 "weights_file": checkpoint.name,
+                "weights_bytes": checkpoint.stat().st_size,
+                "weights_sha256": _sha256_file(checkpoint),
                 "model": signature,
                 "metrics": latest_metrics,
-                "device": str(device),
-                "amp_enabled": amp_enabled,
+                "inputs": input_hashes,
+                "runtime": runtime,
             }
             checkpoint.with_suffix(".json").write_text(
                 json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
@@ -324,11 +363,14 @@ def main() -> None:
             write_sample(step)
 
     summary = {
-        "backend": "pytorch",
-        "device": str(device),
+        "backend": "pytorch-cuda" if device.type == "cuda" else "pytorch",
+        "runtime": _runtime_info(torch, device, amp_enabled),
+        "inputs": input_hashes,
         "parameter_count": parameter_count(model),
         "final_step": max_steps,
-        "best_checkpoint": str(best_checkpoint) if best_checkpoint else None,
+        "best_checkpoint": (
+            best_checkpoint.name if best_checkpoint is not None else None
+        ),
         "best_validation_loss": best_validation_loss,
         "elapsed_seconds": time.monotonic() - started,
     }
