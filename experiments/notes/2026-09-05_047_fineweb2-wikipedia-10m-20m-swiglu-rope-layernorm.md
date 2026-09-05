@@ -46,6 +46,8 @@ smoke開始前の基準commitは`86ad135`です。smoke設定のSHA-256は`13935
 
 13:34 JST、commit `67e51f9`を基準に047 bundle `/tmp/small_llm-colab-047.tar.gz`を作成しました。bundleサイズは約12MB、SHA-256は`d93990206422225bbfff8dc13bc40c9753f12ec33d5628ca4adddbc80f745468`です。bundleには047のsmoke・本学習config、PyTorch学習コード、SwiGLU/RoPE対応のモデルコード、Tokenizer、10M Token列、general validation Token列を含め、Python cacheは除外しました。開始前の予定・hashをこのcommitへ固定してから、Colab sessionを作成します。
 
+13:35 JST、`colab new --session torch20m-swiglu-rope-colab-047 --gpu T4`で新規T4 sessionを作成しようとしましたが、HTTP 412 `Precondition Failed`、`TooManyAssignmentsError`で割り当てられませんでした。041の完走直後でColab側の割当上限に達した可能性があります。`colab sessions`に047 sessionは残らず、bundleのuploadや047のColab学習stepには到達していません。既存sessionの流用は行わず、失敗を記録したうえで、構造確認だけをローカルPyTorch CPU smokeへ切り分けます。
+
 ## 結果と解釈
 
 実験終了後、smokeと本学習を混ぜずに、backend、最終および最良checkpoint、train・validation loss、domain評価、固定chat評価、reload生成、失敗・停止理由、成果物hashを追記します。20Mモデルの出力を医療助言や医学的正解として扱わず、医師国家試験データを含むことによる見かけの専門性と、一般日本語の生成能力を分けて評価します。
