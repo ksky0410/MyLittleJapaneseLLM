@@ -1,0 +1,33 @@
+[paths]
+prepared_dir = "artifacts/corpus/mixed-ja-80-10-10-v2"
+tokenizer_model = "artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model"
+train_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-train.bin"
+val_tokens = "artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin"
+checkpoint_dir = "artifacts/checkpoints/rope-context512-mixed-ja-5m-smoke"
+samples_dir = "artifacts/samples/rope-context512-mixed-ja-5m-smoke"
+
+[model]
+dim = 240
+layers = 6
+heads = 6
+context_length = 512
+mlp_ratio = 4
+position_embedding = "rope"
+
+[training]
+batch_size = 8
+max_steps = 500
+eval_interval = 100
+sample_interval = 100
+eval_batches = 20
+learning_rate = 0.0003
+min_learning_rate = 0.00003
+warmup_steps = 300
+weight_decay = 0.1
+seed = 42
+
+[generation]
+prompt = "今日は"
+max_new_tokens = 160
+temperature = 0.8
+top_k = 40
