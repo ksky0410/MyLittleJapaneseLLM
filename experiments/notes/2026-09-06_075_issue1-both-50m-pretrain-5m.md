@@ -52,6 +52,14 @@ step 2,100はtrain loss 3.520096、general validation loss 4.746451、PPL 115.17
 
 学習完走時点では、前回073の約1M Token条件のbest validation loss 6.228799に対して、本実験は4.689170で1.539629低下しました。学習中のvalidation曲線も、073がstep 1,300以降に悪化したのに対し、本実験はstep 2,500まで改善を続けました。このため「50Mモデルに約1M Tokenではデータ不足が強く、約5M Tokenへ増やすと少なくともgeneral language modelingは改善する」という仮説は支持されます。ただし、同じ学習Token列ではなく混合データの構成も変わっているため、約5倍のToken数だけの効果とは断定せず、領域別評価と固定chat-testを実行してから結論を確定します。次にbest checkpointをconversation・medical・RPC・MRMPを含むdomain評価へ回し、生成サンプルはGitHubへ追加します。
 
+## 評価結果と解釈
+
+best checkpointの5領域評価はCPU、eval batches 20で実行しました。general validation lossは4.689170、conversationは2.889645、medicalは2.978035、RPCは2.855596、MRMPは2.582441でした。073の50M・約1M Token条件と比較すると、それぞれ1.539629、0.412347、0.544530、0.418280、0.214785低下しており、5領域すべてで改善しました。特にgeneralとmedicalの差が大きく、混合学習列に含まれるFineWeb2 Edu Japaneseと医療データを一度だけでなく十分に学習できた効果が考えられます。ただし、073と075では学習Token列の内容・規模が異なるため、この差をToken数だけの因果効果とは扱いません。75のデータ構成、source比率、モデル容量を分けた追加対照が必要です。
+
+固定chat-test-v1の48例では、EOS到達48/48、平均生成長9.8958 Token、precision 0.081253、recall 0.055935、Token overlap F1 0.060641でした。short・medium・longのF1はそれぞれ0.046429、0.067933、0.067563でした。073のEOS 48/48、平均8.3958 Token、overall F1 0.072697と比べると、平均生成長は1.5000 Token伸びましたが、overall F1は0.012056低下しました。したがって、domain lossの大幅な改善は固定会話の表面一致へ直結せず、事前学習だけではIssue #1の自然な応答品質は未達です。出力には「そうですね」「それは同じ!」のような短い相づちに近いものもありますが、「そうかわいいのか?」「おそらくまでのデバイスとか見かけないんですね!」のように履歴と無関係な文も含まれます。context超過やtrain本文重複のある評価例もあるため、Token overlapだけで会話能力を判定しません。
+
+評価JSONは[`5領域評価`](../../artifacts/evaluations/issue1-both-50m-pretrain-5m-2p5k-domains.json)、固定chatの機械可読結果は[`chat-test-v1 JSON`](../../artifacts/evaluations/issue1-both-50m-pretrain-5m-2p5k-chat-test-v1.json)、全生成本文は[`chat-test-v1 TXT`](../../artifacts/evaluations/issue1-both-50m-pretrain-5m-2p5k-chat-test-v1.txt)、人手レビュー用templateは[`chat-review JSON`](../../artifacts/evaluations/issue1-both-50m-pretrain-5m-2p5k-chat-review.json)、学習中の生成は[`step別samples`](../../artifacts/samples/issue1-both-50m-pretrain-5m-2p5k/)です。レビュー状態は未確認であり、自然さ・話題適合性・応答完結性は人手評価待ちです。重い`.pt`本体はGit管理外ですが、step metadataとsummaryにhashを保存しています。
+
 ## 実験終了後の結果と解釈
 
 実験終了直後に、実際のruntime、最良・最終loss、PPL、学習時間、最大メモリまたは未計測の理由、best checkpointのhash、領域別評価、chat-test、固定promptの代表的な生成例、073との差、仮説との一致・不一致、次に変える条件を追記します。自動評価だけで自然さを断定せず、人手レビューが未実施ならその状態を明記します。
