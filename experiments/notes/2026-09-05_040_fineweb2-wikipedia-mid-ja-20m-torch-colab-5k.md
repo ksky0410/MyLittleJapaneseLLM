@@ -38,6 +38,10 @@ bootstrapは`/content/small_llm`へbundleを展開してから、`scripts/train_
 
 2026-09-05、名前付きT4 session `torch20m-wikipedia-mid-colab-5k`を作成し、bundleを`/content/small_llm_bundle.tar.gz`へuploadしました。最初のbundle hashは`5316852dee7950a94cfda5d494e9bae4b56b1609a3899f0bdccf49286d6ad103`でした。`colab exec --session torch20m-wikipedia-mid-colab-5k --timeout 1800 --file scripts/colab_bootstrap_040.py`を実行しましたが、Colabがwrapperを一時ディレクトリから評価するため、`from colab_bootstrap_train import main`で`ModuleNotFoundError`が発生しました。bundle展開、PyTorch初期化、Token列読み込み、学習stepには到達していません。この失敗は削除せず記録し、wrapperがbundleを先に展開してからimportする修正版へ更新します。
 
+その後、wrapperをbundle展開後にimportする形へ修正し、修正版bundle hash `6b45fc705d46f7da88c210fc4d3c80cf7eb32effc51f5cac432f58589ae0584b`を使用して同じT4 sessionを再実行しました。修正版の学習では、初回失敗と混ざらないよう同じ実験名の出力ディレクトリを新規作成し、step 1から5,000までを完走させました。学習中はstep 100間隔でmetrics・checkpoint metadataを保存し、step 100間隔の生成文も省略せず出力しました。全checkpointのSHA-256一覧と軽量成果物archiveをColab側で生成し、最良checkpoint、metrics、summary、生成文を回収します。学習完了後、Colab sessionは停止し、`colab sessions`で稼働中セッションがないことを確認する予定です。
+
+学習成果物を回収した後にPyTorch用の`evaluate_torch.py`を使い、同じcheckpointをgeneral、conversation、medical、FineWeb、Wikipediaの5 domainで評価し、既存の固定manifest `experiments/evaluation/chat-test-v1.json`にあるshort・medium・long各16例、合計48例のheld-out会話を生成評価します。MacBook側にはPyTorchがないため、評価もColab T4で行い、生成JSON/TXTと実行環境情報を回収します。評価用コードの追加とテストを完了した時点のGit commitを、実行開始前にこのノートへ追記します。
+
 ## 結果と解釈
 
 未実施です。
