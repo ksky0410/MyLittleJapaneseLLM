@@ -65,6 +65,8 @@ Colab CLIが利用可能ですので、学習前にT4 GPUの割り当てを一�
 
 step 600ではvalidation loss 3.944994、PPL 51.6760、step 700では3.926233、PPL 50.7156、step 800では3.922354、PPL 50.5192、step 900では3.900266、PPL 49.4156となりました。step 1,000ではtrain loss 3.740906、SFT loss 3.463129、rehearsal loss 4.852015、validation loss 3.891312、PPL 48.9751、learning rate 4.0147e-5、経過時間561.71秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。step 500の生成「こんにちは〜。」に対し、step 1,000は「よろしくお願いします!」となり、短い挨拶応答の表現が変化しました。長文層化の効果はまだ評価できないため、学習を継続します。
 
+step 1,100ではvalidation loss 3.859794、PPL 47.4556、step 1,200では3.843093、PPL 46.6696、step 1,300では3.840304、PPL 46.5396、step 1,400では3.829444、PPL 46.0369となりました。step 1,500ではtrain loss 3.643088、SFT loss 3.513138、rehearsal loss 4.162886、validation loss 3.820388、PPL 45.6219、learning rate 2.8742e-5、経過時間838.03秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、1,500 step時点の成果物をコミット・pushします。固定promptへのstep 1,500生成は「こんばんはー!」となり、短い挨拶の出力表現は引き続き変化しています。ここまで異常はありませんが、long stratumへの効果は最終評価まで保留します。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、実行条件、最終train・validation loss、PPL、最良checkpoint、学習時間、評価JSONと全文生成へのリンク、実験067との比較、次に変える条件を追記します。悪い生成や失敗も削除せず、GitHubから追跡できる形で保存します。
