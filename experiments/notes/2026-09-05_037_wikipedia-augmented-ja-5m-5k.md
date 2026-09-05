@@ -18,7 +18,7 @@
 
 実験036の結果commitは`575c02d`です。実験037のconfig SHA-256は`a0efd68cb9b1f4d895129359697c382fe3975038209974f3df5a99d7e6753a1f`です。学習はMacBook上の既存MLX環境で行い、smokeは省略します。実験036で同じモデル・Token列の100 step smokeと2,500 step本学習が成功済みであるため、今回は5,000 step本学習のみを実行します。
 
-本学習は同日開始し、step 1,200まで正常に進行しています。step 500ではtrain loss 5.263340、validation loss 6.219744、perplexity 502.574、step 1,000ではtrain loss 4.764680、validation loss 5.774941、perplexity 322.125、step 1,200ではtrain loss 4.705955、validation loss 5.739346、perplexity 310.861でした。step 1,200時点の学習率は`2.763507e-4`、経過時間は206.81秒です。step 1,200までNaN、shape error、データ長エラー、メモリ不足は発生しておらず、学習は継続中です。
+本学習は同日開始し、step 2,500まで正常に進行しています。step 500ではtrain loss 5.263340、validation loss 6.219744、perplexity 502.574、step 1,000ではtrain loss 4.764680、validation loss 5.774941、perplexity 322.125、step 1,200ではtrain loss 4.705955、validation loss 5.739346、perplexity 310.861、step 2,000ではtrain loss 4.340868、validation loss 5.512431、perplexity 247.753、step 2,500ではtrain loss 4.080081、validation loss 5.436808、perplexity 229.708でした。step 2,500時点の学習率は`1.786027e-4`、経過時間は470.15秒です。step 2,500までNaN、shape error、データ長エラー、メモリ不足は発生しておらず、学習は継続中です。
 
 予定コマンドは次のとおりです。
 
@@ -30,7 +30,7 @@
 
 ## 実験中の記録
 
-未実施です。
+step 2,000ではvalidation lossが5.512431、step 2,500では5.436808まで下がりました。実験036の同じstep 2,500のvalidation loss 5.525606より0.088798低く、現時点では学習期間を延長する仮説と一致する方向です。ただし、実験036とはlearning-rate scheduleの終点も異なるため、Wikipedia追加の効果だけとは解釈しません。step 2,500時点では学習時間470.15秒で、学習は継続中です。step 2,500までの生成結果も`artifacts/samples/fineweb2-wikipedia-augmented-ja-5m-5k/step_002500.txt`に保存しています。
 
 ## 結果と解釈
 
