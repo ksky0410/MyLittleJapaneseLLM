@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "backend": "pytorch",
+  "weights_file": "step_000100.pt",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 384,
+    "layers": 10,
+    "heads": 6,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "absolute"
+  },
+  "metrics": {
+    "step": 100,
+    "train_loss": 22.60304069519043,
+    "validation_loss": 23.189870834350586,
+    "validation_perplexity": 485165195.4097903,
+    "learning_rate": 3.026639166218334e-05,
+    "elapsed_seconds": 5.225088243000073
+  },
+  "device": "cuda",
+  "amp_enabled": true
+}

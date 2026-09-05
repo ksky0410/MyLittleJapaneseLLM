@@ -26,7 +26,15 @@
 
 ## 結果と解釈
 
-未実施です。
+初期化修正後のsmokeは成功しました。Colab T4上でPyTorch 2.11.0+cu128、CUDA 12.8、Python 3.13.15を使い、float16 autocastとGradScalerを有効にして100 stepを完走しました。GPUはTesla T4、総メモリは15,360MiBです。step 1のtrain lossは8.684756、general validation lossは8.782655、perplexityは6,520.166、step 100のtrain lossは6.537301、validation lossは7.003381、perplexityは1,100.347でした。step 100までNaN、shape error、Token列不足、メモリ不足は発生していません。
+
+学習時間はstep 100時点で4.269秒、summary上では5.289秒でした。実験033の同条件に近いPyTorch smokeはstep 100時点で5.225秒でしたが、初期化不良でlossが崩れていたため、速度だけを厳密比較しません。MLX版20M smokeのstep 100は28.479秒であり、今回のT4が大幅に高速な参考値は得られました。GPUの最大メモリ割当はこの学習runではmetadataへ記録していないため未計測です。実験032の行列積probeでの最大割当は75,628,544 bytesでしたが、学習時の値とは区別します。
+
+生成はstep 0では未知の漢字列が続きましたが、step 100では「今日はかするがの、、:ススはにのりにのンのきいにの、...」のように日本語の文字・助詞・句読点を含む列へ変化しました。まだ文法と意味は崩れておりますが、実験033の「今日は」の完全反復は解消しました。悪い生成を含む全文は`artifacts/samples/fineweb2-mixed-ja-20m-torch-smoke-v2/`に保存します。
+
+最良checkpointは`artifacts/checkpoints/fineweb2-mixed-ja-20m-torch-smoke-v2/step_000100.pt`で、ローカル保存サイズは約74MiB、SHA-256は`e69bcb1795287617331bc8e6851abe1d880ca12a949628ef11883cd4ac4d2902`です。軽量成果物のSHA-256は、metricsが`34a1545051f92cb23082b98eab3c911da230e6f8ad04dbde82f68a95478c85f4`、step 1 metadataが`80191cb9bd0c7cea61815611068c5387258b1f421a995ce966fdd918d3280cc1`、step 100 metadataが`b7795e60314a711ecdb69671fe6caf03804be1584310e2b9a3bfafb61c2f13cf`、summaryが`d7844d0782faa7440bfe0b8e4c3a7487c8d70a4263355a93b49e2fc34f082b93`、step 0生成が`97973fcf09682820190c97797d9ec96b81f70b301937fc9945f8aaf84f0fdabc`、step 100生成が`680e3f1ad4734406aba25e7bb1ae1417cd100089824aaa18f25bfa41fb08f9c7`です。Colabセッション`torch20m-smoke`は成果物回収後に停止し、確認時点でアクティブセッションはありません。
+
+初期化修正の仮説は支持されました。ただし、PyTorch標準AdamWのbias correction、Embedding以外の初期化、CUDA float16計算がMLXと異なるため、MLXとの数値parityはまだ未確認です。次はfloat32・同一初期重み・AdamW更新式を揃えた小型parity testを行い、差分の原因を切り分けます。
 
 ## 次に試すこと
 

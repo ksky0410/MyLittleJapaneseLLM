@@ -1,0 +1,9 @@
+{
+  "backend": "pytorch",
+  "device": "cuda",
+  "parameter_count": 19401216,
+  "final_step": 100,
+  "best_checkpoint": "/content/small_llm/artifacts/checkpoints/fineweb2-mixed-ja-20m-torch-smoke-v2/step_000100.pt",
+  "best_validation_loss": 7.003381093343099,
+  "elapsed_seconds": 5.2886150689998885
+}
