@@ -66,7 +66,17 @@ step 2,600ではvalidation loss 3.728683、PPL 41.6243、step 2,700では3.72680
 
 ## 実験終了後の結果と解釈
 
-学習は完了しました。共通5領域評価と固定chat-testを実行した後、runtime、学習時間、best step、SFT/rehearsal/validation loss、064〜066との差、代表生成、ratio 0.20を次の標準条件として採用するかどうかを追記します。生成本文は品質に関係なくGitHubへ保存します。
+学習はMPS上で完走し、PyTorch 2.14.0、AMP無効、19,308,032 parameter、summary上の経過時間1,744.84秒でした。最良checkpointはstep 2,900で、train lossは4.085155、SFT lossは4.047915、rehearsal lossは4.234115、validation lossは3.721274、PPLは41.316998でした。最終step 3,000はvalidation loss 3.722987、PPL 41.387829でした。`best.pt`のSHA-256は`0e08765f841abd26445c9fc1160cc5cb7d7ff9c9d5f20f8aa16c9024d5ebeb2b`です。step 0〜3,000の全31個の生成本文とcheckpoint metadataを保存しました。NaN、OOM、shape errorは発生していません。
+
+共通の5領域評価はCPU上で20バッチずつ行いました。generalはvalidation loss 5.469881（PPL 237.432）、conversationは2.897588（18.130）、medicalは3.218233（24.984）、RPCは2.899929（18.173）、MRMPは2.341413（10.396）でした。実験066（ratio 0.10）との差はgeneral -0.166105、conversation -0.017877、medical -0.075755、RPC -0.014596、MRMP -0.018550で、5領域すべてが改善しました。実験065（ratio 0.25）との差はgeneral +0.060727、conversation +0.012093、medical +0.027371、RPC +0.010942、MRMP +0.013269で、全領域で065には届きませんでした。実験064（rehearsalなし）と比べると、general -0.773332、conversation -0.432661、medical -0.350536、RPC -0.448262、MRMP -0.440618となり、rehearsalの効果は維持されています。
+
+固定chat-test v1は48例すべてでEOSへ到達し、平均生成Token数は10.4792、precisionは0.261407、recallは0.216222、Token overlap F1は0.207753でした。short・medium・longのF1はそれぞれ0.322669、0.166843、0.133749です。066のF1 0.207140より0.000613高く、065の0.186345より0.021408高い一方、064の0.229654より0.021901低くなりました。平均生成長は066より0.2083、065と064より0.0833短くなりましたが、EOS到達率は全条件で48/48でした。ratio 0.20は、066から会話F1をほぼ落とさずに5領域lossを改善し、065で失われたF1を回復したため、現時点の一般性能・会話性能の標準候補としてratio 0.10より優先します。ただし単一seed・48例・Token overlap指標での判断ですので、会話の自然さを証明したとは扱いません。
+
+今回のbatch size 8では、ratio 0.10がSFT 7例・rehearsal 1例、ratio 0.20がSFT 6例・rehearsal 2例、ratio 0.25もSFT 6例・rehearsal 2例となります。したがって0.20と0.25の差は、rehearsal例の個数ではなくloss weightを主に変えた比較です。0.20で066とchat F1がほぼ同じだったこと、0.25でF1が下がったことから、rehearsalの重みは増やすほど単調に改善するのではなく、0.20付近に一つの実用的なバランスがある可能性が出ました。長文層のF1は0.133749に留まり、rehearsal比率だけでは長い会話の話題継続を解決できていません。
+
+代表的な生成では、固定サンプルの`こんにちは！`に対して`こんにちは!`と返し、held-outの`こんにちは`には`こんにちは!`、`それは楽しみ`には`そうなんですね`と返せました。一方、長い会話では、料理の説明に対して`あー、うちの子が好きなんですか?`、YouTubeの話題に対して`そうなんですね。電車と電子が出てきてないですか?`のように、EOSへ到達しても直前の話題を維持できない出力が残りました。これらを含む全文は評価TXTへ保存し、品質の悪い出力も削除していません。Token overlap F1は表層一致の指標であるため、次の実験では長文応答の人手確認または話題適合の補助評価を追加します。
+
+checkpoint metadataは[`artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-mps-3k/`](../../artifacts/checkpoints/issue1-both-20m-sft-source-rehearsal020-mps-3k/)、学習中の生成本文は[`artifacts/samples/issue1-both-20m-sft-source-rehearsal020-mps-3k/`](../../artifacts/samples/issue1-both-20m-sft-source-rehearsal020-mps-3k/)、5領域評価は[`issue1-both-20m-sft-source-rehearsal020-mps-3k-domains.json`](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-mps-3k-domains.json)、48例の全文は[`issue1-both-20m-sft-source-rehearsal020-mps-3k-chat-test-v1.txt`](../../artifacts/evaluations/issue1-both-20m-sft-source-rehearsal020-mps-3k-chat-test-v1.txt)です。
 
 ## 次に試すこと
 
