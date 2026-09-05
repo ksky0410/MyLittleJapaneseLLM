@@ -58,6 +58,8 @@ uv run python scripts/train_sft_torch.py \
 
 準備時点ではColab sessionは存在せず、`colab sessions`でactive sessionがないことを確認しました。22:06:44 JSTにsession `exp067-both-rehearsal020`のT4割り当てを試みましたが、Colab APIがHTTP 503 `Service Unavailable`を返し、sessionは作成されませんでした。bundle uploadとColab上の学習は発生していません。これまでのT4割り当て失敗と同じため、予定どおり同じbundleを用いたMPSへ切り替えます。学習中は1,000 step以内の間隔でloss、PPL、learning rate、経過時間、生成本文、警告、途中停止を追記します。
 
+Colab失敗を記録したcommitは`a74c7ef`、MPS fallback commandを記録したcommitは`6f8f2bf`です。MPS学習は同日22時台に開始し、step 1ではtrain loss 4.539920、SFT loss 4.371544、rehearsal loss 5.213422、validation loss 4.723595、PPL 112.5722、経過時間2.31秒でした。step 100ではvalidation loss 4.105101、PPL 60.6489、step 200では4.092865、PPL 59.9113、step 300では4.030184、PPL 56.2713、step 400では4.014373、PPL 55.3886となりました。step 500ではtrain loss 4.315105、SFT loss 4.265006、rehearsal loss 4.515504、validation loss 4.000267、PPL 54.6128、learning rate 4.7931e-5、経過時間209.07秒でした。step 500までNaN、OOM、shape errorは発生せず、step 0から500までのconversation形式生成サンプルも保存されています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 ここへ実際のruntime、学習時間、best step、SFT/rehearsal/validation loss、5領域loss、chat-test結果、064〜066との差、代表生成、ratio 0.20を次の標準条件として採用するかどうかを追記します。生成本文は品質に関係なくGitHubへ保存します。
