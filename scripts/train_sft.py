@@ -23,6 +23,7 @@ from my_little_japanese_llm.sft import (
     make_sft_rehearsal_batch,
     masked_causal_lm_loss,
     split_sft_rehearsal_batch_size,
+    validate_long_response_options,
     validate_rehearsal_ratio,
     validate_short_response_options,
 )
@@ -78,6 +79,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="短い応答と判定するloss対象Token数の上限",
     )
+    parser.add_argument(
+        "--long-response-ratio",
+        type=float,
+        default=None,
+        help="SFT batchに占める長い応答例の割合（0以上1未満）",
+    )
+    parser.add_argument(
+        "--long-response-min-tokens",
+        type=int,
+        default=None,
+        help="長い応答と判定するloss対象Token数の下限",
+    )
     return parser
 
 
@@ -106,6 +119,9 @@ def main() -> None:
             validate_short_response_options(
                 args.short_response_ratio, args.short_response_max_tokens
             )
+        )
+        long_response_ratio, long_response_min_tokens = validate_long_response_options(
+            args.long_response_ratio, args.long_response_min_tokens
         )
     except ValueError as error:
         parser.error(str(error))
@@ -213,6 +229,8 @@ def main() -> None:
                 mx,
                 short_response_ratio=short_response_ratio,
                 short_response_max_tokens=short_response_max_tokens,
+                long_response_ratio=long_response_ratio,
+                long_response_min_tokens=long_response_min_tokens,
             )
         else:
             inputs, targets, loss_mask = make_sft_batch(
@@ -222,6 +240,8 @@ def main() -> None:
                 mx,
                 short_response_ratio=short_response_ratio,
                 short_response_max_tokens=short_response_max_tokens,
+                long_response_ratio=long_response_ratio,
+                long_response_min_tokens=long_response_min_tokens,
             )
         lr = learning_rate(
             step - 1,
@@ -272,6 +292,8 @@ def main() -> None:
                 "rehearsal_ratio": rehearsal_ratio,
                 "short_response_ratio": short_response_ratio,
                 "short_response_max_tokens": short_response_max_tokens,
+                "long_response_ratio": long_response_ratio,
+                "long_response_min_tokens": long_response_min_tokens,
             }
             if rehearsal_active:
                 sft_train_loss = masked_causal_lm_loss(
@@ -315,6 +337,8 @@ def main() -> None:
         "rehearsal_ratio": rehearsal_ratio,
         "short_response_ratio": short_response_ratio,
         "short_response_max_tokens": short_response_max_tokens,
+        "long_response_ratio": long_response_ratio,
+        "long_response_min_tokens": long_response_min_tokens,
         "elapsed_seconds": time.monotonic() - started,
     }
     (checkpoint_dir / "summary.json").write_text(

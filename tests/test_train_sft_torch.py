@@ -22,6 +22,7 @@ from train_sft_torch import (
     encode_generation_prompt,
     exclude_eos_from_loss,
     validate_eos_loss_weight,
+    validate_long_response_options,
     validate_rehearsal_options,
     weight_eos_in_loss,
 )
@@ -71,6 +72,12 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         self.assertEqual(args.device, "cpu")
         self.assertTrue(args.no_amp)
         self.assertEqual(args.rehearsal_ratio, 0.25)
+
+    def test_long_response_options_are_validated(self) -> None:
+        self.assertEqual(validate_long_response_options(None, None), (0.0, 32))
+        self.assertEqual(validate_long_response_options(0.25, 24), (0.25, 24))
+        with self.assertRaises(ValueError):
+            validate_long_response_options(0.25, None)
 
     def test_parser_accepts_mps_device(self) -> None:
         args = build_parser().parse_args(

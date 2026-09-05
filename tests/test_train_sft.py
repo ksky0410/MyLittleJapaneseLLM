@@ -43,6 +43,28 @@ class TrainSFTOptionTests(unittest.TestCase):
         self.assertEqual(args.short_response_ratio, 0.5)
         self.assertEqual(args.short_response_max_tokens, 8)
 
+    def test_parser_accepts_long_response_options(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--base-checkpoint",
+                "base.npz",
+                "--train-data",
+                "train.npz",
+                "--validation-data",
+                "val.npz",
+                "--output-dir",
+                "checkpoints",
+                "--samples-dir",
+                "samples",
+                "--long-response-ratio",
+                "0.25",
+                "--long-response-min-tokens",
+                "24",
+            ]
+        )
+        self.assertEqual(args.long_response_ratio, 0.25)
+        self.assertEqual(args.long_response_min_tokens, 24)
+
 
 if __name__ == "__main__":
     unittest.main()

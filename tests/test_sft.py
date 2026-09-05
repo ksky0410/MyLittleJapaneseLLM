@@ -11,6 +11,7 @@ from my_little_japanese_llm.sft import (
     load_sft_arrays,
     make_sft_batch,
     split_sft_rehearsal_batch_size,
+    validate_long_response_options,
     validate_rehearsal_ratio,
     validate_short_response_options,
 )
@@ -95,6 +96,42 @@ class SFTDataTests(unittest.TestCase):
             validate_short_response_options(1.0, 8)
         with self.assertRaises(ValueError):
             validate_short_response_options(0.5, 0)
+
+    def test_can_sample_long_responses_as_a_stratum(self) -> None:
+        arrays = {
+            "input_ids": np.arange(20, dtype=np.int32).reshape(4, 5),
+            "target_ids": np.arange(20, dtype=np.int32).reshape(4, 5),
+            "loss_mask": np.array(
+                [
+                    [1, 0, 0, 0, 0],
+                    [1, 1, 0, 0, 0],
+                    [1, 1, 1, 0, 0],
+                    [1, 1, 1, 1, 0],
+                ],
+                dtype=np.float32,
+            ),
+        }
+        batch = make_sft_batch(
+            arrays,
+            4,
+            np.random.default_rng(7),
+            _FakeMX(),
+            long_response_ratio=0.5,
+            long_response_min_tokens=3,
+        )
+        lengths = batch[2].sum(axis=1)
+        self.assertEqual(int((lengths >= 3).sum()), 2)
+        self.assertEqual(int((lengths < 3).sum()), 2)
+
+    def test_validates_long_response_options(self) -> None:
+        self.assertEqual(validate_long_response_options(None, None), (0.0, 32))
+        self.assertEqual(validate_long_response_options(0.25, 24), (0.25, 24))
+        with self.assertRaises(ValueError):
+            validate_long_response_options(0.25, None)
+        with self.assertRaises(ValueError):
+            validate_long_response_options(1.0, 24)
+        with self.assertRaises(ValueError):
+            validate_long_response_options(0.25, 0)
 
     def test_splits_rehearsal_batch_and_validates_ratio(self) -> None:
         self.assertEqual(split_sft_rehearsal_batch_size(8, 0.25), (6, 2))

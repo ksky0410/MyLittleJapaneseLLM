@@ -19,6 +19,7 @@ from my_little_japanese_llm.sft import (
     load_rehearsal_tokens,
     load_sft_arrays,
     split_sft_rehearsal_batch_size,
+    validate_long_response_options,
     validate_rehearsal_ratio,
 )
 from my_little_japanese_llm.tokenizer import load_processor
@@ -186,6 +187,18 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="rehearsal lossの重み（0以上1未満）",
     )
+    parser.add_argument(
+        "--long-response-ratio",
+        type=float,
+        default=None,
+        help="SFT batchに占める長い応答例の割合（0以上1未満）",
+    )
+    parser.add_argument(
+        "--long-response-min-tokens",
+        type=int,
+        default=None,
+        help="長い応答と判定するloss対象Token数の下限",
+    )
     return parser
 
 
@@ -231,11 +244,36 @@ def _sft_batch(
     rng: np.random.Generator,
     device: Any,
     torch: Any,
+    *,
+    long_response_ratio: float = 0.0,
+    long_response_min_tokens: int = 32,
 ) -> tuple[Any, Any, Any]:
     count = arrays["input_ids"].shape[0]
     if count == 0:
         raise ValueError("SFTデータが空です")
-    indices = rng.integers(0, count, size=batch_size)
+    if long_response_ratio <= 0:
+        indices = rng.integers(0, count, size=batch_size)
+    else:
+        response_lengths = arrays["loss_mask"].sum(axis=1)
+        long_indices = np.flatnonzero(
+            response_lengths >= float(long_response_min_tokens)
+        )
+        regular_indices = np.flatnonzero(
+            response_lengths < float(long_response_min_tokens)
+        )
+        if long_indices.size == 0 or regular_indices.size == 0:
+            raise ValueError("長い応答と通常の応答の両方が必要です")
+        long_size = max(1, round(batch_size * long_response_ratio))
+        long_size = min(batch_size - 1, long_size)
+        indices = np.concatenate(
+            [
+                rng.choice(long_indices, size=long_size, replace=True),
+                rng.choice(
+                    regular_indices, size=batch_size - long_size, replace=True
+                ),
+            ]
+        )
+        rng.shuffle(indices)
     return (
         torch.as_tensor(arrays["input_ids"][indices], dtype=torch.long, device=device),
         torch.as_tensor(arrays["target_ids"][indices], dtype=torch.long, device=device),
@@ -389,6 +427,12 @@ def main() -> None:
         parser.error(
             "--exclude-eos-from-sft-lossと--eos-loss-weightは同時に指定できません"
         )
+    try:
+        long_response_ratio, long_response_min_tokens = validate_long_response_options(
+            args.long_response_ratio, args.long_response_min_tokens
+        )
+    except ValueError as error:
+        parser.error(str(error))
 
     torch = require_torch()
     from torch.nn import functional
@@ -522,7 +566,13 @@ def main() -> None:
     for step in range(1, max_steps + 1):
         model.train()
         sft_inputs, sft_targets, sft_loss_mask = _sft_batch(
-            train_arrays, sft_batch_size, rng, device, torch
+            train_arrays,
+            sft_batch_size,
+            rng,
+            device,
+            torch,
+            long_response_ratio=long_response_ratio,
+            long_response_min_tokens=long_response_min_tokens,
         )
         if args.exclude_eos_from_sft_loss:
             sft_loss_mask = exclude_eos_from_loss(
@@ -609,6 +659,8 @@ def main() -> None:
                 "rehearsal_ratio": rehearsal_ratio,
                 "eos_loss_weight": eos_loss_weight,
                 "lr_schedule_steps": lr_schedule_steps,
+                "long_response_ratio": long_response_ratio,
+                "long_response_min_tokens": long_response_min_tokens,
             }
             if rehearsal_loss is not None:
                 latest_metrics["rehearsal_train_loss"] = float(
@@ -659,6 +711,8 @@ def main() -> None:
                     else None,
                     "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
                     "eos_loss_weight": eos_loss_weight,
+                    "long_response_ratio": long_response_ratio,
+                    "long_response_min_tokens": long_response_min_tokens,
                 },
             }
             checkpoint.with_suffix(".json").write_text(
@@ -721,6 +775,8 @@ def main() -> None:
         },
         "exclude_eos_from_sft_loss": args.exclude_eos_from_sft_loss,
         "eos_loss_weight": eos_loss_weight,
+        "long_response_ratio": long_response_ratio,
+        "long_response_min_tokens": long_response_min_tokens,
     }
     (output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

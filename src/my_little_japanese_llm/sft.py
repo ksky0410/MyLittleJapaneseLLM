@@ -37,6 +37,24 @@ def validate_short_response_options(
     return float(ratio), int(max_tokens)
 
 
+def validate_long_response_options(
+    ratio: float | None, min_tokens: int | None
+) -> tuple[float, int]:
+    """長い応答の層化sampling設定を検証して返す。"""
+
+    if ratio is None and min_tokens is None:
+        return 0.0, 32
+    if ratio is None or min_tokens is None:
+        raise ValueError(
+            "long_response_ratioとlong_response_min_tokensは同時に指定してください"
+        )
+    if not np.isfinite(ratio) or ratio < 0 or ratio >= 1:
+        raise ValueError("long_response_ratioは0以上1未満の有限値で指定してください")
+    if min_tokens <= 0:
+        raise ValueError("long_response_min_tokensは正の整数で指定してください")
+    return float(ratio), int(min_tokens)
+
+
 def load_rehearsal_tokens(path: str | Path) -> np.ndarray:
     """通常のraw uint32 Token列を読み込み、学習用int32へ変換する。"""
 
@@ -98,6 +116,8 @@ def make_sft_batch(
     *,
     short_response_ratio: float = 0.0,
     short_response_max_tokens: int = 8,
+    long_response_ratio: float = 0.0,
+    long_response_min_tokens: int = 32,
 ) -> tuple[Any, Any, Any]:
     """整形済みSFT配列からランダムまたは層化batchを作る。"""
 
@@ -106,26 +126,45 @@ def make_sft_batch(
     count = arrays["input_ids"].shape[0]
     if count == 0:
         raise ValueError("SFTデータが空です")
-    if short_response_ratio <= 0:
+    short_response_ratio, short_response_max_tokens = validate_short_response_options(
+        short_response_ratio, short_response_max_tokens
+    )
+    long_response_ratio, long_response_min_tokens = validate_long_response_options(
+        long_response_ratio, long_response_min_tokens
+    )
+    if short_response_ratio > 0 and long_response_ratio > 0:
+        raise ValueError("短い応答と長い応答の層化samplingは同時に指定できません")
+    if short_response_ratio <= 0 and long_response_ratio <= 0:
         indices = rng.integers(0, count, size=batch_size)
     else:
-        if short_response_max_tokens <= 0:
-            raise ValueError("short_response_max_tokensは正の整数で指定してください")
         response_lengths = arrays["loss_mask"].sum(axis=1)
-        short_indices = np.flatnonzero(
-            response_lengths <= float(short_response_max_tokens)
-        )
-        regular_indices = np.flatnonzero(
-            response_lengths > float(short_response_max_tokens)
-        )
-        if short_indices.size == 0 or regular_indices.size == 0:
-            raise ValueError("短い応答と通常の応答の両方が必要です")
-        short_size = max(1, round(batch_size * short_response_ratio))
-        short_size = min(batch_size - 1, short_size)
+        if short_response_ratio > 0:
+            selected_indices = np.flatnonzero(
+                response_lengths <= float(short_response_max_tokens)
+            )
+            regular_indices = np.flatnonzero(
+                response_lengths > float(short_response_max_tokens)
+            )
+            selected_size = max(1, round(batch_size * short_response_ratio))
+            selected_name = "短い応答"
+        else:
+            selected_indices = np.flatnonzero(
+                response_lengths >= float(long_response_min_tokens)
+            )
+            regular_indices = np.flatnonzero(
+                response_lengths < float(long_response_min_tokens)
+            )
+            selected_size = max(1, round(batch_size * long_response_ratio))
+            selected_name = "長い応答"
+        if selected_indices.size == 0 or regular_indices.size == 0:
+            raise ValueError(f"{selected_name}と通常の応答の両方が必要です")
+        selected_size = min(batch_size - 1, selected_size)
         indices = np.concatenate(
             [
-                rng.choice(short_indices, size=short_size, replace=True),
-                rng.choice(regular_indices, size=batch_size - short_size, replace=True),
+                rng.choice(selected_indices, size=selected_size, replace=True),
+                rng.choice(
+                    regular_indices, size=batch_size - selected_size, replace=True
+                ),
             ]
         )
         rng.shuffle(indices)
@@ -175,6 +214,8 @@ def make_sft_rehearsal_batch(
     *,
     short_response_ratio: float = 0.0,
     short_response_max_tokens: int = 8,
+    long_response_ratio: float = 0.0,
+    long_response_min_tokens: int = 32,
 ) -> tuple[Any, Any, Any, Any, Any]:
     """一つの学習batchをSFT例とrehearsal例へ分割して返す。"""
 
@@ -190,6 +231,8 @@ def make_sft_rehearsal_batch(
         mx,
         short_response_ratio=short_response_ratio,
         short_response_max_tokens=short_response_max_tokens,
+        long_response_ratio=long_response_ratio,
+        long_response_min_tokens=long_response_min_tokens,
     )
     rehearsal_batch = make_rehearsal_batch(
         rehearsal_tokens, rehearsal_size, context_length, rng, mx
