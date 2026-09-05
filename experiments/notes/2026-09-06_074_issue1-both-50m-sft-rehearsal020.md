@@ -76,9 +76,15 @@ step 1,600ではtrain loss 3.762556、SFT loss 3.622922、rehearsal loss 4.32108
 
 step 2,100ではtrain loss 3.539636、SFT loss 3.659393、rehearsal loss 3.060606、validation loss 3.703124、PPL 40.5739、step 2,200では3.370444、3.096182、4.467492、3.687750、PPL 39.9548となりました。step 2,300ではtrain loss 3.626217、SFT loss 3.433627、rehearsal loss 4.396577、validation loss 3.680348、PPL 39.6602、step 2,400では3.703965、3.577548、4.209635、3.661523、PPL 38.9206となりました。step 2,500ではtrain loss 3.524211、SFT loss 3.287322、rehearsal loss 4.471768、validation loss 3.659192、PPL 38.8299、learning rate 8.2333e-6、経過4864.15秒でした。step 2,100〜2,500のmetrics、生成本文、step 2,500のcheckpoint metadataを保存しました。`step_002500.pt`のSHA-256は`49b33add7ba41f4eae64dce4c41466ed327344e37a6cfd2da9d0907267890a1b`です。step 2,500の固定会話prompt生成は`こんにちは!`に対して`こんにちは!`となり、step 1,500以降の形式を維持しました。validation lossは完走へ向けて改善中であり、学習は継続中です。ここまでNaN、OOM、shape errorは発生していません。
 
+step 2,600ではtrain loss 3.651251、SFT loss 3.180677、rehearsal loss 5.533544、validation loss 3.652970、PPL 38.5891、step 2,700では3.608090、3.282909、4.908812、3.650604、PPL 38.4979となりました。step 2,800ではtrain loss 3.674568、SFT loss 3.701749、rehearsal loss 3.565843、validation loss 3.641207、PPL 38.1378、step 2,900では3.917525、3.856141、4.163059、3.637832、PPL 38.0093となりました。最終step 3,000ではtrain loss 3.405780、SFT loss 3.363649、rehearsal loss 3.574304、validation loss 3.637327、PPL 37.9901、learning rate 5.0000e-6、経過5550.45秒で完走しました。step 2,600〜3,000のmetrics、生成本文、step 3,000のcheckpoint metadata、summaryを保存しました。最良checkpointはstep 3,000の`best.pt`で、重みサイズは200,870,286 bytes、SHA-256は`5a9f7a9021ac6dcbe29e0cf3e9fa61dd1a8d440bffd06281e2bba6dc749d61ff`です。summary上の総経過時間は5552.04秒（約92.5分）でした。
+
+step 2,600の固定会話prompt生成は`こんにちは!`、step 2,700は`こんにちは!よろしくお願いします!`、step 2,800は`こんばんは!`、step 2,900は`こんにちは!`、step 3,000は`こんにちは、よろしくお願いいたします`でした。会話形式、EOS、挨拶表現は安定しましたが、固定promptが単純なため、自然な会話能力の判定は共通48例のchat-testと全文レビューへ委ねます。step 3,000までNaN、OOM、shape errorは発生せず、学習実験としては完走成功です。最大メモリ使用量と温度は今回のMPSログでは取得できなかったため、未計測と記録します。
+
 ## 実験終了後の結果と解釈
 
 学習終了後に、実際のruntime、parameter数、最良・最終loss、学習時間、最大メモリ、生成本文の代表例、checkpoint・入力・bundleのhash、20Mとの差を追記します。領域別lossとchat-testの自動指標が一致しない場合は、片方だけで容量効果を断定しません。人手レビュー未実施の場合はその状態を明記します。
+
+学習完走時点では、PyTorch 2.14.0、MPS、AMP無効、実測parameter数50,207,616でした。base checkpointから50Mモデルをresponse-only SFTへ移行し、rehearsal ratio 0.20、EOS loss weight 0.50で3,000 stepを完走できました。最良validation lossは3.637327で、step 1の4.746552から改善しました。次にこのbest checkpointを共通5領域と固定chat-testで評価し、20Mの実験067相当結果と比較します。完走時点では評価未実施のため、会話品質の改善はまだ確定していません。
 
 ## 次に試すこと
 
