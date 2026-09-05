@@ -16,7 +16,7 @@
 
 20Mの初期checkpointは実験050の`artifacts/checkpoints/issue1-both-20m-colab-2p5k/best.pt`で、SHA-256 `326e30b6b6480c76a0dc468d79f96aeb79e6d844a475d80b86caf27996a86751`、best step 1,700、19,308,032 parametersです。5M smokeの初期checkpointは実験049の`artifacts/checkpoints/issue1-both-5m-smoke/best.pt`で、SHA-256 `ac07c9a835bea9b3f6e94322c621c7958cd86fe12dbed4384f7118b647376865`です。Tokenizerはvocab 4,096の`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。rehearsal Token列は`artifacts/tokens/mixed-ja-80-10-10-v2-train.bin`、SHA-256 `d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`です。
 
-5M smoke設定は`configs/issue1-both-5m-sft-torch-smoke.toml`、20M設定は`configs/issue1-both-20m-sft-torch-colab-1k.toml`です。実験開始時点の基準commitは実験050成果物をpushした`a4ee1ff`です。PyTorch版SFTスクリプト`scripts/train_sft_torch.py`と単体テスト`tests/test_train_sft_torch.py`を追加し、SHA-256はそれぞれ`c19b73d85972a0ab877c445ebf6a8c7315376e7be261b463737358a2538dbf6b`、`41ed2a6528dadce5c5c2caf2c0cb3a0bdd5eabe4b761e46ff0ed9c4cbd87fcd7`です。追加テストは5件、全体テストは74件が通過しました。実行コードを確定したcommitは`2eeaee9`です。
+5M smoke設定は`configs/issue1-both-5m-sft-torch-smoke.toml`、20M設定は`configs/issue1-both-20m-sft-torch-colab-1k.toml`です。実験開始時点の基準commitは実験050成果物をpushした`a4ee1ff`です。PyTorch版SFTスクリプト`scripts/train_sft_torch.py`と単体テスト`tests/test_train_sft_torch.py`を追加し、確定版のSHA-256はそれぞれ`a10826ace585be3b719ed43f4a4675e70f591c51bb72ed5c9e09e7621e1d31ba`、`41ed2a6528dadce5c5c2caf2c0cb3a0bdd5eabe4b761e46ff0ed9c4cbd87fcd7`です。追加テストは5件、全体テストは74件が通過しました。実行コードを確定したcommitは`2eeaee9`です。
 
 ## 実行コマンド
 
