@@ -16,6 +16,8 @@
 
 初期化修正とこのノートをcommit・pushした後、実験033と同じbundle構成で、v2設定を含むbundleを作成します。Colabセッション`torch20m-smoke`は再利用し、古い出力先には書き込みません。bootstrapへv2設定を渡して100 stepを実行し、終了後にv2の軽量成果物を回収します。
 
+実行コードcommitは`f0713c6`です。v2 bundleは`/tmp/small_llm-colab-034-1788568607.tar.gz`として作成し、SHA-256は`ee9629b55f7fb7869ca8ddb481c91ee701c59599d5150d24dca36373b34b42ad`です。bundleには実験033と同じコード・入力hashのファイルに加え、`configs/fineweb2-mixed-ja-20m-torch-smoke-v2.toml`を含めます。
+
 成功基準は、step 1のlossが異常値でなく、100 stepがNaN、shape error、Token列不足、メモリ不足なしに完走し、metrics、metadata、生成TXT、summaryが保存されることです。step 1のlossの厳密なMLX一致は、初期化とoptimizerの完全な移植が済んでいないため要求しません。
 
 ## 実験中の記録
