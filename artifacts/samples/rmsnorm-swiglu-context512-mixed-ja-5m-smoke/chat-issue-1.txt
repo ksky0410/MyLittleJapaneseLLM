@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/rmsnorm-swiglu-context512-mixed-ja-5m-smoke/step_000500.npz
+checkpoint_step: 500
+config: /Users/koseki/projects/small_llm/configs/rmsnorm-swiglu-context512-mixed-ja-5m-smoke.toml
+seed: 42
+max_new_tokens: 160
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=29.00
+backchannel: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+short-turn: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+discourse-marker: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+disagreement: count=1 empty=0 eos=0 mean_completion_tokens=160.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+,前後は変となる.
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+しに連れますが,肺体,27248歳の男性.65),AST 7.1IU/L(基準7626),:総蛋白(基準7～276.5),クレアチニン1(基準24414.6),尿素),赤血球7kg.0mg/dL,尿素129mg/dL,クレアチニン0.8mg/dL,Ht 36mg/dL,クレアチニン0.血圧17.5/59mmHg.血液生化学所見:総蛋白6mg/dL,AST 6.1.2IU/L,L,D 1008%,59mg/dL,ALT 14.1g/L,Cl 97%,L,ALT 
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+かけないのと、大に、御上にやく、何をしく見っくい、そのとって、君子でもないか、その後に外とかくかんを持ひやろう。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+inta aにいく,ASaioirmein sen型iha allfrot-aystriineorrf alre abiseiolitooa cmeecanart ea so sseanhse sheotetet abertit beno病uuoey a enlidd lrrare metiv病 colc病〈Efiy - tanst 
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+の発生から,大気に同じ.;e:×e 家族歴は,中膜に頭や同じ. 尿道の病院の症状は低(基準前から経過で吸収縮性関節を指される.;e:×e 水頭痛症は肺動脈児内部分 正解:d ポイント: 選択肢解説:a:×a 胸骨盤症 2 胸骨盤体の要娩は,右右心臓の要を伴うため,児頭の原因としては,小さを示唆する.;b:○b 子宮内に必要とした眼球の投与 低値はは水分泌が,その中学の原因を伴うが,内視が有効
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+にかります。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+
