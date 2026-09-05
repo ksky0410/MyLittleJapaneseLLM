@@ -47,6 +47,8 @@ Colab CLIでT4割り当てを試します。失敗時はHTTP応答とsession状�
 
 この節には、Colab試行、MPSへの切り替え、500 stepごとのloss・PPL・経過時間・生成本文、警告や途中停止を時系列で追記します。学習中の生成本文は省略せずGitHubへ保存します。
 
+2026年9月5日23:23:46 JSTに`colab new -s exp069-both-long0167 --gpu T4`を実行しましたが、Colab APIのassignment endpointがHTTP 503 `Service Unavailable`を返しました。`colab sessions`でもactive sessionがないことを確認し、bundle uploadやColab上の学習は発生していません。実験068までと同じ制約ですので、同一条件をMPSへ切り替えます。なお、その前のCLI呼び出しには実行前の記述エラーがありましたが、Colab APIへ到達した試行はこの記録の一回です。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、最終train・validation loss、PPL、最良checkpoint、学習時間、5領域loss、EOS、長さ別F1、source別F1、生成例、成果物hash、実験068および067との差を追記します。失敗した場合も削除せず、原因不明ならそのまま記録します。
