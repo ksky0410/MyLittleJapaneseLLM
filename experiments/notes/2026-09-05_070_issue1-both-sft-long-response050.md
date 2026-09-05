@@ -53,6 +53,8 @@ Colab CLIでT4割り当てを試します。失敗時はHTTP応答とsession状�
 
 step 600ではvalidation loss 3.933197、PPL 51.0700、step 700では3.925920、PPL 50.6997、step 800では3.954736、PPL 52.1819、step 900では3.889577、PPL 48.8902となりました。step 1,000ではtrain loss 3.772419、SFT loss 3.502555、rehearsal loss 4.851875、validation loss 3.899693、PPL 49.3873、learning rate 4.0147e-5、経過時間498.44秒となりました。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、1,000 step時点の成果物をコミット・pushします。step 800で一時的なvalidation loss悪化があり、step 900で改善しました。固定promptへのstep 1,000生成は「よろしくお願いします!」となりました。ここまで異常はありません。
 
+step 1,100ではvalidation loss 3.865315、PPL 47.7183、step 1,200では3.858782、PPL 47.4076、step 1,300では3.850078、PPL 46.9967、step 1,400では3.850653、PPL 47.0238となりました。step 1,500ではtrain loss 3.838816、SFT loss 3.755827、rehearsal loss 4.170773、validation loss 3.847234、PPL 46.8632、learning rate 2.8742e-5、経過時間769.97秒となりました。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、1,500 step時点の成果物をコミット・pushします。step 1,300以降のvalidation lossはおおむね横ばいで、長文3/6によるbatchごとの揺らぎが続いています。固定promptへのstep 1,500生成は「こんにちは!」となりました。ここまで異常はありません。
+
 ## 実験終了後の結果と解釈
 
 学習終了直後に、最終train・validation loss、PPL、最良checkpoint、学習時間、5領域loss、EOS、長さ別F1、source別F1、生成例、成果物hash、実験067〜069との差を追記します。
