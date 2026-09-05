@@ -59,10 +59,18 @@ bootstrapは検証用展開先`/content/small_llm_041`を使った後、`colab_b
 
 ## 結果と解釈
 
-041の学習結果は未実施です。新規T4割当の失敗、既存sessionを再利用した際のkernel応答停止、L4 acceleratorの権限不足という三つの失敗を削除せず記録しました。回収できた041の学習成果物はなく、metrics、checkpoint metadata、生成文は生成されていません。したがって、040とのlossや生成品質の比較もまだ行えません。
+前半に記録した新規T4割当の失敗、既存sessionを再利用した際のkernel応答停止、L4 acceleratorの権限不足は、041の失敗履歴としてそのまま保持します。その後、2026-09-05 13:12 JSTに新規T4 session `torch20m-wikipedia-mid-colab-10k-r3`のfresh probeが成功し、041の再試行は10,000 stepまで完走しました。失敗履歴を成功結果で上書きせず、今回の完走結果を以下に記録します。
+
+学習はstep 10,000で終了し、実測パラメータ数は19,401,216、経過時間は428.80秒でした。評価は100 stepごとに101件、生成文はstep 0からstep 10,000まで100 stepごとに保存され、periodic checkpoint metadataは1,000 stepごとに保存されました。validation lossは学習中に単調に改善し、最良checkpointは最終stepの`best.pt`、最良validation lossは4.5294143359、perplexityは92.7042516268でした。最終stepのtrain lossは3.5883781900、学習率は3.0000007080e-05でした。Colab側の実行環境はPython 3.13.15、PyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、15,360 MiBで、AMPを有効にしたCUDA学習です。重み本体はローカルの`best.pt`へ回収し、SHA-256 `f554bb5b6b2b1fe20b9318d1558465c0bb4407ddfa971593b853dc7f2aab868e`がColab上のマニフェストおよび`best.json`と一致しました。periodic weights全11個のサイズとSHA-256は、`artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/colab_checkpoint_manifest.json`に記録しています。軽量成果物114ファイルのColabアーカイブSHA-256は`a6d41fc25a8cf3f1936d1852a62bf538f358d4b84626729628c3d4116253a291`です。
+
+固定prompt `今日は`の生成は、step 0では「唆呵晴蚊…」という文字列の崩れが目立ちました。step 5,000では「今日は日本の漫画家としてもらう漫画家…」のように日本語らしい断片とWikipedia風の固有表現が現れ、step 10,000では「今日は Inc Internet Dentebe…」のように英数字を含む技術文書風の出力へ変化しました。日本語の文字列や頻出表現は学習されましたが、短い自然な物語を安定して生成できたとは言えません。生成結果は品質にかかわらず、`artifacts/samples/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/`へ全件保存しています。
+
+回収した最良重みをローカルCPUで再評価したところ、general validation lossは4.5293409030（PPL 92.6974）、conversationは2.7032114665（PPL 14.9276）、medicalは2.6418840090（PPL 14.0396）でした。Colabの評価値とローカルCPUのgeneral値には評価バッチの乱数位置による小さな差があります。held-out chat-test-v1の48例では、EOS到達率48/48、平均生成Token数8.54、Token overlap F1は0.086434でした。040の5,000 step時点のgeneral loss 4.924788からは改善しましたが、chat F1の改善だけで会話能力が伸びたとは判断しません。今回のデータは一般Web 53.282%、Wikipedia 26.632%、会話6.651%、医療6.657%、青空文庫6.777%を混ぜた事前学習列であり、medical専用モデルではありません。なお、ローカル評価開始時にはシステムPythonに`sentencepiece`が見つからず一度停止しましたが、リポジトリの`.venv`には依存が導入済みだったため、環境を変更せず`.venv/bin/python`で再実行しました。
+
+事前の予想どおり、学習stepを5,000から10,000へ延長するとgeneral lossは改善しました。一方、生成文は日本語らしい断片を含むものの、Wikipedia由来の文体や英数字の混入があり、固定chat評価も短いEOS出力に偏っています。したがって、今回の結果は「学習不足の一部は解消したが、会話能力や自然な生成には、より多いToken予算だけでなくデータ形式・モデル構造・instruction tuningの検討が必要」と解釈します。
 
 今回の失敗から、長時間実験を始める前に、sessionが新しいkernelとして実行可能かを短いprobeで確認し、probeの出力と最初のmetrics生成を検証する手順が必要だと分かりました。また、10,000 stepを100 step間隔で重み保存すると約100個、合計約7.7GBの`.pt`を書き込むため、再試行用コードではmetricsと生成文の記録間隔を維持しつつ、重みcheckpointを1,000 step間隔と最良重み`best.pt`へ分離しました。保存stepと直近のvalidation stepもmetadataで別々に記録します。
 
 ## 次に試すこと
 
-Colabの新規T4 kernelが確保できたら、まずPython・PyTorch・T4のprobeを実行し、実行コードcommitとbundle hashを検証した後に041を再試行します。生成文とmetricsは100 step間隔、periodicな重み本体は1,000 step間隔、最良重みは`best.pt`へ上書き保存する方式です。Colabが使えない間は、MacBookの既存MLX実装でRoPE・RMSNorm・SwiGLU・GQAを一つずつ比較し、Colab復旧後に50M級または長いToken予算へ進みます。
+041の完走と成果物回収は完了しました。次は、今回のLayerNorm + GELU + absolute position構成を比較対象として固定し、同じ20M規模でLayerNorm + SwiGLU + RoPEを導入した構成を、まず短いsmoke実験で検証します。その後、ColabのT4が利用可能な場合は、今回と同じ7.5M Token列を使って10,000 stepへ延長し、構造変更と学習stepの効果を分離して比較します。結果が安定すれば、Wikipedia比率を保ったままToken予算を増やす実験、50M級への拡大、会話・医療データを混ぜたinstruction tuningへ進みます。今回と同じく、生成文は良否を問わず全ステップ保存し、開始前・途中・終了直後のノート更新とGitHub pushを継続します。

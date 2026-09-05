@@ -1,0 +1,23 @@
+{
+  "experiment": "041",
+  "remote_session": "torch20m-wikipedia-mid-colab-10k-r3",
+  "hardware": "Tesla T4",
+  "lightweight_archive": "/content/exp041-lightweight.tar.gz",
+  "lightweight_files": 114,
+  "archive_bytes": 31015,
+  "archive_sha256": "a6d41fc25a8cf3f1936d1852a62bf538f358d4b84626729628c3d4116253a291",
+  "checkpoint_policy": "periodic weights every 1000 steps and best.pt; weight bodies are kept locally but not committed to Git",
+  "checkpoints": [
+    {"path": "best.pt", "bytes": 77634853, "sha256": "f554bb5b6b2b1fe20b9318d1558465c0bb4407ddfa971593b853dc7f2aab868e"},
+    {"path": "step_001000.pt", "bytes": 77642279, "sha256": "54b14d3c2343b51b9d586199e735fff164cc4fe54cd29b7b4a1bd87fa4285b07"},
+    {"path": "step_002000.pt", "bytes": 77642279, "sha256": "9d091df7304aabb9d5e1a190a2bde2ddd068d0650e9ae2a6f5bc3d62ebe4d304"},
+    {"path": "step_003000.pt", "bytes": 77642279, "sha256": "09af717152e022876879fb0b69e57c786ae4be01b5f8f266cfd03df3cdfc0243"},
+    {"path": "step_004000.pt", "bytes": 77642279, "sha256": "95aec0ec034ac3c16839ebb0632385966627f1c85b06005be0500a3ba8c06b2d"},
+    {"path": "step_005000.pt", "bytes": 77642279, "sha256": "956047a8b9a2bbe73ae0720df036dbb639dd965d666835245b3c9ecff2d0774b"},
+    {"path": "step_006000.pt", "bytes": 77642279, "sha256": "ba16344a8187f823f7104505adbde423d46e13654c181bca5c5ea540e6ab0ce7"},
+    {"path": "step_007000.pt", "bytes": 77642279, "sha256": "a2c44a238a97cc57b1dc70fb5e0aaaa6814fa495d5f410d3761c77830926c9b1"},
+    {"path": "step_008000.pt", "bytes": 77642279, "sha256": "753d995ab963c78dd2a0bc6377af6ece27f12fc226e4de2b8093f33e07c6a11b"},
+    {"path": "step_009000.pt", "bytes": 77642279, "sha256": "1529110d8359e958f3dc9b24f4bb8218b4e3b2906ba3d66bf1897ce6d6a58362"},
+    {"path": "step_010000.pt", "bytes": 77642279, "sha256": "410f842d93f3b65e396c588002226a9005f426374a23aa19e4436cb09a419d1a"}
+  ]
+}

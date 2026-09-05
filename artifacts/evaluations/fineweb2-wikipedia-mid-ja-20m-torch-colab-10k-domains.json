@@ -1,0 +1,43 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch",
+  "config": "/Users/koseki/projects/small_llm/configs/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/fineweb2-wikipedia-mid-ja-20m-torch-colab-10k/best.pt",
+  "checkpoint_sha256": "f554bb5b6b2b1fe20b9318d1558465c0bb4407ddfa971593b853dc7f2aab868e",
+  "checkpoint_step": 10000,
+  "parameter_count": 19401216,
+  "seed": 42,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.529340902964274,
+      "perplexity": 92.69744433261103
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 2.703211466471354,
+      "perplexity": 14.92759429779815
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 2.6418840090433755,
+      "perplexity": 14.039629495546519
+    }
+  ]
+}
