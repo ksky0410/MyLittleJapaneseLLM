@@ -146,6 +146,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--samples-dir", required=True)
     parser.add_argument("--max-steps", type=int, default=None)
+    parser.add_argument(
+        "--lr-schedule-steps",
+        type=int,
+        default=None,
+        help="cosine学習率の終点step。省略時はmax_stepsと同じ",
+    )
     parser.add_argument("--device", default="auto", help="auto、cuda、cpuのいずれか")
     parser.add_argument("--no-amp", action="store_true", help="CUDAでもfloat32で実行")
     parser.add_argument(
@@ -400,6 +406,11 @@ def main() -> None:
     )
     if max_steps <= 0 or max_steps > 1_000_000:
         raise ValueError("max_stepsは1以上1,000,000以下で指定してください")
+    lr_schedule_steps = (
+        args.lr_schedule_steps if args.lr_schedule_steps is not None else max_steps
+    )
+    if lr_schedule_steps <= 0 or lr_schedule_steps > 1_000_000:
+        raise ValueError("lr_schedule_stepsは1以上1,000,000以下で指定してください")
 
     random.seed(config.training.seed)
     np.random.seed(config.training.seed)
@@ -530,7 +541,7 @@ def main() -> None:
             rehearsal_inputs = rehearsal_targets = None
         lr = learning_rate(
             step - 1,
-            max_steps,
+            lr_schedule_steps,
             config.training.learning_rate,
             config.training.min_learning_rate,
             config.training.warmup_steps,
@@ -589,6 +600,7 @@ def main() -> None:
                 "elapsed_seconds": time.monotonic() - started,
                 "rehearsal_ratio": rehearsal_ratio,
                 "eos_loss_weight": eos_loss_weight,
+                "lr_schedule_steps": lr_schedule_steps,
             }
             if rehearsal_loss is not None:
                 latest_metrics["rehearsal_train_loss"] = float(
@@ -625,6 +637,7 @@ def main() -> None:
                     "sample_interval": config.training.sample_interval,
                     "checkpoint_interval": checkpoint_interval,
                 },
+                "lr_schedule_steps": lr_schedule_steps,
                 "base_checkpoint": {
                     "path": str(base_checkpoint),
                     "weights_sha256": base_metadata.get("weights_sha256"),
@@ -680,6 +693,7 @@ def main() -> None:
             "checkpoint_interval": checkpoint_interval,
         },
         "final_step": max_steps,
+        "lr_schedule_steps": lr_schedule_steps,
         "best_checkpoint": best_checkpoint.name
         if best_checkpoint is not None
         else None,

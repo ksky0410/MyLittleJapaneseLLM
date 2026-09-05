@@ -109,6 +109,28 @@ class TrainSFTTorchOptionTests(unittest.TestCase):
         )
         self.assertEqual(args.eos_loss_weight, 0.5)
 
+    def test_parser_accepts_lr_schedule_steps(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--base-checkpoint",
+                "base.pt",
+                "--train-data",
+                "train.npz",
+                "--validation-data",
+                "validation.npz",
+                "--output-dir",
+                "checkpoints",
+                "--samples-dir",
+                "samples",
+                "--max-steps",
+                "6000",
+                "--lr-schedule-steps",
+                "3000",
+            ]
+        )
+        self.assertEqual(args.max_steps, 6000)
+        self.assertEqual(args.lr_schedule_steps, 3000)
+
     def test_generation_prompt_supports_raw_and_conversation_templates(self) -> None:
         class Processor:
             def encode(self, text: str, out_type: type[int] = int) -> list[int]:
