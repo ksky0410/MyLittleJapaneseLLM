@@ -52,6 +52,8 @@ Colab CLIでT4割当を先に試し、bundleには075 best checkpoint、加工�
 
 同日、MPSで076 SFTを開始しました。step 1のtrain lossは4.183418、SFT train lossは4.239130、rehearsal train lossは3.960572、validation lossは4.342213、PPL 76.88、learning rateは5.0e-7、経過4.12秒でした。実測parameter数は075と同じ50,207,616で、SFT設定はrehearsal ratio 0.20、EOS loss weight 0.50、lr schedule終点3,000 stepです。NaN、OOM、shape error、base checkpoint signature不一致はありません。学習を継続します。
 
+step 100はtrain loss 3.678967、SFT train loss 3.792676、rehearsal loss 3.224131、validation loss 3.811520、PPL 45.22、経過65.23秒でした。step 200は3.999521、4.261581、2.951283、3.844824、PPL 46.75、経過218.40秒、step 300は3.590491、3.882473、2.422562、3.795923、PPL 44.52、経過338.52秒、step 400は3.726098、3.695177、3.849782、3.829993、PPL 46.06、経過464.20秒でした。step 500ではtrain loss 4.052101、SFT train loss 4.131844、rehearsal loss 3.733128、validation loss 3.828892、PPL 46.01、learning rate 4.7931e-5、経過590.58秒となりました。step 500 metadataのweights SHA-256は`3cbb4f447700da2c7bcd31c37c8c15cf66aee1d47cff1961d47027b8c96275e9`です。固定会話promptの生成はstep 0の「こんばんは!」から、step 500では「こんにちは!!こんばんは!」へ変化し、挨拶形式への適応は見えますが、まだ過剰な反復があります。validation lossはstep 100以降おおむね3.8前後で横ばいです。NaN、OOM、shape error、警告はありません。学習を継続します。
+
 ## 実験終了後の結果と解釈
 
 完走後に実際のruntime、最良・最終loss、SFTとrehearsalの損失、学習時間、best checkpoint hash、5領域評価、固定chat評価、生成本文を追記します。074との差は、初期checkpointとSFT条件を分けて記載し、075基盤の効果とSFT条件の効果を混同しません。
