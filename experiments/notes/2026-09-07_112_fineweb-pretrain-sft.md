@@ -80,6 +80,10 @@ step 5,000のvalidation lossは2.769219、perplexityは15.9462、learning rate�
 
 step 6,000のvalidation lossは2.761517、perplexityは15.8238、learning rateは4.7681e-6、経過時間は482.98秒だった。最良値はstep 5,500の2.758811で、実験110のbest 2.773049より0.014238低い。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 6,250〜7,500
+
+step 6,250のvalidation lossは2.763860、step 6,500は2.757301、step 6,750は2.754414、step 7,000は2.756882、step 7,250は2.752892、step 7,500は2.754526だった。step 7,250で最良値を2.752892まで更新し、実験110のbest 2.773049を0.020157下回っている。step 7,500時点のlearning rateは2.1826e-6、経過時間は604.56秒であり、NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、領域別loss、一般会話48例、医療162例、実験110・111との比較、仮説との一致・不一致、次に試す変更を追記する。
