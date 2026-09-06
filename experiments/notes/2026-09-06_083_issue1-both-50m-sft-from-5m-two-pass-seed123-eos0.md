@@ -53,3 +53,32 @@ step 1,500の固定生成は「こんにちわー!わがんは!???!いいえ。�
 ## 次に試すこと
 
 083が改善した場合はEOS weight 0.0または0.25を候補にし、5M Token列の反復回数を増やす実験へ進みます。悪化した場合は0.25または082の0.5へ戻し、10Mから20Mへデータを増やす条件と会話・一般・医療の混合比を調べます。どちらの場合も蒸留を主線にせず、自前データの量・品質・反復学習・終了記号の設計を優先します。
+
+評価コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-domains.json
+
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/best.pt \
+  --selection experiments/evaluation/chat-test-v1.json \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --device cpu --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-test-v1.txt
+
+uv run python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-test-v1.json \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-review.json
+```
