@@ -93,6 +93,10 @@ step 3,000のFineWeb validation lossは2.814817、perplexityは16.6901、learnin
 
 step 4,000のFineWeb validation lossは2.808892、perplexityは16.5915、learning rateは3.6545e-6、経過時間は262.63秒だった。学習率の減衰後もvalidation lossは安定して低下している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 5,000
+
+step 5,000のFineWeb validation lossは2.804508、perplexityは16.5189、learning rateは2.9365e-6、経過時間は328.40秒だった。実験110の初期値から0.136810改善しており、10,000 stepの半分までNaN、OOM、shape errorなく進んでいる。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
