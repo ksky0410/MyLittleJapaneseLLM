@@ -62,6 +62,8 @@ shard 3・4の抽出は並列に実行し、どちらも正常終了した。sha
 
 抽出本文をseed 11401、shard 3:4 = 1:1で混合した。出力は39,237単位、19,999,496 tokens、本文SHA-256 `ff2afe12a7c00696e59772a243ee2e6e3d97514ba94a42cc1c065fa0f14409bf`、mix manifest SHA-256 `9a0ea3f1d4644d12477d5a90ce6eeb6dd29c3c8b4472f6d413a45bfb011f94eb`となった。実測Token比率はshard 3が50.0008%、shard 4が49.9992%で、重複除去は0件だった。SentencePieceでToken化し、Token列は19,999,496、binary SHA-256 `8d387f27ac75ce2c214a0a60d47b0f03d7d1f168fc17a85095264976fd6f91d6`、metadata SHA-256 `8f812e3e6c1117b4a6705324d595234bd0c79b66ab602cb7f48de680d9ccf91b`となった。
 
+学習開始前のSHA照合では、新しい設定ファイルがRunpod側へまだ同期されておらず、`sha256sum`が設定ファイルだけを`No such file or directory`として終了した。Token列、validation、初期checkpoint、学習コードの照合は成功しており、学習や既存成果物には影響しない。設定ファイルを同期してから照合をやり直す。
+
 ## 学習中の記録
 
 ここに500 stepごとのvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
