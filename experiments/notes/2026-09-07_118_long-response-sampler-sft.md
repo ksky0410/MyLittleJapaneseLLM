@@ -6,6 +6,18 @@
 
 Exp117と同じRunpod A40、同じdomain Token列、同じ評価config、同じ一般会話48例・医療162例・生成seedを使い、best checkpoint（step 3,500）を評価する。一般会話のEOS、平均生成長、Token overlap F1、医療のEOS、平均生成長、回答形式抽出、完全一致、Token overlap F1を比較し、生成本文の話題適合性と反復も確認する。評価JSON、全文TXT、評価ログは全件保存する。
 
+## 評価結果と判断
+
+Exp118 best（step 3,500）のdomain lossはFineWeb2 2.906245、general 4.039475、conversation 1.984228、medical 1.870503だった。Exp117 bestの2.903175、4.041337、1.992968、1.871806と比べ、FineWeb2は悪化したが、general・conversation・medicalは改善した。
+
+一般会話48例はEOS 48/48、平均生成長10.208 tokens、Token overlap F1 0.234298だった。Exp117 bestのEOS 48/48、平均10.000 tokens、F1 0.246358よりF1が低下した。出力には「食べてみたい!笑」のように自然な短い反応もあるが、「お昼ごはん食べました？」に「洗濯はなさんだりしないですか?」、「皆さんダイエットとかなさってますか？」に「大阪で!」のように話題が外れる応答が残った。長文samplingによって一般会話の自然さが改善したとは判定しない。
+
+医療162例はEOS 160/162、平均生成長45.944 tokens、Token overlap F1 0.338486、回答形式抽出162/162、正解の完全一致27/162（16.67%）だった。Exp117 bestと比べてF1は0.250300から大幅に上がったが、完全一致は31/162から27/162へ低下し、誤答理由を長く生成する例が増えた。したがって、医療F1の上昇も正確性の改善とは解釈しない。
+
+長文samplingの仮説は、validation lossと医療の表面的なToken overlapには効果があったが、一般会話の話題適合性と医療完全一致には効果がなく、自然な日本語の主条件としては棄却する。Exp118は比較用の成果物として保存し、次はExp117 bestを基盤に戻す。SFTデータをさらに反復する前に、未使用FineWeb2日本語データを追加して事前学習を継続し、一般的な日本語の表現力と知識を増やす。
+
+評価成果物は、[domain評価](../../artifacts/evaluations/exp118-best/domains.json)、[一般会話JSON](../../artifacts/evaluations/exp118-best/general-chat.json)、[一般会話全文](../../artifacts/evaluations/exp118-best/general-chat.txt)、[医療JSON](../../artifacts/evaluations/exp118-best/medical-chat.json)、[医療全文](../../artifacts/evaluations/exp118-best/medical-chat.txt)、[評価ログ](../../experiments/results/exp118/evaluation.log)に保存した。SHA-256はdomain JSON `53c55fb777500cad8a69d84d389a4dd8174e1d12f136ab027475fff145d350e7`、一般会話JSON `b218a7ce779fcb90736ccf69774781b94cb6df40644e44fa155e049bc36dec61`、一般会話TXT `7c040f21ec569e3eb1ce8bc34cd25737985c9c6dc5900224029839346cf577f9`、医療JSON `2950e3dfb319d8464bec4e6fabc168f76f93d752fb30947226faea5f53e06060`、医療TXT `111b17c68507e127b9bd393b8fa4c0b1b327053792f1677417cbe3840874d5e0`、評価ログ `906ca1640d8f5fe0b57d76a1a47c0e687833c8483bf3e9255fc63d05901b8da2`である。
+
 step 4,000までNaN、OOM、shape errorなく完走した。step 4,000のvalidation lossは2.720873、perplexityは15.193575、経過時間は353.72秒だった。最良checkpointはstep 3,500で、validation lossは2.720545、perplexityは15.188603だった。Exp117 bestの2.728217より0.007672低く、validation上は改善した。
 
 最良重み`best.pt`のSHA-256は`ec8d2a661a715c299ca13067c812da82b2778086bd5bb9e5ac8e0005d025da9c`である。最大GPUメモリ使用量はallocated 1,490,586,112 bytes、reserved 1,598,029,824 bytesだった。metrics 17点、生成サンプル17本、step 4,000 metadata、学習ログを保存した。固定prompt「今日は天気がいいですね。」へのstep 4,000出力は「こちらこそ、こんばんは!」で、文章は短く完結したが、天気への意味的な反応とは言いにくい。固定評価で自然さを判定する。
