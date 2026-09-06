@@ -61,6 +61,10 @@ NaN、OOM、shape errorなく8,000 stepを完走し、250 stepごとのvalidatio
 
 RunpodのA40上で、実験109のbest checkpointを初期値として学習を開始した。step 1のvalidation lossは3.183849、step 250は2.876897、step 250のlearning rateは1.9998e-5、経過時間は21.14秒だった。rehearsal ratioは0.2で、NaN、OOM、shape errorは発生していない。学習は継続中であり、step 250時点では生成品質の判定を保留する。
 
+### 2026-09-07：step 500
+
+step 500のvalidation lossは2.870976、perplexityは17.6542、learning rateは1.9935e-5、経過時間は41.47秒だった。学習中サンプルでは、`こんにちは！`に対して「こんにちは。今日はどこか行かれました?」と返しており、実験109のraw事前学習直後に失われた会話形式が早い段階で回復している。これは固定prompt一例に基づく暫定的な観察であり、一般48例と医療162例の最終評価で確認する。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに実際の実行条件、最終loss、最良checkpointとstep、学習時間、生成評価、実験109および実験105との比較、予想との一致・不一致、次に試す変更を追記する。
