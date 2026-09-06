@@ -84,6 +84,8 @@ pilotのsummary、metrics、生成文、評価結果をRunpod上の`artifacts/ch
 
 step 750付近の一時的な悪化から回復し、pilot bestのvalidation loss 3.067110も下回ったため、現時点では早期停止せず8,000 stepまで継続する。後半で再びvalidationが悪化した場合はbest stepのcheckpointを採用する。
 
+step 2,250、2,500、2,750のvalidation lossは3.016256、3.011978、3.004206となった。step 2,750のPerplexityは20.170203、SFT train lossは2.366128、rehearsal train lossは2.244631、学習率は`1.5659e-5`である。step 2,750でbestを更新しており、validationは安定して改善している。
+
 ### 本番実行コマンド
 
 ```bash
