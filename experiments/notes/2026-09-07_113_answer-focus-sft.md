@@ -76,6 +76,10 @@ step 1,750のvalidation lossは2.805113、step 2,000は2.812463、step 2,250は2
 
 step 2,500のvalidation lossは2.805033、step 2,750は2.816896だった。step 2,500でstep 250に近い値まで戻ったが、最良値の更新はない。step 2,750時点のlearning rateは1.5659e-5、経過時間は226.18秒で、NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 3,000〜3,250
+
+step 3,000のvalidation lossは2.810933、step 3,250は2.800252だった。step 3,250で最良値を更新し、実験112のstep 3,250付近の2.786897にはまだ届いていない。step 3,250時点のlearning rateは1.4025e-5、経過時間は266.63秒である。学習は安定して継続している。
+
 ## 実験終了後の記録
 
 学習完了後に、最良checkpointのstepとSHA-256、最終loss、学習時間、最大GPUメモリ、評価JSON/TXTのSHA-256、実験112との比較、仮説の判定、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとハッシュだけを記録する。
