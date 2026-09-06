@@ -81,6 +81,10 @@ step 3,000のvalidation lossは2.832890、perplexityは16.9945、learning rate�
 
 step 4,000のvalidation lossは2.808299、perplexityは16.5817、learning rateは1.1366e-5、経過時間は324.20秒だった。ここまでの最良値を更新している。固定promptへの生成は「こんにちは!」に対して「こんにちは!」と短く返した。形式は崩れていないが、返答の長さはサンプリングにより揺れているため、最終の48例評価で平均長とEOS率を確認する。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 5,000
+
+step 5,000のvalidation lossは2.795988、perplexityは16.3788、learning rateは7.8119e-6、経過時間は405.23秒だった。最良値はstep 4,750の2.791013で、step 5,000では少し戻ったが、学習は安定して継続している。固定promptへの生成は「こんにちは!」に対して「こんにちは!」となった。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに実際の実行条件、最終loss、最良checkpointとstep、学習時間、生成評価、実験109および実験105との比較、予想との一致・不一致、次に試す変更を追記する。
