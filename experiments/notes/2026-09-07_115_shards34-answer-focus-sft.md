@@ -67,6 +67,10 @@ step 500のvalidation lossは2.811753、step 750は2.823874、step 1,000は2.813
 
 step 1,250のvalidation lossは2.828422、step 1,500は2.827187だった。step 500の2.811753を更新しておらず、step 1,500時点のlearning rateは1.8796e-5、経過時間は125.16秒だった。validation lossは実験113より高い状態で推移しているが、NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 1,750〜2,250
+
+step 1,750のvalidation lossは2.818044、step 2,000は2.808153、step 2,250は2.807672だった。step 2,250で最良値を更新したが、実験113の同時期よりまだ高い。step 2,250時点のlearning rateは1.7105e-5、経過時間は186.84秒で、学習は安定している。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、domain loss、一般会話48例、医療162例、実験113・114との比較、仮説の判定、次の一手を追記する。checkpoint本体はGitHubへ追加せず、metadata・SHA-256・生成文・評価全文を保存する。
