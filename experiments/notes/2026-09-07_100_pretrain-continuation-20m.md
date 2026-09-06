@@ -119,6 +119,12 @@ Tokenizerでのencodeも完了し、binaryは19,993,334 tokensとなった。学
 
 smoke完了後、同じPod上で本番40,000 stepを`configs/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda.toml`、初期重み`artifacts/checkpoints/issue1-both-50m-pretrain-20m-40k-runpod-cuda/best.pt`、`--device cuda`で開始した。初期optimizer stateはなく、Runpod上の`/workspace/exp100/train.log`へ標準出力を保存している。Podを削除せず、500 stepごとにloss・生成文・経過時間を確認する。
 
+### 条件停止の追記
+
+本条件はstep 2,000で意図的に停止した。step 500まではFineWeb validation lossが2.927500まで下がり、実験098のbest 2.973267を下回った。しかしwarmup終了後に学習率が`1e-4`へ上がると、step 1,000で2.938092、step 1,500で2.939899、step 2,000で2.936907となり、step 500のbestから改善しなかった。新規データ上のtrain lossは下がっているため、継続学習の高い学習率が既存の一般日本語validationへ悪影響を与えた可能性がある。原因を完全には確定できないが、40,000 stepまで同条件を続ける価値は低いと判断した。
+
+NaN、OOM、shape errorは発生していない。Pod上のmetrics、best metadata、step 0〜2,000の生成サンプルをローカルの`artifacts/checkpoints/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr1e-4/`と`artifacts/samples/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr1e-4/`へ回収した。bestはstep 500、weights SHA-256は`4917a3b9abb04ce7b722589426c88ea5a90b5eb1244fdda687ed30cdad52cea0`である。今回の失敗記録を削除せず、次の実験101では初期checkpointを実験098のbestへ戻し、最大学習率を`3e-5`へ下げて同じ新規token列を比較する。
+
 ## 実験終了後の追記
 
 ここには、最終step、best step、FineWeb testと各domain loss、固定chat-test、新規会話test、人手レビュー、学習時間、最大メモリ、Runpod料金、次に会話SFTへ渡すcheckpointのパスを追記する。

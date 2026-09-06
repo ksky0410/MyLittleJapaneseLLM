@@ -1,0 +1,36 @@
+[paths]
+prepared_dir = "artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-continuation-20m-v1"
+tokenizer_model = "artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model"
+train_tokens = "artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-continuation-20m-v1-train.bin"
+val_tokens = "artifacts/tokens/fineweb2-edu-japanese-v1-test.bin"
+checkpoint_dir = "artifacts/checkpoints/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5"
+samples_dir = "artifacts/samples/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5"
+
+[model]
+dim = 576
+layers = 12
+heads = 9
+context_length = 256
+mlp_ratio = 4
+position_embedding = "rope"
+norm_type = "layernorm"
+ffn_type = "swiglu"
+
+[training]
+batch_size = 8
+max_steps = 40000
+eval_interval = 500
+sample_interval = 500
+checkpoint_interval = 5000
+eval_batches = 20
+learning_rate = 0.00003
+min_learning_rate = 0.000003
+warmup_steps = 1000
+weight_decay = 0.1
+seed = 101
+
+[generation]
+prompt = "今日はなにをしていましたか？"
+max_new_tokens = 160
+temperature = 0.8
+top_k = 40

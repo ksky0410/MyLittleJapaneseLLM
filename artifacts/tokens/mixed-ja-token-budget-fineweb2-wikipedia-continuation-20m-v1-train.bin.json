@@ -1,0 +1,9 @@
+{
+  "format": "uint32_sentencepiece_ids_v1",
+  "tokenizer": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "input": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-continuation-20m-v1.txt",
+  "tokens": 19993334,
+  "eos_id": 3,
+  "vocab_size": 4096,
+  "sha256": "f19878618870a487ce5b0aab6970d6d72b2ef71ab76ee79520e7c3fe3341dec1"
+}
