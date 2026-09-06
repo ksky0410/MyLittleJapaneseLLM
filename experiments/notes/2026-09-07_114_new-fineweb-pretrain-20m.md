@@ -60,6 +60,8 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \
 
 shard 3・4の抽出は並列に実行し、どちらも正常終了した。shard 3は先頭20,000行を除外した後19,654文書、9,999,914 tokensを選択し、本文SHA-256は`5e1d80c71ef4241143ecb5cd28224044f3e132ac64dbd2c845e3c69f858d9011`、manifest SHA-256は`437bd29dec3457dd9d7786b32951d9625eb9d8f41f2aeae8ca54e0decbb41149`だった。shard 4は19,583文書、9,999,582 tokensを選択し、本文SHA-256は`8c6b97bad4f08b8b08cd104e87d906ed0a146290b957f02089dd7b4fb504e215`、manifest SHA-256は`5ff03ac86f5ece928f1f13364750455f99250d2d129454d7ac37b5d6dbfad2e7`だった。両方とも空行と本文完全一致の重複は0件で、Tokenizer SHA-256は計画値と一致した。
 
+抽出本文をseed 11401、shard 3:4 = 1:1で混合した。出力は39,237単位、19,999,496 tokens、本文SHA-256 `ff2afe12a7c00696e59772a243ee2e6e3d97514ba94a42cc1c065fa0f14409bf`、mix manifest SHA-256 `9a0ea3f1d4644d12477d5a90ce6eeb6dd29c3c8b4472f6d413a45bfb011f94eb`となった。実測Token比率はshard 3が50.0008%、shard 4が49.9992%で、重複除去は0件だった。SentencePieceでToken化し、Token列は19,999,496、binary SHA-256 `8d387f27ac75ce2c214a0a60d47b0f03d7d1f168fc17a85095264976fd6f91d6`、metadata SHA-256 `8f812e3e6c1117b4a6705324d595234bd0c79b66ab602cb7f48de680d9ccf91b`となった。
+
 ## 学習中の記録
 
 ここに500 stepごとのvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
