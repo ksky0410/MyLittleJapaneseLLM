@@ -47,13 +47,17 @@ Runpod Pod `j9c46julmtbcb4` のA40上で、次のコマンドを実行する。�
 
 ```bash
 cd /workspace/exp100
-PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft.py \
+PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
   --config configs/issue1-balanced-pretrain-answer-focus-sft-runpod-1k.toml \
   --base-checkpoint artifacts/checkpoints/issue1-balanced-pretrain-general-medical-sft-runpod-8k/best.pt \
   --train-data artifacts/sft/issue1-general-medical-answer-focus-v1/train.npz \
   --validation-data artifacts/sft/issue1-general-medical-concat-v1/validation.npz \
   --output-dir artifacts/checkpoints/issue1-balanced-pretrain-answer-focus-sft-runpod-1k \
   --samples-dir artifacts/samples/issue1-balanced-pretrain-answer-focus-sft-runpod-1k \
+  --device cuda \
+  --sample-template conversation \
+  --sample-speaker-a DA \
+  --sample-speaker-b DC \
   --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
   --rehearsal-ratio 0.2
 ```
