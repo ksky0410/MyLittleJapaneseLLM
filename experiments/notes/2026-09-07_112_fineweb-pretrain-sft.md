@@ -64,6 +64,10 @@ step 1,000のvalidation lossは2.811358、perplexityは16.6325、learning rate�
 
 step 2,000のvalidation lossは2.803952、perplexityは16.5098、learning rateは1.7739e-5、経過時間は161.93秒だった。step 2,000でvalidation lossの最良値をわずかに更新したが、step 2,250では2.811817へ戻った。学習率はまだ減衰前半であり、NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 3,000
+
+step 3,000のvalidation lossは2.789558、perplexityは16.2738、learning rateは1.4862e-5、経過時間は242.28秒だった。step 2,750の2.799209からさらに改善し、ここまでの最良値を更新した。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、領域別loss、一般会話48例、医療162例、実験110・111との比較、仮説との一致・不一致、次に試す変更を追記する。
