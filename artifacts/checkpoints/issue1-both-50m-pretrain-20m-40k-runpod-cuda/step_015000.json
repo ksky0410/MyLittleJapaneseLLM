@@ -1,13 +1,13 @@
 {
   "format_version": 1,
   "backend": "pytorch-cuda",
-  "checkpoint_role": "best",
-  "checkpoint_step": 15500,
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 15000,
   "checkpoint_interval": 5000,
-  "checkpoint_train_loss": 3.1310031414031982,
-  "weights_file": "best.pt",
-  "weights_bytes": 200872334,
-  "weights_sha256": "3d0379ce82df89b2fb7b2327509893ad8dc54cbe19e29b29e9ff8cb3b2fe5d35",
+  "checkpoint_train_loss": 2.999924898147583,
+  "weights_file": "step_015000.pt",
+  "weights_bytes": 200882813,
+  "weights_sha256": "cc7223c1dc589106233ac162ae4970405e76ae71b8cdb11d302664b75e2f4cd5",
   "model": {
     "vocab_size": 4096,
     "dim": 576,
@@ -20,12 +20,12 @@
     "ffn_type": "swiglu"
   },
   "metrics": {
-    "step": 15500,
-    "train_loss": 3.1310031414031982,
-    "validation_loss": 3.1511653542518614,
-    "validation_perplexity": 23.3632752149584,
-    "learning_rate": 0.00022430156616277545,
-    "elapsed_seconds": 719.4077724460512
+    "step": 15000,
+    "train_loss": 2.999924898147583,
+    "validation_loss": 3.1649080395698546,
+    "validation_perplexity": 23.686565705901703,
+    "learning_rate": 0.00022926271357770811,
+    "elapsed_seconds": 683.532114489004
   },
   "inputs": {
     "config_sha256": "d77f6846603fa211a5cb22c1bf73ce719820c6f61a6013ee556e667dc17dbc2a",
