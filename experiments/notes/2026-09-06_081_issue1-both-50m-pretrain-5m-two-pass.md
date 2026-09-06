@@ -64,7 +64,42 @@ step 4,600はtrain loss 3.129592、validation loss 4.401906、PPL 81.61、learni
 
 ## 実験終了後の結果と解釈
 
-080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
+実際に実行した評価コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-pretrain-5m-5k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-5m-5k-domains.json
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-pretrain-5m-5k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt \
+  --selection experiments/evaluation/chat-test-v1.json \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --device cpu --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-5m-5k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-pretrain-5m-5k-chat-test-v1.txt
+uv run python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/issue1-both-50m-pretrain-5m-5k-chat-test-v1.json \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-5m-5k-chat-review.json
+```
+
+080との差を比較すると、081のvalidation lossはgeneralが4.607053から4.371884へ-0.235169、conversationが2.703728から2.588882へ-0.114846、medicalが2.732444から2.573062へ-0.159381、RPCが2.649845から2.544832へ-0.105013となりました。MRMPだけは2.363312から2.365846へ+0.002534とわずかに悪化しましたが、4領域では反復学習が改善しました。075の5M・2,500 stepから081の5M・5,000 stepへ総学習Tokenを増やした条件では、全領域のvalidation lossが大きく改善しており、同じデータをもう一周見せることがこの規模では有効でした。
+
+固定chat-test 48例では、081もEOS到達は48例中48例でした。平均生成Token数は080の8.8750から9.4792へ+0.6042、precisionは0.110874から0.148852へ+0.037979、recallは0.067281から0.078555へ+0.011275、全体F1は0.074119から0.094911へ+0.020792改善しました。short F1は0.081483から0.124037へ+0.042554、long F1は0.073293から0.100298へ+0.027005改善しました。一方、medium F1は0.067581から0.060397へ-0.007184、平均生成長も9.7500から7.7500へ短くなりました。081は長文化だけではなく、短い応答の重複率を改善しており、079の長文oversamplingより主目的に合っています。
+
+それでも生成文は完成していません。事前学習の固定promptはstep 5,000で空応答へ戻り、chat-testにも「大量で、どうでしょう?」「男性には女性が好きなんですが、もう子供の女性は、」のような文脈を外した出力が残っています。したがって、反復学習はvalidation性能と簡易chat F1を改善する有望な手法ですが、自然な日本語の安定生成を保証しません。今後はSFTへ進む前に、EOSや文書境界を含む学習形式、会話データの混合比、学習途中での生成評価を重視します。
+
+評価JSON、生成全文、人手レビュー用JSONのSHA-256は、領域評価が`26c094237c80fdece236cc30b2bfb66391efc357b3e78e20dec375d7dee0225e`、chat JSONが`af0c36e5361e5a5603aebb9c0405df787db87cd301a6c0e7decc4f1710f4ac52`、生成TXTが`b85b99b9ec1f7db74a6e6433d429e9d62a05ed9428d26f9fdf7d3249202cd0c5`、review JSONが`622d9cd981fe0a403427ddbebffb6d1b8ac29db5cfd6130580a8aafea9484b9e`です。
+
+今回の判断は、081の「5M Tokenを二周相当学習する」条件を、現状の50Mモデルの主線として採用する、です。080の10M unique tokens一周より、同じ総学習Token予算でvalidation lossと全体chat F1が良くなりました。次は、081のbest checkpointからSFTへ進める前に、5M列の重複をさらに減らす品質改良、会話・医療・一般文書の比率、EOSを含む文書境界の扱いを一つずつ調べます。蒸留は使わず、フルスクラッチのデータ品質・反復回数・SFTの組合せで自然な日本語を伸ばします。
 
 ## 次に試すこと
 
