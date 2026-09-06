@@ -52,3 +52,7 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
 ### 2026-09-07：初回起動の設定検証失敗
 
 最初の起動は、設定の`training.warmup_steps`へ0を指定したため、設定検証で停止した。`warmup_steps`は正の整数だけを受け付ける実装であり、モデルのforward、checkpoint読み込み、学習データの読み込みより前に終了している。Runpod上の出力ディレクトリにはcheckpointや生成文は作成されず、exp115のcheckpointと入力データは変更されていない。設定を1へ修正し、継続学習開始時点ではwarmupの影響がほぼない条件として再実行する。
+
+### 2026-09-07：step 8,250〜8,750
+
+設定修正後の再実行は正常に開始した。step 8,250のvalidation lossは2.754303、step 8,500は2.754326、step 8,750は2.753209だった。step 8,750でexp115のbest 2.754026を更新し、learning rateは9.682e-7、経過時間は62.64秒だった。学習率を抑えた継続でも初期には改善が見られている。NaN、OOM、shape errorは発生していない。各stepの生成文は `artifacts/samples/issue1-exp115-continuation-sft-runpod-16k/` に保存されている。
