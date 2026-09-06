@@ -70,6 +70,12 @@ Tokenizerでuint32列へ変換し、Token数は20,000,000、binaryのSHA-256は 
 
 Runpod Pod `j9c46julmtbcb4` のA40上で、実験105の最良checkpointから追加事前学習を開始した。step 1のFineWeb validation lossは2.921104、step 500は2.865372で、step 500の学習率は1.0e-5、経過時間は31.34秒だった。NaN、OOM、shape errorは発生していない。学習中の生成、metrics、checkpoint metadataは専用出力先へ保存する。
 
+### 2026-09-07：step 1,000〜10,000
+
+validation lossはstep 1,000で2.856815、2,000で2.849935、3,000で2.848086、4,000で2.846685、5,000で2.846276、6,000で2.845728、7,000で2.845544、8,000で2.843922、9,000で2.843931、9,500で2.843884となった。step 5,500では2.846718へ一時的に悪化したが、その後に最良値を更新した。最終step 10,000までNaN、OOM、shape error、途中停止はなく、学習時間は621.30秒だった。最良checkpointはstep 9,500である。
+
+FineWeb lossは実験105のSFT後2.921111から大きく改善した。これは追加20M tokensと10,000 stepの事前学習がvalidation上の日本語適合を改善したことを示すが、会話の自然さや医療正答率は生成評価を終えるまで判断しない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、最終step、FineWeb・general・conversation・medicalのdomain loss、固定chat-test、医療162問の正解率、学習時間、次の再SFT条件を追記する。
