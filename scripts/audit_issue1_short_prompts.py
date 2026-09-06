@@ -141,7 +141,7 @@ def scan_prompt_matches(
     split: str,
     prompts: tuple[str, ...],
     token_count: Callable[[str], int],
-    selected_keys: set[tuple[str, int, int]],
+    selected_keys: set[tuple[str, str, int]],
 ) -> list[dict[str, Any]]:
     """会話turnの完全一致・部分一致と、直後応答を収集する。"""
 
@@ -184,7 +184,10 @@ def scan_prompt_matches(
                         "response_token_count": response_tokens,
                         "response_function": category,
                         "response_speaker": response.get("speaker_id") if response else None,
-                        "sft_selected": (source, record_index, turn_index + 1)
+                        # record_index は split ごとに振り直されるため、train と
+                        # validation/test の照合キーには使わない。conversation_id
+                        # と target_index で、実際にSFTへ採用された会話だけを照合する。
+                        "sft_selected": (source, conversation_id, turn_index + 1)
                         in selected_keys,
                     }
                 )
@@ -214,12 +217,18 @@ def summarize_matches(matches: list[dict[str, Any]]) -> dict[str, Any]:
     return summary
 
 
-def _load_selected_keys(path: Path) -> tuple[set[tuple[str, int, int]], str]:
+def _load_selected_keys(path: Path) -> tuple[set[tuple[str, str, int]], str]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    keys: set[tuple[str, int, int]] = set()
+    keys: set[tuple[str, str, int]] = set()
     for item in manifest.get("selected_provenance", []):
         if isinstance(item, dict):
-            keys.add((str(item["source"]), int(item["record_index"]), int(item["target_index"])))
+            keys.add(
+                (
+                    str(item["source"]),
+                    str(item["conversation_id"]),
+                    int(item["target_index"]),
+                )
+            )
     return keys, sha256_file(path)
 
 
@@ -318,7 +327,7 @@ def main() -> None:
         git_commit = "unknown"
 
     result: dict[str, Any] = {
-        "format": "issue1-short-prompt-audit-v1",
+        "format": "issue1-short-prompt-audit-v2",
         "evaluation_path": str(evaluation_path),
         "evaluation_sha256": sha256_file(evaluation_path),
         "selection_path": str(selection_path),

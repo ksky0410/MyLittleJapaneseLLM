@@ -26,12 +26,34 @@ def test_scan_prompt_matches_records_response_and_selection() -> None:
         "train",
         ("まじで", "明日ひま？"),
         TokenCounter(),
-        {("rpc", 0, 1)},
+        {("rpc", "rpc:1", 1)},
     )
     assert [item["match_type"] for item in matches] == ["exact", "substring"]
     assert matches[0]["response"] == "ほんと？"
     assert matches[0]["sft_selected"] is True
     assert matches[1]["response_function"] is not None
+
+
+def test_scan_prompt_matches_does_not_use_split_local_record_index() -> None:
+    records = [
+        {
+            "conversation_id": "rpc:shared-id",
+            "turns": [
+                {"speaker_id": "A", "text": "まじで"},
+                {"speaker_id": "B", "text": "ほんと？"},
+            ],
+        }
+    ]
+    matches = scan_prompt_matches(
+        records,
+        "rpc",
+        "validation",
+        ("まじで",),
+        TokenCounter(),
+        # train splitのrecord_index=0が同じでも、conversation_idが違えば未採用。
+        {("rpc", "rpc:other-id", 1)},
+    )
+    assert matches[0]["sft_selected"] is False
 
 
 def test_audit_evaluation_joins_selection_metadata() -> None:

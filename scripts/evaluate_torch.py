@@ -20,7 +20,7 @@ from evaluate_chat_dataset import (
     summarize_chat_results,
     token_overlap_scores,
 )
-from train_torch import _evaluation_batches, _generate, _loss
+from train_torch import _evaluation_batches, _generate, _loss, _weighted_mean_losses
 from my_little_japanese_llm.config import load_config
 from my_little_japanese_llm.data import load_tokens
 from my_little_japanese_llm.tokenizer import load_processor
@@ -125,6 +125,7 @@ def _evaluate(
     batches: int,
 ) -> float:
     losses = []
+    batch_sizes = []
     with torch.no_grad():
         eval_batches = _evaluation_batches(
             tokens,
@@ -137,7 +138,8 @@ def _evaluate(
         for inputs, targets in eval_batches:
             with _autocast(torch, device, amp_enabled):
                 losses.append(float(_loss(model, inputs, targets, functional).item()))
-    return float(sum(losses) / len(losses))
+            batch_sizes.append(int(inputs.shape[0]))
+    return _weighted_mean_losses(losses, batch_sizes)
 
 
 def evaluate_domains(args: argparse.Namespace) -> dict[str, Any]:

@@ -84,8 +84,14 @@ def _evaluation_batches(
 ) -> list[tuple[object, object]]:
     if tokens.size <= context_length:
         raise ValueError("検証Token列がcontext_length以下です")
+    if batch_size <= 0 or batches <= 0:
+        raise ValueError("batch_sizeとbatchesは正の整数で指定してください")
     available = tokens.size - context_length
-    starts = np.linspace(0, available - 1, num=max(1, batches), dtype=np.int64)
+    # batches は「バッチ数」であり、「評価サンプル数」ではない。以前は
+    # batches=20, batch_size=8 でも20例（3バッチ）しか評価していなかった。
+    # ここでは指定バッチ数ぶんの窓を取り、最後のバッチだけ短くなることを許す。
+    sample_count = min(available, batch_size * batches)
+    starts = np.linspace(0, available - 1, num=sample_count, dtype=np.int64)
     result = []
     for offset in range(0, len(starts), batch_size):
         selected = starts[offset : offset + batch_size]
@@ -100,6 +106,20 @@ def _evaluation_batches(
             )
         )
     return result
+
+
+def _weighted_mean_losses(losses: list[float], batch_sizes: list[int]) -> float:
+    """バッチ内平均lossを、実際のサンプル数で重み付けして平均する。"""
+
+    if len(losses) != len(batch_sizes) or not losses:
+        raise ValueError("lossesとbatch_sizesは同じ長さの空でない配列が必要です")
+    total_size = sum(batch_sizes)
+    if total_size <= 0:
+        raise ValueError("batch_sizesの合計は正である必要があります")
+    return float(
+        sum(loss * size for loss, size in zip(losses, batch_sizes, strict=True))
+        / total_size
+    )
 
 
 def _loss(model: object, inputs: object, targets: object, F: object) -> object:
@@ -143,6 +163,7 @@ def _evaluate(
     was_training = model.training
     model.eval()
     losses = []
+    batch_sizes = []
     with torch.no_grad():
         for inputs, targets in _evaluation_batches(
             tokens, batch_size, context_length, batches, device, torch
@@ -150,9 +171,10 @@ def _evaluate(
             with autocast_context():
                 loss = _loss(model, inputs, targets, F)
             losses.append(float(loss.item()))
+            batch_sizes.append(int(inputs.shape[0]))
     if was_training:
         model.train()
-    return float(np.mean(losses))
+    return _weighted_mean_losses(losses, batch_sizes)
 
 
 def _generate(
