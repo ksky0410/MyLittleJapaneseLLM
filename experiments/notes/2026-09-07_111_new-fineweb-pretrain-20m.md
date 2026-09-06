@@ -109,6 +109,12 @@ step 7,000のFineWeb validation lossは2.799132、perplexityは16.4304、learnin
 
 step 8,000のFineWeb validation lossは2.797786、perplexityは16.4083、learning rateは9.7489e-7、経過時間は524.83秒だった。学習率が1e-6を下回ってもvalidation lossは小幅に改善している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 9,000〜10,000
+
+step 9,000のFineWeb validation lossは2.797013、perplexityは16.3956、learning rateは6.2215e-7、経過時間は590.96秒だった。step 10,000ではloss 2.796272、perplexity 16.3834、learning rate 5.0e-7、経過時間656.89秒となり、最終stepで最良checkpointを更新した。学習summaryの総経過時間は658.95秒、最大割当メモリは1,528,083,968 bytesだった。NaN、OOM、shape error、途中停止は発生していない。
+
+raw固定prompt `今日はなにをしていましたか？` へのstep 10,000生成は、「今回はこのセミナーをお待ちしています。」の後に「お客様の声」を多数反復した。FineWeb validation lossは改善したが、会話としての自然さはこの時点で明らかに不足している。raw checkpoint単体は会話モデルとして採用せず、一般・医療SFTを再適用して形式回復を評価する。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
