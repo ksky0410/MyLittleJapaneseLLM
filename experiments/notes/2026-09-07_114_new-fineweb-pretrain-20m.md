@@ -76,6 +76,10 @@ shard 3・4の抽出は並列に実行し、どちらも正常終了した。sha
 
 step 500のFineWeb validation lossは2.795288、perplexityは16.3673、learning rateは5.0e-6、経過時間は33.21秒だった。step 1,000ではloss 2.793580、perplexity 16.3394、learning rate 4.9694e-6、経過時間64.41秒となった。開始時から0.002696改善し、NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 1,500〜2,000
+
+step 1,500のFineWeb validation lossは2.792016、step 2,000は2.790129だった。step 2,000時点で開始時から0.006147改善し、learning rateは4.7292e-6、経過時間は128.18秒となった。validation lossは小さいながら一貫して低下しており、NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、実験111との比較、仮説との一致・不一致、SFT再適用を行うかどうか、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとSHA-256だけを記録する。
