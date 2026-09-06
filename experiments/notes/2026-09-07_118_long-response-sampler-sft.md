@@ -2,6 +2,10 @@
 
 ## 学習完了時の記録
 
+## 評価の計画
+
+Exp117と同じRunpod A40、同じdomain Token列、同じ評価config、同じ一般会話48例・医療162例・生成seedを使い、best checkpoint（step 3,500）を評価する。一般会話のEOS、平均生成長、Token overlap F1、医療のEOS、平均生成長、回答形式抽出、完全一致、Token overlap F1を比較し、生成本文の話題適合性と反復も確認する。評価JSON、全文TXT、評価ログは全件保存する。
+
 step 4,000までNaN、OOM、shape errorなく完走した。step 4,000のvalidation lossは2.720873、perplexityは15.193575、経過時間は353.72秒だった。最良checkpointはstep 3,500で、validation lossは2.720545、perplexityは15.188603だった。Exp117 bestの2.728217より0.007672低く、validation上は改善した。
 
 最良重み`best.pt`のSHA-256は`ec8d2a661a715c299ca13067c812da82b2778086bd5bb9e5ac8e0005d025da9c`である。最大GPUメモリ使用量はallocated 1,490,586,112 bytes、reserved 1,598,029,824 bytesだった。metrics 17点、生成サンプル17本、step 4,000 metadata、学習ログを保存した。固定prompt「今日は天気がいいですね。」へのstep 4,000出力は「こちらこそ、こんばんは!」で、文章は短く完結したが、天気への意味的な反応とは言いにくい。固定評価で自然さを判定する。
