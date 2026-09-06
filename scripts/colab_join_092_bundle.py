@@ -7,8 +7,8 @@ from pathlib import Path
 
 PARTS = sorted(Path("/content").glob("exp092-part-*"))
 TARGET = Path("/content/exp092_bundle_reassembled.tar.gz")
-EXPECTED_BYTES = 0
-EXPECTED_SHA256 = ""
+EXPECTED_BYTES = 265098998
+EXPECTED_SHA256 = "d3091b93d3b9c3318a4a6d35f97a3b73ab01bd5a3a19ac416dda54b33cdb215f"
 
 
 def sha256(path: Path) -> str:

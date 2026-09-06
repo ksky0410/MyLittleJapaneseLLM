@@ -14,11 +14,13 @@
 
 092用の設定は`configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware.toml`、Colab実行は`scripts/colab_bootstrap_092.py`、bundle結合は`scripts/colab_join_092_bundle.py`、成果物回収は`scripts/colab_package_092.py`です。実験開始前に、設定・コード・base checkpoint・validation・rehearsal token列・Tokenizer・品質選別NPZ・manifestのSHA-256を記録します。
 
+準備コミットは`5a85b42`、設定のSHA-256は`91d18a72717c863fc32a9bd0ee2cc6a66038a8c8751999af466a3b6f34f3cd8e`、bootstrapは`b60b19a608b60655d87014c727f5304d57dc30b1f8af694d52084db18f67891f`、bundle結合スクリプトは`92f23549d27bb1dab94171a086c3a07e5a407d6fcad917d7b8b8b65545259b64`、成果物回収スクリプトは`f03b4a18a7e22f88bf7fbdce24ab13a6a868b1abc9084de20f0e0709849f1272`です。bundleは265,098,998 bytes、SHA-256は`d3091b93d3b9c3318a4a6d35f97a3b73ab01bd5a3a19ac416dda54b33cdb215f`で、ColabのHTTP upload制限を避けるため60 MiB以下の分割片として送ります。
+
 品質選別データは`artifacts/sft/issue1-quality-aware-770k-each-v1/train.npz`、manifestは同じディレクトリの`manifest.json`です。response token数はRPC 771,000、MRMP 770,975で、全体は1,541,975 tokenです。元の会話JSONLと`medilink_analysis`内の原本は変更しません。
 
 ## 学習前の記録
 
-このノート作成時点では、092の学習はまだ開始していません。設定と実行スクリプトを追加し、入力検証を通過するbundleを作成してからColab T4を試します。Colab APIがHTTP 503を返した場合は、学習未実施のままエラーと時刻を追記し、同じ条件で再試行できる状態を保ちます。
+092の学習はまだ開始していません。設定と実行スクリプトを追加し、入力検証を通過するbundleを作成しました。Colab APIがHTTP 503を返した場合は、学習未実施のままエラーと時刻を追記し、同じ条件で再試行できる状態を保ちます。
 
 ## 実験中の記録
 
