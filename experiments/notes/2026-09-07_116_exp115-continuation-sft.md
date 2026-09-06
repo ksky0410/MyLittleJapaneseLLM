@@ -84,3 +84,7 @@ step 12,500のvalidation lossは2.748631、step 12,750は2.749006、step 13,000�
 ### 2026-09-07：step 13,250〜13,750
 
 step 13,250のvalidation lossは2.748865、step 13,500は2.748030、step 13,750は2.748123だった。最良値はstep 11,750の2.747498のままで、step 13,750のlearning rateは2.865e-7、経過時間は469.24秒だった。step 13,000以降も大きな悪化はないが、追加学習によるvalidation改善は確認できない。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 14,000〜14,500
+
+step 14,000のvalidation lossは2.748182、step 14,250は2.748196、step 14,500は2.748038だった。最良値はstep 11,750の2.747498から更新されず、step 14,500のlearning rateは2.388e-7、経過時間は529.04秒だった。後半はvalidation lossが2.748前後で安定しているが、exp115をさらに下回る新しい改善は確認できていない。NaN、OOM、shape errorは発生していない。
