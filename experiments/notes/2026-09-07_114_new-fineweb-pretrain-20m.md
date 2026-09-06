@@ -68,6 +68,10 @@ shard 3・4の抽出は並列に実行し、どちらも正常終了した。sha
 
 ここに500 stepごとのvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
 
+### 2026-09-07：step 1
+
+実験111 raw bestからRunpod A40上で追加事前学習を開始した。step 1のFineWeb validation lossは2.796276、perplexityは16.3835、learning rateは1.0e-8、経過時間は2.44秒だった。実験111 raw bestの評価値2.796272とほぼ一致しており、checkpointのreload、Token列、validation経路は正常である。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、実験111との比較、仮説との一致・不一致、SFT再適用を行うかどうか、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとSHA-256だけを記録する。
