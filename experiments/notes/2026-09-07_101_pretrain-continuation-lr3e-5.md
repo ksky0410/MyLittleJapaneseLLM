@@ -90,3 +90,5 @@ step 16,000から20,000までのvalidation lossは順に2.851190、2.850689、2.
 step 27,000、27,500のvalidation lossは2.839855、2.839585となった。step 27,500のPerplexityは17.108666、train lossは2.480381、学習率は`9.2856e-6`である。step 27,500でbest validation lossを2.839585へ更新した。学習率はすでに1e-5を下回っているが、lossはまだ緩やかに改善している。
 
 step 28,000、28,500のvalidation lossは2.839717、2.838744となった。step 28,500のPerplexityは17.094283、train lossは2.389570、学習率は`8.3908e-6`である。step 28,500でbest validation lossを更新した。低学習率の終盤でもvalidation lossが急落せず、緩やかな改善を保っている。
+
+step 29,000、29,500、30,000のvalidation lossは2.839523、2.838294、2.838723となった。step 29,500でbest validation lossを2.838294へ更新し、step 30,000では0.0004程度反発した。step 30,000のPerplexityは17.093922、train lossは2.523805、学習率は`7.1490e-6`である。学習は正常に継続している。
