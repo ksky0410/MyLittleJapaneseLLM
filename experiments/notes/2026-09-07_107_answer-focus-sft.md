@@ -27,6 +27,8 @@
 - validation：実験102・105・106と同じ `artifacts/sft/issue1-general-medical-concat-v1/validation.npz`
 - rehearsal：`artifacts/mixed-ja-80-10-10-v2-train.bin`、比率20%
 - 学習設定：`configs/issue1-balanced-pretrain-answer-focus-sft-runpod-1k.toml`
+- 学習設定SHA-256：`409cd853ffa50ce3359eb6a048c9bab12c3cee5a0dfb84cb7e6efd5a12b30f74`
+- 学習コード：`scripts/train_sft.py`、SHA-256 `1fb3c3c269fde247f25cf75e162f33e7e1dc3259b184770d86953f99016d2c22`
 - 乱数seed：107
 - 学習率：3e-6から3e-7までのcosine decay、warmup 100 steps
 - 予定step：1,000 steps
@@ -38,6 +40,23 @@
 再生成したanswer-focus会話はtrain 2,945例、validation 162例で、train JSONLのSHA-256は `8c702d252f78ce850da3d41f57bf174b0d943a30964f8f962956150eb50d7ea1` である。Tokenizerは実験102以降と同じ `mixed-ja-80-10-10-v2-unigram.model`（SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`）を使い、answer-focus train NPZは2,945例、応答本文18,577トークン、EOSを含む損失対象21,522トークン、SHA-256 `d15b59f3bc0a91b48145694b405b95fc954a76c60abc0c38ba6e49fbf4227f81`となった。
 
 一般127,731例、元の医療2,945例、answer-focus医療2,945例を連結したtrain NPZは133,621例、損失対象1,736,042トークン、SHA-256 `99fc5e82cefc7efd7e4eb69bb5250d794526313c4ae6e54eeee862673100b262` である。初回に医療問題全体を使った生成では6,098例まで増えてしまったため採用せず、既存SFTと同じ問題番号に絞った生成へ修正した。この経緯は失敗として残す。
+
+### 実行コマンド
+
+Runpod Pod `j9c46julmtbcb4` のA40上で、次のコマンドを実行する。初期checkpoint、学習NPZ、validation NPZ、rehearsal token列はすべてRunpod上でSHA-256を照合してから開始する。
+
+```bash
+cd /workspace/exp100
+PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft.py \
+  --config configs/issue1-balanced-pretrain-answer-focus-sft-runpod-1k.toml \
+  --base-checkpoint artifacts/checkpoints/issue1-balanced-pretrain-general-medical-sft-runpod-8k/best.pt \
+  --train-data artifacts/sft/issue1-general-medical-answer-focus-v1/train.npz \
+  --validation-data artifacts/sft/issue1-general-medical-concat-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-balanced-pretrain-answer-focus-sft-runpod-1k \
+  --samples-dir artifacts/samples/issue1-balanced-pretrain-answer-focus-sft-runpod-1k \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.2
+```
 
 ### 成功判定
 
