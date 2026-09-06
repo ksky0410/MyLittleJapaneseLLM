@@ -67,3 +67,5 @@ RPCとMRMPを連結した一般会話NPZは124,894例、response 1,700,055 token
 ### Runpod転送時の保存先エラー
 
 最終SFT NPZをRunpodへ転送する最初の試行は、`artifacts/sft/issue1-conversation-rebalance-medical-answer-focus-v2/`がRunpod側に存在しなかったため失敗した。ローカルのNPZ、元データ、医師国家試験原本、exp116 checkpointには影響がなく、学習プロセスも起動していない。Runpod側に保存先を作成して同じファイルを再送し、SHA-256を照合してから学習を開始する。
+
+保存先を作成して再送した結果、Runpod上の最終SFT NPZはSHA-256 `30d4c6de43391fcfedfc46966067d09c0f9f86d41a04aa15060d64214bd09e26`、設定は`aa32e24a522e2d8a2fc51346682bae10dd78f5a80ebda136c4bc60d8b69163be`、初期checkpointとして使うexp116 bestは`eaa3b779778be238ba5bbdfaae28bdabceb7e3c996971b5b20d1326c08870406`であることを確認した。学習開始前の入力照合は成功した。
