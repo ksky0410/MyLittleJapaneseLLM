@@ -34,6 +34,8 @@ uv run python scripts/train_sft_torch.py \
 
 実行用bundleは`/tmp/small_llm-colab-083.tar.gz`、236,747,311 bytes（226 MiB）、SHA-256は`7ae0a7caa91c33578ae145d187b1a0f027fbe2a4f4e65eb4275c98a7a84029fb`です。082で判明した依存漏れを修正し、`train_torch.py`とbase metadata `best.json`をbundleへ含めました。HTTP upload制限を避けるため64 MiB以下の分割片で送信し、`scripts/colab_join_083_bundle.py`で結合後にSHA-256を検証します。学習開始前のsessionは`No active sessions found on server.`でした。
 
+本番SFTはT4・CUDA AMP有効で開始し、入力9件のハッシュ検証を通過しました。step 400のvalidation lossは3.615486、500は3.606614、600は3.618175、700は3.619773、800は3.669414でした。082の同じstepのvalidation lossはそれぞれおよそ3.52、3.496、3.469、3.475、3.472であり、083は開始直後から悪化しています。step 800のperplexityは39.228926です。EOS weight 0.0が生成の長さを伸ばす一方で、学習目標全体との不均衡を生んでいる可能性があります。原因を決めつけず、3,000 stepまで実行して最終生成と領域評価で確認します。
+
 ## 実験終了後の結果と解釈
 
 082と同じCPU・同じ5領域・同じ48例chat-test・同じgeneration seed 42で評価します。領域loss、平均生成Token数、EOS到達数、short・medium・long F1を比較し、EOS loss weight 0.0が自然な日本語を改善したかを判断します。
