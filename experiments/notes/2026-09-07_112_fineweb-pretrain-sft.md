@@ -90,4 +90,16 @@ step 6,250のvalidation lossは2.763860、step 6,500は2.757301、step 6,750は2
 
 ## 実験終了後の記録
 
-ここに最良checkpoint、学習時間、領域別loss、一般会話48例、医療162例、実験110・111との比較、仮説との一致・不一致、次に試す変更を追記する。
+実験112はNaN、OOM、shape errorなく8,000 stepを完走した。最良checkpointはstep 7,750で、validation lossは2.751857、perplexityは15.6717だった。step 8,000のvalidation lossは2.753525であり、後半はstep 7,250〜7,750付近で安定した。最良checkpointの重みSHA-256は`4979355786b4faef5787e366067d856ade06a5bc62170d2a9a30325eb3abda15`、学習時間は645.63秒、peak allocated memoryは1,490,586,112 bytesだった。
+
+領域別validation lossはFineWeb2 2.924918、general 4.060053、conversation 2.006600、medical 1.876712だった。実験110と比べると、FineWeb2は2.941318から0.016400改善し、generalは4.073868から0.013815改善、conversationは2.029899から0.023299改善した。一方、medicalは1.874220から0.002492悪化しており、追加FineWeb2をSFTへ戻しただけでは医療の改善は確認できなかった。実験111 rawと比べるとFineWeb2は2.796272から悪化したが、generalは4.229550から、conversationは2.097783から、medicalは1.923146からそれぞれ改善し、SFTによって応答形式が回復した。
+
+一般会話48例はEOS到達48/48、平均生成8.42 Token、Token overlap F1 0.222845だった。実験110のEOS 48/48、平均7.08 Token、F1 0.232590と比べると、生成長は少し伸びたがF1は0.009745低下した。実際の生成には「こんにちは」「そうですよね!」「そうなんですね」「すごいですね」のような短い相づちが多く、文法としては自然でも、直前の話題へ具体的に応じない例が残った。したがって、general lossの改善は自然な会話能力の改善と同一ではない。
+
+医療QA162例はEOS到達155/162、平均生成52.42 Token、Token overlap F1 0.372191だった。回答形式の抽出は162/162だったが、正解記号の完全一致は19/162（11.73%）に留まった。実験110のEOS 158/162、平均54.64 Token、F1 0.381138、完全一致31/162（19.14%）と比べ、今回は医療の正答率が下がった。出力は「正解はcです。理由は…」という形式を守る一方、選択肢と無関係な医学用語をつなげたり、同じ語句を反復したりする例が多かった。これは回答形式の学習と、問題文から正しい知識を取り出す能力が別であることを示している。
+
+固定promptの学習中サンプルと評価全文は、[checkpoint metadata](../../artifacts/checkpoints/issue1-fineweb-new-pretrain-general-medical-sft-runpod-8k/best.json)、[metrics](../../artifacts/checkpoints/issue1-fineweb-new-pretrain-general-medical-sft-runpod-8k/metrics.jsonl)、[step別生成](../../artifacts/samples/issue1-fineweb-new-pretrain-general-medical-sft-runpod-8k/)、[領域評価](../../artifacts/evaluations/exp112/domains.json)、[一般会話評価](../../artifacts/evaluations/exp112/general-chat.json)、[一般会話全文](../../artifacts/evaluations/exp112/general-chat.txt)、[医療評価](../../artifacts/evaluations/exp112/medical-chat.json)、[医療全文](../../artifacts/evaluations/exp112/medical-chat.txt)に保存した。領域評価のSHA-256は`bd75da863dab1f2f35c70586b90e30ba8cca61e1bc6cf47727c6e7c5f8e253ef`、一般会話JSONは`70ead40470c999c0244733a9714d3969ddae0d558739f4787f171d35ea063979`、一般会話TXTは`5b71df4da2cafac6b8dbf12611b067f070855a37574391dc250740956ab989e8`、医療JSONは`c1b6c1bcb86703849064f64af260bf67714cf89e5cb3cbdef26efe8478952b2e`、医療TXTは`c59b4ef12ec575475eacfa3be4e9e5fd619ac44de03564f4822f9246bbcb8492`である。
+
+事前の予想のうち、「追加FineWeb2で得た改善がSFT後にも一部残る」は、generalとconversationのloss、およびFineWeb2のlossが実験110をわずかに上回ったため部分的に支持された。一方、「一般会話F1と医療F1が実験110以上へ戻る」は支持されなかった。さらに、評価準備でFineWeb2検証列のファイル名を一度誤ったが、失敗を削除せず記録し、既存の`fineweb2-edu-japanese-v1-test.bin`へ修正して同じ評価を完了した。
+
+次は、長い誤説明をそのまま学習することが医療QAの正答率を下げている可能性を切り分ける。実験113では通常医療回答に加えて、同じ問題へ「正解はaです。」だけを返すanswer-focusデータを追加し、一般会話と通常医療を残したまま学習する。
