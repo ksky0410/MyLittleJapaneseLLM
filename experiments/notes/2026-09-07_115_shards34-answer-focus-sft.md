@@ -55,6 +55,10 @@ NaN、OOM、shape errorなく8,000 stepを完走し、250 stepごとのvalidatio
 
 ここに1,000 stepを超えない間隔でvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。悪い生成も削除しない。
 
+### 2026-09-07：step 1〜250
+
+Runpod A40上で実験114 raw bestからanswer-focus SFTを開始した。step 1のvalidation lossは2.937145、perplexityは18.8619、learning rateは1.0e-7、経過時間は0.89秒だった。step 250ではvalidation loss 2.829083、perplexity 16.9299、learning rate 1.9998e-5、経過時間21.47秒となった。実験113のstep 250よりvalidation lossは高いが、学習は安定しており、NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、domain loss、一般会話48例、医療162例、実験113・114との比較、仮説の判定、次の一手を追記する。checkpoint本体はGitHubへ追加せず、metadata・SHA-256・生成文・評価全文を保存する。
