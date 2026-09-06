@@ -77,3 +77,7 @@ Runpod A40上でexp116 bestから学習を開始した。step 1のvalidation los
 ### 2026-09-07：step 500〜750
 
 step 500のvalidation lossは2.743028、step 750は2.740917だった。warmup終了後にlossは低下し、step 750のlearning rateは4.772e-6、経過時間は62.19秒となった。exp116 bestの2.747276をすでに下回っており、会話データ再配分によるvalidation改善の可能性が見えている。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 1,000〜1,500
+
+step 1,000のvalidation lossは2.742237、step 1,250は2.739406、step 1,500は2.740307だった。step 1,250で現時点の最良値を更新し、exp116 bestから0.007870改善した。step 1,500のlearning rateは3.823e-6、経過時間は122.78秒だった。step 750以降は小さな揺らぎがあるものの、再配分条件のvalidation lossはexp116より低い状態を保っている。NaN、OOM、shape errorは発生していない。
