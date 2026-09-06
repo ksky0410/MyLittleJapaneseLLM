@@ -66,6 +66,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft.py \
 
 実験開始後、250 stepごとにvalidation loss、学習率、生成例、警告・停止の有無を追記する。
 
+### 起動試行1：2026-09-07
+
+Runpod上で予定コマンドを起動したが、`/workspace/exp100/scripts/train_sft.py` が存在せず、Pythonが開始直後に終了した。学習stepは0で、checkpointやデータへの変更はない。Runpodの作業ディレクトリには今回のデータだけを転送しており、実行コード本体の転送が不足していた。`scripts/train_sft.py` を追加転送し、import確認後に同じコマンドを再実行する。
+
 ## 実験終了後の記録
 
 学習終了直後に、実際の条件、最終validation loss、最良checkpoint SHA-256、学習時間、ピークGPUメモリ、4領域loss、一般会話と医療会話の生成評価、162問の正解数を追記する。実験105・106と比較し、次に変える条件は一つか二つに絞る。
