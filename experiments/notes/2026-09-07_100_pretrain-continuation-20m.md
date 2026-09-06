@@ -109,6 +109,16 @@ Tokenizerでのencodeも完了し、binaryは19,993,334 tokensとなった。学
 
 ここには、データ抽出結果、入力hash、bundle hash、Pod ID、GPU、料金、速度、各500 stepのlossと生成文、警告、途中停止を発生時点で追記する。
 
+### 開始時の追記
+
+データ準備後のテストは`PYTHONPATH=scripts uv run pytest -q`で`108 passed`となった。設定と開始前ノートはcommit`896a1c3`としてGitHubの`main`へpush済みである。Runpodへ送ったbundleは205MB、SHA-256は`beb3beb7339d2e81946d1fca61f1234ef3cb3bb1e97db5a2a750c8a22c3efac4`である。
+
+2026年9月7日、Runpod A40 Secure Pod `j9c46julmtbcb4`（CA-MTL-1、約$0.49/時）で入力を展開した。Pod上でA40 46,068MiB、PyTorch 2.9.1+cu128、CUDA 12.8、AMPを確認し、不足していたNumPy 2.5.3とSentencePiece 0.2.2をPodのPython環境へ導入した。bundleのhashはローカルと一致し、best checkpointのSHA-256は`83e8be941b645823efd1ae0a358d2c4521faa49b58de7696229298973bd25ac7`、新規train binaryのSHA-256は`f19878618870a487ce5b0aab6970d6d72b2ef71ab76ee79520e7c3fe3341dec1`となった。
+
+本番前の20 step smokeを本番とは別の`artifacts/checkpoints/exp100-smoke`へ実行した。50,207,616 parameters、CUDA AMP、NaN・OOM・shape errorなしで完走し、step 1のFineWeb validation lossは2.97326596、step 20は2.97170031だった。smokeの学習率はwarmup中であり、本番性能の判定には使わない。checkpoint読み込み、新規token列、評価、生成、保存処理が接続されていることを確認した。
+
+smoke完了後、同じPod上で本番40,000 stepを`configs/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda.toml`、初期重み`artifacts/checkpoints/issue1-both-50m-pretrain-20m-40k-runpod-cuda/best.pt`、`--device cuda`で開始した。初期optimizer stateはなく、Runpod上の`/workspace/exp100/train.log`へ標準出力を保存している。Podを削除せず、500 stepごとにloss・生成文・経過時間を確認する。
+
 ## 実験終了後の追記
 
 ここには、最終step、best step、FineWeb testと各domain loss、固定chat-test、新規会話test、人手レビュー、学習時間、最大メモリ、Runpod料金、次に会話SFTへ渡すcheckpointのパスを追記する。
