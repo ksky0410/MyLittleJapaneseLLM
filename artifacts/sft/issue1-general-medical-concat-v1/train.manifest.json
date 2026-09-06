@@ -1,0 +1,25 @@
+{
+  "format": "sft-npz-concat-v1",
+  "inputs": {
+    "general": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-quality-aware-770k-each-v1/train.npz",
+      "sha256": "fc2a9367a16c0cf963fbc2e96530a9944d41e4d2d8e4029874dface2d71b5d57",
+      "example_count": 127731,
+      "response_token_count": 1541975
+    },
+    "medical": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/train.npz",
+      "sha256": "fe1db09546363145845e219f71e05dfa6d8ceb006dfa2093fca302da2d2b8b07",
+      "example_count": 2945,
+      "response_token_count": 172545
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-general-medical-concat-v1/train.npz",
+  "output_sha256": "598c464b03cd94a9c5579552df5f78059410f8ce5721da6cc93acb8251382cf4",
+  "output_example_count": 130676,
+  "output_response_token_count": 1714520,
+  "array_shape": [
+    130676,
+    256
+  ]
+}

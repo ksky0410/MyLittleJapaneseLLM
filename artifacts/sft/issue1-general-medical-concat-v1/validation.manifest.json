@@ -1,0 +1,25 @@
+{
+  "format": "sft-npz-concat-v1",
+  "inputs": {
+    "general": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-both-full-v1/validation.npz",
+      "sha256": "fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1",
+      "example_count": 49045,
+      "response_token_count": 738660
+    },
+    "medical": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/validation.npz",
+      "sha256": "f4b7538782affce55c441f0fea8ca8cf6691deedde0b4fcd3dcc02125971457f",
+      "example_count": 162,
+      "response_token_count": 9277
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-general-medical-concat-v1/validation.npz",
+  "output_sha256": "95b6729ea46821d247ced049a0f06eef607c2d5ceb8e76cbcb8d337bebd8ad35",
+  "output_example_count": 49207,
+  "output_response_token_count": 747937,
+  "array_shape": [
+    49207,
+    256
+  ]
+}

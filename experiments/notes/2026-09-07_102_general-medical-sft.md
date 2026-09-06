@@ -1,0 +1,63 @@
+# 実験102：50Mモデルの一般会話・医師国家試験混合SFT
+
+## 目的
+
+実験101の継続事前学習で得る50M日本語モデルに対して、一般会話の自然さと質問回答能力を同時に改善できるかを調べる。一般会話だけでSFTすると会話の型は身につきやすい一方、質問に対して内容のある回答を返す能力が不足する可能性がある。そこで、既存の品質管理済み会話データへ医師国家試験の質問回答データを加え、応答部分だけをSFTの損失対象にする。
+
+## 事前仮説
+
+一般会話データに医師国家試験データを少量加えることで、会話の自然さを大きく損なわず、明示的な質問に対して「正解と理由」を返す能力が改善すると予想する。ただし、医療問題は一般会話と文体・語彙が異なるため、医療データを過度に繰り返すと雑談の自然さが悪化する可能性がある。本実験では医療データを重複複製せず一度だけ連結し、事前学習トークンを20%のrehearsalとして混ぜて過学習と知識忘却を抑える。
+
+## 実験前の条件
+
+- 実施日：2026年9月7日予定
+- 担当：Codex
+- 初期checkpoint：実験101の低学習率継続事前学習のbest checkpoint
+- モデル：dim 576、12層、9 heads、RoPE、LayerNorm、SwiGLU、context 256、約50.2M parameters
+- Tokenizer：`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`
+- tokenizer SHA-256：`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`
+- 学習データ：一般会話 `issue1-quality-aware-770k-each-v1/train.npz` と医師国家試験 `medical-qb-sft-v1/train.npz` の連結
+- 学習データの例数：一般会話127,731例、医療2,945例、合計130,676例
+- 応答対象Token数：一般会話1,541,975、医療172,545、合計1,714,520
+- 検証データ：一般会話validationと医療validationの連結。合計49,207例、応答対象747,937 tokens
+- 学習配列SHA-256：`598c464b03cd94a9c5579552df5f78059410f8ce5721da6cc93acb8251382cf4`
+- 検証配列SHA-256：`95b6729ea46821d247ced049a0f06eef607c2d5ceb8e76cbcb8d337bebd8ad35`
+- 学習配列manifest SHA-256：`4c5e4f458a281598fd2c57726064be4164c26a2032bc7d5030f968c642ad94cd`
+- 検証配列manifest SHA-256：`bd1b1a097f988be0dca4fcc84b929be032f0deb29afb69daf9c7abf495eebc47`
+- 設定ファイルSHA-256：`af7953a1c5dfec5bbcd06772c4d07dacdfba3427db2968a845cc9dac5161d756`
+- 学習：batch size 8、最大8,000 step、eval/sample 250 stepごと、checkpoint 500 stepごと
+- optimizer：AdamW、learning rate `2e-5`から`2e-6`へのcosine decay、warmup 200、weight decay 0.01、seed 202
+- rehearsal：`artifacts/tokens/mixed-ja-80-10-10-v2-train.bin`、ratio 0.20
+- GPU：実験101と同じRunpod A40 Secureを予定
+
+## 成功基準
+
+一般会話・医療のvalidation loss、固定会話プロンプト、新規会話評価、医療質問評価を実験101のbest checkpointと比較する。一般会話の自然さを保ったまま医療質問の正解率または回答形式が改善し、NaN・OOM・shape errorなく完走することを有望な結果とする。validation lossだけで採用checkpointを決めず、生成結果を必ず人手確認用に保存する。
+
+## 実行前の準備
+
+`scripts/concat_sft_npz.py`で一般会話と医療SFT配列を連結した。元の医師国家試験データは読み取り専用で扱い、元ディレクトリを変更していない。大きなNPZ本体はGitへ追加せず、入力hash・出力hash・例数は`artifacts/sft/issue1-general-medical-concat-v1/*.manifest.json`へ保存した。
+
+学習開始前に、実験101のbest checkpointのSHA-256、Runpod Pod ID、設定ファイルSHA-256、実際の実行コマンドをこのノートへ追記する。実験101が完了するまでは本実験を開始しない。
+
+## 実行コマンド（予定）
+
+```bash
+PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
+  --config configs/issue1-general-medical-50m-sft-runpod-8k.toml \
+  --base-checkpoint <experiment-101-best.pt> \
+  --train-data artifacts/sft/issue1-general-medical-concat-v1/train.npz \
+  --validation-data artifacts/sft/issue1-general-medical-concat-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-general-medical-50m-sft-runpod-8k \
+  --samples-dir artifacts/samples/issue1-general-medical-50m-sft-runpod-8k \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 \
+  --sample-template conversation \
+  --sample-speaker-a A \
+  --sample-speaker-b B \
+  --device cuda
+```
+
+## 結果
+
+実験101の終了後、実行条件、途中metrics、best checkpoint、生成サンプル、一般会話評価、医療質問評価、停止理由を追記する。失敗した場合も出力を削除せず、そのまま記録する。
