@@ -52,6 +52,16 @@ step 3,300はtrain loss 3.393661、validation loss 4.523731、PPL 92.18、learni
 
 step 3,900はtrain loss 3.086437、validation loss 4.445015、PPL 85.20、learning rate 6.7955e-5、経過442.30秒、step 4,000はtrain loss 3.184059、validation loss 4.436998、PPL 84.52、learning rate 6.1645e-5、経過454.07秒でした。step 4,000まで大きな過学習は観測されず、080との差も維持されています。学習は継続中です。
 
+step 4,100はtrain loss 2.883411、validation loss 4.431080、PPL 84.02、learning rate 5.5838e-5、経過466.42秒でした。step 4,200は4.428928、PPL 83.84、learning rate 5.0563e-5、経過476.42秒、step 4,300は4.420510、PPL 83.14、learning rate 4.5846e-5、経過488.23秒、step 4,400はtrain loss 3.003122、validation loss 4.418502、PPL 82.97、learning rate 4.1710e-5、経過498.24秒でした。step 4,500はtrain loss 3.184942、validation loss 4.414973、PPL 82.68、learning rate 3.8174e-5、経過510.27秒でした。
+
+step 4,600はtrain loss 3.129592、validation loss 4.401906、PPL 81.61、learning rate 3.5256e-5、経過523.49秒、step 4,700はtrain loss 2.901073、validation loss 4.389427、PPL 80.59、learning rate 3.2970e-5、経過535.47秒、step 4,800はtrain loss 3.083824、validation loss 4.388238、PPL 80.50、learning rate 3.1327e-5、経過546.15秒でした。step 4,900はtrain loss 3.406056、validation loss 4.371881、PPL 79.19、learning rate 3.0335e-5、経過558.68秒で最良を更新しました。step 5,000はtrain loss 3.005190、validation loss 4.376420、PPL 79.55、learning rate 3.0000e-5、経過571.34秒でした。最終stepでも最良からの悪化は小さく、学習後半に明確な過学習は見られません。
+
+学習はColab T4・PyTorch 2.11.0+cu128・CUDA 12.8・AMP有効で5,000 stepを完走しました。パラメータ数は50,207,616、summary上の総時間は571.34秒です。最良checkpointはstep 4,900、validation loss 4.371880690256755、PPL 79.19242816373284です。best weightのSHA-256は`1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb`、`best.json`は`4b6b56ad60730cc75a938dd8ef99aba6e713e03852043e8fe9175ef5d5c2813b`、`summary.json`は`73c18287af27bbcfd8eb8fa1a7faa229c7e87014e3241a7955724ac7ced393cc`、`metrics.jsonl`は`bf36605740eb6a18f3f983d147b0e95b3a1755bd7606ede640c6db4f00b35f8e`です。Colab軽量archiveは64ファイル、SHA-256は`d94218e2a140496bb5a49894e5f314244ba070fa961fb58fa202c83097582d9b`、best checkpoint archiveのSHA-256は`147eebc3fa0c6c93fd4566aec9035762bdd43c35d9f692579ced346dac8e3131`、checkpoint hash manifestは`artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/colab_checkpoint_manifest.json`です。
+
+固定promptの生成では、step 0は080と同じ文字崩れでした。step 2,500では「私はその後の自分には一日も何度も大事にしました」のような文法的に崩れた長文が出ましたが、step 5,000ではprompt直後にEOSとなり、空応答へ戻りました。validation lossの改善は確認できても、生成の自然さと安定性はまだ不足しています。step 0からstep 5,000まで100 step間隔の生成本文はすべて保存しました。
+
+次に080と同じ5領域validation、固定chat-test-v1 48例、生成全文を評価します。評価にはstep 4,900のbest checkpointを使います。
+
 ## 実験終了後の結果と解釈
 
 080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
