@@ -1,0 +1,76 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 11401,
+  "target_units": null,
+  "target_tokens": 20000000,
+  "tokenizer_path": "/workspace/exp100/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "shard3": 0.5,
+    "shard4": 0.5
+  },
+  "input_unit_count": 39237,
+  "unique_unit_count": 39237,
+  "output_unit_count": 39237,
+  "output_lines": 39237,
+  "output_character_count": 25578800,
+  "output_sha256": "ff2afe12a7c00696e59772a243ee2e6e3d97514ba94a42cc1c065fa0f14409bf",
+  "output_path": "/workspace/exp100/artifacts/corpus/fineweb2-edu-japanese-shards34-20m-v1/train.txt",
+  "selected_token_count": 19999496,
+  "actual_adoption_share": {
+    "shard3": 0.5009047582638836,
+    "shard4": 0.4990952417361164
+  },
+  "actual_adoption_character_share": {
+    "shard3": 0.5016798447177816,
+    "shard4": 0.4983201552822184
+  },
+  "actual_adoption_token_share": {
+    "shard3": 0.5000083002091653,
+    "shard4": 0.49999169979083474
+  },
+  "actual_token_share": {
+    "shard3": 0.5000083002091653,
+    "shard4": 0.49999169979083474
+  },
+  "sources": [
+    {
+      "name": "shard3",
+      "input_path": "/workspace/exp100/artifacts/corpus/fineweb2-edu-japanese-shards34-20m-v1/shard3.txt",
+      "input_sha256": "5e1d80c71ef4241143ecb5cd28224044f3e132ac64dbd2c845e3c69f858d9011",
+      "input_lines": 19654,
+      "input_characters": 12832338,
+      "input_unit_count": 19654,
+      "unique_unit_count": 19654,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.5,
+      "adopted_unit_count": 19654,
+      "adopted_characters": 12812684,
+      "adopted_token_count": 9999914,
+      "actual_adoption_share": 0.5009047582638836,
+      "actual_token_share": 0.5000083002091653
+    },
+    {
+      "name": "shard4",
+      "input_path": "/workspace/exp100/artifacts/corpus/fineweb2-edu-japanese-shards34-20m-v1/shard4.txt",
+      "input_sha256": "8c6b97bad4f08b8b08cd104e87d906ed0a146290b957f02089dd7b4fb504e215",
+      "input_lines": 19583,
+      "input_characters": 12746462,
+      "input_unit_count": 19583,
+      "unique_unit_count": 19583,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.5,
+      "adopted_unit_count": 19583,
+      "adopted_characters": 12726879,
+      "adopted_token_count": 9999582,
+      "actual_adoption_share": 0.4990952417361164,
+      "actual_token_share": 0.49999169979083474
+    }
+  ]
+}
