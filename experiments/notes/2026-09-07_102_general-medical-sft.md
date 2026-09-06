@@ -40,6 +40,32 @@
 
 学習開始前に、実験101のbest checkpointのSHA-256、Runpod Pod ID、設定ファイルSHA-256、実際の実行コマンドをこのノートへ追記する。実験101が完了するまでは本実験を開始しない。
 
+## 開始前の実行記録
+
+実験101が累積step 40,000まで完走し、step 38,000のbest checkpointを回収したため、本実験を開始する。初期checkpointのSHA-256は`6057172a5a2b3b420c5c751388eead0b17e0dfaa41585259265859ab9bf016b4`、設定ファイルのSHA-256は`af7953a1c5dfec5bbcd06772c4d07dacdfba3427db2968a845cc9dac5161d756`である。Runpod Podは実験101と同じ`j9c46julmtbcb4`（A40 Secure、CA-MTL-1）を使う。
+
+まず同じ条件のpilotを最大1,000 stepで実行する。pilotの出力は本番と分離して`artifacts/checkpoints/exp102-pilot`と`artifacts/samples/exp102-pilot`へ保存し、validation loss、EOS到達率、生成文を確認する。pilotでNaN、OOM、loss急上昇、出力形式の明らかな崩壊がなければ、同じ初期checkpointからではなくpilotの重みを引き継いで本番8,000 stepへ進む。本番では、SFTの学習率scheduleをpilot後も連続させる。
+
+### pilot実行コマンド
+
+```bash
+PYTHONPATH=scripts python3 scripts/train_sft_torch.py \
+  --config configs/issue1-general-medical-50m-sft-runpod-8k.toml \
+  --base-checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5/best.pt \
+  --train-data artifacts/sft/issue1-general-medical-concat-v1/train.npz \
+  --validation-data artifacts/sft/issue1-general-medical-concat-v1/validation.npz \
+  --output-dir artifacts/checkpoints/exp102-pilot \
+  --samples-dir artifacts/samples/exp102-pilot \
+  --max-steps 1000 \
+  --lr-schedule-steps 8000 \
+  --rehearsal-tokens artifacts/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 \
+  --sample-template conversation \
+  --sample-speaker-a A \
+  --sample-speaker-b B \
+  --device cuda
+```
+
 ## 実行コマンド（予定）
 
 ```bash
