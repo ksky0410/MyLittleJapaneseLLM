@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from train_sft_torch import (
     _load_base_checkpoint,
     _masked_cross_entropy,
+    _prune_periodic_checkpoints,
     build_parser,
     encode_generation_prompt,
     exclude_eos_from_loss,
@@ -33,6 +34,22 @@ from my_little_japanese_llm.training import signature_from_config
 
 
 class TrainSFTTorchOptionTests(unittest.TestCase):
+    def test_prune_periodic_checkpoints_keeps_latest_weights_and_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            for step in (500, 1000, 1500):
+                (output_dir / f"step_{step:06d}.pt").write_bytes(b"weights")
+                (output_dir / f"step_{step:06d}.json").write_text("{}")
+                (output_dir / f"step_{step:06d}.txt").write_text("sample")
+
+            _prune_periodic_checkpoints(output_dir, keep=1)
+
+            self.assertTrue((output_dir / "step_001500.pt").exists())
+            self.assertTrue((output_dir / "step_001500.json").exists())
+            self.assertFalse((output_dir / "step_000500.pt").exists())
+            self.assertFalse((output_dir / "step_001000.json").exists())
+            self.assertTrue((output_dir / "step_000500.txt").exists())
+
     def test_rehearsal_options_are_paired_and_validated(self) -> None:
         self.assertEqual(validate_rehearsal_options(None, None), (None, 0.0))
         self.assertEqual(

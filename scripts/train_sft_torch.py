@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import random
 import time
 from pathlib import Path
@@ -48,6 +49,37 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _save_torch_state_dict_atomic(
+    torch: Any, state_dict: Any, destination: Path
+) -> None:
+    """一時ファイル経由でcheckpointを保存し、既存の完全な重みを守る。"""
+
+    temporary = destination.with_name(
+        f".{destination.name}.tmp-{os.getpid()}"
+    )
+    try:
+        if temporary.exists():
+            temporary.unlink()
+        torch.save(state_dict, temporary)
+        temporary.replace(destination)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _prune_periodic_checkpoints(output_dir: Path, keep: int = 1) -> None:
+    """周期checkpointを新しいものだけ残し、生成物とmetricsは削除しない。"""
+
+    if keep < 1:
+        raise ValueError("周期checkpointは少なくとも1個保持してください")
+    checkpoints = sorted(output_dir.glob("step_*.pt"))
+    for checkpoint in checkpoints[:-keep]:
+        checkpoint.unlink()
+        metadata = checkpoint.with_suffix(".json")
+        if metadata.exists():
+            metadata.unlink()
 
 
 def validate_rehearsal_options(
@@ -146,6 +178,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--validation-data", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--samples-dir", required=True)
+    parser.add_argument(
+        "--keep-periodic-checkpoints",
+        type=int,
+        default=1,
+        help="保存する周期checkpointの個数。best.ptと生成物は別に保持",
+    )
     parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument(
         "--lr-schedule-steps",
@@ -503,6 +541,8 @@ def main() -> None:
 
     output_dir = repo_path(args.output_dir).resolve()
     samples_dir = repo_path(args.samples_dir).resolve()
+    if args.keep_periodic_checkpoints < 1:
+        raise ValueError("--keep-periodic-checkpointsは1以上で指定してください")
     output_dir.mkdir(parents=True, exist_ok=True)
     samples_dir.mkdir(parents=True, exist_ok=True)
     metrics_path = output_dir / "metrics.jsonl"
@@ -677,7 +717,7 @@ def main() -> None:
             checkpoint_loss: Any = loss,
             checkpoint_metrics: dict[str, Any] = latest_metrics,
         ) -> None:
-            torch.save(model.state_dict(), checkpoint)
+            _save_torch_state_dict_atomic(torch, model.state_dict(), checkpoint)
             metadata = {
                 "format_version": 1,
                 "backend": "pytorch-cuda" if device.type == "cuda" else "pytorch",
@@ -715,14 +755,26 @@ def main() -> None:
                     "long_response_min_tokens": long_response_min_tokens,
                 },
             }
-            checkpoint.with_suffix(".json").write_text(
-                json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
+            metadata_path = checkpoint.with_suffix(".json")
+            temporary_metadata = metadata_path.with_name(
+                f".{metadata_path.name}.tmp-{os.getpid()}"
             )
+            try:
+                temporary_metadata.write_text(
+                    json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                temporary_metadata.replace(metadata_path)
+            finally:
+                if temporary_metadata.exists():
+                    temporary_metadata.unlink()
 
         if should_checkpoint:
             checkpoint = output_dir / f"step_{step:06d}.pt"
             save_checkpoint(checkpoint, "periodic")
+            _prune_periodic_checkpoints(
+                output_dir, keep=args.keep_periodic_checkpoints
+            )
             if is_best:
                 best_checkpoint_step = step
                 best_validation_loss = float(validation_loss)
@@ -754,6 +806,7 @@ def main() -> None:
             "sample_interval": config.training.sample_interval,
             "checkpoint_interval": checkpoint_interval,
         },
+        "keep_periodic_checkpoints": args.keep_periodic_checkpoints,
         "final_step": max_steps,
         "lr_schedule_steps": lr_schedule_steps,
         "best_checkpoint": best_checkpoint.name
