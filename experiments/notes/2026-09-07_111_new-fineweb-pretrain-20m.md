@@ -59,6 +59,10 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 
 抽出の最初の試行では、Runpod側に`scripts/import_fineweb2_edu_japanese.py`がまだ同期されておらず、`can't open file '/workspace/exp100/scripts/import_fineweb2_edu_japanese.py'`で終了した。データ、checkpoint、既存Token列は変更されていない。`uv run --with pyarrow`によってpyarrowを一時環境へ導入したが、プロジェクトの依存ファイルは変更していない。この失敗を記録した後、同スクリプトをRunpodへ同期して抽出を再実行する。
 
+スクリプトを同期した後の抽出は成功した。shard 1は19,687 documents、9,999,311 tokens、本文SHA-256 `6345d0d6fcba4d6308e44c8c77938f574382b61018a6877c26268a64ba2ee4df`、shard 2は19,583 documents、9,999,812 tokens、本文SHA-256 `68cb523c5dd56e5e246d0003f0679ed14ff03ea7c5716c543cb9539841b82ab3`となった。いずれも先頭20,000行を除外し、Tokenizer SHA-256は固定値と一致した。
+
+その後、`mix_corpora.py`と`encode_data.py`がRunpod側に同期されていない状態で混合・Token化を開始し、`can't open file '/workspace/exp100/scripts/mix_corpora.py'`で終了した。この試行も学習や既存データを変更していない。過去の実験で必要だったスクリプト同期が不足していたため、`mix_corpora.py`、`encode_data.py`と、それらが使う既存のsource moduleを同期してから再実行する。
+
 ## 学習中の記録
 
 ここに500 stepごとのvalidation loss、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。生成文は崩れたものも含め、GitHubへ保存する。
