@@ -186,6 +186,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument(
+        "--start-step",
+        type=int,
+        default=0,
+        help="読み込んだcheckpointが既に完了している累積step数",
+    )
+    parser.add_argument(
         "--lr-schedule-steps",
         type=int,
         default=None,
@@ -496,6 +502,9 @@ def main() -> None:
     )
     if max_steps <= 0 or max_steps > 1_000_000:
         raise ValueError("max_stepsは1以上1,000,000以下で指定してください")
+    start_step = args.start_step
+    if start_step < 0 or start_step >= max_steps:
+        raise ValueError("start_stepは0以上でmax_steps未満にしてください")
     lr_schedule_steps = (
         args.lr_schedule_steps if args.lr_schedule_steps is not None else max_steps
     )
@@ -589,7 +598,7 @@ def main() -> None:
         )
         return generated
 
-    write_sample(0)
+    write_sample(start_step)
     rehearsal_active = rehearsal_tokens is not None and rehearsal_ratio > 0
     if rehearsal_active:
         sft_batch_size, rehearsal_batch_size = split_sft_rehearsal_batch_size(
@@ -603,7 +612,7 @@ def main() -> None:
     best_checkpoint: Path | None = None
     latest_metrics: dict[str, Any] = {}
 
-    for step in range(1, max_steps + 1):
+    for step in range(start_step + 1, max_steps + 1):
         model.train()
         sft_inputs, sft_targets, sft_loss_mask = _sft_batch(
             train_arrays,
@@ -807,6 +816,7 @@ def main() -> None:
             "checkpoint_interval": checkpoint_interval,
         },
         "keep_periodic_checkpoints": args.keep_periodic_checkpoints,
+        "start_step": start_step,
         "final_step": max_steps,
         "lr_schedule_steps": lr_schedule_steps,
         "best_checkpoint": best_checkpoint.name
