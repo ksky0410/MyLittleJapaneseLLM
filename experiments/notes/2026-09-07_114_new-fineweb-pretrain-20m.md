@@ -110,4 +110,16 @@ step 8,500のFineWeb validation lossは2.778439、step 9,000は2.778033だった
 
 ## 実験終了後の記録
 
-ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、実験111との比較、仮説との一致・不一致、SFT再適用を行うかどうか、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとSHA-256だけを記録する。
+実験114はNaN、OOM、shape errorなく10,000 stepを完走した。最良checkpointはstep 10,000で、FineWeb validation lossは2.777802、perplexityは16.0836だった。学習時間は649.34秒、metrics上のstep 10,000経過時間は647.29秒、peak allocated memoryは1,528,083,968 bytesだった。最良checkpointの重みSHA-256は`4f6f9f4ddad1f717dbf170de8b1d5e704e1ef3975c1b4ab4e5e905abc5c3eca6`である。
+
+FineWeb validation lossは、実験111 raw bestの2.796272から0.018470改善した。追加shard 3・4の約20M tokensは、同じTokenizer・同じモデル・同じ学習率スケジュールで、未使用FineWeb testへの適合をさらに伸ばした。一方、raw checkpointの領域lossはgeneral 4.263909、conversation 2.243929、medical 1.959759となり、実験111 rawのgeneral 4.229550、conversation 2.097783、medical 1.923146より悪化した。FineWeb文書を続けて学習すると、会話・医療形式の保持が弱くなるという予想どおりの結果である。
+
+raw固定prompt `今日はなにをしていましたか？` のstep 10,000生成は、「おもてなし」を中心に同じ構文を繰り返した。実験111 rawの「今回はこのセミナーをお待ちしています。」「お客様の声」の反復とは語彙が変わったが、自然な会話としてはまだ崩れている。FineWeb validation lossの改善を、自然な日本語生成の改善とは解釈しない。
+
+raw評価では、一般会話48例はEOS 48/48、平均生成10.10 Token、Token overlap F1 0.220002だった。実験111 rawのEOS 48/48、平均11.13 Token、F1 0.250090からF1が低下した。医療162例はEOS 102/162、平均生成79.88 Token、Token overlap F1 0.154844、回答形式抽出57/162、正解10/162（6.17%）だった。実験111 rawのEOS 102/162、平均93.57 Token、F1 0.246671、抽出127/162、正解26/162（16.05%）より悪化しており、raw checkpointは会話・医療モデルとして採用しない。
+
+生成文、checkpoint metadata、metrics、raw評価全文は、[checkpoint metadata](../../artifacts/checkpoints/issue1-50m-pretrain-fineweb-new-shards34-runpod-10k/best.json)、[metrics](../../artifacts/checkpoints/issue1-50m-pretrain-fineweb-new-shards34-runpod-10k/metrics.jsonl)、[step別生成](../../artifacts/samples/issue1-50m-pretrain-fineweb-new-shards34-runpod-10k/)、[raw領域評価](../../artifacts/evaluations/exp114-raw/domains.json)、[raw一般会話評価](../../artifacts/evaluations/exp114-raw/general-chat.json)、[raw一般会話全文](../../artifacts/evaluations/exp114-raw/general-chat.txt)、[raw医療評価](../../artifacts/evaluations/exp114-raw/medical-chat.json)、[raw医療全文](../../artifacts/evaluations/exp114-raw/medical-chat.txt)に保存した。best JSONのSHA-256は`e9e7170d60194c59ec41ed3e13174d19513cd771e64061e26f7d12427c40d197`、metricsは`fba755364ba90fc85e78d0f1537b2a6b306d4b38d25e68f217cb4fc5d8aaa295`、summaryは`1155e0f819c21251f39455ed1c15329dba29a17a1ecbc2e8b7a8fda7e33949e7`、step 10,000 metadataは`43fc0a33fbab0bb40b06fef2731ec1835eccccd1a34d8b3827037282e5e6fb62`である。raw領域評価のSHA-256は`3408fdd8b3e5ff9161e412573e06f07ba53de6adb88ea7bc37271718a7c87a1e`、raw一般会話JSONは`f3f71947e165cbb76157df1e19b4766839438511c52de57ea36d4b6b952826c6`、TXTは`74a80043042f8341531720c4ddc74bd5f72660bb6633819dc154c903be58acb4`、raw医療JSONは`387d8daf9a1240d03f9da32bbdc15f8edfa15f68a980d3e326a8d374b417cc05`、TXTは`f06354fc6d5e6be87043461b2d8dfdb63589a80fec5ccefdbf04750dc8360864`である。
+
+なお、評価結果の回収時にRunpod上の補助確認で`rg`が未導入だったため、step 10,000のmetricsは`grep`で再確認した。学習結果や評価JSONには影響しない。
+
+今回の仮説は部分的に支持された。新しいFineWeb文書をさらに20M tokens学習すればFineWeb validation lossは改善したが、rawの会話・医療能力と自然な生成は改善しなかった。したがって、このraw checkpointを次のSFTの初期値として使い、実験113と同じanswer-focus混合SFTを再適用する。実験113との比較により、追加20M pretrainingがSFT後の一般会話と医療正答率へ残る効果を切り分ける。
