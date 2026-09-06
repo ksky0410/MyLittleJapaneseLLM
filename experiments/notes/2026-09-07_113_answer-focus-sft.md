@@ -115,3 +115,17 @@ step 7,250のvalidation lossは2.756807、step 7,500は2.758019、step 7,750は2
 ## 実験終了後の記録
 
 学習完了後に、最良checkpointのstepとSHA-256、最終loss、学習時間、最大GPUメモリ、評価JSON/TXTのSHA-256、実験112との比較、仮説の判定、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとハッシュだけを記録する。
+
+実験113はNaN、OOM、shape errorなく8,000 stepを完走した。最良checkpointはstep 7,250で、validation lossは2.756807、perplexityは15.7495だった。step 8,000のvalidation lossは2.757623で、最良値は後半のstep 7,000〜7,250に現れた。最良checkpointの重みSHA-256は`7cc2c9df032f0d2a19094a80aebb4b5da700f9a3f0d2500475b66295d1a1911c`、学習時間は653.49秒、peak allocated memoryは1,490,586,112 bytesだった。
+
+領域別validation lossはFineWeb2 2.926402、general 4.052437、conversation 2.007372、medical 1.875708だった。実験112と比べると、FineWeb2は0.001484悪化、generalは0.007616改善、conversationは0.000772悪化、medicalは0.001004改善した。answer-focus例を追加しても通常validation全体を大きく壊さず、generalとmedicalにはわずかな改善が見られた。
+
+一般会話48例はEOS到達48/48、平均生成9.10 Token、Token overlap F1 0.254858だった。実験112のEOS 48/48、平均8.42 Token、F1 0.222845と比べ、生成長は0.69 Token伸び、F1は0.032012改善した。ただし、生成本文は「わかります」「そうですね」「そうなんですね」のような短い応答が中心で、直前の話題に具体的に答える能力はまだ弱い。自動F1の改善を、そのまま自然な会話の獲得とは解釈しない。
+
+医療QA162例はEOS到達162/162、平均生成19.65 Token、Token overlap precision 0.737016、recall 0.192238、F1 0.240837だった。回答形式は162/162で抽出でき、正解記号の完全一致は33/162（20.37%）となった。実験112の完全一致19/162（11.73%）から14例増え、EOS未到達も7例減った。一方、平均生成長は52.42 Tokenから19.65 Tokenへ大きく短くなり、recallとF1は実験112の0.372191より低下した。つまりanswer-focusは、長い誤説明を抑えて選択肢記号を当てる能力を改善したが、理由を十分に説明する能力や医学知識そのものを改善したとは言えない。正解した33例についても、理由部分が誤っている例が残っている。
+
+生成サンプルと評価結果は、[checkpoint metadata](../../artifacts/checkpoints/issue1-fineweb-new-pretrain-answer-focus-sft-runpod-8k/best.json)、[metrics](../../artifacts/checkpoints/issue1-fineweb-new-pretrain-answer-focus-sft-runpod-8k/metrics.jsonl)、[step別生成](../../artifacts/samples/issue1-fineweb-new-pretrain-answer-focus-sft-runpod-8k/)、[領域評価](../../artifacts/evaluations/exp113/domains.json)、[一般会話評価](../../artifacts/evaluations/exp113/general-chat.json)、[一般会話全文](../../artifacts/evaluations/exp113/general-chat.txt)、[医療評価](../../artifacts/evaluations/exp113/medical-chat.json)、[医療全文](../../artifacts/evaluations/exp113/medical-chat.txt)に保存した。metadataのbest JSONのSHA-256は`0e009c3d03a7f074957a9c2aa5b573796c4b78463c49c8a1267221d8a282968a`、metricsは`97df2ba31b72853f15c26df963875a6cdefcc10b8ace0bc7202ef26ba910fee7`、領域評価は`c4d475308ad882c1c110b0972d75b06e658420363a8a09a0705f6e9249c85614`、一般会話JSONは`1ae4682199902ac7fa6854c9b5e30df9d45ac766a095a2b0181f59f19e67c46a`、一般会話TXTは`9201817929b16498adcf72daf310e009b0110098222922c64a81fa4205182c0b`、医療JSONは`f2edf22a72c4438c909f330be0ec7f7943cdd3529eb4d81152a9c2940caa19ad`、医療TXTは`acced9952a554161de6ededc4f4b96921dd216984b338c9bb5eb509f530e7134`である。
+
+仮説は部分的に支持された。answer-focusを加えると医療の完全一致が改善し、一般会話F1も悪化しなかったため、現在の主線へ「短い正解形式を少量混ぜる」方針は採用できる。ただし、医療F1と理由の正確さは低下したため、answer-focusだけを増やすことは採用しない。今後は、正解記号だけの例と、正しい理由を短く保った例を分け、回答の長さを抑えながら根拠の品質を守る必要がある。
+
+次の候補は、一般会話のSFTデータで短い相づちだけを学ぶ比率を減らし、質問・話題継続・具体的な内容応答を一定量確保した構成を作ることである。同時に、FineWeb2の追加日本語Tokenをさらに取得してraw基盤を延長し、データ量の効果と会話SFTの効果を混同しないよう別実験として比較する。
