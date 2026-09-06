@@ -118,3 +118,11 @@ step 39,500、40,000のvalidation lossは2.835559、2.835226となり、NaN、OO
 Runpod A40（PyTorch 2.9.1+cu128、AMP有効）での実測経過時間は2,527.5秒、約42.1分だった。ピークGPUメモリはallocated約1.53GB、reserved約1.59GBである。best checkpointのSHA-256は`6057172a5a2b3b420c5c751388eead0b17e0dfaa41585259265859ab9bf016b4`、metrics.jsonlのSHA-256は`708f1f64e5e97f0d528ba5f78e4c128348b9062e49e396f53017a397ae3acf3e`である。metricsとstep 0から40,000までの生成サンプルをローカルへ回収した。
 
 今回の結果から、50Mモデルに約2,000万tokensの未使用日本語コーパスを追加し、学習率を`3e-5`へ下げて40,000 step継続する条件は、既存validationを壊さずに改善する条件として有望と判断する。一方、validation lossの改善だけでは自然な会話や質問回答の改善を証明できないため、次はこのbest checkpointを初期値に実験102の一般会話・医師国家試験混合SFTを行う。
+
+### 完了後の比較評価
+
+同じA40、同じTokenizer、同じeval batches 20で、実験098のbest checkpointとstep 38,000 bestを比較した。FineWeb test lossは2.973267から2.835023へ改善したが、一般validationは4.149753から4.444538、conversation validationは2.183868から3.860727、medical validationは2.018987から2.266281へ悪化した。追加コーパスがFineWeb・Wikipedia中心で、会話・医療形式を含まなかったため、特殊な会話形式とEOSの扱いを忘れた可能性が高い。これは「FineWeb loss改善」を「自然な会話改善」と解釈してはいけない具体的な反証である。
+
+held-out生成でも、一般会話48例ではbaselineのEOS到達48例に対してcontinuationは16例、平均生成Token数は13.10から70.75へ増えた。医療質問162例ではEOS到達160例から58例、平均生成Token数は14.40から109.20へ増えた。token overlap F1は一般会話0.1086から0.0805へ下がった一方、医療は0.0380から0.0990へ上がったため、内容の一部を拾う能力と、自然に短く回答を終える能力が分離している。生成全文、比較JSON、domain評価JSONは`experiments/results/exp101/`へ保存した。
+
+この結果を受け、実験102ではSFTデータに一般会話と医療質問回答を含め、さらに事前学習Token列のrehearsal ratio 0.20を加える。SFT後にもdomain lossとheld-out生成を再評価し、会話のEOS崩れが回復しない場合は、会話・医療データを含むreplay付き継続事前学習を別実験として追加する。
