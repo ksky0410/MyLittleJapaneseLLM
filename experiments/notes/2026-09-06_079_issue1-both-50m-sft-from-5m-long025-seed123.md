@@ -54,9 +54,55 @@ step 1,100はvalidation loss 3.665414、PPL 39.0723、learning rate 3.8061e-5、
 
 step 1,500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> えー、よろしくお願いします。`でした。step 1,100〜1,500の生成本文、step 1,500のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は継続中です。
 
+step 1,600はvalidation loss 3.605783、PPL 36.8105、learning rate 2.6306e-5、経過時間2,084.30秒でした。step 1,700は3.598783、PPL 36.5537、learning rate 2.3884e-5、経過時間2,202.08秒、step 1,800は3.572048、PPL 35.5894、learning rate 2.1504e-5、経過時間2,330.61秒でした。step 1,900は3.593619、PPL 36.3655、learning rate 1.9195e-5、経過時間2,458.91秒、step 2,000はtrain loss 3.314458、SFT loss 3.282593、rehearsal loss 3.441917、validation loss 3.571540、PPL 35.5713、learning rate 1.6982e-5、経過時間2,587.86秒でした。
+
+step 2,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`でした。step 1,600〜2,000の生成本文、step 2,000のcheckpoint metadata、metricsを保存しました。step 2,000時点ではvalidation lossの最良はstep 1,500の3.614141からstep 2,000の3.571540へ更新されました。学習は継続中です。
+
+step 2,100はtrain loss 2.880641、SFT loss 2.946008、rehearsal loss 2.619175、validation loss 3.577139、PPL 35.7710、learning rate 1.4893e-5、経過時間2,722.14秒でした。step 2,200はtrain loss 3.656598、SFT loss 3.657779、rehearsal loss 3.651873、validation loss 3.573679、PPL 35.6475、learning rate 1.2952e-5、経過時間2,851.88秒でした。step 2,300はtrain loss 3.098670、SFT loss 2.905879、rehearsal loss 3.869832、validation loss 3.567085、PPL 35.4132、learning rate 1.1182e-5、経過時間2,981.63秒、step 2,400はtrain loss 4.024920、SFT loss 4.145559、rehearsal loss 3.542368、validation loss 3.560665、PPL 35.1866、learning rate 9.6027e-6、経過時間3,114.47秒でした。
+
+step 2,500はtrain loss 3.071373、SFT loss 2.686692、rehearsal loss 4.610097、validation loss 3.542961、PPL 34.5691、learning rate 8.2333e-6、経過時間3,249.27秒でした。固定生成は引き続き`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`でした。step 2,100〜2,500の生成本文、step 2,500のcheckpoint metadata、metricsを保存しました。step 2,500で最良validationを更新しました。
+
+step 2,600はtrain loss 2.747316、SFT loss 2.950996、rehearsal loss 1.932600、validation loss 3.540011、PPL 34.4673、learning rate 7.0898e-6、経過時間3,386.20秒でした。step 2,700はtrain loss 3.328378、SFT loss 3.080291、rehearsal loss 4.320726、validation loss 3.541172、PPL 34.5073、learning rate 6.1856e-6、経過時間3,519.20秒、step 2,800はtrain loss 3.660130、SFT loss 3.598723、rehearsal loss 3.905756、validation loss 3.543153、PPL 34.5758、learning rate 5.5313e-6、経過時間3,649.06秒でした。step 2,900はtrain loss 3.119025、SFT loss 3.224555、rehearsal loss 2.696908、validation loss 3.531731、PPL 34.1831、learning rate 5.1345e-6、経過時間3,777.17秒でした。step 2,900で最良validationを更新しました。
+
+step 3,000はtrain loss 2.949194、SFT loss 3.074243、rehearsal loss 2.448998、validation loss 3.536578、PPL 34.3492、learning rate 5.0000e-6、経過時間3,910.17秒でした。固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんは!`でした。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存しました。NaN、OOM、shape errorは発生していません。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、078との差、生成本文の質的観察を追記します。評価結果、生成全文、checkpoint metadataのSHA-256を残します。
+
+学習はMPSで3,000 stepを完走しました。Torchは2.14.0、CUDAは未使用、AMPは無効、パラメータ数は50,207,616、総経過時間は3,911.49秒でした。最良checkpointはstep 2,900で、validation lossは3.5317310214042665、PPLは34.18308808773353です。最終step 3,000はvalidation loss 3.536577832698822、PPL 34.34916922199306であり、評価には最良の`best.pt`を使います。`best.pt`のSHA-256は`03bd492d82fa31b1ee13e492d1fe2d7f1d69d3e4f122e32a4ac41370a2867bcb`、`best.json`は`847e6b6d27113694d72a494994ec40dabe12e0bc1008b6793aaf7a4f25e30afb`、`summary.json`は`84fbdbce70d697ffabab6c6b9620a4d844847891017f072c2116e00cb6a532d7`、`metrics.jsonl`は`7c7787fdd0c62ad5f5fc49f1812bdb02aa8bcfb4afa12351fcd93791c54ff6ec`です。
+
+step 2,500以降もvalidation lossが改善し、step 2,900で最良になった一方、固定生成は短い挨拶からほとんど伸びませんでした。この段階では長文比率25%が「自然に長く話す」ことを保証したとは言えず、validation lossと会話生成長の両方を評価して判断する必要があります。
+
+評価開始前の予定として、実験078と同じCPU・同じ5領域・同じ48例のchat-test・同じseed 42・max-new-tokens 64で評価します。実行コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-sft-from-5m-long025-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-long025-seed123-3k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-domains.json
+```
+
+```bash
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-sft-from-5m-long025-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-long025-seed123-3k/best.pt \
+  --selection experiments/evaluation/chat-test-v1.json \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --device cpu --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-test-v1.txt
+uv run python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-test-v1.json \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-review.json
+```
 
 ## 次に試すこと
 
