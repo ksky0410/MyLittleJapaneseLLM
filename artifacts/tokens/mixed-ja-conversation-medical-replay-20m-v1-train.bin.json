@@ -1,0 +1,9 @@
+{
+  "format": "uint32_sentencepiece_ids_v1",
+  "tokenizer": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "input": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-conversation-medical-replay-20m-v1.txt",
+  "tokens": 20000000,
+  "eos_id": 3,
+  "vocab_size": 4096,
+  "sha256": "7b9aa1968ad81cc1f695c452baea6362ed2117ef28db23d9f9e71753f75a73db"
+}

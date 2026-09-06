@@ -31,6 +31,8 @@
 - モデル：50,207,616 parameters、12 layers、dimension 576、9 heads、context 256、RoPE、LayerNorm、SwiGLU、vocab 4096
 - Tokenizer：`mixed-ja-80-10-10-v2-unigram.model`、SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`
 - 事前学習設定：`configs/issue1-50m-pretrain-new-japanese-20m-runpod-10k.toml`
+- 事前学習設定SHA-256：`7972b5d11dc132c5660b72bafe82e84626b4787070812cc636007f395048fe3e`
+- 学習コード：`scripts/train_torch.py`、SHA-256 `4695dfea5487fb7d912db762c0825a524aa921247dbfb670d74b5002cc4fe001`
 - 学習：batch size 8、10,000 step、総提示Token約20.48M、AdamW、learning rate 1e-5から1e-6、warmup 500、weight decay 0.1、seed 109
 - validation：`fineweb2-edu-japanese-v1-test.bin`、20 evaluation batches
 
@@ -52,7 +54,13 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \
 
 ## データ準備中の記録
 
-ここにデータ抽出・混合・Token化の実際の件数、各入力と出力のSHA-256、想定との差を追記する。
+データ混合は完了した。入力単位は51,761件、重複除去後のunique単位は44,150件で、20,000,000 tokensを採用した。出力本文のSHA-256は `e40a6181e864abced2385be88128bda1462c310e3f5345e05f453ab3dd10a3a4`、mix manifestのSHA-256は `dcd71a8319859aa262e753aac3b74fb423d4361b55f565074eb38496a1980f58` である。
+
+実際のToken比率はreplay 47.14%（9,427,150 tokens）、会話 41.54%（8,307,061 tokens）、医療 11.33%（2,265,789 tokens）だった。青空文庫はreplay側と本文単位が重複していたため、追加採用は0 tokensとなった。会話は全11,635単位のうち10,938単位、医療は全6,142単位のうち4,986単位を採用しており、初期混合データで採用された一部だけでなく、より広い範囲を学習に含められた。
+
+Tokenizerでuint32列へ変換し、Token数は20,000,000、binaryのSHA-256は `7b9aa1968ad81cc1f695c452baea6362ed2117ef28db23d9f9e71753f75a73db`、metadataのSHA-256は `2a768f65ba1334fd6e6907d7cb4373fddd6f1e129b19b2e4de1da62a542da0e4` となった。大きな本文とbinary本体はGitへ追加せず、manifestとこのノートへ取得条件・hashを残す。
+
+この結果は、当初の「replay 33%、会話33%、医療25%、青空文庫8%」という希望比率とは異なる。原因は会話・医療の単位が枯渇し、青空文庫がreplayと重複して全除外されたためである。実際に増えたデータ量とsource比率を優先し、予定との差は成功結果として明記する。
 
 ## 学習中の記録
 

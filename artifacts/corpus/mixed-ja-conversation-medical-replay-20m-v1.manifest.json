@@ -1,0 +1,120 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 10901,
+  "target_units": null,
+  "target_tokens": 20000000,
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "replay": 0.3333333333333333,
+    "conversation": 0.3333333333333333,
+    "medical": 0.25,
+    "aozora": 0.08333333333333333
+  },
+  "input_unit_count": 51761,
+  "unique_unit_count": 44150,
+  "output_unit_count": 29263,
+  "output_lines": 435904,
+  "output_character_count": 28980306,
+  "output_sha256": "e40a6181e864abced2385be88128bda1462c310e3f5345e05f453ab3dd10a3a4",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-conversation-medical-replay-20m-v1.txt",
+  "selected_token_count": 20000000,
+  "actual_adoption_share": {
+    "replay": 0.45583159621364866,
+    "conversation": 0.373782592352117,
+    "medical": 0.17038581143423437,
+    "aozora": 0.0
+  },
+  "actual_adoption_character_share": {
+    "replay": 0.4044025978615002,
+    "conversation": 0.49280355806179416,
+    "medical": 0.10279384407670564,
+    "aozora": 0.0
+  },
+  "actual_adoption_token_share": {
+    "replay": 0.4713575,
+    "conversation": 0.41535305,
+    "medical": 0.11328945,
+    "aozora": 0.0
+  },
+  "actual_token_share": {
+    "replay": 0.4713575,
+    "conversation": 0.41535305,
+    "medical": 0.11328945,
+    "aozora": 0.0
+  },
+  "sources": [
+    {
+      "name": "replay",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-20m-v1.txt",
+      "input_sha256": "ee634d4da7326fce4afd5361eeac673eb5a714fc6fc20d3dec182329f8b17eb9",
+      "input_lines": 53642,
+      "input_characters": 24827261,
+      "input_unit_count": 28226,
+      "unique_unit_count": 28226,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.3333333333333333,
+      "adopted_unit_count": 13339,
+      "adopted_characters": 11707877,
+      "adopted_token_count": 9427150,
+      "actual_adoption_share": 0.45583159621364866,
+      "actual_token_share": 0.4713575
+    },
+    {
+      "name": "conversation",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/train.txt",
+      "input_sha256": "747026f9ed29f2f39112f40a62da7fd261230a0765fab247e1fdb189216f844e",
+      "input_lines": 443505,
+      "input_characters": 15203901,
+      "input_unit_count": 11635,
+      "unique_unit_count": 10938,
+      "duplicate_units_removed": 697,
+      "weight": 1.0,
+      "requested_weight_share": 0.3333333333333333,
+      "adopted_unit_count": 10938,
+      "adopted_characters": 14267177,
+      "adopted_token_count": 8307061,
+      "actual_adoption_share": 0.373782592352117,
+      "actual_token_share": 0.41535305
+    },
+    {
+      "name": "medical",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.txt",
+      "input_sha256": "7cbe5fb1993bdbb9401a1dbad20d6ea416dddfa642a0f5c416e21e6998e2683e",
+      "input_lines": 6142,
+      "input_characters": 3674479,
+      "input_unit_count": 6142,
+      "unique_unit_count": 4986,
+      "duplicate_units_removed": 1156,
+      "weight": 0.75,
+      "requested_weight_share": 0.25,
+      "adopted_unit_count": 4986,
+      "adopted_characters": 2975989,
+      "adopted_token_count": 2265789,
+      "actual_adoption_share": 0.17038581143423437,
+      "actual_token_share": 0.11328945
+    },
+    {
+      "name": "aozora",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/aozora-general-v1.txt",
+      "input_sha256": "0b992488d310351f3f595b2cc7928661cc00dd9caff5a5932a359f2539372978",
+      "input_lines": 5758,
+      "input_characters": 727095,
+      "input_unit_count": 5758,
+      "unique_unit_count": 0,
+      "duplicate_units_removed": 5758,
+      "weight": 0.25,
+      "requested_weight_share": 0.08333333333333333,
+      "adopted_unit_count": 0,
+      "adopted_characters": 0,
+      "adopted_token_count": 0,
+      "actual_adoption_share": 0.0,
+      "actual_token_share": 0.0
+    }
+  ]
+}
