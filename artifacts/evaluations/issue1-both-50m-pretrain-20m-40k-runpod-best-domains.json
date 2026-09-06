@@ -1,0 +1,75 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch",
+  "config": "/Users/koseki/projects/small_llm/configs/issue1-both-50m-pretrain-20m-40k-runpod-cuda.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-pretrain-20m-40k-runpod-cuda/best.pt",
+  "checkpoint_sha256": "83e8be941b645823efd1ae0a358d2c4521faa49b58de7696229298973bd25ac7",
+  "checkpoint_step": 36000,
+  "parameter_count": 50207616,
+  "seed": 42,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.149757933616638,
+      "perplexity": 63.41864691743263
+    },
+    {
+      "name": "fineweb",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 2.9732701539993287,
+      "perplexity": 19.55576551094282
+    },
+    {
+      "name": "wikipedia",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/wikimedia-wikipedia-ja-validation-v1.bin",
+      "token_sha256": "2898e8ab7385dc7beb26e4ba956639eaa791b059a1a7e763ae9d4b958e09d269",
+      "token_count": 998845,
+      "validation_loss": 2.858363115787506,
+      "perplexity": 17.43296781917242
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 2.1838666021823885,
+      "perplexity": 8.880577619968884
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 2.018988174200058,
+      "perplexity": 7.530701319540842
+    },
+    {
+      "name": "RPC",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/issue1-real-persona-chat-validation.bin",
+      "token_sha256": "30f8b66828b7a5c1171024af220613cc79d066089a4c09896456112f8754491c",
+      "token_count": 948172,
+      "validation_loss": 2.2745998978614805,
+      "perplexity": 9.724027629886791
+    },
+    {
+      "name": "MRMP",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/issue1-mrmp-validation.bin",
+      "token_sha256": "9431d4d7432f89f69d9656bf2c3eea7c18dbcb94e84467060cba3fa8d9445623",
+      "token_count": 156475,
+      "validation_loss": 1.9954732656478882,
+      "perplexity": 7.355683396524693
+    }
+  ]
+}
