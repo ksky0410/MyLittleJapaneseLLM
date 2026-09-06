@@ -32,6 +32,8 @@ Tokenizerは`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256 `
 - 学習コード：`scripts/train_torch.py`
 - 学習コードSHA-256：`4695dfea5487fb7d912db762c0825a524aa921247dbfb670d74b5002cc4fe001`
 
+学習開始前に、Runpod上で設定SHA-256 `8e7b9e005f9857f424899bb5d763589b0b58e8d4c65f3c24ee7fe31a4e386823`、学習コードSHA-256 `4695dfea5487fb7d912db762c0825a524aa921247dbfb670d74b5002cc4fe001`、初期checkpoint SHA-256 `cbf18b9cbd39ec9256811e945ecc3e7fc99fe39d12d6987df7198027fd8ae492`、新規Token列SHA-256 `5aea382f8754df2c9d594003cb607489afbadbe6ac7c757f4c00069d1f33bf8e`が一致することを確認する。
+
 ### 実行コマンド
 
 データ取得・抽出・混合・Token化を完了し、各ファイルのSHA-256を照合してから、次のコマンドを実行する。
