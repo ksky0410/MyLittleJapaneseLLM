@@ -63,6 +63,10 @@ Runpod A40上で実験114 raw bestからanswer-focus SFTを開始した。step 1
 
 step 500のvalidation lossは2.811753、step 750は2.823874、step 1,000は2.813150だった。最良値はstep 500の2.811753で、step 1,000時点のlearning rateは1.9538e-5、経過時間は84.18秒だった。実験113の同時点より高いものの、学習は安定している。
 
+### 2026-09-07：step 1,250〜1,500
+
+step 1,250のvalidation lossは2.828422、step 1,500は2.827187だった。step 500の2.811753を更新しておらず、step 1,500時点のlearning rateは1.8796e-5、経過時間は125.16秒だった。validation lossは実験113より高い状態で推移しているが、NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、domain loss、一般会話48例、医療162例、実験113・114との比較、仮説の判定、次の一手を追記する。checkpoint本体はGitHubへ追加せず、metadata・SHA-256・生成文・評価全文を保存する。
