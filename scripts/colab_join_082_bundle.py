@@ -7,7 +7,7 @@ from pathlib import Path
 
 PARTS = sorted(Path("/content").glob("exp082-part-*"))
 TARGET = Path("/content/exp082_bundle_reassembled.tar.gz")
-EXPECTED_BYTES = 236_556_712
+EXPECTED_BYTES = 236_744_165
 EXPECTED_SHA256 = "9571c667294c29018f5297e67c8db6587e3aae29850617c53a8a00ff69e7aa4c"
 
 
@@ -23,7 +23,15 @@ def main() -> None:
     if not PARTS:
         raise FileNotFoundError("bundle分割片が見つかりません")
     if TARGET.exists():
-        raise FileExistsError(f"既存のbundleを上書きしません: {TARGET}")
+        actual_bytes = TARGET.stat().st_size
+        actual_sha256 = sha256(TARGET)
+        if actual_bytes == EXPECTED_BYTES and actual_sha256 == EXPECTED_SHA256:
+            print(
+                {"status": "already_verified", "bytes": actual_bytes, "sha256": actual_sha256},
+                flush=True,
+            )
+            return
+        raise FileExistsError(f"検証不能な既存bundleを上書きしません: {TARGET}")
     with TARGET.open("wb") as output:
         for part in PARTS:
             print(f"結合中: {part} ({part.stat().st_size} bytes)", flush=True)
