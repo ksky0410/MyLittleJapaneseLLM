@@ -54,6 +54,16 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \
 
 データ取得、抽出、混合、Token化の各段階で、失敗した試行も含めて入力サイズ、hash、コマンド、生成物を追記する。完了後にRunpod上で入力hashを再確認してから学習を開始する。
 
+## データ準備の結果
+
+2026-09-07、shard 5・6のparquetをRunpodへ取得した。shard 5は269,589,405 bytes、入力SHA-256 `239a4cee8b8e87644d7e8376e3dd616281810bffc97047fae307bb7cda4b6411`、shard 6は268,992,270 bytes、入力SHA-256 `5b1f7206117b5c9e4d50498e3788b0943991c6468cc64560728d6c43c9f034f1`だった。HTTP 200で取得でき、途中停止や再試行による破損は確認されなかった。
+
+先頭20,000行を除外して現在のTokenizerで抽出した結果、shard 5は19,585文書、9,999,758 tokens、本文SHA-256 `03808507303850d4626a6ac3a4e0d9db6a8587989f2fb001d3398032ab5bb444`、shard 6は19,552文書、9,999,909 tokens、本文SHA-256 `3ec0be4c354c3ef9a8823f888a5729e3421cbbca8759767e9e7334ee4870f916`となった。空行はなく、各shard内の本文完全一致重複は0件だった。
+
+seed 11901、shard 5・6のweight 1:1、target 20,000,000 tokensで決定的に混合した。混合本文は39,137単位、19,999,667 tokens、本文SHA-256 `817deeccf8119ad999f900afac907a23039bd21ed35a81e0d83e94e7a8f96915`、mix manifest SHA-256 `6d9ff50f07e7c174a02c6794458503fde2a07d36224cb56e26bfe5884c57891d`となった。実測token比率はshard 5が49.9996%、shard 6が50.0004%である。Token化後のbinaryは19,999,667 tokens、SHA-256 `fd0917a05519c64e9f24b2c86d924ab4260da0342b2c2e558783357812eee741`、metadata SHA-256 `88673d9e0eb33171a846fb96c2919875b8f3a82abaf182422c41c457a929e99b`となった。
+
+学習開始前のRunpod照合では、設定SHA-256 `22b9d5d47cfdb3c1f847ff7e2f84550ebf17c4a234215ed6bf5e92bb6d5f0cbd`、初期checkpoint SHA-256 `4f6f9f4ddad1f717dbf170de8b1d5e704e1ef3975c1b4ab4e5e905abc5c3eca6`、Tokenizer SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`が計画値と一致した。抽出・混合・Token化のログは`experiments/results/exp119/`へ保存した。
+
 ## 学習中の記録
 
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
