@@ -1,0 +1,17 @@
+{
+  "format": "sft-npz-repeat-v1",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/train.npz",
+  "input_sha256": "fe1db09546363145845e219f71e05dfa6d8ceb006dfa2093fca302da2d2b8b07",
+  "input_example_count": 2945,
+  "input_response_token_count": 172545,
+  "repeat": 4,
+  "seed": 303,
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-general-medical-heavy-v1/medical-repeat4.npz",
+  "output_sha256": "ef574b78e1991fd52f6ab5f1dfa5c6a5098a5f80258aca023ffcc4d352a61678",
+  "output_example_count": 11780,
+  "output_response_token_count": 690180,
+  "array_shape": [
+    11780,
+    256
+  ]
+}
