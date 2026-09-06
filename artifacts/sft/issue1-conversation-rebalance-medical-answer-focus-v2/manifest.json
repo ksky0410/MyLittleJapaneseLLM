@@ -1,0 +1,31 @@
+{
+  "format": "sft-npz-concat-v1",
+  "inputs": {
+    "conversation": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-conversation-rebalance-v2/train.npz",
+      "sha256": "41777539e38dc8edec5d6a6bee311dde4a19c0246c3e49766373edb7fcd2bb5a",
+      "example_count": 124894,
+      "response_token_count": 1700055
+    },
+    "medical": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/train.npz",
+      "sha256": "fe1db09546363145845e219f71e05dfa6d8ceb006dfa2093fca302da2d2b8b07",
+      "example_count": 2945,
+      "response_token_count": 172545
+    },
+    "medical_answer_focus": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-medical-answer-focus-v1/train.npz",
+      "sha256": "d15b59f3bc0a91b48145694b405b95fc954a76c60abc0c38ba6e49fbf4227f81",
+      "example_count": 2945,
+      "response_token_count": 21522
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-conversation-rebalance-medical-answer-focus-v2/train.npz",
+  "output_sha256": "30d4c6de43391fcfedfc46966067d09c0f9f86d41a04aa15060d64214bd09e26",
+  "output_example_count": 130784,
+  "output_response_token_count": 1894122,
+  "array_shape": [
+    130784,
+    256
+  ]
+}

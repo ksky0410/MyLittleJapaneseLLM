@@ -58,6 +58,8 @@ quality-aware選別はエラーなく完了した。RPCは72,136例、response 1
 
 生成したNPZのSHA-256は、RPCが`0a726889528f30adb19d5beff7cac104f7beb7f75fe1fff56a1a84d51d5822ba`、MRMPが`154be47ff6cd3f1cff1f0fafc14565f6b17b0fbde14c3a2a7f7046efb0049168`である。manifestはそれぞれ`artifacts/sft/issue1-rpc-1200k-quality-v2/manifest.json`と`artifacts/sft/issue1-mrmp-500k-quality-v2/manifest.json`へ保存した。選別処理は既存の`prepare_quality_chat_sft.py`を使用し、元のJSONLへ書き込みは行っていない。
 
+RPCとMRMPを連結した一般会話NPZは124,894例、response 1,700,055 tokens、SHA-256 `41777539e38dc8edec5d6a6bee311dde4a19c0246c3e49766373edb7fcd2bb5a`となった。通常医療とanswer-focus医療を加えた最終SFT NPZは130,784例、response 1,894,122 tokens、SHA-256 `30d4c6de43391fcfedfc46966067d09c0f9f86d41a04aa15060d64214bd09e26`である。最終NPZと連結manifestは`artifacts/sft/issue1-conversation-rebalance-medical-answer-focus-v2/`へ保存した。exp116のSFT trainは133,621例だったため、今回は医療を含む例数は少し減るが、一般会話のresponse tokenは増えている。
+
 ## 学習中の記録
 
 データ準備前。学習を開始した場合は、少なくとも1,000 step以内ごとにvalidation loss、learning rate、経過時間、生成文、警告を追記する。失敗した場合も削除せず記録する。
