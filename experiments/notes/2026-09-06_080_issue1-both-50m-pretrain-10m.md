@@ -30,6 +30,8 @@ uv run python scripts/train_torch.py \
 
 Colab T4が利用できる場合は、同じ設定と入力を`colab_bootstrap_080.py`から実行します。Colab失敗時はHTTP status、session状態、bundle hashを残してMPSへ切り替えます。
 
+開始時点で`colab sessions`は`No active sessions found on server.`でした。Colab送信用bundleは`/tmp/small_llm-colab-080.tar.gz`、12MB、SHA-256は`ec8d498e1956083df20333b094aba73b333fb32657c04987f9a7f7a8a51552c5`です。bundleには080の設定、学習スクリプト、srcパッケージ、Tokenizer、10M Token列、general validationだけを含め、元JSONL、医師国家試験原本、`medilink_analysis`は含めていません。
+
 ## 実験中の記録
 
 学習開始前に設定・入力hash・Git commit・bundle hash・Colab試行結果を追記します。学習中は1,000 stepを超えて記録を空けず、原則100 stepごとにmetrics、生成文、異常を保存します。生成文は良いものだけでなく、崩れた出力も削除せずGitHubへ追加します。
