@@ -78,4 +78,8 @@ step 1,500のFineWeb validation lossは2.775514、step 2,000は2.774617だった
 
 step 2,500のFineWeb validation lossは2.773718、step 3,000は2.772658、step 3,500は2.771256だった。step 3,500時点で初期値から0.006537改善し、learning rateは3.981e-6、経過時間は235.94秒である。改善は緩やかだが、学習率が十分に高い段階で安定した低下が続いている。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 4,000〜5,000
+
+step 4,000のFineWeb validation lossは2.770698、step 4,500は2.769839、step 5,000は2.768849だった。step 5,000時点で初期値から0.008944、Exp114 raw bestの2.777802から0.008953改善している。step 5,000のlearning rateは2.937e-6、経過時間は335.99秒だった。学習は安定しており、NaN、OOM、shape errorは発生していない。
+
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
