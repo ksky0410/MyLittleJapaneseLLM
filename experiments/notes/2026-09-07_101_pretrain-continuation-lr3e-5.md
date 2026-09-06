@@ -45,6 +45,10 @@ Runpodの同じA40 Pod `j9c46julmtbcb4`上で、実験101の2,000 step pilotを�
 
 本番はpilotのstep 2,000 best重みから`--start-step 2000`で継続し、累積40,000 stepまで学習する。これによりpilotの2,000 stepを捨てず、学習率scheduleと乱数の進行も連続させる。
 
+### 本番開始の追記
+
+pilotの入力と結果を確認後、同じRunpod Pod `j9c46julmtbcb4`で本番プロセスをPID 808として起動した。学習ログはPod上の`/workspace/exp100/exp101.log`、軽量metricsと生成文は設定どおりの`issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5`ディレクトリへ保存する。pilotのstep 2,000 best重みを初期値に使い、`--start-step 2000`で累積stepを継続している。終了までPodを保持し、途中で500 step以上記録を空けない。
+
 ## 実行コマンド
 
 ```bash
