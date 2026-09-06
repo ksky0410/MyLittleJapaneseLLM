@@ -67,6 +67,32 @@ step 3,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにち
 
 評価は077と同じCPUコマンドで、general・conversation・medical・RPC・MRMPを各20 batch、固定chat-test-v1を48例、最大64 Token、評価seed 42で実施します。評価JSON、全文TXT、人手レビュー用JSONを作成してからseed42の077と比較します。
 
+評価に使うコマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-sft-from-5m-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-seed123-3k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-domains.json
+
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-sft-from-5m-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-seed123-3k/best.pt \
+  --device cpu \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --selection-file experiments/evaluation/chat-test-v1.json \
+  --examples 48 --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-chat-test-v1.txt
+```
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、077との差、seed分散への解釈を追記します。評価結果と生成全文のSHA-256も残します。
