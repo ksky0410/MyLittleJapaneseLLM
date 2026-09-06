@@ -105,6 +105,10 @@ step 6,000のFineWeb validation lossは2.801336、perplexityは16.4666、learnin
 
 step 7,000のFineWeb validation lossは2.799132、perplexityは16.4304、learning rateは1.5200e-6、経過時間は459.84秒だった。step 6,500からさらに0.000938改善し、実験110の初期値からの改善幅は0.142186となった。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 8,000
+
+step 8,000のFineWeb validation lossは2.797786、perplexityは16.4083、learning rateは9.7489e-7、経過時間は524.83秒だった。学習率が1e-6を下回ってもvalidation lossは小幅に改善している。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
