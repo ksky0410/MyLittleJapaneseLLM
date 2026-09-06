@@ -42,7 +42,7 @@ def main() -> None:
             archive.extractall(PROJECT, filter="data")
 
     required = {
-        CONFIG: "",
+        CONFIG: "ef795c1d17de3e985e778bbdd77d2705b208682d48f6dca9b6efd65c6866af5c",
         BASE: "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb",
         BASE_METADATA: "4b6b56ad60730cc75a938dd8ef99aba6e713e03852043e8fe9175ef5d5c2813b",
         TRAIN_DATA: "001dc022a998abc5756f641b199988112db77ff42903485ff7a6fd6bd0e028a3",
