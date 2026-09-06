@@ -60,6 +60,10 @@ Runpod A40上で実験111 raw bestからSFTを開始した。step 1のvalidation
 
 step 1,000のvalidation lossは2.811358、perplexityは16.6325、learning rateは1.9538e-5、経過時間は82.00秒だった。step 1,250ではloss 2.808899、perplexity 16.5916、learning rate 1.9209e-5、経過時間102.14秒となった。現時点の最良はstep 250の2.804113で、学習は安定している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 2,000〜2,250
+
+step 2,000のvalidation lossは2.803952、perplexityは16.5098、learning rateは1.7739e-5、経過時間は161.93秒だった。step 2,000でvalidation lossの最良値をわずかに更新したが、step 2,250では2.811817へ戻った。学習率はまだ減衰前半であり、NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、領域別loss、一般会話48例、医療162例、実験110・111との比較、仮説との一致・不一致、次に試す変更を追記する。
