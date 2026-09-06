@@ -63,3 +63,7 @@ RPCとMRMPを連結した一般会話NPZは124,894例、response 1,700,055 token
 ## 学習中の記録
 
 データ準備前。学習を開始した場合は、少なくとも1,000 step以内ごとにvalidation loss、learning rate、経過時間、生成文、警告を追記する。失敗した場合も削除せず記録する。
+
+### Runpod転送時の保存先エラー
+
+最終SFT NPZをRunpodへ転送する最初の試行は、`artifacts/sft/issue1-conversation-rebalance-medical-answer-focus-v2/`がRunpod側に存在しなかったため失敗した。ローカルのNPZ、元データ、医師国家試験原本、exp116 checkpointには影響がなく、学習プロセスも起動していない。Runpod側に保存先を作成して同じファイルを再送し、SHA-256を照合してから学習を開始する。
