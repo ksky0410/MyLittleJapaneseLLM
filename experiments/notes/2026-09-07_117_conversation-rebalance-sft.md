@@ -12,6 +12,20 @@
 
 固定プロンプト「今日は天気がいいですね。」に対するstep 4,000の出力は、短く「こんばんは!」と返す形だった。日本語として壊れてはいないが、天気への応答や話題の維持までは確認できないため、validation lossの改善だけで自然な会話能力の向上とは判断しない。次に一般会話と医療の固定評価を実施し、exp115・116と比較する。
 
+## 評価結果と判断
+
+Exp116と同じ固定評価を実行した。Exp117 best（step 3,500）のdomain lossはFineWeb2 2.903175、general 4.041337、conversation 1.992968、medical 1.871806だった。Exp116 bestの2.904958、4.046684、2.002839、1.873826と比べて、4領域すべてで改善した。
+
+一方、一般会話48例はEOS 48/48、平均生成長10.000 tokens、Token overlap F1 0.246358だった。Exp116 bestのEOS 48/48、平均9.708 tokens、F1 0.249142より、生成長はわずかに伸びたがF1は低下した。本文には「そうなんです。」「そうですね。」のような文脈に合う短い応答がある一方、「じゃー!」「ご苦労様です。」のように直前の話題へ十分に反応しない応答も残っている。したがって、domain lossの改善だけで自然な会話が改善したとは判定しない。
+
+医療162例はEOS 162/162、平均生成長20.043 tokens、Token overlap F1 0.250300、回答形式の抽出162/162、正解の完全一致31/162（19.14%）だった。Exp116 bestのEOS 158/162、平均23.975 tokens、F1 0.242326、完全一致33/162（20.37%）と比べ、EOSとF1は改善したが、完全一致は2例減った。選択肢を返す形式は維持されたものの、説明が短く、誤った選択肢にもっともらしい説明を付ける出力も残った。
+
+今回の仮説は部分的にしか支持されなかった。RPCを増やしMRMPを減らすとdomain lossは改善したが、固定会話F1と医療完全一致は改善しなかった。会話データの量比だけでは自然な日本語を作るには不十分であり、次は質問と回答の関係が明確で、直前の話題へ具体的に反応する長めの会話例を明示的に選ぶ。人工的に応答を長くするのではなく、元データに十分な応答長があり、定型相槌だけで終わらず、質問・参照語・固有内容を含む例を優先する。
+
+評価成果物は、[domain評価](../../artifacts/evaluations/exp117-best/domains.json)、[一般会話JSON](../../artifacts/evaluations/exp117-best/general-chat.json)、[一般会話全文](../../artifacts/evaluations/exp117-best/general-chat.txt)、[医療JSON](../../artifacts/evaluations/exp117-best/medical-chat.json)、[医療全文](../../artifacts/evaluations/exp117-best/medical-chat.txt)、[評価ログ](../../experiments/results/exp117/evaluation.log)に保存した。
+
+評価成果物のSHA-256は、domain JSONが`01fd88f4512749d608949da258f101108a2834f1e34f405e09e8fa7249018394`、一般会話JSONが`7e5bbb6a8f30b42f0b99f0f9d7cdb7d2813ed7c682e707727a045f7446af5263`、一般会話TXTが`c81892c306f75ad31d1d5538498e15a92cd6ec1052f9152322f3f30064ea9e7e`、医療JSONが`afe41da76b04017a29506dc65370de8466c511f3f316180664a5b856b6a69bb6`、医療TXTが`2dfd8ba92cdbaa56410ca9e658c083e126fe5e743d2a5f76a01bd1b5d13b23bb`、評価ログが`9e88ac53b043682c0728800401be4c97bba3f5db00d35b631d65bd79bf71cba6`である。
+
 ## 実施前の計画
 
 ### 目的
