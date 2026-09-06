@@ -74,4 +74,8 @@ Exp114 raw bestからRunpod A40上で追加事前学習を開始した。step 1�
 
 step 1,500のFineWeb validation lossは2.775514、step 2,000は2.774617だった。step 2,000時点で初期値から0.003175改善し、learning rateは4.729e-6、経過時間は134.28秒である。改善幅はExp114の初期段階より小さいが、validation lossは継続して低下している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 2,500〜3,500
+
+step 2,500のFineWeb validation lossは2.773718、step 3,000は2.772658、step 3,500は2.771256だった。step 3,500時点で初期値から0.006537改善し、learning rateは3.981e-6、経過時間は235.94秒である。改善は緩やかだが、学習率が十分に高い段階で安定した低下が続いている。NaN、OOM、shape errorは発生していない。
+
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
