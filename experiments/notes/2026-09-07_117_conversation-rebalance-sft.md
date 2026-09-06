@@ -2,6 +2,10 @@
 
 ## 学習完了時の記録
 
+## 評価の計画
+
+学習完了後、Exp116と同じRunpod A40、同じconfig、同じTokenizer、同じ評価Token列、同じ20 batch、同じ固定会話48例・医療162例・生成seedを使って、best checkpoint（step 3,500）を評価する。比較対象はFineWeb2、general、conversation、medicalのdomain loss、一般会話のEOS・平均生成長・Token overlap F1、医療の回答形式抽出・完全一致・Token overlap F1である。評価JSON、全文TXT、評価ログは保存し、自然さについては自動指標だけでなく生成本文も確認する。
+
 2026-09-07、step 4,000まで正常に完走した。step 4,000のvalidation lossは2.728911、validation perplexityは15.316194、learning rateは5.000e-7、経過時間は325.93秒だった。最良checkpointはstep 3,500で、validation lossは2.728217、perplexityは15.305569だった。exp116 bestのvalidation loss 2.747276と比べて0.019059低く、今回の会話データ再配分がvalidation上では明確な改善を示した。
 
 最良重み`best.pt`のSHA-256は`333456ca779477bba5191e1acce5414a9a48b4d7acb1336207f97a8da301ad20`である。学習全体の最大GPUメモリ使用量はallocated 1,490,586,112 bytes、reserved 1,598,029,824 bytesだった。NaN、OOM、shape errorは発生しなかった。250 stepごとのmetrics、生成サンプル17本、step 4,000の最終checkpoint metadata、学習ログを保存した。
