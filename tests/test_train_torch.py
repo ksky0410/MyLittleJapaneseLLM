@@ -7,10 +7,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from train_torch import _schedule_steps
+from train_torch import _advance_batch_rng, _schedule_steps
 
 
 class TrainTorchScheduleTests(unittest.TestCase):
+    def test_resume_rng_matches_skipping_the_same_number_of_batches(self) -> None:
+        import numpy as np
+
+        direct = np.random.default_rng(42)
+        resumed = np.random.default_rng(42)
+        for _ in range(5):
+            direct.integers(0, 997, size=8)
+        _advance_batch_rng(resumed, 5, 1024, 256, 8)
+
+        np.testing.assert_array_equal(
+            direct.integers(0, 997, size=8),
+            resumed.integers(0, 997, size=8),
+        )
+
     def test_legacy_schedule_keeps_checkpoint_at_evaluation_steps(self) -> None:
         evaluated = []
         checkpointed = []

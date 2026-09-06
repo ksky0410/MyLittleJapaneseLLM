@@ -74,6 +74,23 @@ def _batch(
     )
 
 
+def _advance_batch_rng(
+    rng: np.random.Generator,
+    steps: int,
+    token_count: int,
+    context_length: int,
+    batch_size: int,
+) -> None:
+    """重みだけのcheckpointから再開するとき、学習窓の乱数位置を進める。"""
+
+    if steps < 0:
+        raise ValueError("stepsは0以上で指定してください")
+    if token_count <= context_length:
+        raise ValueError("token_countはcontext_lengthより大きくしてください")
+    for _ in range(steps):
+        rng.integers(0, token_count - context_length, size=batch_size)
+
+
 def _evaluation_batches(
     tokens: np.ndarray,
     batch_size: int,
@@ -225,6 +242,12 @@ def main() -> None:
         default=None,
         help="重みだけを読み込んで追加学習を始めるcheckpoint（optimizerは初期化）",
     )
+    parser.add_argument(
+        "--start-step",
+        type=int,
+        default=0,
+        help="重みだけのcheckpointから再開するときの累積step。学習率scheduleもこのstepから継続する",
+    )
     parser.add_argument("--device", default="auto", help="auto、cuda、cpuのいずれか")
     parser.add_argument("--no-amp", action="store_true", help="CUDAでもfloat32で実行")
     args = parser.parse_args()
@@ -246,6 +269,9 @@ def main() -> None:
     max_steps = args.max_steps if args.max_steps is not None else config.training.max_steps
     if max_steps <= 0 or max_steps > 1_000_000:
         raise ValueError("max_stepsは1以上1,000,000以下で指定してください")
+    start_step = args.start_step
+    if start_step < 0 or start_step >= max_steps:
+        raise ValueError("start-stepは0以上max-steps未満で指定してください")
 
     random.seed(config.training.seed)
     np.random.seed(config.training.seed)
@@ -254,6 +280,13 @@ def main() -> None:
         torch.cuda.manual_seed_all(config.training.seed)
         torch.backends.cudnn.benchmark = False
     rng = np.random.default_rng(config.training.seed)
+    _advance_batch_rng(
+        rng,
+        start_step,
+        int(train_tokens.size),
+        config.model.context_length,
+        config.training.batch_size,
+    )
     model = TorchJapaneseGPT(
         vocab_size=vocab_size,
         dim=config.model.dim,
@@ -338,7 +371,7 @@ def main() -> None:
         )
         return generated
 
-    write_sample(0)
+    write_sample(start_step)
     best_validation_loss = float("inf")
     best_checkpoint_step: int | None = None
     best_checkpoint: Path | None = None
@@ -353,12 +386,13 @@ def main() -> None:
                 "initial_checkpoint": (
                     str(initial_checkpoint_path) if initial_checkpoint_path else None
                 ),
+                "start_step": start_step,
             },
             ensure_ascii=False,
         )
     )
 
-    for step in range(1, max_steps + 1):
+    for step in range(start_step + 1, max_steps + 1):
         model.train()
         inputs, targets = _batch(
             train_tokens,
@@ -485,6 +519,7 @@ def main() -> None:
             "checkpoint_interval": checkpoint_interval,
         },
         "final_step": max_steps,
+        "start_step": start_step,
         "best_checkpoint": (
             best_checkpoint.name if best_checkpoint is not None else None
         ),
