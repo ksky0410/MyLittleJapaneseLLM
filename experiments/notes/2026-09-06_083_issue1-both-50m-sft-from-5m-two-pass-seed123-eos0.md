@@ -40,6 +40,8 @@ step 1,200のvalidation lossは3.613898、1,300は3.627349、1,400は3.602808、
 
 step 1,900のvalidation lossは3.551040、2,000は3.550312、2,100は3.508189、2,200は3.530277、2,300は3.523702でした。step 2,300のperplexityは33.909717です。後半に改善しているものの、082の同じ時点より約0.24高く、EOS lossを完全に外す条件はvalidation性能では不利なままです。最終stepまで実行し、best checkpointを保存します。
 
+step 2,500のvalidation lossは3.527650、2,600は3.538727、2,700は3.510081、2,800は3.531154、2,900は3.538751、最終step 3,000は3.523709でした。最終perplexityは33.909980、経過時間は350.88秒です。監視用のColab CLIはstep 2,300付近で応答待ちtimeoutとなりましたが、Colab sessionは存続しており、metricsの再downloadで学習完走を確認しました。timeoutは学習失敗ではありません。082の最終validation loss 3.275936との差は+0.247773で、EOS weight 0.0はvalidation性能を明確に悪化させました。
+
 ## 実験終了後の結果と解釈
 
 082と同じCPU・同じ5領域・同じ48例chat-test・同じgeneration seed 42で評価します。領域loss、平均生成Token数、EOS到達数、short・medium・long F1を比較し、EOS loss weight 0.0が自然な日本語を改善したかを判断します。
