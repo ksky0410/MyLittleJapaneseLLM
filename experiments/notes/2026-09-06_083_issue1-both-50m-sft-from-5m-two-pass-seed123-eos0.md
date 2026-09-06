@@ -82,3 +82,13 @@ uv run python scripts/create_chat_review_template.py \
   --evaluation artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-test-v1.json \
   --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k-chat-review.json
 ```
+
+## 評価結果
+
+083のbest checkpointはstep 2,100で、5領域のvalidation lossはgeneral 4.400724、conversation 2.526248、medical 2.554055、RPC 2.490487、MRMP 2.135504でした。082の値と比べると、それぞれ+0.014714、+0.025048、+0.008315、+0.021166、+0.037967で、5領域すべてが悪化しました。ただし078との比較では5領域すべてでまだ改善しており、EOS weight 0.0が事前学習基盤を完全に壊したわけではなく、082の0.5よりSFTの適合が悪いと解釈します。
+
+chat-test 48例では、EOS到達数が45、平均生成Token数が28.1042、precisionが0.111357、recallが0.231212、全体F1が0.130776でした。082のEOS 48、平均8.9167、precision 0.316841、recall 0.209471、F1 0.216100と比べると、出力長とrecallだけが増え、precisionとF1は大きく低下しました。short F1は0.161434、medium F1は0.090185、long F1は0.140709で、長文F1も082の0.153583を下回りました。078のlong F1 0.134327は上回っていますが、これは自然な応答になったことを意味しません。
+
+出力には、同じ挨拶の反復、疑問符の連続、意味のない文字列、max_new_tokensまでEOSを出さない例が増えました。したがって、EOS loss weight 0.0は採用しません。「長く話すこと」と「自然に必要な内容を話して終わること」は別であり、終了記号の学習を外すことは性能向上策にならない、という反証を得ました。評価JSONのSHA-256は、領域評価が`b2b600c778260ee466f3fd33082d65d6df31108656600b07121cc191d297a7dc`、chat JSONが`880999e1f5627d15e6ddad44df6165be61768fcab9191e348166f784c7a06a83`、生成TXTが`fe2e39f429a6351f4df056a4711d0a148e95fff4da5ee081c7701f8e4b18eb70`、review JSONが`b1f7f39a432bbd35d8fc04a532678f88ea515559e55afdd93fd157ad2c691bd8`です。
+
+083の結論は不採用です。082のEOS weight 0.5を現在の標準条件として保持し、次に0.25の中間条件を試します。中間条件でもF1が戻らない場合はEOS重みではなく、SFTデータの応答品質、会話履歴の切り詰め、反復事前学習データ量の問題として切り分けます。
