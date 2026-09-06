@@ -64,6 +64,10 @@ NaN、OOM、shape errorなく8,000 stepを完走し、250 stepごとのvalidatio
 
 Runpod A40上で実験111 raw bestから学習を開始した。step 1のvalidation lossは2.913260、perplexityは18.4167、learning rateは1.0e-7、経過時間は0.93秒だった。step 250ではvalidation loss 2.803733、perplexity 16.5061、learning rate 1.9998e-5、経過時間21.51秒となった。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 500〜1,500
+
+step 500のvalidation lossは2.810042、step 750は2.821706、step 1,000は2.822412、step 1,250は2.814637、step 1,500は2.805546だった。step 250の2.803733をまだ更新しておらず、学習率はstep 1,500で1.8796e-5、経過時間は124.18秒だった。answer-focus追加による異常なloss発散はなく、NaN、OOM、shape errorも発生していない。
+
 ## 実験終了後の記録
 
 学習完了後に、最良checkpointのstepとSHA-256、最終loss、学習時間、最大GPUメモリ、評価JSON/TXTのSHA-256、実験112との比較、仮説の判定、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとハッシュだけを記録する。
