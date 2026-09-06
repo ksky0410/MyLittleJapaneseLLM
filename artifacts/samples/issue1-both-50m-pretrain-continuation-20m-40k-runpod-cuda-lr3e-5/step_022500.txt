@@ -1,0 +1,3 @@
+prompt: 今日はなにをしていましたか？
+
+今日はなにをしていましたか? 今回、このサイトでは、「Sun Server Manage Access Ver.5.4」のようなサンプルを用意してきました。 その後、サンプルを選択して新たに「Sun Server Server Manage Access Ver.5.5」を選択し、そのまま「 Sun Server Server Server Server In-Server Server Server Server Server Server Server Server 

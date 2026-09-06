@@ -110,3 +110,11 @@ step 36,500、37,000のvalidation lossは2.835609、2.836115となった。step 
 step 37,500、38,000のvalidation lossは2.835654、2.835023となった。step 38,000のPerplexityは17.030800、train lossは2.358047、学習率は`3.1750e-6`である。step 38,000でbest validation lossを更新した。最大学習率3e-5のcosine decay終点へ近づいているが、追加データによる改善がわずかに続いている。
 
 step 38,500、39,000のvalidation lossは2.835060、2.835237となった。step 39,000のPerplexityは17.034444、train lossは2.480704、学習率は`3.0439e-6`である。step 38,000のbestは更新していないが、終盤で大きな悪化はなく、残り1,000 stepの完走を待つ。
+
+### 完了結果（2026年9月7日）
+
+step 39,500、40,000のvalidation lossは2.835559、2.835226となり、NaN、OOM、shape errorなく累積step 40,000まで完走した。best checkpointはstep 38,000で、FineWeb validation lossは2.835023、Perplexityは17.030800である。実験098のbest loss 2.973267からlossは約4.6%低下し、Perplexityは約13%低下した。最終stepのlossはbestより0.0002程度だけ高く、終盤の過学習は小さい。
+
+Runpod A40（PyTorch 2.9.1+cu128、AMP有効）での実測経過時間は2,527.5秒、約42.1分だった。ピークGPUメモリはallocated約1.53GB、reserved約1.59GBである。best checkpointのSHA-256は`6057172a5a2b3b420c5c751388eead0b17e0dfaa41585259265859ab9bf016b4`、metrics.jsonlのSHA-256は`708f1f64e5e97f0d528ba5f78e4c128348b9062e49e396f53017a397ae3acf3e`である。metricsとstep 0から40,000までの生成サンプルをローカルへ回収した。
+
+今回の結果から、50Mモデルに約2,000万tokensの未使用日本語コーパスを追加し、学習率を`3e-5`へ下げて40,000 step継続する条件は、既存validationを壊さずに改善する条件として有望と判断する。一方、validation lossの改善だけでは自然な会話や質問回答の改善を証明できないため、次はこのbest checkpointを初期値に実験102の一般会話・医師国家試験混合SFTを行う。
