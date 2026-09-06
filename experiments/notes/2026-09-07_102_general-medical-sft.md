@@ -96,6 +96,24 @@ step 5,500、5,750、6,000、6,250のvalidation lossは2.928746、2.922036、2.9
 
 step 6,500、6,750、7,000のvalidation lossは2.907382、2.906050、2.904649となった。step 7,000のPerplexityは18.258828、SFT train lossは2.809907、rehearsal train lossは2.279622、学習率は`2.7216e-6`である。step 7,000でbestを更新し、SFT開始時から約5.3%改善した。終了まで残り1,000 stepである。
 
+### 本番完了結果
+
+step 7,250、7,500、7,750、8,000のvalidation lossは2.900771、2.897912、2.895842、2.894461となった。最終step 8,000でbestを更新し、Perplexityは18.073754、SFT train lossは2.325478、rehearsal train lossは2.886434、学習率は`2.0000e-6`である。開始時step 1のvalidation loss 3.067089から約5.6%改善した。NaN、OOM、shape errorなく完走した。
+
+Runpod A40での本番経過時間は644.97秒、約10.7分で、ピークGPU allocated memoryは約1.49GBだった。SFTの初期値であるpilot bestのSHA-256は`7a54f816de8f4d28b6e722aaf094780e2c499ca08b80e061a08328daa2c0c9ab`である。SFTの最終best、metrics、summary、stepごとの生成文を回収し、一般会話・医療質問・raw domain lossを別々に評価する。
+
+### 本番完了後の評価
+
+回収したbest checkpointの実SHA-256は`a3404756796e5ecdaa33b09ebf11fb5fafa4660007ef6ae48d31f078ca647acc`である。`summary.json`に記録された`7a54...`はSFTの初期値であるpilot bestのhashであり、best重み自身のhashではない。
+
+実験101 continuation、実験102 SFT、実験098 baselineを同じA40・同じ20 evaluation batchesで比較した。SFT後のraw domain lossはFineWeb 2.953670、general 4.089575、conversation 2.100814、medical 1.987503となった。実験101 continuationのgeneral 4.444538、conversation 3.860727、medical 2.266281から大きく回復し、実験098 baselineのconversation 2.183868、medical 2.018987もおおむね上回った。一方FineWebは実験101の2.835023より悪く、SFTが会話・QA能力を優先して一般事前学習lossを少し犠牲にした。
+
+held-out生成48例ではEOS到達48例、平均生成7.90 tokens、token overlap F1 0.1892となった。実験101 continuationのEOS 16例・平均70.75 tokens・F1 0.0805から明確に回復し、baselineのF1 0.1086も上回った。ただし、一般会話の一部は「そうなんですね」のように短すぎるため、今後は応答の長さと内容のバランスも評価する。
+
+医療質問162例ではEOS到達156例、平均生成54.32 tokens、token overlap F1 0.3801となった。baselineのF1 0.0380、continuationのF1 0.0990から大幅に改善した。生成文から「正解は…」を抽出できた161例のうち、正解選択肢と完全一致したのは37例、正解率は22.98%だった。5択問題の一様ランダムに近く、回答形式と説明らしさは改善したものの、医学的な正答能力はまだ不十分である。このため、実験102を最終的な医療QAモデルとは扱わず、次に医療回答を適度に重み付けしたSFTまたはreplay条件を比較する。
+
+評価JSON、可読生成全文、metrics、summary、SFT中の生成サンプルは`experiments/results/exp102/`、`artifacts/checkpoints/issue1-general-medical-50m-sft-runpod-8k/`、`artifacts/samples/issue1-general-medical-50m-sft-runpod-8k/`へ保存する。
+
 ### 本番実行コマンド
 
 ```bash

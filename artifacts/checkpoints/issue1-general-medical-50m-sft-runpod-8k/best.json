@@ -1,0 +1,79 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "best",
+  "checkpoint_step": 8000,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 2.437669277191162,
+  "weights_file": "best.pt",
+  "weights_bytes": 200882354,
+  "weights_sha256": "a3404756796e5ecdaa33b09ebf11fb5fafa4660007ef6ae48d31f078ca647acc",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 576,
+    "layers": 12,
+    "heads": 9,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 8000,
+    "train_loss": 2.437669277191162,
+    "sft_train_loss": 2.3254780769348145,
+    "validation_loss": 2.8944608569145203,
+    "validation_perplexity": 18.073754474235468,
+    "learning_rate": 2.000000730000315e-06,
+    "elapsed_seconds": 644.2370023941621,
+    "rehearsal_ratio": 0.2,
+    "eos_loss_weight": 1.0,
+    "lr_schedule_steps": 8000,
+    "long_response_ratio": 0.0,
+    "long_response_min_tokens": 32,
+    "rehearsal_train_loss": 2.886434316635132
+  },
+  "inputs": {
+    "config_sha256": "af7953a1c5dfec5bbcd06772c4d07dacdfba3427db2968a845cc9dac5161d756",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "598c464b03cd94a9c5579552df5f78059410f8ce5721da6cc93acb8251382cf4",
+    "validation_data_sha256": "95b6729ea46821d247ced049a0f06eef607c2d5ceb8e76cbcb8d337bebd8ad35",
+    "base_checkpoint_sha256": "7a54f816de8f4d28b6e722aaf094780e2c499ca08b80e061a08328daa2c0c9ab",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1490586112,
+    "peak_memory_reserved_bytes": 1598029824
+  },
+  "training_intervals": {
+    "eval_interval": 250,
+    "sample_interval": 250,
+    "checkpoint_interval": 500
+  },
+  "lr_schedule_steps": 8000,
+  "base_checkpoint": {
+    "path": "/workspace/exp100/artifacts/checkpoints/exp102-pilot/best.pt",
+    "weights_sha256": "7a54f816de8f4d28b6e722aaf094780e2c499ca08b80e061a08328daa2c0c9ab"
+  },
+  "sft": {
+    "train_examples": 130676,
+    "validation_examples": 49207,
+    "rehearsal_ratio": 0.2,
+    "rehearsal_tokens": "/workspace/exp100/artifacts/mixed-ja-80-10-10-v2-train.bin",
+    "exclude_eos_from_sft_loss": false,
+    "eos_loss_weight": 1.0,
+    "long_response_ratio": 0.0,
+    "long_response_min_tokens": 32
+  }
+}

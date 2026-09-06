@@ -1,0 +1,54 @@
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1490586112,
+    "peak_memory_reserved_bytes": 1598029824
+  },
+  "inputs": {
+    "config_sha256": "af7953a1c5dfec5bbcd06772c4d07dacdfba3427db2968a845cc9dac5161d756",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "598c464b03cd94a9c5579552df5f78059410f8ce5721da6cc93acb8251382cf4",
+    "validation_data_sha256": "95b6729ea46821d247ced049a0f06eef607c2d5ceb8e76cbcb8d337bebd8ad35",
+    "base_checkpoint_sha256": "7a54f816de8f4d28b6e722aaf094780e2c499ca08b80e061a08328daa2c0c9ab",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 250,
+    "sample_interval": 250,
+    "checkpoint_interval": 500
+  },
+  "keep_periodic_checkpoints": 1,
+  "final_step": 8000,
+  "lr_schedule_steps": 8000,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 8000,
+  "best_validation_loss": 2.8944608569145203,
+  "base_checkpoint": "/workspace/exp100/artifacts/checkpoints/exp102-pilot/best.pt",
+  "train_examples": 130676,
+  "validation_examples": 49207,
+  "rehearsal_tokens": "/workspace/exp100/artifacts/mixed-ja-80-10-10-v2-train.bin",
+  "rehearsal_ratio": 0.2,
+  "elapsed_seconds": 644.9717851122841,
+  "sample_prompt": {
+    "text": "こんにちは！",
+    "template": "conversation",
+    "speaker_a": "A",
+    "speaker_b": "B"
+  },
+  "exclude_eos_from_sft_loss": false,
+  "eos_loss_weight": 1.0,
+  "long_response_ratio": 0.0,
+  "long_response_min_tokens": 32
+}
