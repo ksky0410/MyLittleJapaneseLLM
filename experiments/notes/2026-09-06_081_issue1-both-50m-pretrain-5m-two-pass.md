@@ -44,6 +44,10 @@ step 1,600はvalidation loss 4.977218、PPL 145.07、learning rate 2.6218e-4、�
 
 step 2,100はtrain loss 3.623113、validation loss 4.790753、PPL 120.39、learning rate 2.2426e-4、経過234.99秒でした。step 2,200はvalidation loss 4.803434、PPL 121.93、learning rate 2.1566e-4、経過245.08秒と一時的に悪化しましたが、step 2,300は4.781965、PPL 119.34、learning rate 2.0681e-4、経過256.09秒、step 2,400はtrain loss 3.445386、validation loss 4.710782、PPL 111.14、learning rate 1.9775e-4、経過267.79秒、step 2,500はtrain loss 3.306795、validation loss 4.682791、PPL 108.07、learning rate 1.8854e-4、経過279.69秒でした。step 2,500では080の同じstepのvalidation loss 4.980713を下回っています。学習は継続中です。
 
+step 2,600はtrain loss 3.700928、validation loss 4.681067、PPL 107.89、learning rate 1.7921e-4、経過292.31秒でした。step 2,700は4.652793、PPL 104.88、learning rate 1.6981e-4、経過304.26秒、step 2,800はtrain loss 3.158581、validation loss 4.621344、PPL 101.63、learning rate 1.6038e-4、経過316.11秒でした。step 2,900は4.611706、PPL 100.66、learning rate 1.5098e-4、経過328.00秒、step 3,000はtrain loss 3.626999、validation loss 4.599061、PPL 99.39、learning rate 1.4165e-4、経過339.77秒でした。
+
+step 3,100はtrain loss 3.247999、validation loss 4.575391、PPL 97.07、learning rate 1.3243e-4、経過352.50秒、step 3,200はtrain loss 3.545044、validation loss 4.533112、PPL 93.05、learning rate 1.2337e-4、経過364.30秒でした。step 3,200では080の同じstepのvalidation loss 4.841980より明確に低く、現時点で反復学習条件が優勢です。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
