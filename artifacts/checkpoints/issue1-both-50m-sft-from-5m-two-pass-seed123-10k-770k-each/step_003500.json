@@ -1,0 +1,79 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "periodic",
+  "checkpoint_step": 3500,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 3.527953863143921,
+  "weights_file": "step_003500.pt",
+  "weights_bytes": 200882813,
+  "weights_sha256": "f06f9fcf62024321baf996a61ac534b89f6605e1760ea77179c54b319b04ba2d",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 576,
+    "layers": 12,
+    "heads": 9,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 3500,
+    "train_loss": 3.527953863143921,
+    "sft_train_loss": 3.7275915145874023,
+    "validation_loss": 3.240568959712982,
+    "validation_perplexity": 25.548253539958523,
+    "learning_rate": 3.813239220955372e-05,
+    "elapsed_seconds": 409.71124432399995,
+    "rehearsal_ratio": 0.2,
+    "eos_loss_weight": 0.5,
+    "lr_schedule_steps": 10000,
+    "long_response_ratio": 0.0,
+    "long_response_min_tokens": 32,
+    "rehearsal_train_loss": 2.729402542114258
+  },
+  "inputs": {
+    "config_sha256": "919d1acee3929091b399dc8863d1906b4097ee90abea57baedcf0a7990f2f726",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "001dc022a998abc5756f641b199988112db77ff42903485ff7a6fd6bd0e028a3",
+    "validation_data_sha256": "fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1",
+    "base_checkpoint_sha256": "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 1491208704,
+    "peak_memory_reserved_bytes": 1598029824
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "lr_schedule_steps": 10000,
+  "base_checkpoint": {
+    "path": "/content/small_llm_086/artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt",
+    "weights_sha256": "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb"
+  },
+  "sft": {
+    "train_examples": 128900,
+    "validation_examples": 49045,
+    "rehearsal_ratio": 0.2,
+    "rehearsal_tokens": "/content/small_llm_086/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin",
+    "exclude_eos_from_sft_loss": false,
+    "eos_loss_weight": 0.5,
+    "long_response_ratio": 0.0,
+    "long_response_min_tokens": 32
+  }
+}

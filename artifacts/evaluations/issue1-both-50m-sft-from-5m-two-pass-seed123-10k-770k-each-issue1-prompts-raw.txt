@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each/best.pt
+checkpoint_step: 10000
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-1m-each.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=33.50
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=51.00
+short-turn: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=8.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=53.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+,肺胞の上昇などの異常の原因とは,腎機能の低下により大動脈弓の強化や膿瘍の発生の障害がある.前立腺筋の拡張障害,高度の経過を伴う,全身低減のリスクは起こるが,前
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+のでしょう」「いいえ、そうかもしれませんね。あのところは人間の偉大なことを思い出してしまったのです」と東風君は大に感動した。迷亭は平気で不愉快のような苦痛がなかった。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+それほどに大きなのをしようと思ってたのに、またおくと、ちょっと待って、まだ苦痛をしないように気を付けて、この調子も少しずつ動かなくなって来たと云うと、この顔が急に熱心の度胸に残ったと、一返は
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+い。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+らいなさそうでした。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、今の通りの通りの真中に入る。大学の教師の事を聞いている。迷亭はどこの云う事はよく知れん、もし生徒が大学の教師の教師をうらなり向うへ呼び掛けている。
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+も楽しいです。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+

@@ -48,10 +48,41 @@ uv run python scripts/train_sft_torch.py \
 
 Colab session `exp086-issue1-diverse-sft`をT4で作成し、bundle再結合後のSHA-256一致を確認しました。bootstrapは9入力のhash検証を通過し、086本学習を開始しています。
 
+086本学習はColab T4で10,000 stepを完走しました。OOM、NaN、shape error、途中停止はありませんでした。step 500のvalidation lossは3.504923、1,000は3.465738、1,500は3.407572、2,000は3.365918、2,500は3.309586、3,000は3.263908、3,500は3.240569、4,000は3.217721、4,500は3.203465、5,000は3.170082でした。その後もstep 6,000で3.118876、7,000で3.096408、8,000で3.066016、9,000で3.058462、9,500で3.048642まで改善し、最終step 10,000で3.046459となりました。今回のbest checkpointは最終stepです。
+
+学習時間はsummary上1,185.99秒、PyTorch 2.11.0+cu128、CUDA 12.8、Tesla T4、AMP有効、peak allocated memory 1,491,208,704 bytesでした。best weightのSHA-256は`10d59191d680f6e5f31ea1220048c62656b5d89002e47552e2539b4b1ac62ccb`、best checkpoint archiveは200,878,080 bytes・SHA-256 `f033ba06bac6cc98663320a89f9862dc78c3377ca81d63b07f3da7dd5de6b4a6`、lightweight archiveは19,035 bytes・SHA-256 `5e89319efa22d54e1fc1c3919278f1000244cf6e56ac558f101d4e99be6fcbff`です。metrics、checkpoint metadata、summary、100 step間隔の生成文を回収しました。
+
+学習中の固定生成はstep 0で「こんにちは」、step 1,000で「こんばんは!」、step 3,000から9,000では「こんにちは!」、step 10,000では「こんにちはー!」でした。085と同じく、単一の固定生成は挨拶へ偏っており、データを増やした効果はこのサンプルから判定できません。予定どおり5領域・held-out chat・Issue #1固定promptを評価します。
+
 ## 実験終了後の結果と解釈
 
-ここに、抽出後のデータ件数・response token数、学習実績、best checkpoint、5領域評価、48例chat-test、Issue #1固定prompt全文、各artifactのSHA-256を追記します。085との差は、モデル条件が同じでSFTデータの多様性だけを変えたpaired comparisonとして解釈します。
+抽出後のSFTデータはRPC 47,518例・770,981 response token、MRMP 81,382例・770,975 response tokenで、連結後は128,900例・1,541,956 response tokenでした。085の64,423例・約770k response tokenから、例数と入力の多様性を増やしています。1Mずつという当初計画はMRMPの総量不足で成立しなかったため、実際の比較は「RPCとMRMPを各770k tokenで揃えた条件」となります。
+
+学習はT4で10,000 stepを完走し、OOM、NaN、shape error、途中停止はありませんでした。best checkpointはstep 10,000、validation lossは3.046459、perplexityは21.040704、学習時間は1,185.99秒でした。085のvalidation loss 3.084671から0.038212改善しています。best weightは`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each/best.pt`に保存し、SHA-256は`10d59191d680f6e5f31ea1220048c62656b5d89002e47552e2539b4b1ac62ccb`です。summaryは`f9d98a0c9349b05d5ed180cdebd065bb5efd77b092fd70ccf61f4aa72fc26eaa`、metricsは`0886348d4ed064b32f978dde99d8b6504329394dc1464cc10953e53fd4dda1f4`、best metadataは`ba8fc22e367084ff5aa9574f2bfaa0731d4392f503adf6e5b122d61f2f8b64cf`です。
+
+085と同じ検証分割で測ったvalidation lossは、generalが4.361762から4.354792、conversationが2.441312から2.405646、medicalが2.522089から2.521558、RPCが2.403770から2.355622、MRMPが2.024484から2.001416となりました。5領域すべてが悪化せず、特に会話データとRPCで改善したため、データを増やして同じstep数で学習することは、少なくとも次トークン予測の汎化には有効でした。ただしmedicalの改善は0.000531に留まり、会話形式だけで一般的な対話能力が得られるとは判断できません。
+
+48例のheld-out chat-testでは、086の全体F1が0.203292で、085の0.236752より0.033460低下しました。shortは0.418210から0.352868、mediumは0.154845から0.139040、longは0.137200から0.117967へいずれも低下しています。EOS到達率は両条件とも48/48で、平均生成token数は7.729から7.896へわずかに増えました。したがって、今回のvalidation loss改善は、未知の会話への意味的な応答性能の改善を意味しません。追加したRPC・MRMPの分布がvalidationには適合した一方、held-outの話題や応答の選択には十分な多様性がなかった可能性があります。
+
+Issue #1固定プロンプトの会話テンプレートでは、8/8がEOSに到達したものの、`まじで`と`それな`に「おはようございます」、`今日なにしてた？`から`こんばんは!`、`明日ひま？`から`こんにちはー!`を出すなど、入力の意味をほぼ利用せず挨拶へ収束しました。086のconversation出力は次のとおりです。
+
+```text
+まじで → おはようございます
+それな → おはようございます。
+今日なにしてた？ → こんばんは!
+やば → こんばんはー!
+なんかさ → こんばんは!
+いやそれは → こんばんは!
+おつかれ → おはようございます。
+明日ひま？ → こんにちはー!
+```
+
+raw形式では、`まじで`から医療文、`それな`から夏目漱石風の文、`今日なにしてた？`から古風な長文が生成されました。一方で`やば`から`い。`、`なんかさ`から`らいなさそうでした。`のような接続は見られます。全出力は`artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each-issue1-prompts-raw.txt`と`...-conversation.txt`、学習途中の全100 step間隔の生成文は`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each/`に保存しています。生成文は省略せずGit管理対象にしました。
+
+評価JSONのSHA-256は、5領域評価が`38ac988d35dae028e9f0a035a5b5ed9600cbaa40bf63e0e6611943cf0a2127a5`、held-out chatが`7384650d98b34271b882633b7b456b190a1f111a96ee1ed420eddf2dfba2ee25`、人手レビュー用テンプレートが`7c9083b8e867d966dfcbb58df33b43122a535cb846a7f0731c537dcf8c7d3b62`、Issue #1 conversation promptが`fa2fd6a89b3361151e2bb192d6381ccc4a262232a41b5b2b5f04fd6a8d2e96be`、raw promptが`7d3753917ed99af26613d7f6d9a9b88014f28b3dd23f4504ec13623b0b124e1b`です。対応するテキスト出力のSHA-256はchat-testが`1c9323b8aeff86bd530bd809934700b034714ec43ab3b3aecd3144bfce29783a`、conversation promptが`8b034c29dca4d407098251bcf835a72b8468e1be0812caa788317d5db73370c0`、raw promptが`ab1a87be83402d438498cf54d00bccfc37cfd6bedf3ad45f212473df76fcbb74`です。
+
+以上から、086の仮説は「SFT例を増やせば固定プロンプトの挨拶偏重が弱まる」という部分では支持されませんでした。データを増やすこと自体はvalidation lossを下げましたが、自然な日本語を話す能力を高めるには、会話例の件数だけでなく、入力に応じた応答の多様性、質問への回答、相づち、話題継続、終了の仕方を分けて管理する必要があります。また、raw形式で古典・医療文へ漂流し、conversation形式で挨拶へ縮退するという差から、pretraining分布とSFTの会話書式の接続にも課題があります。強いLLMからの蒸留を使わずに性能を上げるという本プロジェクトの目的に照らすと、次は「より多く同じ分布を見る」よりも、一般日本語pretrainingのトークン量を増やしつつ、SFT側では重複・定型挨拶を抑え、応答機能別に層化したデータを作る方が妥当です。
 
 ## 次に試すこと
 
-086で改善する場合は、SFTデータを増やす主線を維持し、さらに一般日本語pretrainingを10Mから20Mへ増やす条件を試します。改善しない場合は、単純なsubset拡大ではなく、会話履歴の切り詰め方、短文・質問・相づち・長文の層化、pretrainingとSFTの順序を見直します。いずれも蒸留を使わず、データ量と品質を分けて検証します。
+086で確認できた「validation lossは改善するが、固定promptとheld-out chatは改善しない」という差を出発点に、次は次の順で研究します。第一に、086のベースcheckpointからSFTを継ぎ足すのではなく、一般日本語pretrainingを5Mから少なくとも20M tokenへ増やした50Mモデルを作り、自然な日本語の基礎能力を先に伸ばします。第二に、RPC・MRMPのSFTデータから、定型挨拶の連続例を間引き、質問応答・相づち・短い返答・話題継続・終了発話の比率を明示した品質管理版を作ります。第三に、同じデータを1周だけ見る条件と、複数周見る条件を比較し、反復がvalidation lossだけを下げて会話の多様性を失わせていないか確認します。第四に、学習中の固定生成を挨拶だけでなく、質問、否定、話題継続、医療以外の一般話題を含むプロンプト集合へ拡張します。すべてランダム初期値からの事前学習、公開コーパス、既存データの再構成だけで実施し、強いLLMの蒸留は使いません。

@@ -1,0 +1,164 @@
+{
+  "format": "torch-chat-prompt-evaluation-v1",
+  "prompt_file": "/Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json",
+  "prompt_sha256": "b538af4f00668e60e712aa796b1de5d51e0f677c8b9a19bc4445d40a90929594",
+  "prompt_template": "raw",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each/best.pt",
+  "checkpoint_sha256": "10d59191d680f6e5f31ea1220048c62656b5d89002e47552e2539b4b1ac62ccb",
+  "checkpoint_step": 10000,
+  "config": "/Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-1m-each.toml",
+  "seed": 42,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "generation": {
+    "max_new_tokens": 64,
+    "temperature": 0.8,
+    "top_k": 40
+  },
+  "category_summary": {
+    "short-reply": {
+      "count": 2,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 33.5
+    },
+    "backchannel": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 51.0
+    },
+    "short-turn": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 0,
+      "mean_completion_tokens": 64.0
+    },
+    "discourse-marker": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 8.0
+    },
+    "disagreement": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 53.0
+    },
+    "parting": {
+      "count": 1,
+      "empty_count": 0,
+      "eos_count": 1,
+      "mean_completion_tokens": 5.0
+    },
+    "invitation": {
+      "count": 1,
+      "empty_count": 1,
+      "eos_count": 1,
+      "mean_completion_tokens": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "casual-01",
+      "category": "short-reply",
+      "prompt": "まじで",
+      "template": "raw",
+      "seed": 42,
+      "prompt_token_count": 4,
+      "rendered_prompt": "まじで",
+      "completion_token_count": 64,
+      "eos_reached": false,
+      "completion": ",肺胞の上昇などの異常の原因とは,腎機能の低下により大動脈弓の強化や膿瘍の発生の障害がある.前立腺筋の拡張障害,高度の経過を伴う,全身低減のリスクは起こるが,前"
+    },
+    {
+      "id": "casual-02",
+      "category": "backchannel",
+      "prompt": "それな",
+      "template": "raw",
+      "seed": 43,
+      "prompt_token_count": 3,
+      "rendered_prompt": "それな",
+      "completion_token_count": 51,
+      "eos_reached": true,
+      "completion": "のでしょう」「いいえ、そうかもしれませんね。あのところは人間の偉大なことを思い出してしまったのです」と東風君は大に感動した。迷亭は平気で不愉快のような苦痛がなかった。"
+    },
+    {
+      "id": "casual-03",
+      "category": "short-turn",
+      "prompt": "今日なにしてた？",
+      "template": "raw",
+      "seed": 44,
+      "prompt_token_count": 6,
+      "rendered_prompt": "今日なにしてた？",
+      "completion_token_count": 64,
+      "eos_reached": false,
+      "completion": "それほどに大きなのをしようと思ってたのに、またおくと、ちょっと待って、まだ苦痛をしないように気を付けて、この調子も少しずつ動かなくなって来たと云うと、この顔が急に熱心の度胸に残ったと、一返は"
+    },
+    {
+      "id": "casual-04",
+      "category": "short-reply",
+      "prompt": "やば",
+      "template": "raw",
+      "seed": 45,
+      "prompt_token_count": 3,
+      "rendered_prompt": "やば",
+      "completion_token_count": 3,
+      "eos_reached": true,
+      "completion": "い。"
+    },
+    {
+      "id": "casual-05",
+      "category": "discourse-marker",
+      "prompt": "なんかさ",
+      "template": "raw",
+      "seed": 46,
+      "prompt_token_count": 3,
+      "rendered_prompt": "なんかさ",
+      "completion_token_count": 8,
+      "eos_reached": true,
+      "completion": "らいなさそうでした。"
+    },
+    {
+      "id": "casual-06",
+      "category": "disagreement",
+      "prompt": "いやそれは",
+      "template": "raw",
+      "seed": 47,
+      "prompt_token_count": 3,
+      "rendered_prompt": "いやそれは",
+      "completion_token_count": 53,
+      "eos_reached": true,
+      "completion": "、今の通りの通りの真中に入る。大学の教師の事を聞いている。迷亭はどこの云う事はよく知れん、もし生徒が大学の教師の教師をうらなり向うへ呼び掛けている。"
+    },
+    {
+      "id": "casual-07",
+      "category": "parting",
+      "prompt": "おつかれ",
+      "template": "raw",
+      "seed": 48,
+      "prompt_token_count": 5,
+      "rendered_prompt": "おつかれ",
+      "completion_token_count": 5,
+      "eos_reached": true,
+      "completion": "も楽しいです。"
+    },
+    {
+      "id": "casual-08",
+      "category": "invitation",
+      "prompt": "明日ひま？",
+      "template": "raw",
+      "seed": 49,
+      "prompt_token_count": 6,
+      "rendered_prompt": "明日ひま？",
+      "completion_token_count": 1,
+      "eos_reached": true,
+      "completion": ""
+    }
+  ]
+}
