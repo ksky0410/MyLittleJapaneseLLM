@@ -59,6 +59,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
 
 学習中は250 stepごとにvalidation loss、学習率、生成例、警告・停止の有無を追記する。短答に戻る出力や、理由の反復・崩壊も削除せず保存する。
 
+### 本走：step 1,000まで完了
+
+step 1のvalidation lossは2.911438、step 250は2.911840、step 500は2.908120、step 750は2.908841、step 1,000は2.908092だった。step 500付近で改善し、その後も大きな発散はなかった。NaN、OOM、shape errorは発生せず、学習時間は84.05秒、ピークGPU allocated memoryは1,490,586,112 bytesだった。混合validation lossは実験107の2.911412を下回ったが、固定生成の評価前である。
+
 ## 実験終了後の記録
 
 学習終了直後に、実際の条件、最終validation loss、最良checkpoint SHA-256、学習時間、ピークGPUメモリ、4領域loss、一般会話と医療会話の生成評価、162問の正解数を追記する。実験105・106・107と比較し、次に変える条件を一つか二つに絞る。
