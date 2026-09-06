@@ -57,6 +57,10 @@ NaN、OOM、shape errorなく8,000 stepを完走し、250 stepごとのvalidatio
 
 ここに250 stepごとのvalidation loss、learning rate、elapsed time、GPUメモリ、固定prompt生成、警告、設定変更を追記する。実験が失敗した場合も、失敗した時点と原因を削除せずに残す。
 
+### 2026-09-07：step 250
+
+RunpodのA40上で、実験109のbest checkpointを初期値として学習を開始した。step 1のvalidation lossは3.183849、step 250は2.876897、step 250のlearning rateは1.9998e-5、経過時間は21.14秒だった。rehearsal ratioは0.2で、NaN、OOM、shape errorは発生していない。学習は継続中であり、step 250時点では生成品質の判定を保留する。
+
 ## 実験終了後の記録
 
 ここに実際の実行条件、最終loss、最良checkpointとstep、学習時間、生成評価、実験109および実験105との比較、予想との一致・不一致、次に試す変更を追記する。
