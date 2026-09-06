@@ -33,10 +33,11 @@ def main() -> None:
     if not BUNDLE.is_file():
         raise FileNotFoundError(f"bundleが見つかりません: {BUNDLE}")
     if PROJECT.exists() and any(PROJECT.iterdir()):
-        raise RuntimeError(f"既存の実験ディレクトリを上書きしません: {PROJECT}")
-    PROJECT.mkdir(parents=True, exist_ok=True)
-    with tarfile.open(BUNDLE, "r:gz") as archive:
-        archive.extractall(PROJECT, filter="data")
+        print(f"既存の展開済みprojectを検証して再利用します: {PROJECT}", flush=True)
+    else:
+        PROJECT.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(BUNDLE, "r:gz") as archive:
+            archive.extractall(PROJECT, filter="data")
 
     required = {
         CONFIG: "",
