@@ -90,4 +90,14 @@ summaryでは、best checkpointはstep 1,000、SHA-256は学習終了後に取�
 
 ## 実験終了後の記録
 
-学習終了直後に、実際の条件、最終validation loss、最良checkpoint SHA-256、学習時間、ピークGPUメモリ、4領域loss、一般会話と医療会話の生成評価、162問の正解数を追記する。実験105・106と比較し、次に変える条件は一つか二つに絞る。
+### 2026-09-07：学習・固定評価完了
+
+実験105の最良checkpointから、一般127,731例、元の医療2,945例、answer-focus医療2,945例を連結した133,621例で1,000 step学習した。rehearsal比率は0.20、seedは107、学習率は3e-6から3e-7、batch sizeは8である。最良checkpointはstep 1,000、SHA-256は `080d6e30f33b3464fdf470d674edee48f47e59c9117cafba0c5120532f8cee44` である。学習時間は81.98秒、ピークGPU allocated memoryは1,490,586,112 bytes、NaN・OOM・shape errorはなかった。
+
+混合SFT validation lossは2.911412、perplexityは18.3827だった。領域別lossはFineWeb 2.922944、general 4.083455、conversation 2.068766、medical 1.976274である。実験105との比較では、FineWeb 2.921111からわずかに悪化、general 4.084512から改善、conversation 2.070219から改善、medical 1.977347から改善した。ただしvalidation lossの改善だけでは回答品質を示さない。
+
+固定一般会話48例ではEOS 48/48、平均生成9.96 tokens、token overlap F1 0.2331だった。実験105のEOS 48/48、平均11.33 tokens、F1 0.2086よりF1は改善した。医療162例では回答形式の抽出が162/162、EOS 158/162、平均生成25.54 tokens、token overlap F1 0.2503だった。正解率は23/162、14.20%であり、実験105の29/162、17.90%、実験106の31/162、19.14%を下回った。生成本文を見ると、短い例では「正解はcです。」のように直ちに終了し、長い例では誤った選択肢と理由を反復するものも残った。
+
+この結果から、answer-focus例を一度追加するだけでは医療正答能力は改善せず、むしろ元の理由付き回答形式を短いラベル回答へ寄せすぎることが分かった。一般会話のF1は改善したため、追加例が一般SFT全体を壊したわけではないが、医療QAを含む総合モデルとしては採用しない。生成JSON/TXTは `artifacts/evaluations/exp107/`、学習中のstep別サンプルは `artifacts/samples/issue1-balanced-pretrain-answer-focus-sft-runpod-1k/`、metricsとsummaryは `artifacts/checkpoints/issue1-balanced-pretrain-answer-focus-sft-runpod-1k/` に保存した。
+
+次は実験107のcheckpointから元の理由付き一般・医療SFTへ短期復帰し、短い回答への偏りを戻せるかを確認する。これで医療回答長だけが戻り正答率が戻らない場合、SFTの反復ではなく、事前学習データ量と問題形式の学習方法を見直す。
