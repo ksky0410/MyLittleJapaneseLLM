@@ -66,6 +66,10 @@ Tokenizerでuint32列へ変換し、Token数は20,000,000、binaryのSHA-256は 
 
 ここに500 stepごとのvalidation loss、learning rate、elapsed time、GPUメモリ、固定prompt生成、停止理由を追記する。崩れた生成も削除しない。
 
+### 2026-09-07：step 500
+
+Runpod Pod `j9c46julmtbcb4` のA40上で、実験105の最良checkpointから追加事前学習を開始した。step 1のFineWeb validation lossは2.921104、step 500は2.865372で、step 500の学習率は1.0e-5、経過時間は31.34秒だった。NaN、OOM、shape errorは発生していない。学習中の生成、metrics、checkpoint metadataは専用出力先へ保存する。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、最終step、FineWeb・general・conversation・medicalのdomain loss、固定chat-test、医療162問の正解率、学習時間、次の再SFT条件を追記する。
