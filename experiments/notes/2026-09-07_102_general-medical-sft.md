@@ -78,6 +78,12 @@ pilot bestを用いた小規模生成評価では、一般会話12例のEOS到�
 
 pilotのsummary、metrics、生成文、評価結果をRunpod上の`artifacts/checkpoints/exp102-pilot`、`artifacts/samples/exp102-pilot`、`evaluations/exp102-pilot-*`へ保存した。本番はpilot bestを初期checkpointに使い、学習率scheduleの終点を8,000 stepとして連続させる。
 
+### 本番途中経過（step 2,000）
+
+本番プロセスはPID 2494で継続中である。step 250、500、750、1,000、1,250、1,500、1,750、2,000のvalidation lossはそれぞれ3.083431、3.092302、3.111439、3.103841、3.072422、3.055892、3.048445、3.034527となった。step 2,000で本番開始後のbestを更新し、Perplexityは20.791146、SFT train lossは2.282514、rehearsal train lossは2.297451、学習率は`1.7739e-5`である。
+
+step 750付近の一時的な悪化から回復し、pilot bestのvalidation loss 3.067110も下回ったため、現時点では早期停止せず8,000 stepまで継続する。後半で再びvalidationが悪化した場合はbest stepのcheckpointを採用する。
+
 ### 本番実行コマンド
 
 ```bash
