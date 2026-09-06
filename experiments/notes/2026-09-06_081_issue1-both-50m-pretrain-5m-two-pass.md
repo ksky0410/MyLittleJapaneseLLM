@@ -48,6 +48,10 @@ step 2,600はtrain loss 3.700928、validation loss 4.681067、PPL 107.89、learn
 
 step 3,100はtrain loss 3.247999、validation loss 4.575391、PPL 97.07、learning rate 1.3243e-4、経過352.50秒、step 3,200はtrain loss 3.545044、validation loss 4.533112、PPL 93.05、learning rate 1.2337e-4、経過364.30秒でした。step 3,200では080の同じstepのvalidation loss 4.841980より明確に低く、現時点で反復学習条件が優勢です。学習は継続中です。
 
+step 3,300はtrain loss 3.393661、validation loss 4.523731、PPL 92.18、learning rate 1.1452e-4、経過375.69秒でした。step 3,400は4.494060、PPL 89.48、learning rate 1.0590e-4、経過387.57秒、step 3,500はtrain loss 3.240968、validation loss 4.500024、PPL 90.02、learning rate 9.7582e-5、経過397.82秒でした。step 3,600は4.492153、PPL 89.31、learning rate 8.9587e-5、経過410.49秒、step 3,700は4.481474、PPL 88.36、learning rate 8.1960e-5、経過420.95秒、step 3,800はtrain loss 3.429658、validation loss 4.456258、PPL 86.16、learning rate 7.4737e-5、経過431.42秒でした。
+
+step 3,900はtrain loss 3.086437、validation loss 4.445015、PPL 85.20、learning rate 6.7955e-5、経過442.30秒、step 4,000はtrain loss 3.184059、validation loss 4.436998、PPL 84.52、learning rate 6.1645e-5、経過454.07秒でした。step 4,000まで大きな過学習は観測されず、080との差も維持されています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
