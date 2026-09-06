@@ -1,0 +1,486 @@
+{
+  "format": "response-function-analysis-v1",
+  "classifier": {
+    "version": "2026-09-06-v2",
+    "priority": [
+      "greeting",
+      "closing",
+      "question_answer",
+      "backchannel",
+      "agreement_disagreement",
+      "topic_continuation",
+      "other"
+    ],
+    "note": "規則ベースの仮分類であり、人手ラベルではない"
+  },
+  "tokenizer": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "sources": {
+    "rpc": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/rpc/train.jsonl",
+      "input_sha256": "aba75dbbba72b2d1839c11cdc96e36ea5b87e4f3a8351175a1259dc21a3bb610",
+      "record_count": 10851,
+      "example_count": 315584,
+      "response_token_count": 5132071,
+      "categories": {
+        "agreement_disagreement": {
+          "example_count": 2490,
+          "response_token_count": 45848,
+          "example_fraction": 0.00789013384708984,
+          "response_token_fraction": 0.008933625431136865,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/11189.json",
+              "record_index": 11,
+              "target_index": 24,
+              "previous": "私もあんまり行かないです。悲しいことに音痴なので。",
+              "response": "いやいやご遠孫を。あまり歌いたいわけじゃないので、カラオケは酒飲みの付き合いぐらいですね。",
+              "response_token_count": 33
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/11189.json",
+              "record_index": 11,
+              "target_index": 29,
+              "previous": "聞いてないですよ。せいぜいママさんが聞いていてくれるぐらいです。",
+              "response": "でも、逆に気兼ねなく歌えていいですね！",
+              "response_token_count": 14
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/11148.json",
+              "record_index": 24,
+              "target_index": 16,
+              "previous": "えらいですねー！見習いたいです。",
+              "response": "いやいや、でも私は動画とかを結構見てしまうので。",
+              "response_token_count": 16
+            }
+          ]
+        },
+        "backchannel": {
+          "example_count": 626,
+          "response_token_count": 2402,
+          "example_fraction": 0.0019836240113567227,
+          "response_token_fraction": 0.0004680371725176834,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/01286.json",
+              "record_index": 9,
+              "target_index": 14,
+              "previous": "どちらかと言うと、あまりものパスタですね！",
+              "response": "なるほど",
+              "response_token_count": 3
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/06664.json",
+              "record_index": 17,
+              "target_index": 29,
+              "previous": "気を付けて卵ライフ楽しんでください。",
+              "response": "はい！",
+              "response_token_count": 4
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/12946.json",
+              "record_index": 31,
+              "target_index": 29,
+              "previous": "そうなんですね！楽しみですね。",
+              "response": "はい！",
+              "response_token_count": 4
+            }
+          ]
+        },
+        "closing": {
+          "example_count": 226,
+          "response_token_count": 1953,
+          "example_fraction": 0.000716132630298114,
+          "response_token_fraction": 0.00038054812569818307,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/07027.json",
+              "record_index": 53,
+              "target_index": 32,
+              "previous": "そうですね、心機一転良いものが見つかることを祈っています！",
+              "response": "ありがとうございます！ではまた。",
+              "response_token_count": 7
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/07027.json",
+              "record_index": 53,
+              "target_index": 33,
+              "previous": "ありがとうございます！ではまた。",
+              "response": "はい、ではまた。",
+              "response_token_count": 7
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/00788.json",
+              "record_index": 110,
+              "target_index": 28,
+              "previous": "はい、気をつけて行きたいです！",
+              "response": "では、失礼します。",
+              "response_token_count": 8
+            }
+          ]
+        },
+        "greeting": {
+          "example_count": 6710,
+          "response_token_count": 26500,
+          "example_fraction": 0.021262167917258164,
+          "response_token_fraction": 0.00516360744034913,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 1,
+              "previous": "こんにちはー！",
+              "response": "こんにちはー！",
+              "response_token_count": 4
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/05727.json",
+              "record_index": 1,
+              "target_index": 1,
+              "previous": "こんばんは",
+              "response": "こんばんはー。",
+              "response_token_count": 5
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/06206.json",
+              "record_index": 2,
+              "target_index": 1,
+              "previous": "こんにちは！",
+              "response": "こんにちは！",
+              "response_token_count": 4
+            }
+          ]
+        },
+        "other": {
+          "example_count": 117150,
+          "response_token_count": 1259034,
+          "example_fraction": 0.37121653822754,
+          "response_token_fraction": 0.24532669170009533,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 2,
+              "previous": "こんにちはー！",
+              "response": "夕飯は決めていますか？",
+              "response_token_count": 10
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 4,
+              "previous": "ええと、まだ決めていないです！",
+              "response": "自炊ですか？？",
+              "response_token_count": 7
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 8,
+              "previous": "パスタ屋さんか、中華屋さんですね！",
+              "response": "いいですねー！両方迷います、、",
+              "response_token_count": 11
+            }
+          ]
+        },
+        "question_answer": {
+          "example_count": 75208,
+          "response_token_count": 1309409,
+          "example_fraction": 0.23831372946663962,
+          "response_token_fraction": 0.2551424171645326,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 3,
+              "previous": "夕飯は決めていますか？",
+              "response": "ええと、まだ決めていないです！",
+              "response_token_count": 11
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 5,
+              "previous": "自炊ですか？？",
+              "response": "えっと、今日は外で食べようかなと思っています",
+              "response_token_count": 13
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 7,
+              "previous": "いいですねー！何の外食屋さんで迷っていますか？",
+              "response": "パスタ屋さんか、中華屋さんですね！",
+              "response_token_count": 15
+            }
+          ]
+        },
+        "topic_continuation": {
+          "example_count": 113174,
+          "response_token_count": 2486925,
+          "example_fraction": 0.35861767389981747,
+          "response_token_fraction": 0.4845850729656702,
+          "samples": [
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 6,
+              "previous": "えっと、今日は外で食べようかなと思っています",
+              "response": "いいですねー！何の外食屋さんで迷っていますか？",
+              "response_token_count": 16
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 13,
+              "previous": "私は中華が好きなので中華ですね",
+              "response": "おお！ありがたい！そっか、中華、何か特別好きなメニューありますか？",
+              "response_token_count": 25
+            },
+            {
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 15,
+              "previous": "五目焼きそばが好きです！でも季節のパスタも食べたいです、、",
+              "response": "うわぁ、五目焼きそばという言葉を聞いたら、途端にお腹減ってきました。パスタも麺類だ！",
+              "response_token_count": 35
+            }
+          ]
+        }
+      }
+    },
+    "mrmp": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-sft-sources-v1/mrmp/train.jsonl",
+      "input_sha256": "93a85f6be0d300980f1c9bcc6cb65845ff7671cd0243390feee6df0a816e9c1e",
+      "record_count": 784,
+      "example_count": 81382,
+      "response_token_count": 770975,
+      "categories": {
+        "agreement_disagreement": {
+          "example_count": 852,
+          "response_token_count": 9278,
+          "example_fraction": 0.010469145511292424,
+          "response_token_fraction": 0.012034112649567106,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
+              "record_index": 1,
+              "target_index": 35,
+              "previous": "漫画もちょっと",
+              "response": "ただで見れるのとか",
+              "response_token_count": 8
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B12108.json",
+              "record_index": 3,
+              "target_index": 63,
+              "previous": "寒い方が私は辛いかも",
+              "response": "でも寒いほうがいいかな",
+              "response_token_count": 8
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A05405.json",
+              "record_index": 4,
+              "target_index": 77,
+              "previous": "ですね。手軽ですね。。",
+              "response": "でも作ったらおいしんだろうな",
+              "response_token_count": 10
+            }
+          ]
+        },
+        "backchannel": {
+          "example_count": 1408,
+          "response_token_count": 5163,
+          "example_fraction": 0.017301123098473863,
+          "response_token_fraction": 0.006696715198287882,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
+              "record_index": 1,
+              "target_index": 61,
+              "previous": "覚悟して見ました",
+              "response": "なるほど～",
+              "response_token_count": 4
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
+              "record_index": 1,
+              "target_index": 91,
+              "previous": "料理人がいるんです",
+              "response": "なるほど～！",
+              "response_token_count": 5
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A00202.json",
+              "record_index": 2,
+              "target_index": 46,
+              "previous": "悔やまれます笑",
+              "response": "笑",
+              "response_token_count": 3
+            }
+          ]
+        },
+        "closing": {
+          "example_count": 9,
+          "response_token_count": 90,
+          "example_fraction": 0.00011058956526013123,
+          "response_token_fraction": 0.00011673530270112519,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B11906.json",
+              "record_index": 78,
+              "target_index": 36,
+              "previous": "@つくね 寒かったですね",
+              "response": "@しらたき お疲れさまー！",
+              "response_token_count": 11
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B15004.json",
+              "record_index": 169,
+              "target_index": 25,
+              "previous": "仕事ありますー",
+              "response": "@こんぶ ありがとう！",
+              "response_token_count": 10
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B12905.json",
+              "record_index": 397,
+              "target_index": 22,
+              "previous": "@たまご よかったですね！",
+              "response": "かさかさバイバイ！",
+              "response_token_count": 11
+            }
+          ]
+        },
+        "greeting": {
+          "example_count": 1934,
+          "response_token_count": 6733,
+          "example_fraction": 0.023764468801454868,
+          "response_token_fraction": 0.008733097700963066,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 1,
+              "previous": "こんにちは",
+              "response": "こんにちは！",
+              "response_token_count": 4
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 3,
+              "previous": "お子さんはいるんですか？",
+              "response": "こんにちは",
+              "response_token_count": 3
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
+              "record_index": 1,
+              "target_index": 1,
+              "previous": "こんにちは",
+              "response": "こんにちは〜",
+              "response_token_count": 4
+            }
+          ]
+        },
+        "other": {
+          "example_count": 60477,
+          "response_token_count": 529301,
+          "example_fraction": 0.7431250153596618,
+          "response_token_fraction": 0.6865345828334252,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 2,
+              "previous": "こんにちは！",
+              "response": "お子さんはいるんですか？",
+              "response_token_count": 8
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 4,
+              "previous": "こんにちは",
+              "response": "2人います",
+              "response_token_count": 5
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 5,
+              "previous": "2人います",
+              "response": "2人いますー！",
+              "response_token_count": 7
+            }
+          ]
+        },
+        "question_answer": {
+          "example_count": 10337,
+          "response_token_count": 100867,
+          "example_fraction": 0.12701825956599738,
+          "response_token_fraction": 0.13083044197282662,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 10,
+              "previous": "@りんご 子供いますか？",
+              "response": "うちは息子一人とわんちゃんです",
+              "response_token_count": 11
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 12,
+              "previous": "@りんご 息子さんおいくつですか？",
+              "response": "@しらたき お子さんはおいくつですか？",
+              "response_token_count": 13
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 13,
+              "previous": "@しらたき お子さんはおいくつですか？",
+              "response": "@つくね もう29歳です",
+              "response_token_count": 10
+            }
+          ]
+        },
+        "topic_continuation": {
+          "example_count": 6365,
+          "response_token_count": 119543,
+          "example_fraction": 0.07821139809785947,
+          "response_token_fraction": 0.155054314342229,
+          "samples": [
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 14,
+              "previous": "@つくね もう29歳です",
+              "response": "@りんご 小学4年と１年です！",
+              "response_token_count": 16
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 43,
+              "previous": "@しらたき おいっ！笑",
+              "response": "@つくね うちも未だに主人と息子のお弁当作ってます笑",
+              "response_token_count": 22
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 54,
+              "previous": "@しらたき 甘いのしか勝たん！笑",
+              "response": "@つくね いっぱい作ってとってるんです、作戦！",
+              "response_token_count": 18
+            }
+          ]
+        }
+      }
+    }
+  }
+}

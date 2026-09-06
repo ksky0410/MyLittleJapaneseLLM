@@ -22,10 +22,22 @@ RPCとMRMPから、それぞれresponse token約770,000を選び、合計約1.54
 
 学習開始前に、使用するconfig、選別データ、validation、base checkpoint、rehearsal token列のSHA-256と、実行コマンドをこのノートへ追記します。学習中は100 stepごとの生成とmetricsを保存し、少なくとも1,000 stepごとに解釈を追記します。
 
+## 仮分類の実装と集計
+
+2026-09-06、`scripts/analyze_response_functions.py`とそのテストを追加しました。分類器は`greeting`、`closing`、`question_answer`、`backchannel`、`agreement_disagreement`、`topic_continuation`、`other`の優先順で一つだけカテゴリを付けます。質問文かどうか、定型挨拶かどうか、短い相づち、否定表現、長さ16 token以上という規則を使っており、人手ラベルではありません。
+
+最初の集計では、長い応答の末尾に偶然「またね」が含まれる例を終了カテゴリへ入れる誤分類が見つかりました。終了カテゴリを12 token以下の短い応答に限定し、分類器をv2へ更新しました。テストは`PYTHONPATH=scripts uv run pytest -q tests/test_analyze_response_functions.py tests/test_prepare_quality_chat_sft.py tests/test_train_sft_torch.py tests/test_train_torch.py`で22件すべて通過しました。
+
+v2の全候補集計では、RPCは315,584例・5,132,071 response tokenで、token比率はquestion_answer 25.51%、topic_continuation 48.46%、other 24.53%、greeting 0.52%、agreement_disagreement 0.89%、backchannel 0.05%、closing 0.04%でした。MRMPは81,382例・770,975 response tokenで、question_answer 13.08%、topic_continuation 15.51%、other 68.65%、greeting 0.87%、agreement_disagreement 1.20%、backchannel 0.67%、closing 0.01%でした。
+
+この分布から、MRMPでは応答機能の希少カテゴリをRPCと同じtoken比率へ揃えられないことが分かります。093ではカテゴリを完全に同率へするのではなく、RPCとMRMPで別の上限を持たせ、希少カテゴリを過剰複製せず、MRMPの`other`を無理に別カテゴリへ偽装しない設計にします。特にMRMPのtopic_continuationは約119,543 tokenしかないため、MRMP側で40%を目標にする設定は実行不能です。
+
+集計結果は`artifacts/analysis/issue1-response-functions-v1.json`に保存し、SHA-256は`d7024e4ca67594a7ab50f01f8c4c58908794aa64745c55a1aa11df20365644db`です。入力JSONLのSHA-256はRPCが`aba75dbbba72b2d1839c11cdc96e36ea5b87e4f3a8351175a1259dc21a3bb610`、MRMPが`93a85f6be0d300980f1c9bcc6cb65845ff7671cd0243390feee6df0a816e9c1e`、Tokenizerは`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。
+
 ## 評価計画
 
 step 7,400または最終学習のbest checkpointについて、Issue #1固定prompt、48例のheld-out chat-test、general・conversation・medical・RPC・MRMPの5領域validationを評価します。092との比較ではcheckpoint stepとbackendの違いを明示し、validation lossだけで採用を決めません。固定promptの全出力、held-out全文、評価JSON、SHA-256をGitHubへ保存します。
 
 ## 現時点の状態
 
-このノート作成時点では、093のカテゴリ集計と学習はまだ開始していません。前段の設計と実験092の結果を記録した状態です。次の操作はカテゴリ規則の実装と、まず小さな集計による妥当性確認です。
+このノート作成時点では、093のカテゴリ集計と仮分類器のテストまで完了し、SFT用NPZの作成と学習はまだ開始していません。MRMPで希少カテゴリが不足することを確認したため、次の操作はsource別の上限を持つ選別器の実装と、その選別結果の監査です。
