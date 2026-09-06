@@ -44,6 +44,16 @@ step 3,200はtrain loss 3.449614、validation loss 4.841980、PPL 126.72、learn
 
 step 3,600はvalidation loss 4.788713、PPL 120.15、learning rate 8.9587e-5、経過402.06秒と一時的に悪化しましたが、step 3,700は4.753023、PPL 115.93、learning rate 8.1960e-5、経過410.87秒、step 3,800は4.737653、PPL 114.17、learning rate 7.4737e-5、経過421.85秒、step 3,900は4.717781、PPL 111.92、learning rate 6.7955e-5、経過433.29秒、step 4,000はtrain loss 3.027063、validation loss 4.696461、PPL 109.56、learning rate 6.1645e-5、経過444.79秒でした。step 4,000時点でもstep 3,500を除いてvalidation lossは改善傾向にあり、学習は継続中です。
 
+step 4,100はtrain loss 3.394165、validation loss 4.680068、PPL 107.78、learning rate 5.5838e-5、経過455.34秒でした。step 4,200は4.674856、PPL 107.22、learning rate 5.0563e-5、経過467.05秒、step 4,300は4.658159、PPL 105.44、learning rate 4.5846e-5、経過478.74秒、step 4,400は4.651424、PPL 104.73、learning rate 4.1710e-5、経過489.00秒でした。step 4,500はtrain loss 3.034811、validation loss 4.649821、PPL 104.57、learning rate 3.8174e-5、経過499.85秒でした。
+
+step 4,600はvalidation loss 4.651350、PPL 104.73、learning rate 3.5256e-5、経過512.27秒とわずかに悪化しましたが、step 4,700は4.634527、PPL 102.98、learning rate 3.2970e-5、経過522.85秒、step 4,800は4.616530、PPL 101.14、learning rate 3.1327e-5、経過534.40秒、step 4,900はtrain loss 2.914563、validation loss 4.607040、PPL 100.19、learning rate 3.0335e-5、経過545.92秒でした。step 5,000はtrain loss 3.380363、validation loss 4.615130、PPL 101.00、learning rate 3.0000e-5、経過555.90秒でした。step 4,900で最良validationを更新し、最終stepではわずかに戻りました。
+
+学習はColab T4・PyTorch 2.11.0+cu128・CUDA 12.8・AMP有効で5,000 stepを完走しました。パラメータ数は50,207,616、GPU memoryは15,637,086,208 bytes、peak allocatedは1,528,071,680 bytes、peak reservedは1,591,738,368 bytes、summary上の総時間は556.84秒でした。Colab CLIの長時間実行ログ取得は途中でtimeoutしましたが、リモートのmetrics、summary、checkpointは正常に生成されており、学習結果には影響していません。最良checkpointはstep 4,900、validation loss 4.607039928436279、PPL 100.18714915065256です。best weightのSHA-256は`d61cf94bbdc053e7724f9648e935d3f0e4bc8a7ca5a6c2b0ec86acfd8137c508`、`best.json`は`2df0c9244a0b383c726275c290b1c473f4e20372901d38278c2d262a9c48eb9f`、`summary.json`は`71b58012ee3a5e755668e04ff2603f48a7763842680ac12da4a82880f4d0a2c0`、`metrics.jsonl`は`c27079a9a8669f3608e74e1fba365d914e12567fc5a54d52f5620d13272628bc`です。Colabから回収した軽量archiveは64ファイル、archive SHA-256は`d0c971c026690b014e2603ba344e9d5f764bb06d1fb852266f149e4e37096267`、checkpoint hash manifestは`/tmp/exp080-manifest.json`で、best checkpoint archiveのSHA-256は`f1e3db105a3380e2ccbae691db525e9d3e4d486118da9a5072d965c9dc0193cf`です。
+
+固定promptの生成はstep 0では日本語と多数の崩れたTokenが混ざりましたが、step 1,000以降は`今日はなにをしていましたか?`の直後にEOSとなり、実質的に空応答へ崩れました。validation lossの改善だけでは自然な生成能力を意味しない典型例です。step 0からstep 5,000まで100 step間隔の生成本文は保存済みで、空応答も含めて省略していません。
+
+次に、実験075と同じ5領域のvalidation、固定chat-test-v1 48例、生成全文を比較します。評価にはstep 4,900のbest checkpointを使い、080の評価設定・出力hash・075との差をこのノートへ追記します。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、完走または停止理由、最良checkpoint、学習時間、5領域loss、chat-test結果、075との差、source比率の影響、自然な日本語の質的観察を追記します。失敗した場合も、原因不明ならそのまま明記し、次の切り分けを残します。

@@ -13,6 +13,7 @@ CHECKPOINT_ROOT = PROJECT / "artifacts/checkpoints" / CONDITION
 SAMPLES_ROOT = PROJECT / "artifacts/samples" / CONDITION
 ARCHIVE = Path("/content/exp080-lightweight.tar.gz")
 MANIFEST = Path("/content/exp080-manifest.json")
+BEST_ARCHIVE = Path("/content/exp080-best-checkpoint.tar")
 
 
 def sha256(path: Path) -> str:
@@ -37,6 +38,11 @@ def main() -> None:
     with tarfile.open(ARCHIVE, "w:gz") as archive:
         for path in files:
             archive.add(path, arcname=path.relative_to(PROJECT))
+    best_checkpoint = CHECKPOINT_ROOT / "best.pt"
+    if not best_checkpoint.is_file():
+        raise FileNotFoundError(f"best checkpointが見つかりません: {best_checkpoint}")
+    with tarfile.open(BEST_ARCHIVE, "w") as archive:
+        archive.add(best_checkpoint, arcname="best.pt")
     checkpoints = [
         {
             "path": str(path.relative_to(PROJECT)),
@@ -52,6 +58,9 @@ def main() -> None:
         "lightweight_archive": str(ARCHIVE),
         "archive_bytes": ARCHIVE.stat().st_size,
         "archive_sha256": sha256(ARCHIVE),
+        "best_checkpoint_archive": str(BEST_ARCHIVE),
+        "best_checkpoint_archive_bytes": BEST_ARCHIVE.stat().st_size,
+        "best_checkpoint_archive_sha256": sha256(BEST_ARCHIVE),
         "checkpoints": checkpoints,
     }
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
