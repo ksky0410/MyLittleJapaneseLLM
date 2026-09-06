@@ -102,3 +102,7 @@ step 6,750のvalidation lossは2.757589、step 7,000は2.756483、step 7,250は2
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、domain loss、一般会話48例、医療162例、実験113・114との比較、仮説の判定、次の一手を追記する。checkpoint本体はGitHubへ追加せず、metadata・SHA-256・生成文・評価全文を保存する。
+
+### 評価開始時の接続失敗
+
+学習完了後の評価をRunpodへ投入する最初のSSH接続がtimeoutとなり、`artifacts/evaluations/exp115`は作成されなかった。checkpointや学習結果には影響せず、Runpod上に評価プロセスが起動していないことを確認した。接続を再試行して同じ評価コマンドを実行する。
