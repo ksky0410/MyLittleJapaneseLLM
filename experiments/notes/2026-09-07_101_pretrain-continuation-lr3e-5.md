@@ -106,3 +106,5 @@ step 34,500ではvalidation lossが2.836688へ一時的に上がったが、step
 step 35,500、36,000のvalidation lossは2.836233、2.836324となった。step 36,000のPerplexityは17.052971、train lossは2.485464、学習率は`3.6951e-6`である。終盤の2回はbestを更新していないが、step 35,000からの悪化は0.0012未満であり、停止条件には該当しない。
 
 step 36,500、37,000のvalidation lossは2.835609、2.836115となった。step 36,500のPerplexityは17.040778、train lossは2.562234、学習率は`3.5333e-6`である。step 35,000のbestはまだ更新していないが、学習は正常に終盤へ進んでいる。
+
+step 37,500、38,000のvalidation lossは2.835654、2.835023となった。step 38,000のPerplexityは17.030800、train lossは2.358047、学習率は`3.1750e-6`である。step 38,000でbest validation lossを更新した。最大学習率3e-5のcosine decay終点へ近づいているが、追加データによる改善がわずかに続いている。
