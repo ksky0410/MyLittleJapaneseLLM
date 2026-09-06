@@ -34,6 +34,8 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 - Tokenizer：`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`
 - 設定：`configs/issue1-50m-pretrain-fineweb-new-shards56-runpod-10k.toml`
 
+設定ファイルのSHA-256は`22b9d5d47cfdb3c1f847ff7e2f84550ebf17c4a234215ed6bf5e92bb6d5f0cbd`である。
+
 ### 成功・失敗の判定
 
 新しい2 shardから約20M tokensを再現可能に抽出し、入力・本文・混合・Token列のmanifestを保存する。学習はNaN、OOM、shape errorなく10,000 stepを完走し、500 stepごとのvalidation lossと固定prompt生成を残す。FineWeb validation lossがExp114 rawの2.777802を下回ることを知識側の第一目標とする。ただし、raw lossの改善だけで自然な日本語の達成とは判定しない。後続SFTの初期値として有用かどうかを、会話・医療評価と生成本文で確認する。
