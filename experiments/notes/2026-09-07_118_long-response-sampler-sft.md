@@ -55,4 +55,8 @@ Runpod A40上でExp117 bestから長文sampling条件のSFTを開始した。ste
 
 全stepで`long_response_ratio=0.25`、`long_response_min_tokens=24`がmetricsへ記録されている。NaN、OOM、shape errorは発生していない。step 0から1,750までの生成文はRunpod上に保存されており、完了後に全件回収する。
 
+### 2026-09-07：step 2,000〜3,000
+
+step 2,000のvalidation lossは2.725745、step 2,250は2.725349、step 2,500は2.724989、step 2,750は2.724544、step 3,000は2.723329だった。step 3,000時点でExp117 bestの2.728217を0.004887下回り、学習後半にかけて改善が続いている。step 3,000のlearning rateは1.227e-6、経過時間は265.87秒だった。NaN、OOM、shape errorは発生していない。
+
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、生成文、警告、設定変更を追記する。悪い生成や短すぎる生成も削除しない。
