@@ -25,6 +25,8 @@ Exp117 bestを初期値とし、モデル、Tokenizer、SFTデータ、validatio
 - Tokenizer：`artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model`、SHA-256 `5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`
 - 設定：`configs/issue1-exp117-long-response-sft-runpod-4k.toml`
 
+設定ファイルのSHA-256は`2f3ca624f38cd9a03e3c850a71cadd41bfb44fd2f1cc165b944cfe18269f3d76`である。
+
 ### 成功・失敗の判定
 
 4,000 stepをNaN、OOM、shape errorなく完走し、250 stepごとのmetricsと生成全文を保存できれば実装上の成功とする。性能面では、Exp117 bestと比べて一般会話のF1または実際の話題適合性が改善し、平均生成長だけでなく具体的な応答が増えることを期待する。domain lossだけが改善する場合、あるいは出力が長くなるだけで文脈逸脱・反復・誤答が増える場合は自然さの改善と認定しない。
