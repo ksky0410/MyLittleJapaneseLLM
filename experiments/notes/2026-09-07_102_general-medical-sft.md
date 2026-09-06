@@ -66,6 +66,10 @@ PYTHONPATH=scripts python3 scripts/train_sft_torch.py \
   --device cuda
 ```
 
+### pilot途中経過
+
+Runpod上のpilotはPID 2223で正常に実行中である。step 250の混合validation lossは3.133442、step 500では3.094915まで下がった。step 500のSFT train lossは3.257999、rehearsal train lossは1.999201、学習率は`1.9935e-5`である。NaN、OOM、shape errorは発生していないため、1,000 stepまで継続する。なお、このvalidation lossは一般会話と医療を連結したSFT validationの値であり、実験101のraw domain lossとは直接比較しない。
+
 ## 実行コマンド（予定）
 
 ```bash
