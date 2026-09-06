@@ -32,6 +32,8 @@
 
 step 600はvalidation loss 3.487917、step 700は3.479720、step 800は3.472389、step 900は3.464336、step 1,000は3.464401でした。最良checkpointはstep 900、validation perplexity 31.955221、経過時間851.21秒です。step 1,000の固定prompt生成は「こんばんは!」となり、step 500の「こんにちはー!」から表面上の変化はありますが、まだ一往復の定型挨拶だけで、話題への応答や長い自然文は確認できません。生成本文はstep 0から1,000まで保存しています。現時点ではvalidation lossの改善を自然な会話性能の改善とは解釈せず、学習を継続します。
 
+step 1,100ではvalidation loss 3.469782、step 1,200では3.488342へ一時的に悪化しましたが、step 1,300で3.433376、step 1,400で3.441852、step 1,500で3.427367まで改善しました。step 1,500のperplexityは30.795437、経過時間は1,546.04秒です。最良checkpointはstep 1,500へ更新されました。固定promptのstep 1,500生成は「こんにちは」で終了し、validation改善に対して会話生成の多様性はまだ増えていません。validation lossと固定promptの自然さが一致しない例として記録し、held-out chat評価まで結論を保留します。
+
 Colab停止中の代替可否を確認するため、Apple Silicon実機のMPSが利用可能かを`torch 2.14.0`で確認しました。`torch.backends.mps.is_built()`と`is_available()`はいずれも`True`でした。まずは本番条件を変更しない2 stepのMPS smokeを、専用出力先`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`へ保存します。これは本番092の性能結果には混ぜず、速度・ロード・loss計算・生成経路だけを確認する補助実験です。
 
 smokeは2026-09-06に完了しました。MPS、PyTorch 2.14.0、AMPなしで、step 1のvalidation lossは4.042009、step 2は4.035694でした。50,207,616 parameters、train 127,731例、validation 49,045例を読み込み、NaN、OOM、shape errorはありませんでした。2 stepの経過時間は19.40秒で、step 0・1・2の生成サンプルとmetrics、checkpoint metadata、summaryを専用出力先へ保存しました。この結果は本番の性能比較には使わず、実行経路が正常であることだけを示します。
