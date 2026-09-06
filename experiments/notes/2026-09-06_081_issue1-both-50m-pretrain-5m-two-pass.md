@@ -42,6 +42,8 @@ step 1,200はtrain loss 3.892087、validation loss 5.169767、PPL 175.87、learn
 
 step 1,600はvalidation loss 4.977218、PPL 145.07、learning rate 2.6218e-4、経過178.05秒、step 1,700は4.929737、PPL 138.34、learning rate 2.5540e-4、経過190.06秒、step 1,800はtrain loss 3.580178、validation loss 4.908610、PPL 135.45、learning rate 2.4819e-4、経過201.11秒でした。step 1,900はvalidation loss 4.854780、PPL 128.35、learning rate 2.4057e-4、経過213.53秒、step 2,000はtrain loss 4.015949、validation loss 4.840270、PPL 126.50、learning rate 2.3258e-4、経過223.94秒でした。step 2,000時点でもvalidation lossは改善中で、過学習による明確な悪化はまだ見えていません。学習は継続中です。
 
+step 2,100はtrain loss 3.623113、validation loss 4.790753、PPL 120.39、learning rate 2.2426e-4、経過234.99秒でした。step 2,200はvalidation loss 4.803434、PPL 121.93、learning rate 2.1566e-4、経過245.08秒と一時的に悪化しましたが、step 2,300は4.781965、PPL 119.34、learning rate 2.0681e-4、経過256.09秒、step 2,400はtrain loss 3.445386、validation loss 4.710782、PPL 111.14、learning rate 1.9775e-4、経過267.79秒、step 2,500はtrain loss 3.306795、validation loss 4.682791、PPL 108.07、learning rate 1.8854e-4、経過279.69秒でした。step 2,500では080の同じstepのvalidation loss 4.980713を下回っています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
