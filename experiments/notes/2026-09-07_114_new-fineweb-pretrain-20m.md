@@ -58,6 +58,8 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \
 
 ここに取得失敗、再試行、入力サイズとSHA-256、抽出結果、混合結果、Token化結果、使用したコマンドを発生順に追記する。失敗したコマンドも削除しない。
 
+shard 3・4の抽出は並列に実行し、どちらも正常終了した。shard 3は先頭20,000行を除外した後19,654文書、9,999,914 tokensを選択し、本文SHA-256は`5e1d80c71ef4241143ecb5cd28224044f3e132ac64dbd2c845e3c69f858d9011`、manifest SHA-256は`437bd29dec3457dd9d7786b32951d9625eb9d8f41f2aeae8ca54e0decbb41149`だった。shard 4は19,583文書、9,999,582 tokensを選択し、本文SHA-256は`8c6b97bad4f08b8b08cd104e87d906ed0a146290b957f02089dd7b4fb504e215`、manifest SHA-256は`5ff03ac86f5ece928f1f13364750455f99250d2d129454d7ac37b5d6dbfad2e7`だった。両方とも空行と本文完全一致の重複は0件で、Tokenizer SHA-256は計画値と一致した。
+
 ## 学習中の記録
 
 ここに500 stepごとのvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
