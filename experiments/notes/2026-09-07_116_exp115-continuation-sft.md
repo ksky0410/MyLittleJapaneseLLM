@@ -64,3 +64,7 @@ step 9,000のvalidation lossは2.752965、step 9,250は2.751872だった。exp11
 ### 2026-09-07：step 9,500〜10,000
 
 step 9,500のvalidation lossは2.751341、step 9,750は2.750261、step 10,000は2.750426だった。step 9,750で現時点の最良値を更新し、exp115のbestから0.003765改善した。step 10,000のlearning rateは7.558e-7、経過時間は166.36秒だった。step 10,000でわずかな反発はあるが、継続学習によるvalidation lossの改善は続いている。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 10,250〜10,750
+
+step 10,250のvalidation lossは2.750998、step 10,500は2.750023、step 10,750は2.748146だった。step 10,750で現時点の最良値を更新し、exp115のbestから0.005880改善した。step 10,750のlearning rateは6.375e-7、経過時間は227.13秒だった。学習率が下がる中でもvalidation lossは改善しており、同じSFTデータを追加で見せる効果がまだ残っている可能性がある。NaN、OOM、shape errorは発生していない。
