@@ -57,3 +57,22 @@ RPCはresponse token比率を`question_answer 0.30`、`topic_continuation 0.45`�
 出力は`artifacts/sft/issue1-functional-770k-each-v1/train.npz`と`manifest.json`です。NPZのSHA-256は`5688d15626eb91b923f818d6cad1348480b9182019524e5fd4d5a81cc4815526`で、manifestには入力hash、分類器version、source別のfull/selected分布、選択provenanceを保存しています。選択結果の実例数はRPC 47,084例、MRMP 81,281例、全体128,365例です。
 
 093の学習configは`configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1.toml`です。base checkpoint、Tokenizer、rehearsal、validation、seed、モデル構造、10,000 step、learning rate、EOS loss weight、rehearsal ratioは092と同じにし、SFT NPZだけを変更します。学習前にconfigとmanifestのSHA-256、実行コマンド、MPS backend、checkpoint保持数を追記します。
+
+選別データ準備後のcommitは`3d1ba48`です。configのSHA-256は`1a8c27bafc8b170c9e762b6c6862e23d2d1292365dd692d3bf00d16b1e385f28`、NPZのSHA-256は`5688d15626eb91b923f818d6cad1348480b9182019524e5fd4d5a81cc4815526`、manifestのSHA-256は`99d2141534ad076439f37d1d428c532ea8cea6e219f12b62932f4e754520341f`です。base checkpointは`1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb`、validationは`fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1`、rehearsal token列は`d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090`、Tokenizerは`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`です。
+
+学習開始コマンドは次のとおりです。MPSで実行し、周期checkpointは最新1個だけ保持します。
+
+```text
+uv run python scripts/train_sft_torch.py \
+  --config configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1.toml \
+  --base-checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt \
+  --train-data artifacts/sft/issue1-functional-770k-each-v1/train.npz \
+  --validation-data artifacts/sft/issue1-both-full-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1-mps-10k \
+  --samples-dir artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1-mps-10k \
+  --lr-schedule-steps 10000 --eos-loss-weight 0.5 \
+  --rehearsal-tokens artifacts/tokens/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 \
+  --sample-template conversation --sample-speaker-a DA --sample-speaker-b DC \
+  --keep-periodic-checkpoints 1 --device mps
+```
