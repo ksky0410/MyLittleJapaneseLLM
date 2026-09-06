@@ -40,6 +40,8 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 
 再開設定`configs/issue1-50m-pretrain-fineweb-new-shards56-runpod-10k-retry-from4500.toml`のSHA-256は`52ee12ad3741ae91f6d0567bc35f8404c5a397db756123dbdcc4eea321f29bf7`である。
 
+初回実験のmetadata、metrics、samples、学習ログをローカルへ回収してGitHubへ保存した後、初回出力ディレクトリに残っていた周期checkpoint `step_001000.pt`〜`step_004000.pt`と、保存に失敗したpartial `step_005000.pt`を容量整理のため削除した。best.ptは削除せず、削除前後のSHA-256 `1b7bf1ea31b8b50b17db5d7a667c1f51727de3f0e8e68ae2e94fecba96d94e81`が一致することを確認した。Runpodの空き容量は2.1M bytesから884M bytesへ回復した。周期metadataと生成文は残しており、削除した重みは初回実験のbestではない。
+
 step 5,000のvalidation loss計算は2.768849まで完了し、生成文とmetricsも保存された。しかし、周期checkpoint `step_005000.pt`を書き込む際に`PytorchStreamWriter failed writing file`が発生した。Runpodの20GB overlay diskが過去実験のcheckpointで満杯になっており、step 5,000のpartial fileは116M bytes、SHA-256 `8f169a3cbccb5026093766b9165ae512cc52214161ccdd86c9ac315833b5f1fb`である。summaryは未作成で、学習プロセスは停止した。best checkpointはstep 4,500、SHA-256 `1b7bf1ea31b8b50b17db5d7a667c1f51727de3f0e8e68ae2e94fecba96d94e81`として正常に残っている。
 
 失敗した初回出力のmetadata、metrics、生成サンプル、ログはそのまま保存し、partial checkpointの存在と失敗理由を消さない。ローカルへ回収した後、初回出力ディレクトリの周期`.pt`だけを容量整理のために削除し、best.json、各step metadata、metrics、生成文、ログは残す。再開用設定は`configs/issue1-50m-pretrain-fineweb-new-shards56-runpod-10k-retry-from4500.toml`とし、checkpoint intervalを5,000へ広げ、best step4,500から`--start-step 4500`でstep10,000まで続ける。再開設定のSHA-256と実際の空き容量を、開始前に追記する。
