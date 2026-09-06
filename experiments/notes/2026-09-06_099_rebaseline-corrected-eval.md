@@ -51,4 +51,14 @@ domain JSONとchat JSON/TXTが生成され、各入力・checkpointのSHA-256と
 
 ## 結果
 
-実行後に追記する。
+実験099は完了した。修正済み評価コードのdomain再評価は約68秒、chat-test再評価は約48秒で完了し、OOMや入力不一致はなかった。checkpointは変更せず、生成結果は旧080と同じになった。
+
+domain評価では、general 4.636483（PPL 103.181）、FineWeb test 3.597812（PPL 36.518）、Wikipedia validation 3.618478（PPL 37.281）、conversation 2.558181（PPL 12.912）、medical 2.713700（PPL 15.085）、RPC 2.669679（PPL 14.435）、MRMP 2.350337（PPL 10.489）となった。domain JSONは`artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-domains-corrected-v2.json`、SHA-256は`52ad8cd9929481327822f68d17a69ba621e6a016fec1466c38f5adf108c50094`である。
+
+chat-test 48例はEOS 48/48、平均生成長8.875 Token、token overlap F1 0.074119だった。shortは0.081483、mediumは0.067581、longは0.073293である。chat JSONは`artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-chat-test-corrected-v2.json`、SHA-256は`fa6d6c2c99d77d90073175324a538897ee8ba7e3ba837fd1b5318dcc35df87e7`、全文TXTのSHA-256は`2f56602d25bf8977fd1131c0a254dad084f5c0ad1deea9b29ee4169d5087eded`である。
+
+旧080ノートのdomain値は旧評価窓の影響を受けているため、今後の比較基準にはこの099の修正版値を使う。chat生成は同じcheckpoint・同じseedで再現し、評価コード修正は生成結果へ影響しなかった。080 checkpointは、validation loss 4.6365の現代FineWeb test適合を持つ一方、chat-test F1は0.0741にとどまり、自然な日本語生成の根拠にはならない。
+
+## 解釈と次の一手
+
+仮説1と3は支持された。domain値は評価窓を増やしても大きくは崩れず、chat本文も一致した。一方、仮説2の「自然さ改善」は080から確認できない。実験098では、20M Token列と40,000 stepを主線として実行し、FineWeb test 3.597812、Wikipedia 3.618478、conversation 2.558181、medical 2.713700、RPC 2.669679、MRMP 2.350337、chat F1 0.074119を比較基準にする。特に、validation lossの低下と会話生成の自然さを別々に判定する。
