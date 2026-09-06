@@ -68,6 +68,10 @@ Runpod A40上で実験111 raw bestから学習を開始した。step 1のvalidat
 
 step 500のvalidation lossは2.810042、step 750は2.821706、step 1,000は2.822412、step 1,250は2.814637、step 1,500は2.805546だった。step 250の2.803733をまだ更新しておらず、学習率はstep 1,500で1.8796e-5、経過時間は124.18秒だった。answer-focus追加による異常なloss発散はなく、NaN、OOM、shape errorも発生していない。
 
+### 2026-09-07：step 1,750〜2,250
+
+step 1,750のvalidation lossは2.805113、step 2,000は2.812463、step 2,250は2.806176だった。最良値は依然としてstep 250の2.803733で、step 2,250時点のlearning rateは1.7105e-5、経過時間は185.74秒である。実験112の同じ時点よりvalidation lossは高めだが、answer-focus追加が学習を壊す異常は見られない。
+
 ## 実験終了後の記録
 
 学習完了後に、最良checkpointのstepとSHA-256、最終loss、学習時間、最大GPUメモリ、評価JSON/TXTのSHA-256、実験112との比較、仮説の判定、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとハッシュだけを記録する。
