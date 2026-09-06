@@ -63,6 +63,10 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 
 その後、`mix_corpora.py`と`encode_data.py`がRunpod側に同期されていない状態で混合・Token化を開始し、`can't open file '/workspace/exp100/scripts/mix_corpora.py'`で終了した。この試行も学習や既存データを変更していない。過去の実験で必要だったスクリプト同期が不足していたため、`mix_corpora.py`、`encode_data.py`と、それらが使う既存のsource moduleを同期してから再実行する。
 
+スクリプトを同期して混合・Token化を再実行した結果、重複除去後の39,270単位から19,999,123 tokensを採用した。shard 1のtoken shareは49.9987%、shard 2は50.0013%で、source間の重複は0件だった。混合本文のSHA-256は`cb665a35d2a384bb60343a2665c94970a4d46d3cddb92eb0624a040f889e58c8`、mix manifestのSHA-256は`2649109f659e7dc11ade8fb19523213f6e44659e0540f262d11e997c8a6f3633`である。Token化後のToken数は19,999,123、binaryのSHA-256は`5aea382f8754df2c9d594003cb607489afbadbe6ac7c757f4c00069d1f33bf8e`、metadataのSHA-256は`d061c406ebe9131a8bea1666a53240e3717623933819f327e46fd144e0ba1fcf`となった。shard manifestのSHA-256は、shard 1が`043493efa7cb4c6b7cb91022d495e9d3212065dc3f5ee0e78c88dde190caca9c`、shard 2が`b836874cc0380bb3e62e6de3e3b2c5fdf52372d42752ee73dae1967cfc1ca6ee`である。
+
+混合・Token化に使ったスクリプトは、`mix_corpora.py` SHA-256 `35cef7df5c91adaac8d77933f845de8acd056d2d46cd7677ac3103ae0ab19255`、`encode_data.py` SHA-256 `fbc83816b93c2f92a6cd9681e494b0a0a1f7ba45b82640becdf6ee83d99c9e4e`である。Tokenizerとmixing・data moduleはローカルとRunpodでSHA-256が一致していることを確認した。
+
 ## 学習中の記録
 
 ここに500 stepごとのvalidation loss、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。生成文は崩れたものも含め、GitHubへ保存する。
