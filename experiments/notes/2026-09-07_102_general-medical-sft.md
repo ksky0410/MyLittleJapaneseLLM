@@ -86,6 +86,8 @@ step 750付近の一時的な悪化から回復し、pilot bestのvalidation los
 
 step 2,250、2,500、2,750のvalidation lossは3.016256、3.011978、3.004206となった。step 2,750のPerplexityは20.170203、SFT train lossは2.366128、rehearsal train lossは2.244631、学習率は`1.5659e-5`である。step 2,750でbestを更新しており、validationは安定して改善している。
 
+step 3,000、3,250、3,500、3,750のvalidation lossは3.007122、2.998693、2.989079、2.974693となった。step 3,750のPerplexityは19.583609、SFT train lossは1.622862、rehearsal train lossは2.367937、学習率は`1.2268e-5`である。step 3,750でbestを更新し、pilot終了時よりvalidation lossが約3.0%下がった。step 3,000の小さな反発後も改善へ戻っている。
+
 ### 本番実行コマンド
 
 ```bash
