@@ -89,3 +89,7 @@ step 1,750のvalidation lossは2.737971、step 2,000は2.738409、step 2,250は2
 ### 2026-09-07：step 2,500〜3,000
 
 step 2,500のvalidation lossは2.733098、step 2,750は2.731355、step 3,000は2.729865だった。step 3,000で現時点の最良値を更新し、exp116 bestから0.017412改善した。step 3,000のlearning rateは1.227e-6、経過時間は244.29秒だった。validation lossは学習後半でも改善を続けている。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 3,250〜3,750
+
+step 3,250のvalidation lossは2.729510、step 3,500は2.728217、step 3,750は2.728646だった。step 3,500で現時点の最良値を更新し、exp116 bestから0.019059改善した。step 3,750のlearning rateは5.483e-7、経過時間は305.80秒だった。step 3,750では小さな反発があったが、全体としてexp116を明確に下回る状態を保っている。NaN、OOM、shape errorは発生していない。
