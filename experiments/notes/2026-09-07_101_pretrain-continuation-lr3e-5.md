@@ -78,3 +78,5 @@ step 10,000、10,500、11,000、11,500、12,000のvalidation lossはそれぞれ
 step 12,500ではvalidation lossが2.856284へ一時的に上がったが、step 13,000では2.855608へ戻った。step 13,000のPerplexityは17.385009、train lossは2.550091、学習率は`2.4170e-5`である。悪化幅は小さく、現在のbestはstep 13,000である。学習は停止せず、以後も500 stepごとのmetricsと生成文を保存する。
 
 step 13,500と14,000のvalidation lossはそれぞれ2.852940、2.851455となった。step 14,000のPerplexityは17.312960、train lossは2.405879、学習率は`2.3251e-5`である。step 12,500の小さな揺らぎの後も再び改善しており、step 14,000時点では実験098のbest lossより約4.1%低い。
+
+step 14,500ではvalidation lossが2.850629まで下がり、現時点のbestとなった。step 15,000、15,500ではそれぞれ2.852036、2.851940へわずかに上がった。step 15,500のPerplexityは17.321354、train lossは2.917514、学習率は`2.1793e-5`である。validationの揺らぎが見え始めたため、終了後は最終stepではなくbest checkpointをSFTへ渡す。
