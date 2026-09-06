@@ -60,3 +60,7 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
 ### 2026-09-07：step 9,000〜9,250
 
 step 9,000のvalidation lossは2.752965、step 9,250は2.751872だった。exp115のbestから合計0.002154改善しており、learning rateはstep 9,250で8.816e-7、経過時間は104.43秒だった。低学習率でvalidation lossは単調ではないものの、現時点では改善傾向を保っている。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 9,500〜10,000
+
+step 9,500のvalidation lossは2.751341、step 9,750は2.750261、step 10,000は2.750426だった。step 9,750で現時点の最良値を更新し、exp115のbestから0.003765改善した。step 10,000のlearning rateは7.558e-7、経過時間は166.36秒だった。step 10,000でわずかな反発はあるが、継続学習によるvalidation lossの改善は続いている。NaN、OOM、shape errorは発生していない。
