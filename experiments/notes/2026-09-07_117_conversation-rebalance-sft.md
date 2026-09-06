@@ -73,3 +73,7 @@ RPCとMRMPを連結した一般会話NPZは124,894例、response 1,700,055 token
 ### 2026-09-07：step 1〜250
 
 Runpod A40上でexp116 bestから学習を開始した。step 1のvalidation lossは2.747247、step 250は2.748958、step 250のlearning rateは4.998e-6、経過時間は21.43秒だった。warmup中のためvalidation lossは一時的に上昇しているが、NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 500〜750
+
+step 500のvalidation lossは2.743028、step 750は2.740917だった。warmup終了後にlossは低下し、step 750のlearning rateは4.772e-6、経過時間は62.19秒となった。exp116 bestの2.747276をすでに下回っており、会話データ再配分によるvalidation改善の可能性が見えている。NaN、OOM、shape errorは発生していない。
