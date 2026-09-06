@@ -23,6 +23,10 @@ BACKCHANNEL_RE = re.compile(
     r"わかる|わかりました|了解|はい|いいえ|ええ|そうだね|そうですね|"
     r"なるほどね|笑|ｗ+|へえ|へー|まじ|マジ)[!！。…\sー〜～]*$"
 )
+BACKCHANNEL_WORD_RE = re.compile(
+    r"(?:うん|そう|そっか|なるほど|たしかに|ほんと|本当|"
+    r"わかる|了解|はい|いいえ|ええ|笑|ｗ+|へえ|へー|まじ|マジ)"
+)
 DISAGREEMENT_RE = re.compile(
     r"^(?:いや|でも|ただ|違う|ちがう|そうじゃ|それは違|"
     r"いやいや|いや、それ)[、,。！!？?\s]*"
@@ -45,7 +49,10 @@ def classify_response_function(
         return "closing"
     if is_question_context(previous_text):
         return "question_answer"
-    if BACKCHANNEL_RE.fullmatch(response):
+    if response_token_count <= 12 and (
+        BACKCHANNEL_RE.fullmatch(response)
+        or BACKCHANNEL_WORD_RE.search(response)
+    ):
         return "backchannel"
     if DISAGREEMENT_RE.search(response):
         return "agreement_disagreement"
@@ -139,7 +146,7 @@ def main() -> None:
     report = {
         "format": "response-function-analysis-v1",
         "classifier": {
-            "version": "2026-09-06-v2",
+            "version": "2026-09-06-v3",
             "priority": [
                 "greeting",
                 "closing",

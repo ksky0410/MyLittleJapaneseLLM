@@ -1,7 +1,7 @@
 {
   "format": "response-function-analysis-v1",
   "classifier": {
-    "version": "2026-09-06-v2",
+    "version": "2026-09-06-v3",
     "priority": [
       "greeting",
       "closing",
@@ -24,10 +24,10 @@
       "response_token_count": 5132071,
       "categories": {
         "agreement_disagreement": {
-          "example_count": 2490,
-          "response_token_count": 45848,
-          "example_fraction": 0.00789013384708984,
-          "response_token_fraction": 0.008933625431136865,
+          "example_count": 2414,
+          "response_token_count": 45108,
+          "example_fraction": 0.007649310484688704,
+          "response_token_fraction": 0.008789434129029002,
           "samples": [
             {
               "conversation_id": "real-persona-chat:real_persona_chat/dialogues/11189.json",
@@ -56,34 +56,34 @@
           ]
         },
         "backchannel": {
-          "example_count": 626,
-          "response_token_count": 2402,
-          "example_fraction": 0.0019836240113567227,
-          "response_token_fraction": 0.0004680371725176834,
+          "example_count": 17407,
+          "response_token_count": 160989,
+          "example_fraction": 0.05515805617521801,
+          "response_token_fraction": 0.0313692074797874,
           "samples": [
             {
-              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/01286.json",
-              "record_index": 9,
-              "target_index": 14,
-              "previous": "どちらかと言うと、あまりものパスタですね！",
-              "response": "なるほど",
-              "response_token_count": 3
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 9,
+              "previous": "いいですねー！両方迷います、、",
+              "response": "そう、両方全然違いすぎるんですよ",
+              "response_token_count": 11
             },
             {
-              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/06664.json",
-              "record_index": 17,
-              "target_index": 29,
-              "previous": "気を付けて卵ライフ楽しんでください。",
-              "response": "はい！",
-              "response_token_count": 4
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
+              "record_index": 0,
+              "target_index": 11,
+              "previous": "お店の中入ってもも迷いそうですね、、",
+              "response": "そうそう。どっちがいいと思いますか？",
+              "response_token_count": 12
             },
             {
-              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/12946.json",
-              "record_index": 31,
-              "target_index": 29,
-              "previous": "そうなんですね！楽しみですね。",
-              "response": "はい！",
-              "response_token_count": 4
+              "conversation_id": "real-persona-chat:real_persona_chat/dialogues/06206.json",
+              "record_index": 2,
+              "target_index": 23,
+              "previous": "色々大変です！",
+              "response": "忙しそうですよね！",
+              "response_token_count": 6
             }
           ]
         },
@@ -152,10 +152,10 @@
           ]
         },
         "other": {
-          "example_count": 117150,
-          "response_token_count": 1259034,
-          "example_fraction": 0.37121653822754,
-          "response_token_fraction": 0.24532669170009533,
+          "example_count": 100445,
+          "response_token_count": 1101187,
+          "example_fraction": 0.3182829294260799,
+          "response_token_fraction": 0.2145697126949335,
           "samples": [
             {
               "conversation_id": "real-persona-chat:real_persona_chat/dialogues/04351.json",
@@ -257,10 +257,10 @@
       "response_token_count": 770975,
       "categories": {
         "agreement_disagreement": {
-          "example_count": 852,
-          "response_token_count": 9278,
-          "example_fraction": 0.010469145511292424,
-          "response_token_fraction": 0.012034112649567106,
+          "example_count": 774,
+          "response_token_count": 8620,
+          "example_fraction": 0.009510702612371287,
+          "response_token_fraction": 0.01118064788092999,
           "samples": [
             {
               "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
@@ -289,34 +289,34 @@
           ]
         },
         "backchannel": {
-          "example_count": 1408,
-          "response_token_count": 5163,
-          "example_fraction": 0.017301123098473863,
-          "response_token_fraction": 0.006696715198287882,
+          "example_count": 10037,
+          "response_token_count": 69601,
+          "example_fraction": 0.12333194072399302,
+          "response_token_fraction": 0.09027659781445573,
           "samples": [
             {
-              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
-              "record_index": 1,
-              "target_index": 61,
-              "previous": "覚悟して見ました",
-              "response": "なるほど～",
-              "response_token_count": 4
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 2,
+              "previous": "こんにちは！",
+              "response": "お子さんはいるんですか？",
+              "response_token_count": 8
             },
             {
-              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A04404.json",
-              "record_index": 1,
-              "target_index": 91,
-              "previous": "料理人がいるんです",
-              "response": "なるほど～！",
-              "response_token_count": 5
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 6,
+              "previous": "2人いますー！",
+              "response": "後猫が一匹笑",
+              "response_token_count": 8
             },
             {
-              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/A_first_time/A00202.json",
-              "record_index": 2,
-              "target_index": 46,
-              "previous": "悔やまれます笑",
-              "response": "笑",
-              "response_token_count": 3
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 24,
+              "previous": "お母さんとしては",
+              "response": "@りんご そうなんですよ…",
+              "response_token_count": 9
             }
           ]
         },
@@ -385,19 +385,11 @@
           ]
         },
         "other": {
-          "example_count": 60477,
-          "response_token_count": 529301,
-          "example_fraction": 0.7431250153596618,
-          "response_token_fraction": 0.6865345828334252,
+          "example_count": 51926,
+          "response_token_count": 465521,
+          "example_fraction": 0.6380526406330638,
+          "response_token_fraction": 0.6038081649858945,
           "samples": [
-            {
-              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
-              "record_index": 0,
-              "target_index": 2,
-              "previous": "こんにちは！",
-              "response": "お子さんはいるんですか？",
-              "response_token_count": 8
-            },
             {
               "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
               "record_index": 0,
@@ -413,6 +405,14 @@
               "previous": "2人います",
               "response": "2人いますー！",
               "response_token_count": 7
+            },
+            {
+              "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B10706.json",
+              "record_index": 0,
+              "target_index": 7,
+              "previous": "後猫が一匹笑",
+              "response": "女の子と男の子です！",
+              "response_token_count": 11
             }
           ]
         },
