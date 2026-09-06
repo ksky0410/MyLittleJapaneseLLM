@@ -38,6 +38,8 @@ uv run python scripts/train_sft_torch.py \
 
 step 1,200のvalidation lossは3.613898、1,300は3.627349、1,400は3.602808、1,500は3.612270、1,600は3.572864でした。step 1,600のperplexityは35.618444です。途中で3.60台まで下がりましたが、082のstep 1,600は約3.36であり、083のvalidation差はまだ大きいままです。step 800の固定生成は「こんにちは!お願いします!よろしくお願いします!」となり、EOS weight 0.0で応答が長くなる仮説は支持されますが、validation悪化との交換条件になっています。
 
+step 1,900のvalidation lossは3.551040、2,000は3.550312、2,100は3.508189、2,200は3.530277、2,300は3.523702でした。step 2,300のperplexityは33.909717です。後半に改善しているものの、082の同じ時点より約0.24高く、EOS lossを完全に外す条件はvalidation性能では不利なままです。最終stepまで実行し、best checkpointを保存します。
+
 ## 実験終了後の結果と解釈
 
 082と同じCPU・同じ5領域・同じ48例chat-test・同じgeneration seed 42で評価します。領域loss、平均生成Token数、EOS到達数、short・medium・long F1を比較し、EOS loss weight 0.0が自然な日本語を改善したかを判断します。
