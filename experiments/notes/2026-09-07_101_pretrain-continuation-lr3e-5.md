@@ -25,6 +25,9 @@
 - 学習率：`3e-5`から`3e-6`までcosine decay、warmup 1,000 step、weight decay 0.1
 - 評価：FineWeb2 Japanese testを500 stepごとに20 evaluation batchesで測定し、同じpromptの生成文を保存
 - GPU：Runpod A40 Secure。前回実測速度は約14.5 step/秒、約$0.49/時
+- 設定SHA-256：`a719b97d30c602076ace58c238d647b19b3160dd81f2a0f2ce9fc3455d62463b`
+- Runpod Pod：`j9c46julmtbcb4`（CA-MTL-1）
+- 転送bundle SHA-256：`beb3beb7339d2e81946d1fca61f1234ef3cb3bb1e97db5a2a750c8a22c3efac4`
 
 ## 実行前の成功基準
 
@@ -34,12 +37,21 @@ step 500以降のFineWeb validation lossが実験100のstep 500 `2.927500`から
 
 このノートは実験100の高学習率条件を停止した直後に作成する。実験100の失敗結果、データ準備、入力hashは上書きせず、実験101の出力先を分離する。開始前に設定のSHA-256、Runpod Pod ID、bundle SHA-256、GPUを追記し、学習開始後は500 stepを超えて記録を空けない。
 
+### 開始前の追加準備
+
+医師国家試験データを後段SFTで使える質問回答形式へ変換する`prepare_medical_sft.py`とテストを追加した。元の`artifacts/corpus/medical-qb-v2`は読み取り専用で扱い、正解欄が空の問題と、context 256で質問または回答が切れる問題を学習用から除外する。変換後のSFT候補はtrain 2,945例、response 172,545 tokens、validation 162例、response 9,277 tokensとなり、SFT配列の`truncated_example_count`はtrain・validationとも0である。除外件数と問題番号は`artifacts/corpus/medical-qb-sft-v1/manifest.json`へ記録した。
+
+Runpodの同じA40 Pod `j9c46julmtbcb4`上で、実験101の2,000 step pilotを本番と別の`exp101-pilot`へ実行した。step 500、1,000、1,500、2,000のFineWeb validation lossはそれぞれ2.931313、2.914403、2.902358、2.896122となり、step 1の2.973276から一貫して改善した。step 2,000のbest checkpoint SHA-256は`e2e23d652fd365716c5f97b68f8da8144332aa1ddb3d9eba465b3f4fe229759f`である。高学習率の実験100とは異なり、step 500以降にvalidation lossが悪化しなかったため、このpilotを有望と判断する。metrics、best metadata、生成サンプルは`artifacts/checkpoints/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5-pilot/`と対応するsamplesディレクトリへ回収した。
+
+本番はpilotのstep 2,000 best重みから`--start-step 2000`で継続し、累積40,000 stepまで学習する。これによりpilotの2,000 stepを捨てず、学習率scheduleと乱数の進行も連続させる。
+
 ## 実行コマンド
 
 ```bash
 PYTHONPATH=scripts uv run python scripts/train_torch.py \
   --config configs/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5.toml \
-  --initial-checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-20m-40k-runpod-cuda/best.pt \
+  --initial-checkpoint artifacts/checkpoints/exp101-pilot/best.pt \
+  --start-step 2000 \
   --device cuda
 ```
 

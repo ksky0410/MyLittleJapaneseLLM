@@ -1,0 +1,51 @@
+{
+  "format": "chat-sft-preparation-v1",
+  "generated_at_utc": "2026-09-06T17:21:47.010699+00:00",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1",
+  "input_sha256": "2b146593c32d8ac2a85f155773435da9d564f98ba29841b097b2a7ce8b16bb5f",
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "context_length": 256,
+  "sequence_length": 257,
+  "seed": 101,
+  "special_tokens": {
+    "conversation_start": "<|startofconversation|>",
+    "conversation_end": "<|endofconversation|>",
+    "eos_id": 3,
+    "pad_id": 0
+  },
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1/train.jsonl",
+      "input_sha256": "f3ab40df9bdd221e025f83a414ee0b6c078c045e2d6b4003dd15d73a97aeb71f",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/train.npz",
+      "npz_sha256": "fe1db09546363145845e219f71e05dfa6d8ceb006dfa2093fca302da2d2b8b07",
+      "conversation_count": 2945,
+      "short_conversation_count": 0,
+      "example_count": 2945,
+      "response_token_count": 172545,
+      "response_body_token_count": 169600,
+      "truncated_example_count": 0,
+      "array_shape": [
+        2945,
+        256
+      ]
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1/validation.jsonl",
+      "input_sha256": "6008cbc602c3096e0d56905ea7167dbf91bca19fa33817662399ef78c53c210d",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/medical-qb-sft-v1/validation.npz",
+      "npz_sha256": "f4b7538782affce55c441f0fea8ca8cf6691deedde0b4fcd3dcc02125971457f",
+      "conversation_count": 162,
+      "short_conversation_count": 0,
+      "example_count": 162,
+      "response_token_count": 9277,
+      "response_body_token_count": 9115,
+      "truncated_example_count": 0,
+      "array_shape": [
+        162,
+        256
+      ]
+    }
+  }
+}
