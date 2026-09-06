@@ -1,0 +1,45 @@
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch",
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "mps",
+    "amp_enabled": false
+  },
+  "inputs": {
+    "config_sha256": "91d18a72717c863fc32a9bd0ee2cc6a66038a8c8751999af466a3b6f34f3cd8e",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "fc2a9367a16c0cf963fbc2e96530a9944d41e4d2d8e4029874dface2d71b5d57",
+    "validation_data_sha256": "fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1",
+    "base_checkpoint_sha256": "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "final_step": 2,
+  "lr_schedule_steps": 2,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 2,
+  "best_validation_loss": 4.035693752765655,
+  "base_checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt",
+  "train_examples": 127731,
+  "validation_examples": 49045,
+  "rehearsal_tokens": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin",
+  "rehearsal_ratio": 0.2,
+  "elapsed_seconds": 19.39799916697666,
+  "sample_prompt": {
+    "text": "こんにちは！",
+    "template": "conversation",
+    "speaker_a": "DA",
+    "speaker_b": "DC"
+  },
+  "exclude_eos_from_sft_loss": false,
+  "eos_loss_weight": 0.5,
+  "long_response_ratio": 0.0,
+  "long_response_min_tokens": 32
+}

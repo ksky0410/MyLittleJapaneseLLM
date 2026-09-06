@@ -28,11 +28,15 @@
 
 2026-09-06 14:03 JST、`colab sessions`で既存セッションがないことを確認した後、`colab new --session exp092-quality-aware-sft --gpu T4`を実行しました。Colab APIのassignmentがHTTP 503 `Service Unavailable`で失敗し、GPUセッションは作成されませんでした。したがって、092の学習step、loss、生成結果はまだありません。bundleは作成済みで、再試行時には同じ分割片と同じSHA-256を使います。
 
+前景MPSセッションではstep 1から学習が始まり、step 100のvalidation lossは3.511052、step 200は3.542971、step 300は3.541620、step 400は3.514441、step 500は3.519792でした。step 500のperplexityは33.777411、経過時間は416.18秒、learning rateは4.98199e-5でした。step 0から500までのmetrics、100 stepごとの生成、step 500のcheckpoint metadataを保存しています。固定promptのstep 500生成は「こんにちはー!」で、短い挨拶への縮退が続いています。一般validation lossは初期に大きく下がった後、step 100以降は横ばいであり、会話自然さの改善はまだ判断できません。
+
 Colab停止中の代替可否を確認するため、Apple Silicon実機のMPSが利用可能かを`torch 2.14.0`で確認しました。`torch.backends.mps.is_built()`と`is_available()`はいずれも`True`でした。まずは本番条件を変更しない2 stepのMPS smokeを、専用出力先`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`へ保存します。これは本番092の性能結果には混ぜず、速度・ロード・loss計算・生成経路だけを確認する補助実験です。
 
 smokeは2026-09-06に完了しました。MPS、PyTorch 2.14.0、AMPなしで、step 1のvalidation lossは4.042009、step 2は4.035694でした。50,207,616 parameters、train 127,731例、validation 49,045例を読み込み、NaN、OOM、shape errorはありませんでした。2 stepの経過時間は19.40秒で、step 0・1・2の生成サンプルとmetrics、checkpoint metadata、summaryを専用出力先へ保存しました。この結果は本番の性能比較には使わず、実行経路が正常であることだけを示します。
 
 ColabのHTTP 503が継続しているため、同じ092条件をMPSで本学習します。出力先は`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-10k`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-10k`です。MPSはCUDA AMPを使わず、seed、batch、学習率、rehearsal、EOS loss weight、評価・生成間隔は設定どおりにします。Colab版とはbackendだけが違うため、092の主結果としてbackendを明記して比較します。
+
+最初のバックグラウンド起動は、step 0の出力を残さず終了しました。原因はログから特定できなかったため、学習結果には含めません。その後、前景セッションで同じコマンドを再実行し、学習を開始できました。
 
 ## 実験終了後の結果と解釈
 
