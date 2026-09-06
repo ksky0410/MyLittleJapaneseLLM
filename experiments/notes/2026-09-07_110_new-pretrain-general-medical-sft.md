@@ -73,6 +73,10 @@ step 1,000のvalidation lossは2.875087、perplexityは17.7270、learning rate�
 
 step 2,000のvalidation lossは2.846258、perplexityは17.2232、learning rateは1.7739e-5、経過時間は162.38秒だった。この時点でvalidation lossの最良値を更新した。固定promptへの生成は「こんにちは!宜しくお願いいたします。」となり、短いながらも話者markerの後に自然な挨拶を返している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 3,000
+
+step 3,000のvalidation lossは2.832890、perplexityは16.9945、learning rateは1.4862e-5、経過時間は243.16秒だった。step 2,750の2.835384を経て最良値を更新しており、step 2,000以降もvalidation lossは緩やかに改善している。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに実際の実行条件、最終loss、最良checkpointとstep、学習時間、生成評価、実験109および実験105との比較、予想との一致・不一致、次に試す変更を追記する。
