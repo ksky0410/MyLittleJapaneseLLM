@@ -10,7 +10,7 @@
 
 ## 再現条件
 
-実験開始時点のGit commit、設定・入力・初期checkpointのSHA-256、Colab bundleとsession名を実行前に追記します。モデルは50,207,616 parameter、dim 576、12層、9 heads、context length 256、RoPE、LayerNorm、SwiGLUです。batch size 8、5,000 step、learning rate 5e-5から5e-6、warmup 250、weight decay 0.01です。
+実験開始時点のGit commitは`3b284a7`です。設定ファイルのSHA-256は`669fddbfb2fbba31cdbc79f90d1afae5cb0185c830cd293c9d38afc5043dfa07`、bootstrapは`6c643fd0ac3703b04c67566c043cae6aaa94cbf8560a6f1cd9a6c4f9957563f5`、bundle結合スクリプトは`d0a4754f66d4e24f739e5d1283639b4f2d22167a87a280ca2cd27b82727d163f`です。bundleは193,600,722 bytes、SHA-256は`4967234c12d5c7104d64f5e91b90fc1d11b5da192264171b305949d647604118`です。初期checkpointのSHA-256は`1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb`、初期checkpoint metadataは`4b6b56ad60730cc75a938dd8ef99aba6e713e03852043e8fe9175ef5d5c2813b`、学習Token列は`54eb3fab617c94bda59899db4f78e6ac65665606219414a710e40cc8ccb8603c`です。モデルは50,207,616 parameter、dim 576、12層、9 heads、context length 256、RoPE、LayerNorm、SwiGLUです。batch size 8、5,000 step、learning rate 5e-5から5e-6、warmup 250、weight decay 0.01です。
 
 ## 実験中の記録
 
