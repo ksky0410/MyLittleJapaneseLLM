@@ -50,7 +50,14 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \\
 
 ## データ準備中の記録
 
-ここに取得URL、ファイルサイズ、入力hash、抽出結果、重複除去、Token数、manifest hashを追記する。取得や抽出が失敗した場合も、そのコマンドとエラーを残す。
+2026-09-07に、次の2つのURLからFineWeb2 Edu JapaneseのparquetをRunpodへ取得した。shard 1は269,326,085 bytes、SHA-256は`91ca7d654aaae70f660fe933c6e101ee2b7e78438da9a267976ee3c9dc062be8`、shard 2は268,827,173 bytes、SHA-256は`3d899cd422633e0ef45e3602e952601aa53cd27f57c13d033d39d74c17a2c7c5`である。
+
+```text
+https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca004c6a89b590daaad86cb062a07a5353c69/small_tokens_cleaned/train-00001-of-00283.parquet?download=true
+https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca004c6a89b590daaad86cb062a07a5353c69/small_tokens_cleaned/train-00002-of-00283.parquet?download=true
+```
+
+抽出の最初の試行では、Runpod側に`scripts/import_fineweb2_edu_japanese.py`がまだ同期されておらず、`can't open file '/workspace/exp100/scripts/import_fineweb2_edu_japanese.py'`で終了した。データ、checkpoint、既存Token列は変更されていない。`uv run --with pyarrow`によってpyarrowを一時環境へ導入したが、プロジェクトの依存ファイルは変更していない。この失敗を記録した後、同スクリプトをRunpodへ同期して抽出を再実行する。
 
 ## 学習中の記録
 
