@@ -30,6 +30,10 @@
 
 Colab停止中の代替可否を確認するため、Apple Silicon実機のMPSが利用可能かを`torch 2.14.0`で確認しました。`torch.backends.mps.is_built()`と`is_available()`はいずれも`True`でした。まずは本番条件を変更しない2 stepのMPS smokeを、専用出力先`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`へ保存します。これは本番092の性能結果には混ぜず、速度・ロード・loss計算・生成経路だけを確認する補助実験です。
 
+smokeは2026-09-06に完了しました。MPS、PyTorch 2.14.0、AMPなしで、step 1のvalidation lossは4.042009、step 2は4.035694でした。50,207,616 parameters、train 127,731例、validation 49,045例を読み込み、NaN、OOM、shape errorはありませんでした。2 stepの経過時間は19.40秒で、step 0・1・2の生成サンプルとmetrics、checkpoint metadata、summaryを専用出力先へ保存しました。この結果は本番の性能比較には使わず、実行経路が正常であることだけを示します。
+
+ColabのHTTP 503が継続しているため、同じ092条件をMPSで本学習します。出力先は`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-10k`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-10k`です。MPSはCUDA AMPを使わず、seed、batch、学習率、rehearsal、EOS loss weight、評価・生成間隔は設定どおりにします。Colab版とはbackendだけが違うため、092の主結果としてbackendを明記して比較します。
+
 ## 実験終了後の結果と解釈
 
 学習未実施の場合は、ColabのHTTP status、session状態、bundle hashを記録します。学習できた場合は、最終・最良validation loss、perplexity、chat F1、最良checkpoint、学習時間、最大メモリ、生成サンプルの保存場所を追記し、086・087と比較します。
