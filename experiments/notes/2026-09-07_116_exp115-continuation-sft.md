@@ -104,3 +104,7 @@ step 16,000のvalidation lossは2.747612、perplexityは15.6053だった。最�
 step 16,000までの全33本の生成文はRunpod上に保存されている。初期promptを`今日は天気がいいですね。`へ変更したため、exp115の固定promptとは直接比較せず、評価セットの生成結果を主比較に使う。
 
 学習完了後、exp115と同じ評価器でbest checkpointを評価する。評価完了後に、step 15,750のbestとstep 16,000の周期checkpointの生成差も確認する。
+
+### step 16,000 checkpoint評価時の指定ミス
+
+step 16,000の周期checkpointを比較する評価で、domainと一般会話は完了したが、医療評価のcheckpoint引数へ誤って`step_016000.json`を指定したため、評価器がメタデータ形式エラーで停止した。学習checkpoint本体やbest評価には影響していない。原因は評価コマンドのファイル名指定ミスであり、正しい`step_016000.pt`を指定して医療評価を再実行する。
