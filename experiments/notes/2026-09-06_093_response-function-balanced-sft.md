@@ -82,3 +82,7 @@ uv run python scripts/train_sft_torch.py \
 2026-09-06 16:54 JST、上記コマンドでMPS学習を開始しました。step 1はtrain loss 3.928150、SFT loss 4.231068、rehearsal loss 2.716481、validation loss 4.042264、PPL 56.9551、経過5.02秒でした。step 100はtrain loss 3.708910、SFT loss 3.836306、rehearsal loss 3.199324、validation loss 3.489293、PPL 32.7628、経過134.27秒でした。step 200はvalidation loss 3.506221、PPL 33.3221、経過256.24秒、step 300は3.526139、PPL 33.9925、経過380.87秒、step 400は3.512475、PPL 33.5311、経過505.27秒でした。step 500はtrain loss 3.507281、SFT loss 3.741178、rehearsal loss 2.571692、validation loss 3.497676、PPL 33.0386、経過628.85秒でした。
 
 step 100のbest checkpointは正常に`best.pt`へ保存され、step 500の周期checkpointも正常に保存されました。checkpoint保持設定により、step 500時点で`.pt`本体は`best.pt`と`step_000500.pt`の2個だけです。生成サンプルはstep 100〜500を保存しています。step 500の固定生成は会話markerの後に「こんにちは!」と返しており、まだ挨拶から広がっていません。学習は継続中です。
+
+step 600はvalidation loss 3.504400、PPL 33.2615、経過756.65秒、step 700は3.484157、PPL 32.5949、経過879.96秒、step 800は3.467179、PPL 32.0462、経過1004.96秒でした。step 900は3.457781、PPL 31.7465、経過1130.22秒、step 1000はtrain loss 2.967423、SFT loss 3.123777、rehearsal loss 2.342007、validation loss 3.448577、PPL 31.4556、経過1256.09秒でした。step 800、900、1000でbest checkpointが順に更新されました。
+
+step 1000時点で、周期checkpointは`step_001000.pt`一個、bestは`best.pt`一個だけで、保存失敗や一時ファイルの残留はありません。空き容量は約2.7GiBです。step 1000の固定生成は引き続き短い挨拶形式であり、会話機能の成功判定は学習完了後のIssue #1 promptとheld-out評価まで保留します。
