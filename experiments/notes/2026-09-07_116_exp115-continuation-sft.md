@@ -108,3 +108,37 @@ step 16,000までの全33本の生成文はRunpod上に保存されている。�
 ### step 16,000 checkpoint評価時の指定ミス
 
 step 16,000の周期checkpointを比較する評価で、domainと一般会話は完了したが、医療評価のcheckpoint引数へ誤って`step_016000.json`を指定したため、評価器がメタデータ形式エラーで停止した。学習checkpoint本体やbest評価には影響していない。原因は評価コマンドのファイル名指定ミスであり、正しい`step_016000.pt`を指定して医療評価を再実行する。
+
+## 実験終了後の記録
+
+### 評価結果
+
+exp115と同じ評価器・評価データを使い、best checkpoint（step 15,750）と最終step 16,000の周期checkpointを比較した。bestのdomain lossはFineWeb2 2.904958、general 4.046684、conversation 2.002839、medical 1.873826だった。exp115の2.903494、4.047548、2.007362、1.876458と比べると、FineWeb2はわずかに悪化したが、general・conversation・medicalは改善した。SFT validation lossだけでなく、会話・医療のdomain lossにも追加stepの効果が残った。
+
+bestの一般会話48例はEOS 48/48、平均生成長9.708 tokens、token overlap F1 0.249142だった。EOSはexp115と同じだが、F1はexp115の0.265719から低下した。出力には「そうなんですね。最近はどんな映画を?」のように会話を続けようとするものがある一方、「わけわかりません」のように文脈を壊す応答も残った。したがって、validation lossやdomain lossの改善だけで自然な会話が改善したとは判断できない。
+
+bestの医療162例はEOS 158/162、平均生成長23.975 tokens、token overlap F1 0.242326だった。正解形式は162/162例で抽出でき、完全一致は33/162、20.37%だった。exp115の26/162、16.05%から7例改善し、実験113の33/162と同じ水準へ戻った。ただしF1はexp115の0.264921より低く、理由の説明が短くなった。正解を当てた例でも、理由が医学的に正しいとは限らず、「正解はeです。理由は○e 聴覚過敏 聴覚過敏は聴覚過敏であり…」のような反復が残っている。
+
+最終step 16,000ではFineWeb2 2.904876、general 4.046810、conversation 2.002643、medical 1.873839だった。一般会話はEOS 48/48、平均10.167 tokens、F1 0.243196、医療はEOS 159/162、平均23.821 tokens、F1 0.249731、完全一致33/162だった。bestと比べて医療EOSとF1はわずかに改善したが、一般会話F1はさらに低かった。総合比較の基準checkpointは、validation lossが最小であるbest step 15,750とする。
+
+今回の仮説は部分的に支持された。同じSFTデータを低学習率で追加8,000 step見せると、validation loss、conversation loss、medical loss、医療の完全一致は改善したため、exp115時点で学習が完全に飽和していたわけではない。しかし、一般会話F1は悪化し、自然な応答の文脈適合も明確には向上しなかった。追加stepは「医療の選択肢を正解形式で返す能力」と「domain loss」には有効だが、「自然な一般会話」を同時に改善する方法ではないと判断する。
+
+この結果から、同じデータをさらに反復する実験は一旦止める。次は、一般会話の学習データについて、短い相槌・質問の繰り返し・文脈から外れた発話を減らし、応答が十分に長く、直前の話題へ具体的に反応する例を選ぶ。応答長だけを人工的に増やすのではなく、質問と回答の関係、話者交代、重複、定型句の割合をmanifestへ記録し、自然会話データの質を変えた効果をexp116 bestから短いSFTで比較する。医療QAは同じ選択肢正答データを過度に増やさず、一般会話の自然さを主指標とする。
+
+### 保存した成果物
+
+最良checkpointの重み本体はGitHubへ追加せず、重みSHA-256 `eaa3b779778be238ba5bbdfaae28bdabceb7e3c996971b5b20d1326c08870406` を記録した。metadata、metrics、評価全文、学習中の33本の生成文、学習ログ、評価ログはGit管理へ追加する。
+
+- `best.json`：`be327e34c2dfad980e370b1e699ccf79d909853c11d8b4701bc9927cd5ee0b17`
+- `summary.json`：`b4436e94481326a7355773e9d26bd2936cdfd6a99f0c9b54645ad9222d914492`
+- `metrics.jsonl`：`05e446439b75ae920ec82a9b527d78871f18c26f54686ab0966b576d3512b4a2`
+- best domain評価：`1451d6043f0738d1684af0b8a4d57413dd45619bff26123b1ce6df96f411584f`
+- best一般会話評価：`e017f9fd1e66023881897691d10627065a9d387261e26435fac0ba1f778d0347`
+- best医療評価：`9218c326f91310eee50ec1ce41172ded27941cb8aa0654dfe50b54bf47efdaff`
+- final domain評価：`aebcd7b434ff04450f7c0fbe6a4b9c343859676610e9bdda49bbb1153aa5fd35`
+- final一般会話評価：`254753fc3caa1644503822021d2fd4e7032c3a85df27d10877eadb05ff9603be`
+- final医療評価：`ed94a33913950bfa1ae5717202b94a744d0c889ccbd60abaf527a6ead628e90d`
+- 学習ログ：`e9a42b4529e2e56d46d3dfe2f7b60152f7d0c229f98b9e086a7f6b6d29645917`
+- best評価ログ：`bc9484c02ff96b3ec7080fcc692c1693a0ded268b76ac3c1d48e3942129b49c8`
+- final評価ログ：`d10a0981d780ba8a3328e6ff40bff4d01eb26a38b161c8c53fcddef6902c84e2`
+- final医療再評価ログ：`ed94a33913950bfa1ae5717202b94a744d0c889ccbd60abaf527a6ead628e90d`

@@ -1,0 +1,57 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch-cuda",
+  "config": "/workspace/exp100/configs/issue1-exp115-continuation-sft-runpod-16k.toml",
+  "checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-exp115-continuation-sft-runpod-16k/best.pt",
+  "checkpoint_sha256": "eaa3b779778be238ba5bbdfaae28bdabceb7e3c996971b5b20d1326c08870406",
+  "checkpoint_step": 15750,
+  "parameter_count": 50207616,
+  "seed": 116,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624
+  },
+  "domains": [
+    {
+      "name": "FineWeb2",
+      "token_path": "/workspace/exp100/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 2.9049580216407778,
+      "perplexity": 18.26447692334299
+    },
+    {
+      "name": "general",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.046684062480926,
+      "perplexity": 57.20744587082596
+    },
+    {
+      "name": "conversation",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 2.002838742733002,
+      "perplexity": 7.410061528634746
+    },
+    {
+      "name": "medical",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 1.8738258838653565,
+      "perplexity": 6.513167414264637
+    }
+  ]
+}
