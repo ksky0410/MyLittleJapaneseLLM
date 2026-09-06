@@ -52,6 +52,12 @@ PYTHONPATH=scripts uv run python scripts/prepare_quality_chat_sft.py \
 
 選別後にRPC・MRMP・通常医療・answer-focus医療を`concat_sft_npz.py`で連結し、入力NPZとmanifestのSHA-256を記録してからRunpodへ転送する。学習開始前にこのノートへ実際の例数とresponse token数を追記する。
 
+### データ選別の結果
+
+quality-aware選別はエラーなく完了した。RPCは72,136例、response 1,200,043 tokens、questionsとして分類された直前発話は34,455例、挨拶だけのresponseは1,035例だった。MRMPは52,758例、response 500,012 tokens、questionsとして分類された直前発話は10,352例、挨拶だけのresponseは1,170例だった。現行のquality-aware-770k-each条件と比べ、RPCを約430k tokens増やし、MRMPを約271k tokens減らす構成になっている。
+
+生成したNPZのSHA-256は、RPCが`0a726889528f30adb19d5beff7cac104f7beb7f75fe1fff56a1a84d51d5822ba`、MRMPが`154be47ff6cd3f1cff1f0fafc14565f6b17b0fbde14c3a2a7f7046efb0049168`である。manifestはそれぞれ`artifacts/sft/issue1-rpc-1200k-quality-v2/manifest.json`と`artifacts/sft/issue1-mrmp-500k-quality-v2/manifest.json`へ保存した。選別処理は既存の`prepare_quality_chat_sft.py`を使用し、元のJSONLへ書き込みは行っていない。
+
 ## 学習中の記録
 
 データ準備前。学習を開始した場合は、少なくとも1,000 step以内ごとにvalidation loss、learning rate、経過時間、生成文、警告を追記する。失敗した場合も削除せず記録する。
