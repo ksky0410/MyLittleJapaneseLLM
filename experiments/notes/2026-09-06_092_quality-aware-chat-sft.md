@@ -66,10 +66,28 @@ ColabのHTTP 503が継続しているため、同じ092条件をMPSで本学習�
 
 最初のバックグラウンド起動は、step 0の出力を残さず終了しました。原因はログから特定できなかったため、学習結果には含めません。その後、前景セッションで同じコマンドを再実行し、学習を開始できました。
 
+## step 7,400 checkpointの評価
+
+step 7,500で周期checkpointの保存に失敗したため、完全な重みとして残ったstep 7,400の`best.pt`を評価しました。評価に使ったcheckpointのSHA-256は`a92cbc8125982a0e4fe779a1ae22725fb68ae0be6ca41ff59fa5dde2b6a6dd3a`です。092は10,000 stepを完走した実験ではなく、以下はstep 7,400時点の暫定評価として扱います。
+
+まず、Issue #1で定めた8個の固定promptをconversation形式で生成しました。8例すべてがEOSへ到達し、平均生成長は短いものの、入力に応じた会話としては不十分でした。`まじで`には「こんばんは!」、`それな`には「どうもー!」、`今日なにしてた？`には「今日は夕ご飯でした。今日は暑かったです。」、`やば`には「こんばんは」、`なんかさ`には「はじめまして、最近お料理ありますか?」、`いやそれは`には「こんばんはー」、`おつかれ`には「こんばんはー」、`明日ひま？`には「こんばんはー!」を生成しました。`今日なにしてた？`と`なんかさ`に少し長い出力は出ましたが、自然な応答というより学習済み定型句の組み合わせに見えます。生成結果は`artifacts/evaluations/issue1-both-50m-quality-aware-mps-best-step7400-issue1-prompts-conversation.json`と同名の`.txt`に保存しています。JSONのSHA-256は`fcd84cc6cc7cfe571ea51c34ebab07519275306853c99ddcc68e54b3d66f015f`、テキストのSHA-256は`95dfe517aed0e0ffb84f7e5d255fac252a3e069c38fce8793715a53fdf15e6ba`です。
+
+次に、48例のheld-out chat-testを同じTorch評価スクリプトで実行しました。先に誤ってMLX用の`evaluate_chat_dataset.py`へTorch checkpointを渡す試行があり、`Unknown file format pt`で終了しました。この試行は評価結果に含めず、生成物も作成されていません。正しいTorch評価では48例すべてがEOSへ到達し、平均生成長は7.8125 token、token overlap F1は0.212413でした。層別のF1はshort 0.348001、medium 0.171042、long 0.118196でした。出力は`artifacts/evaluations/issue1-both-50m-quality-aware-mps-best-step7400-chat-test-v1.json`と同名の`.txt`に保存しています。JSONのSHA-256は`5cd58b0ebbef09d2d9061f4eea51ba7a1009efec2031329a2f40d50aef41d9c1`、テキストのSHA-256は`e51cde5b8990f6b07dffd654c4a76713127fa6c7858fe7c858906b0141568856`です。入力JSONLのSHA-256は`65f534a8e63acf056bcbcbc7c827d62ff7dedfd383be382cc299c056dec90ce5`、selectionのSHA-256は`ab2f372d4c6d5000ab0a8ec91c8d8c22837b6ffa2005e79db3f63fdc7a8ab530`です。
+
+086の全体F1 0.203292に対しては0.009121改善しましたが、087の0.216545には0.004132届きませんでした。087との比較では、092のmedium F1 0.171042は0.034154高い一方、shortは0.348001で0.033519低く、longは0.118196で0.013030低くなりました。ただし086・087は10,000 step付近のbest checkpoint、092はstep 7,400のcheckpointであり、学習stepとbackendも完全には揃っていません。そのため、これを厳密な勝敗とは扱わず、品質選別だけで明確な改善が出たとは結論しません。
+
+同じcheckpointで5領域のvalidationも測定しました。generalはloss 4.352421、perplexity 77.6663、conversationはloss 2.437993、perplexity 11.4500、medicalはloss 2.530518、perplexity 12.5600、RPCはloss 2.394490、perplexity 10.9626、MRMPはloss 2.028177、perplexity 7.6002でした。出力は`artifacts/evaluations/issue1-both-50m-quality-aware-mps-best-step7400-domains.json`に保存し、SHA-256は`449f4038f3bc5bf93abffeef1fb3c13254d937becfd868993262ec3bb538f0f2`です。会話系データのlossは低いものの、固定promptとheld-out F1が伸びていないため、学習データへの適合だけで会話能力を判断してはいけないことが改めて確認できました。
+
 ## 実験終了後の結果と解釈
 
-学習未実施の場合は、ColabのHTTP status、session状態、bundle hashを記録します。学習できた場合は、最終・最良validation loss、perplexity、chat F1、最良checkpoint、学習時間、最大メモリ、生成サンプルの保存場所を追記し、086・087と比較します。
+092は、ColabのHTTP 503を避けるためMPSで実行しました。step 7,500まで学習計算は進み、validation lossはstep 7,500で3.090104まで低下しましたが、周期checkpointの保存時にディスク容量不足によるI/Oエラーが起きました。完全な最良checkpointはstep 7,400で、そこでのvalidation lossは3.095141、perplexityは22.090362です。従って、学習が発散した実験ではなく、保存方式とディスク管理に失敗して途中終了した実験です。
+
+品質を考慮した選別により、086よりheld-out全体F1は上がり、medium層の語彙的重なりも改善しました。しかし、087の長文応答サンプリングほどshort・long層を改善せず、固定promptでは8例中ほぼすべてが挨拶へ戻りました。今回の仮説である「質問履歴を増やし、定型挨拶を抑えれば自然な会話応答が増える」は、少なくともこのcheckpointでは支持されません。質問の割合だけでなく、応答機能、話題継続、否定、相づち、誘い、終了などを明示的に分ける必要があります。また、会話データをSFTへ追加したことで、一般validation lossとheld-out会話性能が一致しない問題も続いています。
+
+step 7,400の重み、metrics、metadata、step 7,500までの生成サンプル、3種類の評価結果は保持します。容量回復のため周期checkpointの古い`.pt`本体を整理しましたが、生成文と評価結果を削除してはいません。092は「10,000 step完走・採用モデル」ではなく、保存失敗を含む失敗実験として記録します。
 
 ## 次に試すこと
 
-092の結果が改善した場合は、質問履歴比率またはsource別の配分を一つだけ変え、改善要因を切り分けます。改善しない場合は、カテゴリ分類の誤り、質問文の過剰選別、MRMPの候補不足を監査します。一般日本語の性能が低い場合は、SFT前の継続事前学習089の結果と組み合わせて、基礎能力と会話適応を分離して評価します。
+次の093では、質問数の単純な増加ではなく、応答機能ごとの配分を変える実験を優先します。具体的には、短い挨拶だけでなく、質問への回答、相づち、同意・否定、話題継続、終了を別カテゴリとして数え、validationの分布から大きく外れない範囲でbatch内の割合を管理します。強いLLMからの蒸留はまだ使わず、Issue #1のRPC・MRMP原データから作れる範囲で改善を試みます。
+
+その前に、学習スクリプトのcheckpoint保存を見直します。周期ごとに大きな`.pt`を積み上げず、`best.pt`と直近1個だけを保持し、保存前後に空き容量を確認する方式へ変更します。これを別の小さな検証実験で確認してから、093を開始します。step 7,400からの継続はoptimizer状態を保存していないため、092の厳密な再開とはせず、実施する場合は新しい実験番号を発行します。
