@@ -1,0 +1,32 @@
+{
+  "format": "medical-qb-answer-focus-conversation-v1",
+  "generated_at_utc": "2026-09-06T19:38:58.357568+00:00",
+  "input_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2",
+  "output_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1",
+  "filter_conversation_dir": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1",
+  "answer_policy": "正解選択肢だけを『正解は○です。』の形式で返す",
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/train.jsonl",
+      "input_sha256": "fc7e556c54c046661d0965bca2d2000ca1ab15a38df76721a76063de695375e3",
+      "input_record_count": 2945,
+      "filter_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1/train.jsonl",
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1/train.jsonl",
+      "output_sha256": "8c702d252f78ce850da3d41f57bf174b0d943a30964f8f962956150eb50d7ea1",
+      "output_record_count": 2945,
+      "skipped_record_count": 0,
+      "skipped_records": []
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-v2/validation.jsonl",
+      "input_sha256": "c107d293a40afba2929f6847d13b6255f61638bf796fbb2c75ed5c344f0ac397",
+      "input_record_count": 162,
+      "filter_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-sft-v1/validation.jsonl",
+      "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1/validation.jsonl",
+      "output_sha256": "7e1f0ee901c78b48d6b1855b85862f5f997799e7091d445e85742cb155a9d511",
+      "output_record_count": 162,
+      "skipped_record_count": 0,
+      "skipped_records": []
+    }
+  }
+}

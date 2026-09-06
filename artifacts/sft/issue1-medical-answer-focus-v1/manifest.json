@@ -1,0 +1,51 @@
+{
+  "format": "chat-sft-preparation-v1",
+  "generated_at_utc": "2026-09-06T19:39:02.611298+00:00",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1",
+  "input_sha256": "7050c6e46cf73dcfa5498a423e153ba0de4ea80bbe15de9ffb36695c881f0222",
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "context_length": 256,
+  "sequence_length": 257,
+  "seed": 107,
+  "special_tokens": {
+    "conversation_start": "<|startofconversation|>",
+    "conversation_end": "<|endofconversation|>",
+    "eos_id": 3,
+    "pad_id": 0
+  },
+  "splits": {
+    "train": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1/train.jsonl",
+      "input_sha256": "8c702d252f78ce850da3d41f57bf174b0d943a30964f8f962956150eb50d7ea1",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-medical-answer-focus-v1/train.npz",
+      "npz_sha256": "d15b59f3bc0a91b48145694b405b95fc954a76c60abc0c38ba6e49fbf4227f81",
+      "conversation_count": 2945,
+      "short_conversation_count": 0,
+      "example_count": 2945,
+      "response_token_count": 21522,
+      "response_body_token_count": 18577,
+      "truncated_example_count": 0,
+      "array_shape": [
+        2945,
+        256
+      ]
+    },
+    "validation": {
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/medical-qb-answer-focus-v1/validation.jsonl",
+      "input_sha256": "7e1f0ee901c78b48d6b1855b85862f5f997799e7091d445e85742cb155a9d511",
+      "npz_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-medical-answer-focus-v1/validation.npz",
+      "npz_sha256": "c7a1d6eaa937271e1fd0e36618f228bc5b15b35d255eed7d48f5510d80353c15",
+      "conversation_count": 162,
+      "short_conversation_count": 0,
+      "example_count": 162,
+      "response_token_count": 1162,
+      "response_body_token_count": 1000,
+      "truncated_example_count": 0,
+      "array_shape": [
+        162,
+        256
+      ]
+    }
+  }
+}
