@@ -68,3 +68,5 @@ PYTHONPATH=scripts uv run python scripts/train_torch.py \
 Runpod上の本番プロセスは継続中で、NaN、OOM、shape errorは発生していない。pilotのstep 2,000 best重みから再開した後、FineWeb validation lossはstep 2,500の2.894975からstep 5,500の2.876570まで緩やかに改善した。step 5,000では2.878091、step 5,500ではPerplexity 17.753284である。実験098のbest validation loss 2.973267と比べ、現時点でlossは約3.3%低く、Perplexityは約9%低い。ただし、これは事前学習評価の改善であり、自然な会話応答の改善を意味しないため、後段の会話SFTと生成比較を省略しない。
 
 step 5,500時点のtrain lossは2.395376、学習率は`2.9123e-5`である。step 5,000から5,500までの経過時間は約33秒で、A40は約1.9GBのGPUメモリを使用し、異常なメモリ増加は見られない。metricsと生成サンプルはPod上の設定出力先に保存されており、学習完了後に回収する。
+
+step 6,000、6,500、7,000のvalidation lossはそれぞれ2.874430、2.874084、2.870859となった。step 7,000のPerplexityは17.652169、train lossは2.843273、学習率は`2.8454e-5`である。step 5,500から7,000までの間も学習プロセスは正常に動作し、validation lossは悪化していない。step 7,000時点では、実験098のbest loss 2.973267に対して約3.4%低い。
