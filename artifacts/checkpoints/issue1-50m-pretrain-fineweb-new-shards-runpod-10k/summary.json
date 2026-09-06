@@ -1,0 +1,38 @@
+{
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1528083968,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "inputs": {
+    "config_sha256": "8e7b9e005f9857f424899bb5d763589b0b58e8d4c65f3c24ee7fe31a4e386823",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "5aea382f8754df2c9d594003cb607489afbadbe6ac7c757f4c00069d1f33bf8e",
+    "val_tokens_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+    "initial_checkpoint_sha256": "cbf18b9cbd39ec9256811e945ecc3e7fc99fe39d12d6987df7198027fd8ae492"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 500,
+    "sample_interval": 500,
+    "checkpoint_interval": 1000
+  },
+  "final_step": 10000,
+  "start_step": 0,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 10000,
+  "initial_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-new-pretrain-general-medical-sft-runpod-8k/best.pt",
+  "best_validation_loss": 2.796271562576294,
+  "checkpoint_interval": 1000,
+  "elapsed_seconds": 658.9549954761751
+}

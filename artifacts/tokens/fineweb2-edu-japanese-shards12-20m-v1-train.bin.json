@@ -1,0 +1,9 @@
+{
+  "format": "uint32_sentencepiece_ids_v1",
+  "tokenizer": "/workspace/exp100/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "input": "/workspace/exp100/artifacts/corpus/fineweb2-edu-japanese-shards12-20m-v1/train.txt",
+  "tokens": 19999123,
+  "eos_id": 3,
+  "vocab_size": 4096,
+  "sha256": "5aea382f8754df2c9d594003cb607489afbadbe6ac7c757f4c00069d1f33bf8e"
+}

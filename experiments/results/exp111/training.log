@@ -1,0 +1,60 @@
+{"backend": "pytorch", "device": "cuda", "amp_enabled": true, "parameter_count": 50207616, "initial_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-new-pretrain-general-medical-sft-runpod-8k/best.pt", "start_step": 0}
+{"step": 1, "train_loss": 2.829098701477051, "validation_loss": 2.941313886642456, "validation_perplexity": 18.940715924403367, "learning_rate": 1e-08, "elapsed_seconds": 0.9139343029819429}
+{"step": 500, "train_loss": 2.68410325050354, "validation_loss": 2.860696542263031, "validation_perplexity": 17.473693864966364, "learning_rate": 5e-06, "elapsed_seconds": 32.66332653677091}
+{"step": 1000, "train_loss": 2.7836289405822754, "validation_loss": 2.840944600105286, "validation_perplexity": 17.131940729415756, "learning_rate": 4.969435279787763e-06, "elapsed_seconds": 65.45771741680801}
+{"step": 1500, "train_loss": 2.7337849140167236, "validation_loss": 2.8306748270988464, "validation_perplexity": 16.956899939986297, "learning_rate": 4.878330273807196e-06, "elapsed_seconds": 99.12939138710499}
+{"step": 2000, "train_loss": 2.8700132369995117, "validation_loss": 2.824364757537842, "validation_perplexity": 16.850237599135248, "learning_rate": 4.7291699661001134e-06, "elapsed_seconds": 131.12204975774512}
+{"step": 2500, "train_loss": 2.793217658996582, "validation_loss": 2.8188650131225588, "validation_perplexity": 16.75781996862452, "learning_rate": 4.526023061028864e-06, "elapsed_seconds": 163.48048150818795}
+{"step": 3000, "train_loss": 2.593850612640381, "validation_loss": 2.8148171663284303, "validation_perplexity": 16.69012398470724, "learning_rate": 4.274430876599333e-06, "elapsed_seconds": 196.52310452098027}
+{"step": 3500, "train_loss": 2.6702003479003906, "validation_loss": 2.8116894483566286, "validation_perplexity": 16.638003535491066, "learning_rate": 3.9812561917508815e-06, "elapsed_seconds": 229.82115889294073}
+{"step": 4000, "train_loss": 3.056926727294922, "validation_loss": 2.8088915586471557, "validation_perplexity": 16.59151729862007, "learning_rate": 3.65449604763681e-06, "elapsed_seconds": 262.6284888498485}
+{"step": 4500, "train_loss": 2.8584437370300293, "validation_loss": 2.8064476370811464, "validation_perplexity": 16.551018439855792, "learning_rate": 3.303063609188428e-06, "elapsed_seconds": 295.2857839157805}
+{"step": 5000, "train_loss": 2.592888355255127, "validation_loss": 2.8045079827308657, "validation_perplexity": 16.51894629942601, "learning_rate": 2.9365450372106143e-06, "elapsed_seconds": 328.40240194415674}
+{"step": 5500, "train_loss": 2.490337610244751, "validation_loss": 2.8029430985450743, "validation_perplexity": 16.493116277363804, "learning_rate": 2.5649380029043133e-06, "elapsed_seconds": 361.40472228778526}
+{"step": 6000, "train_loss": 2.689426898956299, "validation_loss": 2.8013360142707824, "validation_perplexity": 16.466631736704965, "learning_rate": 2.198378977458161e-06, "elapsed_seconds": 394.1810384117998}
+{"step": 6500, "train_loss": 2.79510760307312, "validation_loss": 2.8000702261924744, "validation_perplexity": 16.4458016565775, "learning_rate": 1.846866735538265e-06, "elapsed_seconds": 427.37154708988965}
+{"step": 7000, "train_loss": 2.983030319213867, "validation_loss": 2.799132192134857, "validation_perplexity": 16.430382167652336, "learning_rate": 1.5199896147801737e-06, "elapsed_seconds": 459.8426194470376}
+{"step": 7500, "train_loss": 2.8106441497802734, "validation_loss": 2.7984526634216307, "validation_perplexity": 16.419221043781686, "learning_rate": 1.226663970933111e-06, "elapsed_seconds": 491.9182685627602}
+{"step": 8000, "train_loss": 2.6674413681030273, "validation_loss": 2.797785782814026, "validation_perplexity": 16.40827503392213, "learning_rate": 9.748909629183368e-07, "elapsed_seconds": 524.8301754859276}
+{"step": 8500, "train_loss": 2.6934986114501953, "validation_loss": 2.797378861904144, "validation_perplexity": 16.401599522010542, "learning_rate": 7.715383020712488e-07, "elapsed_seconds": 558.1337225968018}
+{"step": 9000, "train_loss": 2.8132033348083496, "validation_loss": 2.7970125317573546, "validation_perplexity": 16.39559222204478, "learning_rate": 6.221529188789297e-07, "elapsed_seconds": 590.9624831038527}
+{"step": 9500, "train_loss": 2.9902114868164062, "validation_loss": 2.796592128276825, "validation_perplexity": 16.388700906677272, "learning_rate": 5.308096571762373e-07, "elapsed_seconds": 624.1121411877684}
+{"step": 10000, "train_loss": 2.733809232711792, "validation_loss": 2.796271562576294, "validation_perplexity": 16.383448093271213, "learning_rate": 5.000001230283085e-07, "elapsed_seconds": 656.8929144269787}
+{
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1528083968,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "inputs": {
+    "config_sha256": "8e7b9e005f9857f424899bb5d763589b0b58e8d4c65f3c24ee7fe31a4e386823",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "5aea382f8754df2c9d594003cb607489afbadbe6ac7c757f4c00069d1f33bf8e",
+    "val_tokens_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+    "initial_checkpoint_sha256": "cbf18b9cbd39ec9256811e945ecc3e7fc99fe39d12d6987df7198027fd8ae492"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 500,
+    "sample_interval": 500,
+    "checkpoint_interval": 1000
+  },
+  "final_step": 10000,
+  "start_step": 0,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 10000,
+  "initial_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-new-pretrain-general-medical-sft-runpod-8k/best.pt",
+  "best_validation_loss": 2.796271562576294,
+  "checkpoint_interval": 1000,
+  "elapsed_seconds": 658.9549954761751
+}

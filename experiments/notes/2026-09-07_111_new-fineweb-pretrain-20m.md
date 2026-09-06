@@ -115,6 +115,14 @@ step 9,000のFineWeb validation lossは2.797013、perplexityは16.3956、learnin
 
 raw固定prompt `今日はなにをしていましたか？` へのstep 10,000生成は、「今回はこのセミナーをお待ちしています。」の後に「お客様の声」を多数反復した。FineWeb validation lossは改善したが、会話としての自然さはこの時点で明らかに不足している。raw checkpoint単体は会話モデルとして採用せず、一般・医療SFTを再適用して形式回復を評価する。
 
+### raw checkpoint評価
+
+raw best checkpointを同じ評価器で測定した。領域別lossはFineWeb 2.796272、general 4.229550、conversation 2.097783、medical 1.923146となった。FineWebは実験110の2.941318から0.145046改善した一方、general・conversation・medicalはそれぞれ0.155682、0.067884、0.048926悪化した。未使用FineWebの追加事前学習がFineWeb validationへ強く効いた反面、SFTで整えた会話・医療形式をそのまま維持しないことが確認できる。
+
+固定一般会話48例ではEOS 48/48、平均生成11.125 tokens、token-overlap F1 0.250090だった。実験110のF1 0.232590より高く、EOSと平均長も維持した。ただし固定promptの反復とvalidation general lossの悪化が同時にあるため、これだけで自然な日本語が改善したとは判断しない。医療162例ではEOS 102/162、平均生成93.568 tokens、F1 0.246671となった。「正解は…」形式を抽出できたのは127例、正解は26例、正解率16.05%であり、実験110の162/162抽出・31/162正解より悪化した。raw checkpointは総合モデルとして採用せず、次の実験112で一般・医療SFTを再適用する。
+
+raw評価JSONのSHA-256は、領域評価が`5abc6c1aaa70243a98bf54f6d4309711f2b44c6dbdbda358d895ee2160de2a79`、一般会話JSON/TXTが`89e1cd16ba2e18f4ccf8a08c97c4c2865888f99f315431ee6f8fecb6ac2c186f` / `fe0edb5801ad1d39319789046936f034c04efc14655328424741805f8354cfce`、医療JSON/TXTが`d77731ffe43d7acb3bdbeff68f4b9a1b12ae7d357dbc6bd926ac3f8fea156fcf` / `17e29d9a0c8b5ccb102c0111a3f9e04c1543419f4a78df422dc3eefed2e747d7`である。評価ログは`experiments/results/exp111/`へ保存した。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
