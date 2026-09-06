@@ -24,6 +24,8 @@ RPCとMRMPから、それぞれresponse token約770,000を選び、合計約1.54
 
 ## 仮分類の実装と集計
 
+GitHubの[Issue #1](https://github.com/ksky0410/MyLittleJapaneseLLM/issues/1)は2026-09-06時点でOpenのままです。本文は、現代会話を追加候補にし、標準文のみ、標準文+RPC、標準文+RPC+MRMPを比較すること、話者境界・出所・ライセンス・ハッシュ・固定promptを記録することを求めています。093はこのうちRPC+MRMPをSFTへ使う比較の一つであり、Issueの目的と矛盾しません。RPCとMRMPは2022年前後のデータを中心とするため、2026年の最新スラングの代表とは扱いません。
+
 2026-09-06、`scripts/analyze_response_functions.py`とそのテストを追加しました。分類器は`greeting`、`closing`、`question_answer`、`backchannel`、`agreement_disagreement`、`topic_continuation`、`other`の優先順で一つだけカテゴリを付けます。質問文かどうか、定型挨拶かどうか、短い相づち、否定表現、長さ16 token以上という規則を使っており、人手ラベルではありません。
 
 最初の集計では、長い応答の末尾に偶然「またね」が含まれる例を終了カテゴリへ入れる誤分類が見つかりました。終了カテゴリを12 token以下の短い応答に限定し、さらに「そうですね、いいですね」のような短い相づちを拾えるようにして、分類器をv3へ更新しました。テストは`PYTHONPATH=scripts uv run pytest -q tests/test_analyze_response_functions.py tests/test_prepare_quality_chat_sft.py tests/test_train_sft_torch.py tests/test_train_torch.py`で22件すべて通過しました。
@@ -41,3 +43,17 @@ step 7,400または最終学習のbest checkpointについて、Issue #1固定pr
 ## 現時点の状態
 
 このノート作成時点では、093のカテゴリ集計と仮分類器のテストまで完了し、SFT用NPZの作成と学習はまだ開始していません。MRMPで希少カテゴリが不足することを確認したため、次の操作はsource別の上限を持つ選別器の実装と、その選別結果の監査です。
+
+## 093選別データの予定条件
+
+RPCはresponse token比率を`question_answer 0.30`、`topic_continuation 0.45`、`other 0.20`、`backchannel 0.03`、`agreement_disagreement 0.015`、`greeting 0.004`、`closing 0.001`とします。MRMPは候補不足を反映し、`question_answer 0.13`、`topic_continuation 0.15`、`other 0.60`、`backchannel 0.09`、`agreement_disagreement 0.02`、`greeting 0.009`、`closing 0.001`とします。どちらも合計1.0です。カテゴリ予算を満たせない場合は、実際に存在する候補だけを使い、残りを他カテゴリから決定的に補充します。希少カテゴリの重複サンプリングは行いません。
+
+各sourceからresponse token約770,000、context length 256、seed 9301で作成します。出力予定先は`artifacts/sft/issue1-functional-770k-each-v1/train.npz`と`manifest.json`です。選別前にこの条件、入力hash、分類器version、候補数、選択数、出力hashをmanifestと本ノートへ残します。
+
+2026-09-06、最初の実データ選別は、MRMPの希少カテゴリが`first_turn`上限にも重なったため、補充候補を選べず`ValueError`で終了しました。NPZとmanifestは作成されていません。この失敗を受け、カテゴリ予算を満たせない候補群がturn上限で枯れた場合は、未選択の通常候補へフォールバックする処理を追加し、テストを増やします。データの重複複製は行いません。
+
+補充処理を修正した後、同日中に再実行が成功しました。RPCは47,084例・770,004 response token、MRMPは81,281例・770,002 response tokenとなり、合計は128,365例・1,540,006 response tokenです。選択済みカテゴリのtoken比率は、RPCではquestion_answer 30.0001%、topic_continuation 45.0016%、other 20.0015%、backchannel 3.0009%、agreement_disagreement 1.5014%、greeting 0.4003%、closing 0.0943%でした。MRMPではquestion_answer 13.0730%、topic_continuation 15.5097%、other 60.3818%、backchannel 9.0300%、agreement_disagreement 1.1195%、greeting 0.8744%、closing 0.0117%でした。MRMPのagreement_disagreement・greeting・closingは候補数の上限により目標比率へ届かず、重複複製なしで他カテゴリへ補充されています。
+
+出力は`artifacts/sft/issue1-functional-770k-each-v1/train.npz`と`manifest.json`です。NPZのSHA-256は`5688d15626eb91b923f818d6cad1348480b9182019524e5fd4d5a81cc4815526`で、manifestには入力hash、分類器version、source別のfull/selected分布、選択provenanceを保存しています。選択結果の実例数はRPC 47,084例、MRMP 81,281例、全体128,365例です。
+
+093の学習configは`configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1.toml`です。base checkpoint、Tokenizer、rehearsal、validation、seed、モデル構造、10,000 step、learning rate、EOS loss weight、rehearsal ratioは092と同じにし、SFT NPZだけを変更します。学習前にconfigとmanifestのSHA-256、実行コマンド、MPS backend、checkpoint保持数を追記します。
