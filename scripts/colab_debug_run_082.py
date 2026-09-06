@@ -17,7 +17,7 @@ def main() -> None:
         "--config",
         "configs/issue1-both-50m-sft-from-5m-two-pass-seed123-3k.toml",
         "--base-checkpoint",
-        "artifacts/checkpoints/issue1-both-pretrain-5m-5k/best.pt",
+        "artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt",
         "--train-data",
         "artifacts/sft/issue1-both-balanced-v1/train.npz",
         "--validation-data",
