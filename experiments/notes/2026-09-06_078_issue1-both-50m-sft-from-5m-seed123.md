@@ -61,6 +61,12 @@ step 2,100はvalidation loss 3.554235、PPL 34.9611、learning rate 1.4893e-5、
 
 step 2,500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`でした。step 2,100〜2,500の生成本文、step 2,500のcheckpoint metadata、metricsを保存し、GitHubへpushします。残り500 stepを継続します。
 
+step 2,600はvalidation loss 3.521188、PPL 33.8246、learning rate 7.0898e-6、経過時間3,289.80秒でした。step 2,700は3.519225、PPL 33.7583、learning rate 6.1856e-6、経過時間3,416.41秒、step 2,800は3.514798、PPL 33.6092、learning rate 5.5313e-6、経過時間3,544.71秒でした。step 2,900は3.515957、PPL 33.6481、learning rate 5.1345e-6、経過時間3,670.92秒、最終step 3,000はtrain loss 3.370131、SFT loss 3.510985、rehearsal loss 2.806717、validation loss 3.506888、PPL 33.3443、learning rate 5.0000e-6、経過時間3,806.68秒でした。step 3,000で最良validationを更新し、学習はNaN、OOM、shape errorなく完走しました。
+
+step 3,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは!`でした。step 2,600〜3,000の生成本文、step 3,000のcheckpoint metadata、metrics、summaryを保存済みです。最良`best.pt`のSHA-256は`fd87a45eb5f283bfc0e710e4cf1dcfef144930b539a5e55cccb48c309c3a2195`、summary上の学習時間は3,809.40秒、最終step到達は3,806.68秒でした。評価用にはこのbest checkpointを使います。
+
+評価は077と同じCPUコマンドで、general・conversation・medical・RPC・MRMPを各20 batch、固定chat-test-v1を48例、最大64 Token、評価seed 42で実施します。評価JSON、全文TXT、人手レビュー用JSONを作成してからseed42の077と比較します。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、077との差、seed分散への解釈を追記します。評価結果と生成全文のSHA-256も残します。
