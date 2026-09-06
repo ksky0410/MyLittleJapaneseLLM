@@ -40,6 +40,10 @@ Colab T4の新規session `exp080-both-50m-pretrain-10m`は作成に成功し、b
 
 step 1,000はtrain loss 4.444293、validation loss 5.593394、PPL 268.65、learning rate 2.9189e-4、経過109.36秒でした。step 1,500はtrain loss 4.536695、validation loss 5.346462、PPL 209.86、learning rate 2.6848e-4、経過166.33秒、step 2,000はtrain loss 3.786160、validation loss 5.110367、PPL 165.73、learning rate 2.3258e-4、経過220.45秒でした。step 2,500はtrain loss 3.421191、validation loss 4.980713、PPL 145.58、learning rate 1.8854e-4、経過278.24秒、step 3,000はtrain loss 3.565266、validation loss 4.889075、PPL 132.83、learning rate 1.4165e-4、経過330.51秒でした。step 3,100はtrain loss 3.711011、validation loss 4.839065、PPL 126.35、learning rate 1.3243e-4、経過343.84秒でした。step 3,100時点でNaN、OOM、shape errorはなく、validation lossは継続的に改善しています。学習は継続中です。
 
+step 3,200はtrain loss 3.449614、validation loss 4.841980、PPL 126.72、learning rate 1.2337e-4、経過356.17秒でした。step 3,300はvalidation loss 4.817392、PPL 123.64、learning rate 1.1452e-4、経過367.39秒、step 3,400は4.793606、PPL 120.74、learning rate 1.0590e-4、経過379.51秒でした。step 3,500はtrain loss 3.090428、validation loss 4.780484、PPL 119.16、learning rate 9.7582e-5、経過389.53秒でした。
+
+step 3,600はvalidation loss 4.788713、PPL 120.15、learning rate 8.9587e-5、経過402.06秒と一時的に悪化しましたが、step 3,700は4.753023、PPL 115.93、learning rate 8.1960e-5、経過410.87秒、step 3,800は4.737653、PPL 114.17、learning rate 7.4737e-5、経過421.85秒、step 3,900は4.717781、PPL 111.92、learning rate 6.7955e-5、経過433.29秒、step 4,000はtrain loss 3.027063、validation loss 4.696461、PPL 109.56、learning rate 6.1645e-5、経過444.79秒でした。step 4,000時点でもstep 3,500を除いてvalidation lossは改善傾向にあり、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、完走または停止理由、最良checkpoint、学習時間、5領域loss、chat-test結果、075との差、source比率の影響、自然な日本語の質的観察を追記します。失敗した場合も、原因不明ならそのまま明記し、次の切り分けを残します。
