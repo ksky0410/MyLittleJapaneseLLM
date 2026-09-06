@@ -1,0 +1,3 @@
+{"step": 1, "train_loss": 8.772271156311035, "validation_loss": 8.743542194366455, "validation_perplexity": 6270.066216186239, "learning_rate": 5.9999999999999995e-05, "elapsed_seconds": 2.079821040853858}
+{"step": 10, "train_loss": 7.456595420837402, "validation_loss": 7.2658371925354, "validation_perplexity": 1430.5827998009142, "learning_rate": 0.0002553326318584458, "elapsed_seconds": 8.612669707974419}
+{"step": 20, "train_loss": 7.04830265045166, "validation_loss": 7.014028072357178, "validation_perplexity": 1112.1252155212228, "learning_rate": 3.2950073900936234e-05, "elapsed_seconds": 19.256752374814823}
