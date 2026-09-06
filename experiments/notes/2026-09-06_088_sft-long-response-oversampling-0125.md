@@ -10,11 +10,13 @@
 
 ## 再現条件
 
-実験開始時点のGit commit、入力ハッシュ、Colab bundle、session名、実行コマンドを実行前に追記します。モデルは50,207,616 parameter、dim 576、12層、9 heads、context length 256、RoPE、LayerNorm、SwiGLUです。batch size 8、10,000 step、learning rate 5e-5から5e-6、warmup 100、weight decay 0.01、seed 123、rehearsal ratio 0.20、EOS loss weight 0.50です。
+実験開始時点のGit commitは`c1bbfca`です。設定ファイルのSHA-256は`70978d302359c7803f1ce86ff04844a64fb2dbdfbae127790e85a5e6ea27961f`、bootstrapは`5c83dd27c0bec2b2fee1ef311b7d82d8372a39f0e70ff88228153e031240f534`、bundle結合スクリプトは`b5fb932d12aee0fd40b02a5c1f85adf3d1b5887e517fb38e56131408f7b56103`です。bundleは263,513,831 bytes、SHA-256は`cf9dc878a24b1733e1144ef06eea0b3ff9bdcfb3faf45310d7a9d3f2bc7ba361`です。入力は086・087と同じで、base checkpointは`1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb`、SFT trainは`001dc022a998abc5756f641b199988112db77ff42903485ff7a6fd6bd0e028a3`、validationは`fd93655b36aafe2a823886595e7f749762800ce741087d4a39035bbe75ea63e1`です。モデルは50,207,616 parameter、dim 576、12層、9 heads、context length 256、RoPE、LayerNorm、SwiGLUです。batch size 8、10,000 step、learning rate 5e-5から5e-6、warmup 100、weight decay 0.01、seed 123、rehearsal ratio 0.20、EOS loss weight 0.50です。
 
 ## 実験中の記録
 
-ここに入力検証、stepごとのloss、生成文、異常、途中停止を追記します。生成文は100 step間隔で保存し、1,000 stepを超えて記録を空けません。
+Colab session `exp088-long0125`の作成をT4で2回試みましたが、Colab APIが`Service Unavailable`（HTTP 503）を返してsessionを作成できませんでした。L4もquotaまたはentitlement不足で拒否されました。既存のColab sessionはなく、087までの成果物や088のbundleは変更されていません。GPUが復旧するまで学習は開始せず、条件を変更しません。
+
+ここに、GPU sessionが確保できた後の入力検証、stepごとのloss、生成文、異常、途中停止を追記します。生成文は100 step間隔で保存し、1,000 stepを超えて記録を空けません。
 
 ## 実験終了後の結果と解釈
 
