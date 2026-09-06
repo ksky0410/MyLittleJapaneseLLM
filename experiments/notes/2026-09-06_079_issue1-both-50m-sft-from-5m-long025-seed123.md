@@ -72,6 +72,14 @@ step 3,000はtrain loss 2.949194、SFT loss 3.074243、rehearsal loss 2.448998�
 
 学習はMPSで3,000 stepを完走しました。Torchは2.14.0、CUDAは未使用、AMPは無効、パラメータ数は50,207,616、総経過時間は3,911.49秒でした。最良checkpointはstep 2,900で、validation lossは3.5317310214042665、PPLは34.18308808773353です。最終step 3,000はvalidation loss 3.536577832698822、PPL 34.34916922199306であり、評価には最良の`best.pt`を使います。`best.pt`のSHA-256は`03bd492d82fa31b1ee13e492d1fe2d7f1d69d3e4f122e32a4ac41370a2867bcb`、`best.json`は`847e6b6d27113694d72a494994ec40dabe12e0bc1008b6793aaf7a4f25e30afb`、`summary.json`は`84fbdbce70d697ffabab6c6b9620a4d844847891017f072c2116e00cb6a532d7`、`metrics.jsonl`は`7c7787fdd0c62ad5f5fc49f1812bdb02aa8bcfb4afa12351fcd93791c54ff6ec`です。
 
+同一条件で評価した実験078との差は次のとおりです。5領域のvalidation lossは、generalが4.673127から4.682027へ+0.008900、conversationが2.724320から2.724248へ-0.000071、medicalが2.942104から2.952771へ+0.010667、RPCが2.706494から2.693884へ-0.012610、MRMPが2.253748から2.269132へ+0.015384でした。長文比率を変えただけで全体の言語モデル性能が一貫して上がったわけではなく、会話・RPCではわずかに改善した一方、general・medical・MRMPでは悪化しました。
+
+固定chat-test 48例では、079もEOS到達は48例中48例でした。平均生成Token数は11.0625から13.5208へ+2.4583伸び、long層では12.3750から17.8125へ+5.4375伸びました。しかし全体F1は0.216804から0.181798へ-0.035005、short F1は0.341643から0.234270へ-0.107372、medium F1は0.174441から0.141558へ-0.032883と低下しました。long F1だけは0.134327から0.169567へ+0.035240改善しました。つまり、長文比率25%は長く生成する傾向とlong層の重複率を高めましたが、短い自然な応答と全体の正確さを犠牲にしています。
+
+生成全文は`artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-test-v1.txt`、機械評価は`artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-test-v1.json`、人手レビュー用の48例は`artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-chat-review.json`に保存しました。SHA-256は順に`1551ce5aa52ca14aedf7b6a7eaf1e030089a6ba9a4bdc52915777744d9e372d9`、`edce353020be067c6afc6b78bec13d7480ad018b6bf388550bd1f1f36af2d33f`、`9c8aa3c204c304f9463f5015dab5225fd6f1e9f957f064edc154c63dba55d350`です。領域評価JSONは`artifacts/evaluations/issue1-both-50m-sft-from-5m-long025-seed123-3k-domains.json`で、SHA-256は`883c9de2cd172fab9a9866a83132a68d2e27a9741d7364b5eb326470f45c0891`です。
+
+今回の結論は、長文比率25%を標準設定として採用しない、です。long層に絞った改善は確認できましたが、ユーザーが求めている「自然な日本語を話す強いモデル」という主目的に対して全体F1とshort層の低下が大きく、長文化と性能向上を混同してはいけません。次の主線では、この設定を使わず、同じ50Mモデルに対して学習Token数を増やし、同じデータを複数周回する方法、データ源の品質と比率、pretrainingからSFTへ移る順序を優先して調べます。
+
 step 2,500以降もvalidation lossが改善し、step 2,900で最良になった一方、固定生成は短い挨拶からほとんど伸びませんでした。この段階では長文比率25%が「自然に長く話す」ことを保証したとは言えず、validation lossと会話生成長の両方を評価して判断する必要があります。
 
 評価開始前の予定として、実験078と同じCPU・同じ5領域・同じ48例のchat-test・同じseed 42・max-new-tokens 64で評価します。実行コマンドは次のとおりです。
