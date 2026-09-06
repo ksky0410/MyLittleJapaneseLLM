@@ -46,6 +46,10 @@ Colab送信用bundleは`/tmp/small_llm-colab-079-XXXXXX.tar.gz`、236,435,471 by
 
 step 500はtrain loss 3.880764、SFT loss 4.131837、rehearsal loss 2.876472、validation loss 3.744829、PPL 42.3018、learning rate 4.7931e-5、経過時間587.21秒でした。step 500の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんばんは`でした。step 0〜500の生成本文、step 500のcheckpoint metadata、metricsを保存し、GitHubへpushします。NaN、OOM、shape error、警告はありません。
 
+step 600はvalidation loss 3.713040、PPL 40.9782、learning rate 4.6792e-5、経過時間716.76秒でした。step 700は3.713716、PPL 41.0059、learning rate 4.5427e-5、経過時間843.25秒、step 800は3.698069、PPL 40.3693、learning rate 4.3852e-5、経過時間969.19秒でした。step 900は3.675959、PPL 39.4865、learning rate 4.2085e-5、経過時間1,096.51秒、step 1,000はtrain loss 3.854930、SFT loss 4.185379、rehearsal loss 2.533137、validation loss 3.650785、PPL 38.5049、learning rate 4.0147e-5、経過時間1,233.94秒でした。step 1,000で最良validationを更新しています。
+
+step 1,000の固定生成は`<|startofconversation|> <|speaker:DA|> こんにちは! <|speaker:DC|> こんにちは`でした。step 600〜1,000の生成本文、step 1,000のcheckpoint metadata、metricsを保存し、GitHubへpushします。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、078との差、生成本文の質的観察を追記します。評価結果、生成全文、checkpoint metadataのSHA-256を残します。
