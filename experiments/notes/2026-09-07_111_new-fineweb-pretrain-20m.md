@@ -85,6 +85,10 @@ step 500のFineWeb validation lossは2.860697、perplexityは17.4737、learning 
 
 step 2,000のFineWeb validation lossは2.824365、perplexityは16.8502、learning rateは4.7292e-6、経過時間は131.12秒だった。改善は緩やかになったが、実験110の初期値から0.116953下がり、ここまで最良値を更新している。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 3,000
+
+step 3,000のFineWeb validation lossは2.814817、perplexityは16.6901、learning rateは4.2744e-6、経過時間は196.52秒だった。step 2,500の2.818865からさらに改善し、実験110の初期値からの改善幅は0.126501となった。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
