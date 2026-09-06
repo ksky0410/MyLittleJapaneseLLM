@@ -54,6 +54,10 @@ step 5,600はvalidation loss 3.142920、step 5,700は3.145978、step 5,800は3.1
 
 step 6,100はvalidation loss 3.123706、step 6,200は3.130502、step 6,300は3.136202、step 6,400は3.136349、step 6,500は3.126902、step 6,600は3.121405、step 6,700は3.115601、step 6,800は3.116168、step 6,900は3.120221、step 7,000は3.114227でした。step 7,000のperplexityは22.516017、経過時間は8,027.75秒で、最良checkpointがstep 7,000へ更新されました。step 7,000の固定生成は「こんにちはー!」で、自然な話題応答にはまだ到達していません。validationの改善と生成品質の差を保ったまま、残り3,000 stepを実行します。
 
+step 7,100はvalidation loss 3.114232、step 7,200は3.109955、step 7,300は3.102167、step 7,400は3.095141、step 7,500は3.090104まで改善しました。step 7,500のmetricsと生成文は標準出力・`metrics.jsonl`・samplesへ書き込まれましたが、同時に周期checkpointを書き込む際、ディスク空き容量不足によるPyTorch I/Oエラーが発生しました。`best.pt`はstep 7,400の完全なcheckpointとして残り、`step_007500.pt`は約88MiBの不完全なファイルになりました。学習プロセスはstep 7,500で終了し、step 7,500の不完全checkpointは再利用不能と確認したうえで除去します。これは学習失敗ではなく、保存容量の管理失敗です。
+
+再開前に、生成文・metrics・checkpoint metadataを残し、周期checkpointの重い`.pt`本体は`best.pt`以外を整理します。`.pt`本体はGitHubへ追加せず、metadataに保存済みのSHA-256とstepを根拠として残します。これにより、元の会話データ、Tokenizer、既存のbest checkpoint、全生成文を保持したまま、再開に必要な空き容量を確保します。再開は同じ092の続きとして扱わず、step 7,400のbest weightsからoptimizerを初期化する別の継続試行として記録します。
+
 Colab停止中の代替可否を確認するため、Apple Silicon実機のMPSが利用可能かを`torch 2.14.0`で確認しました。`torch.backends.mps.is_built()`と`is_available()`はいずれも`True`でした。まずは本番条件を変更しない2 stepのMPS smokeを、専用出力先`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-quality-aware-mps-smoke`へ保存します。これは本番092の性能結果には混ぜず、速度・ロード・loss計算・生成経路だけを確認する補助実験です。
 
 smokeは2026-09-06に完了しました。MPS、PyTorch 2.14.0、AMPなしで、step 1のvalidation lossは4.042009、step 2は4.035694でした。50,207,616 parameters、train 127,731例、validation 49,045例を読み込み、NaN、OOM、shape errorはありませんでした。2 stepの経過時間は19.40秒で、step 0・1・2の生成サンプルとmetrics、checkpoint metadata、summaryを専用出力先へ保存しました。この結果は本番の性能比較には使わず、実行経路が正常であることだけを示します。
