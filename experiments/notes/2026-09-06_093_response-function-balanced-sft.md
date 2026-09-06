@@ -86,3 +86,5 @@ step 100のbest checkpointは正常に`best.pt`へ保存され、step 500の周�
 step 600はvalidation loss 3.504400、PPL 33.2615、経過756.65秒、step 700は3.484157、PPL 32.5949、経過879.96秒、step 800は3.467179、PPL 32.0462、経過1004.96秒でした。step 900は3.457781、PPL 31.7465、経過1130.22秒、step 1000はtrain loss 2.967423、SFT loss 3.123777、rehearsal loss 2.342007、validation loss 3.448577、PPL 31.4556、経過1256.09秒でした。step 800、900、1000でbest checkpointが順に更新されました。
 
 step 1000時点で、周期checkpointは`step_001000.pt`一個、bestは`best.pt`一個だけで、保存失敗や一時ファイルの残留はありません。空き容量は約2.7GiBです。step 1000の固定生成は引き続き短い挨拶形式であり、会話機能の成功判定は学習完了後のIssue #1 promptとheld-out評価まで保留します。
+
+step 1100はvalidation loss 3.473346、PPL 32.2444、経過1385.23秒、step 1200は3.456418、PPL 31.7032、経過1508.25秒でした。step 1300は3.441512、PPL 31.2341、経過1632.86秒、step 1400は3.434141、PPL 31.0048、経過1757.54秒でbest checkpointを更新しました。step 1500はtrain loss 3.037303、SFT loss 3.022823、rehearsal loss 3.095221、validation loss 3.442286、PPL 31.2583、経過1883.02秒でした。step 1500でもNaN、OOM、shape error、checkpoint保存エラーはありません。学習は継続中です。
