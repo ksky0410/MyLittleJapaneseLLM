@@ -6,7 +6,7 @@ import hashlib
 from pathlib import Path
 
 PARTS = sorted(Path("/content").glob("exp082-part-*"))
-TARGET = Path("/content/exp082_bundle.tar.gz")
+TARGET = Path("/content/exp082_bundle_reassembled.tar.gz")
 EXPECTED_BYTES = 236_556_712
 EXPECTED_SHA256 = "9571c667294c29018f5297e67c8db6587e3aae29850617c53a8a00ff69e7aa4c"
 

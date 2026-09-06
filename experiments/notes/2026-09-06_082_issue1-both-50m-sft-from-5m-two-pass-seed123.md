@@ -32,7 +32,7 @@ uv run python scripts/train_sft_torch.py \
 
 ## 実験中の記録
 
-Colab T4が利用できる場合は、`scripts/colab_bootstrap_082.py`から実行します。学習用bundleは`/tmp/small_llm-colab-082.tar.gz`、サイズは226 MiB（236,556,712 bytes）、SHA-256は`9571c667294c29018f5297e67c8db6587e3aae29850617c53a8a00ff69e7aa4c`です。開始前のColabセッションは存在しません。最初のuploadはHTTP 400で失敗しました。bundleを64 MiB以下の分割片で再送し、`scripts/colab_join_082_bundle.py`で結合後に同じSHA-256を検証する方式へ切り替えます。学習中は1,000 stepを超えてノート更新を空けず、metricsと固定生成を保存します。途中停止、警告、空応答、自然さの悪化も削除せず記録します。
+Colab T4が利用できる場合は、`scripts/colab_bootstrap_082.py`から実行します。学習用bundleは`/tmp/small_llm-colab-082.tar.gz`、サイズは226 MiB（236,556,712 bytes）、SHA-256は`9571c667294c29018f5297e67c8db6587e3aae29850617c53a8a00ff69e7aa4c`です。開始前のColabセッションは存在しません。最初のuploadはHTTP 400で失敗し、Colab側に不完全な`/content/exp082_bundle.tar.gz`が残ったため、分割片を64 MiB以下で再送して`/content/exp082_bundle_reassembled.tar.gz`へ結合する方式へ切り替えます。`scripts/colab_join_082_bundle.py`が元bundleと同じSHA-256を検証してから学習を開始します。学習中は1,000 stepを超えてノート更新を空けず、metricsと固定生成を保存します。途中停止、警告、空応答、自然さの悪化も削除せず記録します。
 
 ## 実験終了後の結果と解釈
 

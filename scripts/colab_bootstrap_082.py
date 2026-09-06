@@ -9,7 +9,7 @@ import sys
 import tarfile
 from pathlib import Path
 
-BUNDLE = Path("/content/exp082_bundle.tar.gz")
+BUNDLE = Path("/content/exp082_bundle_reassembled.tar.gz")
 PROJECT = Path("/content/small_llm_082")
 CONFIG = "configs/issue1-both-50m-sft-from-5m-two-pass-seed123-3k.toml"
 BASE = "artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.pt"
