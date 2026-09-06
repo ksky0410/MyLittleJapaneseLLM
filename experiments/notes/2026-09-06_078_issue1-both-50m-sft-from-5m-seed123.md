@@ -95,6 +95,18 @@ uv run python scripts/evaluate_torch.py chat \
 
 ## 実験終了後の結果と解釈
 
+078はPyTorch 2.14.0のMPSで完走し、AMPは無効でした。parameter数は50,207,616、最良checkpointはstep 3,000、最良validation lossは3.506888（PPL 33.3443）、summary上の学習時間は3,809.40秒でした。Colab T4はassignment endpointのHTTP 503で開始できなかったため、MPSへ切り替えています。NaN、OOM、shape error、途中停止はありませんでした。
+
+5領域評価はCPU、20 batchで行いました。generalはvalidation loss 4.673127（PPL 107.0319）、conversationは2.724320（15.2460）、medicalは2.942104（18.9557）、RPCは2.706494（14.9767）、MRMPは2.253748（9.5234）でした。077との差はgeneral -0.013111、conversation -0.000407、medical -0.009197、RPC -0.002873、MRMP -0.014841です。ただし077と078ではseedが異なるため、これはseed 123の標準SFTがseed 42の077より良かったという観測であり、長文比率の効果とは解釈しません。
+
+固定chat-test-v1は48例すべてでEOSへ到達し、平均生成長は11.0625 Token、precisionは0.274957、recallは0.230771、全体Token overlap F1は0.216804でした。short・medium・longのF1はそれぞれ0.341643、0.174441、0.134327でした。077との差は全体F1 +0.025511、short +0.067629、medium +0.049456、long -0.040554です。seed 123の標準条件がseed 42の077を上回ったため、ここでも長文比率0.25の影響を取り出せません。標準SFTのseed分散が大きい可能性が明確になりました。
+
+生成本文には、短い例で「こんにちは」や「私も好きです!」のように参照に近い応答がある一方、長い履歴では「そのまま使ってみます!これはいいです。」や「今の夏は、朝とお昼のぼうの日を飲んでくれましたが...」のように文脈から外れる語を含む出力もありました。EOS到達率とToken overlapの改善だけから、自然な話題継続を主張しません。人手レビュー用JSONは48例を`pending_human_review`として保存し、意味的な評価は未完了です。
+
+成果物のSHA-256は、5領域評価JSONが`17b3f7cb64e53f2419f389075da68f9b84dec615a89ad4ae06d81fa3164debd1`、固定chat JSONが`530f3c2c3f455e6e7614c88f0eb2404ea1b8e970b82c786d417c207aef136a28`、全文TXTが`fd67e1dc46f0d97a3713d6ebc57e5c27b98ba0ccfebb472b7c2caeafa45de12e`、人手レビュー用JSONが`70985196d70fa1d01b2b5ae8e1d65c0ee41ff81b02b1c1fa38eae6bc4d0e7c8d`です。metricsは`5d4567ab47d3f2abc4cfea91fcb32f014fd0fbdaf6f65e3465bb9891e122d36e`、summaryは`42ffbdfa8f6f191cbb4ecf21ee1b7511ffb2bb8a6b83bff9d566066f735bfcea`、best metadataは`ceedeaf3a4799ae0546f8b84211721b85e5ecd8f93020b8342687ff2955efe13`です。生成本文は[学習中のサンプル](../../artifacts/samples/issue1-both-50m-sft-from-5m-seed123-3k/)、[5領域評価](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-domains.json)、[固定chat評価](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-chat-test-v1.json)、[生成全文](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-chat-test-v1.txt)、[人手レビュー用JSON](../../artifacts/evaluations/issue1-both-50m-sft-from-5m-seed123-3k-chat-review.json)から確認できます。
+
+## 実験終了後の結果と解釈
+
 実際のbackend、最良checkpoint、学習時間、5領域loss、固定chat-testのEOS・長さ・precision・recall・F1、長さ別集計、077との差、seed分散への解釈を追記します。評価結果と生成全文のSHA-256も残します。
 
 ## 次に試すこと
