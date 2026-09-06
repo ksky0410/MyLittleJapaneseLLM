@@ -1,0 +1,98 @@
+{
+  "format": "corpus-mix-v1",
+  "seed": 9801,
+  "target_units": null,
+  "target_tokens": 20000000,
+  "tokenizer_path": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "algorithm": "sourceごとにshuffle後、unit token cost / weightを仮想完了時刻へ加算するweighted fair queueで、target_tokensを超えない候補を決定的に選択。",
+  "weight_semantics": "weightは採用単位数またはtoken数に対する希望比率であり、単位の複製には使わない。",
+  "unit_rule": "通常の非空行を一単位とし、会話startからendまでを改行込みの一単位とする。",
+  "duplicate_rule": "本文完全一致をsource指定順で一度だけ採用する。",
+  "requested_weight_share": {
+    "base": 0.5,
+    "fineweb_next": 0.25,
+    "wikipedia_next": 0.25
+  },
+  "input_unit_count": 28226,
+  "unique_unit_count": 28226,
+  "output_unit_count": 28226,
+  "output_lines": 53642,
+  "output_character_count": 24827261,
+  "output_sha256": "ee634d4da7326fce4afd5361eeac673eb5a714fc6fc20d3dec182329f8b17eb9",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-20m-v1.txt",
+  "selected_token_count": 19987750,
+  "actual_adoption_share": {
+    "base": 0.584779990080068,
+    "fineweb_next": 0.34787075745766316,
+    "wikipedia_next": 0.06734925246226883
+  },
+  "actual_adoption_character_share": {
+    "base": 0.5088239925464841,
+    "fineweb_next": 0.25851062349805143,
+    "wikipedia_next": 0.2326653839554644
+  },
+  "actual_adoption_token_share": {
+    "base": 0.5003050868657053,
+    "fineweb_next": 0.2501528186013934,
+    "wikipedia_next": 0.2495420945329014
+  },
+  "actual_token_share": {
+    "base": 0.5003050868657053,
+    "fineweb_next": 0.2501528186013934,
+    "wikipedia_next": 0.2495420945329014
+  },
+  "sources": [
+    {
+      "name": "base",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/mixed-ja-token-budget-fineweb2-wikipedia-10m-v1.txt",
+      "input_sha256": "4ddbc8da19ab87663a3d94e44db2d5a881993679f38c19c42df41c813fd8b305",
+      "input_lines": 41922,
+      "input_characters": 12634850,
+      "input_unit_count": 16506,
+      "unique_unit_count": 16506,
+      "duplicate_units_removed": 0,
+      "weight": 2.0,
+      "requested_weight_share": 0.5,
+      "adopted_unit_count": 16506,
+      "adopted_characters": 12618344,
+      "adopted_token_count": 9999973,
+      "actual_adoption_share": 0.584779990080068,
+      "actual_token_share": 0.5003050868657053
+    },
+    {
+      "name": "fineweb_next",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/fineweb2-edu-japanese-v2/next-train.txt",
+      "input_sha256": "7a4bdd85749e90780a0874305b0ab8d813e705e48241bffaef112fe44e4f477a",
+      "input_lines": 9819,
+      "input_characters": 6420633,
+      "input_unit_count": 9819,
+      "unique_unit_count": 9819,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.25,
+      "adopted_unit_count": 9819,
+      "adopted_characters": 6410814,
+      "adopted_token_count": 4999992,
+      "actual_adoption_share": 0.34787075745766316,
+      "actual_token_share": 0.2501528186013934
+    },
+    {
+      "name": "wikipedia_next",
+      "input_path": "/Users/koseki/projects/small_llm/artifacts/corpus/wikimedia-wikipedia-ja-v2/next-train.txt",
+      "input_sha256": "ce0580d247565b95c05ae29d4cb931974446c1d5b3b9df7421817ebb0b3bec97",
+      "input_lines": 1901,
+      "input_characters": 5771778,
+      "input_unit_count": 1901,
+      "unique_unit_count": 1901,
+      "duplicate_units_removed": 0,
+      "weight": 1.0,
+      "requested_weight_share": 0.25,
+      "adopted_unit_count": 1901,
+      "adopted_characters": 5769877,
+      "adopted_token_count": 4987785,
+      "actual_adoption_share": 0.06734925246226883,
+      "actual_token_share": 0.2495420945329014
+    }
+  ]
+}
