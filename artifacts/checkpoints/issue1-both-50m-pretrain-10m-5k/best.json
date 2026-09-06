@@ -1,0 +1,55 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "best",
+  "checkpoint_step": 4900,
+  "checkpoint_interval": 500,
+  "checkpoint_train_loss": 2.9145631790161133,
+  "weights_file": "best.pt",
+  "weights_bytes": 200872334,
+  "weights_sha256": "d61cf94bbdc053e7724f9648e935d3f0e4bc8a7ca5a6c2b0ec86acfd8137c508",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 576,
+    "layers": 12,
+    "heads": 9,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 4900,
+    "train_loss": 2.9145631790161133,
+    "validation_loss": 4.607039928436279,
+    "validation_perplexity": 100.18714915065256,
+    "learning_rate": 3.0335460425693797e-05,
+    "elapsed_seconds": 545.9161763080001
+  },
+  "inputs": {
+    "config_sha256": "1f3570dd38e13286e9dc3270e68f2b5f803dd8aa44410f2ce85abbede56b9447",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4",
+    "val_tokens_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 1528071680,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  }
+}

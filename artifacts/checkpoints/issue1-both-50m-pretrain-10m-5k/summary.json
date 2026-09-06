@@ -1,0 +1,35 @@
+{
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "Tesla T4",
+    "gpu_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 15637086208,
+    "peak_memory_allocated_bytes": 1528071680,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "inputs": {
+    "config_sha256": "1f3570dd38e13286e9dc3270e68f2b5f803dd8aa44410f2ce85abbede56b9447",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "d043d06180d2c6deb0e0c14038fd1b3f736f86f062cf61260bd19282f8ce48e4",
+    "val_tokens_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 100,
+    "sample_interval": 100,
+    "checkpoint_interval": 500
+  },
+  "final_step": 5000,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 4900,
+  "best_validation_loss": 4.607039928436279,
+  "checkpoint_interval": 500,
+  "elapsed_seconds": 556.8395125710001
+}

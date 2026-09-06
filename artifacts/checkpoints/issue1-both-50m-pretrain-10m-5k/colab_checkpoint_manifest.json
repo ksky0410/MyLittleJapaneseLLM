@@ -1,0 +1,68 @@
+{
+  "experiment": "080",
+  "condition": "issue1-both-50m-pretrain-10m-5k",
+  "lightweight_files": 64,
+  "lightweight_archive": "/content/exp080-lightweight.tar.gz",
+  "archive_bytes": 15227,
+  "archive_sha256": "d0c971c026690b014e2603ba344e9d5f764bb06d1fb852266f149e4e37096267",
+  "best_checkpoint_archive": "/content/exp080-best-checkpoint.tar",
+  "best_checkpoint_archive_bytes": 200878080,
+  "best_checkpoint_archive_sha256": "f1e3db105a3380e2ccbae691db525e9d3e4d486118da9a5072d965c9dc0193cf",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/best.pt",
+      "bytes": 200872334,
+      "sha256": "d61cf94bbdc053e7724f9648e935d3f0e4bc8a7ca5a6c2b0ec86acfd8137c508"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_000500.pt",
+      "bytes": 200882813,
+      "sha256": "3b1dd53c1a5ed5c55aff22119548a3f3c0a79555e1ca637c2120f9cae907e2e3"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_001000.pt",
+      "bytes": 200882813,
+      "sha256": "9d2ec62ec8023e0e85bafc2ae80b586de3e9915fc9fa88bc0f7aa2016f57ac21"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_001500.pt",
+      "bytes": 200882813,
+      "sha256": "d085c7529aa49347718cea36a8aab5e0da5e6e796d2b600336bcedbf53f9fa43"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_002000.pt",
+      "bytes": 200882813,
+      "sha256": "dea2a0057af8ddf876332bc22c996dd153626af56b5aa50b98bc5644219c71a1"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_002500.pt",
+      "bytes": 200882813,
+      "sha256": "6eaf87aea7f7445dfb227451c25958af45183305d16043b91f0138a4af9f59b3"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_003000.pt",
+      "bytes": 200882813,
+      "sha256": "36c082d4bde80bbf4df4acf110d8d66c49fcfe938ee2d721d62b6c60a0a8cf70"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_003500.pt",
+      "bytes": 200882813,
+      "sha256": "f2a85cd0a7ba340689da94b0c2568b548737f455959ae7854b089358694ac2d5"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_004000.pt",
+      "bytes": 200882813,
+      "sha256": "ef48835235209f3cf10bf433635bc66a780a9946053ca860109cd95d02526d53"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_004500.pt",
+      "bytes": 200882813,
+      "sha256": "df98bd1388d6a8feecb7412814fbf81f7d6ea19816c2921280ba1174d14b133f"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/step_005000.pt",
+      "bytes": 200882813,
+      "sha256": "155f44e323437423cea0e1360cc4af5d8d632da26a0f4207a8fbbe38f694e25f"
+    }
+  ]
+}

@@ -56,7 +56,42 @@ step 4,600はvalidation loss 4.651350、PPL 104.73、learning rate 3.5256e-5、�
 
 ## 実験終了後の結果と解釈
 
-実際のbackend、完走または停止理由、最良checkpoint、学習時間、5領域loss、chat-test結果、075との差、source比率の影響、自然な日本語の質的観察を追記します。失敗した場合も、原因不明ならそのまま明記し、次の切り分けを残します。
+実際に実行した評価コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-pretrain-10m-5k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-domains.json
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-50m-pretrain-10m-5k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/best.pt \
+  --selection experiments/evaluation/chat-test-v1.json \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --device cpu --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-chat-test-v1.txt
+uv run python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-chat-test-v1.json \
+  --output artifacts/evaluations/issue1-both-50m-pretrain-10m-5k-chat-review.json
+```
+
+075との差を同じ評価コードとseedで比較しました。5領域のvalidation lossは、generalが4.689170から4.607053へ-0.082117、conversationが2.889645から2.703728へ-0.185917、medicalが2.978035から2.732444へ-0.245591、RPCが2.855596から2.649845へ-0.205751、MRMPが2.582441から2.363312へ-0.219129となり、全領域で改善しました。特にmedicalと会話系の改善幅が大きく、10MコーパスへWikipediaを追加した構成と、Token予算をほぼ2倍にしたことは、言語モデルのvalidation性能には有効でした。
+
+固定chat-test 48例では、080もEOS到達は48例中48例でした。平均生成Token数は9.8958から8.8750へ-1.0208と短くなりましたが、全体のToken overlap precisionは0.081253から0.110874へ+0.029621、recallは0.055935から0.067281へ+0.011346、F1は0.060641から0.074119へ+0.013478改善しました。short F1は0.046429から0.081483へ+0.035054、medium F1は0.067933から0.067581へ-0.000353、long F1は0.067563から0.073293へ+0.005731でした。079のように長く出すだけではなく、080は短いながら重複率が改善しており、少なくとも固定評価上は主目的に近い方向です。
+
+一方、生成本文の質はまだ自然な会話と呼べる水準ではありません。事前学習の固定promptではstep 1,000以降にEOS直後の空応答へ崩れ、chat-testでも`コアラ!`、`こちらは、?`、`そうですね。どのくらいのお弁当ですー。`のように、局所的には日本語でも履歴への対応が弱い出力が残りました。したがって「10Mに増やせば自然な日本語になる」とは言えず、今回確認できたのは、事前学習Tokenを増やすことでvalidation lossと簡易chat F1が改善する可能性です。自然さをさらに高めるには、重複の少ない会話データを含む事前学習、文書境界とEOSの扱い、SFT前の学習量、そして生成時の停止挙動を分けて調べる必要があります。
+
+評価JSON、生成全文、人手レビュー用JSONのSHA-256は、領域評価が`32a9d2008c684377881381dbfb1a03e65141bcbb89dad74c6b139b2de80fb684`、chat JSONが`fa6d6c2c99d77d90073175324a538897ee8ba7e3ba837fd1b5318dcc35df87e7`、生成TXTが`2f56602d25bf8977fd1131c0a254dad084f5c0ad1deea9b29ee4169d5087eded`、review JSONが`1b24becb7efbe36ee2ca797d82979957407c628b14be903bc2860ab3a5a4fcd3`です。Colabのcheckpoint hash manifestは`artifacts/checkpoints/issue1-both-50m-pretrain-10m-5k/colab_checkpoint_manifest.json`へ保存します。
+
+今回の判断は、10M Token構成を主線の新しい基盤候補として採用する、です。ただし、source比率の変更とToken量の増加が同時に起きたため、改善の原因を一つに決めません。次は同じ075の5M Token列を2周以上見せる反復学習条件を実施し、080の「新しいデータを増やした効果」と比較します。これにより、データの多様性、反復回数、総Token予算のどれが効いたかを切り分けます。
 
 ## 次に試すこと
 
