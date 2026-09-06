@@ -56,6 +56,10 @@ NaN、OOM、shape errorなく8,000 stepを完走し、250 stepごとのvalidatio
 
 Runpod A40上で実験111 raw bestからSFTを開始した。step 1のvalidation lossは2.913144、step 250は2.804113、step 250のlearning rateは1.9998e-5、経過時間は21.39秒だった。step 250の固定会話生成は「こんにちは!」に対して「こんにちは!」となり、raw checkpointで見られた長い反復はこの時点では現れていない。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 1,000〜1,250
+
+step 1,000のvalidation lossは2.811358、perplexityは16.6325、learning rateは1.9538e-5、経過時間は82.00秒だった。step 1,250ではloss 2.808899、perplexity 16.5916、learning rate 1.9209e-5、経過時間102.14秒となった。現時点の最良はstep 250の2.804113で、学習は安定している。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、学習時間、領域別loss、一般会話48例、医療162例、実験110・111との比較、仮説との一致・不一致、次に試す変更を追記する。
