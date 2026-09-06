@@ -198,6 +198,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/debug.toml")
     parser.add_argument("--max-steps", type=int, default=None)
+    parser.add_argument(
+        "--initial-checkpoint",
+        default=None,
+        help="重みだけを読み込んで追加学習を始めるcheckpoint（optimizerは初期化）",
+    )
     parser.add_argument("--device", default="auto", help="auto、cuda、cpuのいずれか")
     parser.add_argument("--no-amp", action="store_true", help="CUDAでもfloat32で実行")
     args = parser.parse_args()
@@ -238,6 +243,22 @@ def main() -> None:
         norm_type=config.model.norm_type,
         ffn_type=config.model.ffn_type,
     ).to(device)
+    initial_checkpoint_path = (
+        repo_path(args.initial_checkpoint).resolve()
+        if args.initial_checkpoint is not None
+        else None
+    )
+    if initial_checkpoint_path is not None:
+        if not initial_checkpoint_path.is_file():
+            raise FileNotFoundError(
+                f"initial checkpointが見つかりません: {initial_checkpoint_path}"
+            )
+        state_dict = torch.load(
+            initial_checkpoint_path, map_location="cpu", weights_only=True
+        )
+        if not isinstance(state_dict, dict):
+            raise ValueError("initial checkpointはmodel state_dictで指定してください")
+        model.load_state_dict(state_dict)
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=config.training.learning_rate,
@@ -269,6 +290,10 @@ def main() -> None:
         "train_tokens_sha256": _sha256_file(config.paths.train_tokens),
         "val_tokens_sha256": _sha256_file(config.paths.val_tokens),
     }
+    if initial_checkpoint_path is not None:
+        input_hashes["initial_checkpoint_sha256"] = _sha256_file(
+            initial_checkpoint_path
+        )
 
     def write_sample(step: int) -> str:
         prompt_ids = processor.encode(config.generation.prompt, out_type=int)
@@ -303,6 +328,9 @@ def main() -> None:
                 "device": str(device),
                 "amp_enabled": amp_enabled,
                 "parameter_count": parameter_count(model),
+                "initial_checkpoint": (
+                    str(initial_checkpoint_path) if initial_checkpoint_path else None
+                ),
             },
             ensure_ascii=False,
         )
@@ -439,6 +467,9 @@ def main() -> None:
             best_checkpoint.name if best_checkpoint is not None else None
         ),
         "best_checkpoint_step": best_checkpoint_step,
+        "initial_checkpoint": (
+            str(initial_checkpoint_path) if initial_checkpoint_path else None
+        ),
         "best_validation_loss": best_validation_loss,
         "checkpoint_interval": checkpoint_interval,
         "elapsed_seconds": time.monotonic() - started,
