@@ -36,6 +36,10 @@ Colab T4が利用できる場合は、同じ設定と入力を`colab_bootstrap_0
 
 学習開始前に設定・入力hash・Git commit・bundle hash・Colab試行結果を追記します。学習中は1,000 stepを超えて記録を空けず、原則100 stepごとにmetrics、生成文、異常を保存します。生成文は良いものだけでなく、崩れた出力も削除せずGitHubへ追加します。
 
+Colab T4の新規session `exp080-both-50m-pretrain-10m`は作成に成功し、bundle uploadと入力hash検証も完了しました。Colab側のTorch/CUDA情報は学習完了後のsummaryから確定します。標準出力の転送は遅れましたが、リモートの`metrics.jsonl`を途中回収して学習継続を確認しています。step 1はtrain loss 8.790941、validation loss 8.819555、PPL 6765.26、learning rate 6.0e-7、経過3.48秒でした。step 100はvalidation loss 7.276060、PPL 1445.28、learning rate 6.0e-5、経過12.51秒、step 500はtrain loss 5.497313、validation loss 6.379793、PPL 589.81、learning rate 3.0e-4、経過56.60秒でした。
+
+step 1,000はtrain loss 4.444293、validation loss 5.593394、PPL 268.65、learning rate 2.9189e-4、経過109.36秒でした。step 1,500はtrain loss 4.536695、validation loss 5.346462、PPL 209.86、learning rate 2.6848e-4、経過166.33秒、step 2,000はtrain loss 3.786160、validation loss 5.110367、PPL 165.73、learning rate 2.3258e-4、経過220.45秒でした。step 2,500はtrain loss 3.421191、validation loss 4.980713、PPL 145.58、learning rate 1.8854e-4、経過278.24秒、step 3,000はtrain loss 3.565266、validation loss 4.889075、PPL 132.83、learning rate 1.4165e-4、経過330.51秒でした。step 3,100はtrain loss 3.711011、validation loss 4.839065、PPL 126.35、learning rate 1.3243e-4、経過343.84秒でした。step 3,100時点でNaN、OOM、shape errorはなく、validation lossは継続的に改善しています。学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 実際のbackend、完走または停止理由、最良checkpoint、学習時間、5領域loss、chat-test結果、075との差、source比率の影響、自然な日本語の質的観察を追記します。失敗した場合も、原因不明ならそのまま明記し、次の切り分けを残します。
