@@ -1,0 +1,38 @@
+{
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1528083968,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "inputs": {
+    "config_sha256": "5a8dfe5cfe5cb0a0c8ba2679b6d64a64ef71470e9337b04929d233448d6605c1",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "fa8442332ab19f2134cd4ba1888ae1bc3cfbec02fd8aefba9ec73fbb63c855ff",
+    "val_tokens_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+    "initial_checkpoint_sha256": "6057172a5a2b3b420c5c751388eead0b17e0dfaa41585259265859ab9bf016b4"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 500,
+    "sample_interval": 500,
+    "checkpoint_interval": 1000
+  },
+  "final_step": 5000,
+  "start_step": 0,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 4500,
+  "initial_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-both-50m-pretrain-continuation-20m-40k-runpod-cuda-lr3e-5/best.pt",
+  "best_validation_loss": 2.828303945064545,
+  "checkpoint_interval": 1000,
+  "elapsed_seconds": 331.7868445268832
+}

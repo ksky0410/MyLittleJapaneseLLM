@@ -1,0 +1,3 @@
+prompt: <|startofconversation|><|speaker:A|>こんにちは！<eos:3><|speaker:B|>
+
+<|startofconversation|> <|speaker:A|> こんにちは! <|speaker:B|> こんにちは。こちらは夏休みです!
