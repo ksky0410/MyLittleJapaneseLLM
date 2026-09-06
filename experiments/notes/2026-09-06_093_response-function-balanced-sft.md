@@ -76,3 +76,9 @@ uv run python scripts/train_sft_torch.py \
   --sample-template conversation --sample-speaker-a DA --sample-speaker-b DC \
   --keep-periodic-checkpoints 1 --device mps
 ```
+
+## 学習中の記録
+
+2026-09-06 16:54 JST、上記コマンドでMPS学習を開始しました。step 1はtrain loss 3.928150、SFT loss 4.231068、rehearsal loss 2.716481、validation loss 4.042264、PPL 56.9551、経過5.02秒でした。step 100はtrain loss 3.708910、SFT loss 3.836306、rehearsal loss 3.199324、validation loss 3.489293、PPL 32.7628、経過134.27秒でした。step 200はvalidation loss 3.506221、PPL 33.3221、経過256.24秒、step 300は3.526139、PPL 33.9925、経過380.87秒、step 400は3.512475、PPL 33.5311、経過505.27秒でした。step 500はtrain loss 3.507281、SFT loss 3.741178、rehearsal loss 2.571692、validation loss 3.497676、PPL 33.0386、経過628.85秒でした。
+
+step 100のbest checkpointは正常に`best.pt`へ保存され、step 500の周期checkpointも正常に保存されました。checkpoint保持設定により、step 500時点で`.pt`本体は`best.pt`と`step_000500.pt`の2個だけです。生成サンプルはstep 100〜500を保存しています。step 500の固定生成は会話markerの後に「こんにちは!」と返しており、まだ挨拶から広がっていません。学習は継続中です。
