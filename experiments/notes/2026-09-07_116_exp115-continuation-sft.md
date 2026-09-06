@@ -56,3 +56,7 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
 ### 2026-09-07：step 8,250〜8,750
 
 設定修正後の再実行は正常に開始した。step 8,250のvalidation lossは2.754303、step 8,500は2.754326、step 8,750は2.753209だった。step 8,750でexp115のbest 2.754026を更新し、learning rateは9.682e-7、経過時間は62.64秒だった。学習率を抑えた継続でも初期には改善が見られている。NaN、OOM、shape errorは発生していない。各stepの生成文は `artifacts/samples/issue1-exp115-continuation-sft-runpod-16k/` に保存されている。
+
+### 2026-09-07：step 9,000〜9,250
+
+step 9,000のvalidation lossは2.752965、step 9,250は2.751872だった。exp115のbestから合計0.002154改善しており、learning rateはstep 9,250で8.816e-7、経過時間は104.43秒だった。低学習率でvalidation lossは単調ではないものの、現時点では改善傾向を保っている。NaN、OOM、shape errorは発生していない。
