@@ -1,0 +1,60 @@
+{"step": 1, "train_loss": 2.54248046875, "sft_train_loss": 2.291712760925293, "validation_loss": 2.911437523365021, "validation_perplexity": 18.383205869874928, "learning_rate": 3.0000000000000004e-08, "elapsed_seconds": 1.120796320028603, "rehearsal_ratio": 0.2, "eos_loss_weight": 1.0, "lr_schedule_steps": 1000, "long_response_ratio": 0.0, "long_response_min_tokens": 32, "rehearsal_train_loss": 3.545550584793091}
+{"step": 250, "train_loss": 3.1351521015167236, "sft_train_loss": 3.2905309200286865, "validation_loss": 2.911840224266052, "validation_perplexity": 18.390610294226683, "learning_rate": 2.8214833620480535e-06, "elapsed_seconds": 22.435244027059525, "rehearsal_ratio": 0.2, "eos_loss_weight": 1.0, "lr_schedule_steps": 1000, "long_response_ratio": 0.0, "long_response_min_tokens": 32, "rehearsal_train_loss": 2.5136361122131348}
+{"step": 500, "train_loss": 1.667220115661621, "sft_train_loss": 1.5025198459625244, "validation_loss": 2.9081204533576965, "validation_perplexity": 18.322328512093524, "learning_rate": 1.8890643994314375e-06, "elapsed_seconds": 42.6650293818675, "rehearsal_ratio": 0.2, "eos_loss_weight": 1.0, "lr_schedule_steps": 1000, "long_response_ratio": 0.0, "long_response_min_tokens": 32, "rehearsal_train_loss": 2.326021432876587}
+{"step": 750, "train_loss": 2.632413387298584, "sft_train_loss": 2.548887014389038, "validation_loss": 2.9088410139083862, "validation_perplexity": 18.335535616904036, "learning_rate": 7.858519056953099e-07, "elapsed_seconds": 63.52978741377592, "rehearsal_ratio": 0.2, "eos_loss_weight": 1.0, "lr_schedule_steps": 1000, "long_response_ratio": 0.0, "long_response_min_tokens": 32, "rehearsal_train_loss": 2.9665188789367676}
+{"step": 1000, "train_loss": 2.8633511066436768, "sft_train_loss": 2.740450859069824, "validation_loss": 2.9080917477607726, "validation_perplexity": 18.32180256626538, "learning_rate": 3.0000822466198294e-07, "elapsed_seconds": 83.3299861587584, "rehearsal_ratio": 0.2, "eos_loss_weight": 1.0, "lr_schedule_steps": 1000, "long_response_ratio": 0.0, "long_response_min_tokens": 32, "rehearsal_train_loss": 3.354952335357666}
+{
+  "format": "chat-sft-torch-training-v1",
+  "backend": "pytorch-cuda",
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624,
+    "peak_memory_allocated_bytes": 1490586112,
+    "peak_memory_reserved_bytes": 1598029824
+  },
+  "inputs": {
+    "config_sha256": "3b791b4656c28e372981fcb48abbb3ead2a973bff1e92763b95c5f9a26e4f5d9",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_data_sha256": "598c464b03cd94a9c5579552df5f78059410f8ce5721da6cc93acb8251382cf4",
+    "validation_data_sha256": "95b6729ea46821d247ced049a0f06eef607c2d5ceb8e76cbcb8d337bebd8ad35",
+    "base_checkpoint_sha256": "080d6e30f33b3464fdf470d674edee48f47e59c9117cafba0c5120532f8cee44",
+    "rehearsal_tokens_sha256": "d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090"
+  },
+  "parameter_count": 50207616,
+  "training_intervals": {
+    "eval_interval": 250,
+    "sample_interval": 250,
+    "checkpoint_interval": 500
+  },
+  "keep_periodic_checkpoints": 1,
+  "start_step": 0,
+  "final_step": 1000,
+  "lr_schedule_steps": 1000,
+  "best_checkpoint": "best.pt",
+  "best_checkpoint_step": 1000,
+  "best_validation_loss": 2.9080917477607726,
+  "base_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-balanced-pretrain-answer-focus-sft-runpod-1k/best.pt",
+  "train_examples": 130676,
+  "validation_examples": 49207,
+  "rehearsal_tokens": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-train.bin",
+  "rehearsal_ratio": 0.2,
+  "elapsed_seconds": 84.04579244600609,
+  "sample_prompt": {
+    "text": "こんにちは！",
+    "template": "conversation",
+    "speaker_a": "DA",
+    "speaker_b": "DC"
+  },
+  "exclude_eos_from_sft_loss": false,
+  "eos_loss_weight": 1.0,
+  "long_response_ratio": 0.0,
+  "long_response_min_tokens": 32
+}
