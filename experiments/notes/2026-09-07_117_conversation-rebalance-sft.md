@@ -81,3 +81,7 @@ step 500のvalidation lossは2.743028、step 750は2.740917だった。warmup終
 ### 2026-09-07：step 1,000〜1,500
 
 step 1,000のvalidation lossは2.742237、step 1,250は2.739406、step 1,500は2.740307だった。step 1,250で現時点の最良値を更新し、exp116 bestから0.007870改善した。step 1,500のlearning rateは3.823e-6、経過時間は122.78秒だった。step 750以降は小さな揺らぎがあるものの、再配分条件のvalidation lossはexp116より低い状態を保っている。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 1,750〜2,250
+
+step 1,750のvalidation lossは2.737971、step 2,000は2.738409、step 2,250は2.736940だった。step 2,250で現時点の最良値を更新し、exp116 bestから0.010336改善した。step 2,250のlearning rateは2.474e-6、経過時間は183.06秒だった。学習率が下がる中でもvalidation lossは改善傾向を保ち、データ再配分の効果が一時的なwarmup後の揺らぎだけではない可能性が高まった。
