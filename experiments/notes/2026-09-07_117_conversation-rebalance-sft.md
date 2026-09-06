@@ -1,5 +1,13 @@
 # 実験117：RPCを増やした会話データ再配分SFT
 
+## 学習完了時の記録
+
+2026-09-07、step 4,000まで正常に完走した。step 4,000のvalidation lossは2.728911、validation perplexityは15.316194、learning rateは5.000e-7、経過時間は325.93秒だった。最良checkpointはstep 3,500で、validation lossは2.728217、perplexityは15.305569だった。exp116 bestのvalidation loss 2.747276と比べて0.019059低く、今回の会話データ再配分がvalidation上では明確な改善を示した。
+
+最良重み`best.pt`のSHA-256は`333456ca779477bba5191e1acce5414a9a48b4d7acb1336207f97a8da301ad20`である。学習全体の最大GPUメモリ使用量はallocated 1,490,586,112 bytes、reserved 1,598,029,824 bytesだった。NaN、OOM、shape errorは発生しなかった。250 stepごとのmetrics、生成サンプル17本、step 4,000の最終checkpoint metadata、学習ログを保存した。
+
+固定プロンプト「今日は天気がいいですね。」に対するstep 4,000の出力は、短く「こんばんは!」と返す形だった。日本語として壊れてはいないが、天気への応答や話題の維持までは確認できないため、validation lossの改善だけで自然な会話能力の向上とは判断しない。次に一般会話と医療の固定評価を実施し、exp115・116と比較する。
+
 ## 実施前の計画
 
 ### 目的
