@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-seed123-3k/best.pt
+checkpoint_step: 3000
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-seed123-3k.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=38.00
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=14.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=2.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=10.00
+disagreement: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=17.00
+invitation: count=1 empty=0 eos=1 mean_completion_tokens=2.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+、「あひたいな!」と聞いた。
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+のかな ということはいいし、と考えたら...
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+!
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+しい物は、自分も同じものにこだわって、おもしろかもしれない。だから、この頃はそのまま君子に合ったが、またその名を着た方がその上、よばしくお願いいた。今朝はもう少しまで、おやや、
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+ずまくのことのないですか?
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、この日はその頃の男である。これも一歳の女も、女というのには、「夫の生き物に行くんだね、そのくらいは、もう少しだけもするものだろうっては」と寒月君を愛さない。「どうして、何のうちに」と云う
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+は、おくらげできれば、ついはいかがでしょうか?
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+!

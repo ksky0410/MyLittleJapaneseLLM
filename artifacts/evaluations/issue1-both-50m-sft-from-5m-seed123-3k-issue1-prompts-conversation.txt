@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-seed123-3k/best.pt
+checkpoint_step: 3000
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-seed123-3k.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=3.50
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+short-turn: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+invitation: count=1 empty=0 eos=1 mean_completion_tokens=4.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: <|startofconversation|><|speaker:A|>まじで<eos:3><|speaker:B|>
+completion:
+こんばんは
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: <|startofconversation|><|speaker:A|>それな<eos:3><|speaker:B|>
+completion:
+こんにちはー。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: <|startofconversation|><|speaker:A|>今日なにしてた？<eos:3><|speaker:B|>
+completion:
+こんばんは、!
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: <|startofconversation|><|speaker:A|>やば<eos:3><|speaker:B|>
+completion:
+おはようございます!
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: <|startofconversation|><|speaker:A|>なんかさ<eos:3><|speaker:B|>
+completion:
+こんにちは!
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: <|startofconversation|><|speaker:A|>いやそれは<eos:3><|speaker:B|>
+completion:
+こんばんは。
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: <|startofconversation|><|speaker:A|>おつかれ<eos:3><|speaker:B|>
+completion:
+こんばんは!
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: <|startofconversation|><|speaker:A|>明日ひま？<eos:3><|speaker:B|>
+completion:
+こんばんは!

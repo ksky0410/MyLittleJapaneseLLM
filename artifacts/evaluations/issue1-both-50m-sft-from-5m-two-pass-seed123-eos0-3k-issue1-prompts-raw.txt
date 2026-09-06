@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/best.pt
+checkpoint_step: 2100
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=2 mean_completion_tokens=20.50
+backchannel: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+short-turn: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+discourse-marker: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+disagreement: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+parting: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+invitation: count=1 empty=0 eos=1 mean_completion_tokens=15.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+あれば、お友達にもおかかりください! お子様はどうしようかと思います!
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+のでしょうよ! それは、どうでしょうね、何かしようと願いましょう! そう思ってみてからでも勉強してみます! お祝い、今のお話しさましいです! ちょっと聞きますよ!!! お話しします!!!! お買い物教室の楽しみ
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+実は、今回は、何となく私を呼ぶのでしょうか? 日本人の授業です。その年頃は、もう一時頃は、一応二度と二度と、つまり、私たちは、近所の私を養ってから私を対象
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+い!なに??????????!?
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+、やらないから、と思い込んで、今に至るのかと、赤シャツの娘のようでしたかね。私はまだもう少しの事だから、どうする訳は、よく疑るでしょう。それでその内に、この問題を解くとした。そうしてその言葉を一遍も二つ以上
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、もう少し遅くはなはだぜ。 そう、もうすぐに起るのかと言ったからね。こう聞いても、そのままに話してもいい。 そんな気がしたっていけない......。だから主人もそれとは違っても、何かにしないでください。 
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+な大人の人数の大人数が一定の数字をかけている。たとえ子どもがいっぱい変わったからか。。。 かわいい子だから、ひしょっとこどもった! まぁ、そう思ったんだけど
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+?????です? ?!!!???
