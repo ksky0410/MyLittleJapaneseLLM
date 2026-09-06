@@ -77,6 +77,10 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 
 実験110のbest checkpointから、Runpod A40上で追加事前学習を開始した。step 1のFineWeb validation lossは2.941314、perplexityは18.9407、learning rateは1.0e-8、経過時間は0.91秒だった。実験110の同じFineWeb評価値2.941318とほぼ一致しており、初期checkpointのreloadと評価経路は正常である。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 500〜1,000
+
+step 500のFineWeb validation lossは2.860697、perplexityは17.4737、learning rateは5.0e-6、経過時間は32.66秒だった。step 1,000ではloss 2.840945、perplexity 17.1319、learning rate 4.9694e-6、経過時間65.46秒となった。実験110の初期値から0.100369下がっており、未使用FineWeb shardの追加学習がvalidationへ反映されている。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
