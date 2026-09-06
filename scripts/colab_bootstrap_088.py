@@ -41,7 +41,7 @@ def main() -> None:
         with tarfile.open(BUNDLE, "r:gz") as archive:
             archive.extractall(PROJECT, filter="data")
     required = {
-        CONFIG: "",
+        CONFIG: "70978d302359c7803f1ce86ff04844a64fb2dbdfbae127790e85a5e6ea27961f",
         BASE: "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb",
         BASE_METADATA: "4b6b56ad60730cc75a938dd8ef99aba6e713e03852043e8fe9175ef5d5c2813b",
         TRAIN_DATA: "001dc022a998abc5756f641b199988112db77ff42903485ff7a6fd6bd0e028a3",

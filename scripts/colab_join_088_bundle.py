@@ -7,8 +7,8 @@ from pathlib import Path
 
 PARTS = sorted(Path("/content").glob("exp088-part-*"))
 TARGET = Path("/content/exp088_bundle_reassembled.tar.gz")
-EXPECTED_BYTES = 0
-EXPECTED_SHA256 = ""
+EXPECTED_BYTES = 263_513_831
+EXPECTED_SHA256 = "cf9dc878a24b1733e1144ef06eea0b3ff9bdcfb3faf45310d7a9d3f2bc7ba361"
 
 
 def sha256(path: Path) -> str:
@@ -33,7 +33,7 @@ def main() -> None:
     actual_bytes = TARGET.stat().st_size
     actual_sha256 = sha256(TARGET)
     print({"bytes": actual_bytes, "sha256": actual_sha256}, flush=True)
-    if EXPECTED_BYTES and (actual_bytes != EXPECTED_BYTES or actual_sha256 != EXPECTED_SHA256):
+    if actual_bytes != EXPECTED_BYTES or actual_sha256 != EXPECTED_SHA256:
         raise RuntimeError(f"bundle検証失敗: bytes={actual_bytes}, sha256={actual_sha256}")
 
 
