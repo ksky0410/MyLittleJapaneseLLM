@@ -81,6 +81,10 @@ https://huggingface.co/datasets/hotchpotch/fineweb-2-edu-japanese/resolve/180ca0
 
 step 500のFineWeb validation lossは2.860697、perplexityは17.4737、learning rateは5.0e-6、経過時間は32.66秒だった。step 1,000ではloss 2.840945、perplexity 17.1319、learning rate 4.9694e-6、経過時間65.46秒となった。実験110の初期値から0.100369下がっており、未使用FineWeb shardの追加学習がvalidationへ反映されている。NaN、OOM、shape errorは発生していない。
 
+### 2026-09-07：step 2,000
+
+step 2,000のFineWeb validation lossは2.824365、perplexityは16.8502、learning rateは4.7292e-6、経過時間は131.12秒だった。改善は緩やかになったが、実験110の初期値から0.116953下がり、ここまで最良値を更新している。NaN、OOM、shape errorは発生していない。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、SFT再適用の結果、実験110との比較、仮説との一致・不一致、次に試す変更を追記する。
