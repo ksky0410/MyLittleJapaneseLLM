@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k/best.pt
+checkpoint_step: 9800
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=34.00
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=5.00
+short-turn: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=12.00
+disagreement: count=1 empty=0 eos=1 mean_completion_tokens=9.00
+parting: count=1 empty=0 eos=1 mean_completion_tokens=3.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+みられる.
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+のでしょうね。
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+それは、あれもこれだけはない、ということで、 スタンドアローンを出してみたり、 私も食べてないのに?って感じるのかも。 なので、こればかりではないのか、 スタンドアローンを作ってもいい
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+くの発作性の生存性皮膚炎が生じている. 現病歴:意識は清明.身長163cm,体重56kg.体温38.3°C.脈拍76/分,整.血圧134/82mmHg.呼吸数26/分.
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+ー!そして、最後はどうなんですか?
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、少しずりぶりです。
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+ました。
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+

@@ -1,0 +1,59 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch",
+  "config": "/Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k.toml",
+  "checkpoint": "/Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k/best.pt",
+  "checkpoint_sha256": "3f07dabc7ca0dba08bf6f8ede69b0a7c7688c5fb28f4b7384fece25e246f9d74",
+  "checkpoint_step": 9800,
+  "parameter_count": 50207616,
+  "seed": 123,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.14.0",
+    "cuda": null,
+    "device": "cpu",
+    "amp_enabled": false
+  },
+  "domains": [
+    {
+      "name": "general",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.3617622057596845,
+      "perplexity": 78.39516117615197
+    },
+    {
+      "name": "conversation",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 2.441312392552694,
+      "perplexity": 11.488107760780942
+    },
+    {
+      "name": "medical",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 2.5220885276794434,
+      "perplexity": 12.454581257052132
+    },
+    {
+      "name": "RPC",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/issue1-real-persona-chat-validation.bin",
+      "token_sha256": "30f8b66828b7a5c1171024af220613cc79d066089a4c09896456112f8754491c",
+      "token_count": 948172,
+      "validation_loss": 2.403770367304484,
+      "perplexity": 11.064816253938941
+    },
+    {
+      "name": "MRMP",
+      "token_path": "/Users/koseki/projects/small_llm/artifacts/tokens/issue1-mrmp-validation.bin",
+      "token_sha256": "9431d4d7432f89f69d9656bf2c3eea7c18dbcb94e84467060cba3fa8d9445623",
+      "token_count": 156475,
+      "validation_loss": 2.024483561515808,
+      "perplexity": 7.57219935951801
+    }
+  ]
+}
