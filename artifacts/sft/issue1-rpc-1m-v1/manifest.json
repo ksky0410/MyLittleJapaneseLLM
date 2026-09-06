@@ -1,0 +1,17 @@
+{
+  "format": "sft-npz-response-budget-selection-v1",
+  "input_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-rpc-full-v1/train.npz",
+  "input_sha256": "038bf678f5548bd2759fe5b28d8d98e0b19b7456c81b2cbfb8c71878adbbda15",
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-rpc-1m-v1/train.npz",
+  "output_sha256": "efb82456dbb178b2610c71844fdfa52be32463608b0f83f6a2df059c891c786e",
+  "seed": 8601,
+  "target_response_tokens": 1000000,
+  "input_example_count": 315584,
+  "input_response_token_count": 5132071,
+  "selected_example_count": 61587,
+  "selected_response_token_count": 1000005,
+  "array_shape": [
+    61587,
+    256
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "format": "sft-npz-concat-v1",
+  "inputs": {
+    "rpc": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-rpc-770k-v1/train.npz",
+      "sha256": "1780ec2d19d1d884f39958df59cb5c4c41158c604352c155a5ad994df9d5a8c0",
+      "example_count": 47518,
+      "response_token_count": 770981
+    },
+    "mrmp": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-mrmp-770k-v1/train.npz",
+      "sha256": "2149057f0f61cd8c1ff804b9993014fc72ef2a53a749f1122b64d57cfe8cd7e8",
+      "example_count": 81382,
+      "response_token_count": 770975
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/sft/issue1-both-balanced-770k-each-v1/train.npz",
+  "output_sha256": "001dc022a998abc5756f641b199988112db77ff42903485ff7a6fd6bd0e028a3",
+  "output_example_count": 128900,
+  "output_response_token_count": 1541956,
+  "array_shape": [
+    128900,
+    256
+  ]
+}
