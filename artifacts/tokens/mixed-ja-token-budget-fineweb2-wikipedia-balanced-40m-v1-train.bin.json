@@ -1,0 +1,20 @@
+{
+  "format": "uint32-token-concat-round-robin-v1",
+  "chunk_tokens": 262144,
+  "inputs": {
+    "initial": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-20m-v1-train.bin",
+      "sha256": "707561109835bed5bccd8126527debeb86e86f0e6daaa9abea4ea78ba63e54e6",
+      "token_count": 19987750
+    },
+    "continuation": {
+      "path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-continuation-20m-v1-train.bin",
+      "sha256": "f19878618870a487ce5b0aab6970d6d72b2ef71ab76ee79520e7c3fe3341dec1",
+      "token_count": 19993334
+    }
+  },
+  "output_path": "/Users/koseki/projects/small_llm/artifacts/tokens/mixed-ja-token-budget-fineweb2-wikipedia-balanced-40m-v1-train.bin",
+  "output_sha256": "fa8442332ab19f2134cd4ba1888ae1bc3cfbec02fd8aefba9ec73fbb63c855ff",
+  "output_token_count": 39981084,
+  "dtype": "uint32"
+}
