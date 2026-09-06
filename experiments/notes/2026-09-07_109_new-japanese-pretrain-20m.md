@@ -78,4 +78,14 @@ FineWeb lossは実験105のSFT後2.921111から大きく改善した。これは
 
 ## 実験終了後の記録
 
-ここに最良checkpoint、最終step、FineWeb・general・conversation・medicalのdomain loss、固定chat-test、医療162問の正解率、学習時間、次の再SFT条件を追記する。
+### 2026-09-07：学習・raw評価完了
+
+10,000 stepまで学習し、FineWeb validation lossが最も低かったstep 9,500のcheckpointをbestとして採用した。best checkpointのSHA-256は `0ceaeedef9d8ab8039861078bce673977a78a8bf7d329ff57096184b9f531cea`、最良FineWeb lossは2.843884、perplexityは17.1824、学習時間は621.30秒だった。最終step 10,000のvalidation lossは2.84402付近である。NaN、OOM、shape error、途中停止はなかった。
+
+同じ20 evaluation batchesで評価した領域別lossはFineWeb 2.843884、general 4.126995、conversation 1.969749、medical 1.847450となった。実験105のFineWeb 2.921111、conversation 2.070219、medical 1.977347から改善した一方、generalは4.084512から悪化した。会話・医療のraw validation lossが大きく下がったため、追加コーパスの効果は確認できたが、SFT形式の能力とは区別する必要がある。
+
+固定一般会話48例ではEOS 48/48、平均生成9.29 tokens、token overlap F1 0.1252だった。実験108のF1 0.2359から大きく悪化した。医療162例ではEOS 157/162、平均生成23.20 tokens、token overlap F1 0.0905となり、「正解は…です。」を抽出できたのは12例、正解は2例、正解率1.23%だった。raw next-token事前学習が会話SFTの返答形式と医療回答形式を忘れさせたことが明確である。
+
+したがって、実験109は総合モデルとしては採用しないが、追加20M tokensと広い会話・医療データで知識側validationを改善できる有用なpretraining checkpointとして保存する。次はこのbest checkpointを初期値に、実験105と同じ一般・医療SFTを再適用する。再SFT後に会話・医療正答率が回復し、FineWeb改善も一部維持できれば、今後の標準パイプラインを「追加事前学習→十分なSFT」とする根拠になる。回復しなければ、追加事前学習のlearning rateまたはSFTデータ量を見直す。
+
+学習中のmetrics、summary、checkpoint metadata、step別生成は `artifacts/checkpoints/issue1-50m-pretrain-new-japanese-20m-runpod-10k/` と `artifacts/samples/issue1-50m-pretrain-new-japanese-20m-runpod-10k/` に、評価JSON/TXTは `artifacts/evaluations/exp109/` に保存する。

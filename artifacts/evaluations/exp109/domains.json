@@ -1,0 +1,57 @@
+{
+  "format": "domain-evaluation-torch-v1",
+  "backend": "pytorch-cuda",
+  "config": "/workspace/exp100/configs/issue1-50m-pretrain-new-japanese-20m-runpod-10k.toml",
+  "checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-50m-pretrain-new-japanese-20m-runpod-10k/best.pt",
+  "checkpoint_sha256": "0ceaeedef9d8ab8039861078bce673977a78a8bf7d329ff57096184b9f531cea",
+  "checkpoint_step": 9500,
+  "parameter_count": 50207616,
+  "seed": 109,
+  "eval_batches": 20,
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47697690624
+  },
+  "domains": [
+    {
+      "name": "fineweb",
+      "token_path": "/workspace/exp100/artifacts/tokens/fineweb2-edu-japanese-v1-test.bin",
+      "token_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+      "token_count": 2061459,
+      "validation_loss": 2.8438839673995973,
+      "perplexity": 17.18237187720718
+    },
+    {
+      "name": "general",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin",
+      "token_sha256": "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
+      "token_count": 11780,
+      "validation_loss": 4.126995432376861,
+      "perplexity": 61.99138553308517
+    },
+    {
+      "name": "conversation",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin",
+      "token_sha256": "e78281538e34ad3b895ced68676b3f3386b1d265806cd5901fd777d4700bffc8",
+      "token_count": 1104647,
+      "validation_loss": 1.9697486281394958,
+      "perplexity": 7.168874208587362
+    },
+    {
+      "name": "medical",
+      "token_path": "/workspace/exp100/artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin",
+      "token_sha256": "649483667e3d2328dbb5b59188e637d60b43ef10344371b5ce7855dd6551bb2c",
+      "token_count": 197674,
+      "validation_loss": 1.847449576854706,
+      "perplexity": 6.343619958344359
+    }
+  ]
+}
