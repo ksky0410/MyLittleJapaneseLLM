@@ -1,0 +1,33 @@
+{"backend": "pytorch", "device": "cuda", "amp_enabled": true, "parameter_count": 50207616, "initial_checkpoint": "/workspace/exp100/artifacts/checkpoints/issue1-50m-pretrain-fineweb-new-shards34-runpod-10k/best.pt", "start_step": 0}
+{"step": 1, "train_loss": 2.821906328201294, "validation_loss": 2.777792775630951, "validation_perplexity": 16.08348188795395, "learning_rate": 1e-08, "elapsed_seconds": 1.852248606737703}
+{"step": 500, "train_loss": 2.676617383956909, "validation_loss": 2.7774938106536866, "validation_perplexity": 16.078674208856633, "learning_rate": 5e-06, "elapsed_seconds": 33.824393743649125}
+{"step": 1000, "train_loss": 3.0584073066711426, "validation_loss": 2.7770213723182677, "validation_perplexity": 16.071079820858927, "learning_rate": 4.969435279787763e-06, "elapsed_seconds": 67.14230797905475}
+{"step": 1500, "train_loss": 2.9273929595947266, "validation_loss": 2.7755139112472533, "validation_perplexity": 16.046871544761043, "learning_rate": 4.878330273807196e-06, "elapsed_seconds": 101.08155333297327}
+{"step": 2000, "train_loss": 2.937150239944458, "validation_loss": 2.7746174812316893, "validation_perplexity": 16.032493093053123, "learning_rate": 4.7291699661001134e-06, "elapsed_seconds": 134.27950379578397}
+{"step": 2500, "train_loss": 2.676427125930786, "validation_loss": 2.7737177133560182, "validation_perplexity": 16.018074058665828, "learning_rate": 4.526023061028864e-06, "elapsed_seconds": 168.68033577501774}
+{"step": 3000, "train_loss": 3.016901969909668, "validation_loss": 2.7726584315299987, "validation_perplexity": 16.001115387519462, "learning_rate": 4.274430876599333e-06, "elapsed_seconds": 202.01286681275815}
+{"step": 3500, "train_loss": 2.7968482971191406, "validation_loss": 2.771255815029144, "validation_perplexity": 15.97868769145004, "learning_rate": 3.9812561917508815e-06, "elapsed_seconds": 235.94469090364873}
+{"step": 4000, "train_loss": 3.1284937858581543, "validation_loss": 2.770698845386505, "validation_perplexity": 15.969790525432384, "learning_rate": 3.65449604763681e-06, "elapsed_seconds": 269.4004615889862}
+{"step": 4500, "train_loss": 2.887971878051758, "validation_loss": 2.7698390960693358, "validation_perplexity": 15.956066409427857, "learning_rate": 3.303063609188428e-06, "elapsed_seconds": 302.61531286593527}
+{"step": 5000, "train_loss": 2.6367948055267334, "validation_loss": 2.7688485741615296, "validation_perplexity": 15.940269401019943, "learning_rate": 2.9365450372106143e-06, "elapsed_seconds": 335.9884790936485}
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 967, in save
+    _save(
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 1268, in _save
+    zip_file.write_record(name, storage, num_bytes)
+RuntimeError: [enforce fail at inline_container.cc:858] . PytorchStreamWriter failed writing file data/87: file write failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/exp100/scripts/train_torch.py", line 541, in <module>
+    main()
+  File "/workspace/exp100/scripts/train_torch.py", line 489, in main
+    save_checkpoint(checkpoint, "periodic")
+  File "/workspace/exp100/scripts/train_torch.py", line 460, in save_checkpoint
+    torch.save(model.state_dict(), checkpoint)
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 966, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+  File "/usr/local/lib/python3.12/dist-packages/torch/serialization.py", line 798, in __exit__
+    self.file_like.write_end_of_file()
+RuntimeError: [enforce fail at inline_container.cc:664] . unexpected pos 121119552 vs 121119440
