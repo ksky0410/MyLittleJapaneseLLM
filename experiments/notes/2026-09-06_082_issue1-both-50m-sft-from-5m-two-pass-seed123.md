@@ -60,7 +60,7 @@ uv run python scripts/evaluate_torch.py domains \
   --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-3k-domains.json
 
 uv run python scripts/evaluate_torch.py chat \
-  --config configs/issue1-both-sft-from-5m-two-pass-seed123-3k.toml \
+  --config configs/issue1-both-50m-sft-from-5m-two-pass-seed123-3k.toml \
   --checkpoint artifacts/checkpoints/issue1-both-sft-from-5m-two-pass-seed123-3k/best.pt \
   --selection experiments/evaluation/chat-test-v1.json \
   --input artifacts/corpus/conversation-v1/test.jsonl \
