@@ -49,4 +49,10 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_sft_torch.py \
 
 ## 学習中の記録
 
+### 2026-09-07：step 1〜1,750
+
+Runpod A40上でExp117 bestから長文sampling条件のSFTを開始した。step 1のvalidation lossは2.728228、step 250は2.730192、step 500は2.729358、step 750は2.728031、step 1,000は2.726478、step 1,250は2.730539、step 1,500は2.727325、step 1,750は2.726550だった。step 1,000でExp117 bestの2.728217を一時的に下回り、step 1,250で反発した後、step 1,750で再び改善した。step 1,750のlearning rateは3.394e-6、経過時間は154.48秒である。
+
+全stepで`long_response_ratio=0.25`、`long_response_min_tokens=24`がmetricsへ記録されている。NaN、OOM、shape errorは発生していない。step 0から1,750までの生成文はRunpod上に保存されており、完了後に全件回収する。
+
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、生成文、警告、設定変更を追記する。悪い生成や短すぎる生成も削除しない。
