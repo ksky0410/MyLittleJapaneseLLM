@@ -70,6 +70,34 @@ PYTHONPATH=scripts python3 scripts/train_sft_torch.py \
 
 Runpod上のpilotはPID 2223で正常に実行中である。step 250の混合validation lossは3.133442、step 500では3.094915まで下がった。step 500のSFT train lossは3.257999、rehearsal train lossは1.999201、学習率は`1.9935e-5`である。NaN、OOM、shape errorは発生していないため、1,000 stepまで継続する。なお、このvalidation lossは一般会話と医療を連結したSFT validationの値であり、実験101のraw domain lossとは直接比較しない。
 
+### pilot完了結果
+
+pilotはstep 1,000まで完走し、best checkpointもstep 1,000だった。validation lossは3.067110、Perplexityは21.479729、SFT train lossは2.641896、rehearsal train lossは3.052814である。A40での経過時間は83.35秒、ピークGPU allocated memoryは約1.49GBだった。初期値からNaN、OOM、shape errorは発生していない。
+
+pilot bestを用いた小規模生成評価では、一般会話12例のEOS到達が12例、平均生成Token数が12.0、token overlap F1が0.1742だった。医療validation 20例ではEOS到達が19例、平均生成Token数が52.4、token overlap F1が0.3212だった。実験101 continuationの一般48例EOS 16例、医療162例EOS 58例と比べ、SFTによって終了形式が明確に回復したため、本番8,000 stepへ進む。
+
+pilotのsummary、metrics、生成文、評価結果をRunpod上の`artifacts/checkpoints/exp102-pilot`、`artifacts/samples/exp102-pilot`、`evaluations/exp102-pilot-*`へ保存した。本番はpilot bestを初期checkpointに使い、学習率scheduleの終点を8,000 stepとして連続させる。
+
+### 本番実行コマンド
+
+```bash
+PYTHONUNBUFFERED=1 PYTHONPATH=scripts python3 scripts/train_sft_torch.py \
+  --config configs/issue1-general-medical-50m-sft-runpod-8k.toml \
+  --base-checkpoint artifacts/checkpoints/exp102-pilot/best.pt \
+  --train-data artifacts/sft/issue1-general-medical-concat-v1/train.npz \
+  --validation-data artifacts/sft/issue1-general-medical-concat-v1/validation.npz \
+  --output-dir artifacts/checkpoints/issue1-general-medical-50m-sft-runpod-8k \
+  --samples-dir artifacts/samples/issue1-general-medical-50m-sft-runpod-8k \
+  --max-steps 8000 \
+  --lr-schedule-steps 8000 \
+  --rehearsal-tokens artifacts/mixed-ja-80-10-10-v2-train.bin \
+  --rehearsal-ratio 0.20 \
+  --sample-template conversation \
+  --sample-speaker-a A \
+  --sample-speaker-b B \
+  --device cuda
+```
+
 ## 実行コマンド（予定）
 
 ```bash
