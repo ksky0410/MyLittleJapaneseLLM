@@ -54,6 +54,8 @@ PYTHONUNBUFFERED=1 PYTHONPATH=scripts uv run python scripts/train_torch.py \
 
 ## データ準備中の記録
 
+2026-09-07に、予定したURLからshard 3・4のparquetをRunpodへ取得した。shard 3は269,300,696 bytes、SHA-256は`c2e40f85c363aebfbf72fb4f1486d6142f9ee0d4e3cdc2cfecb03fa9a6a5a2b8`、shard 4は268,420,983 bytes、SHA-256は`6a68a893804f2a9fadf26de01d2ede5f8ae8f3de12df1c246b8538c9e71d12c0`だった。`wget -c`に再試行を設定したが、確認時点で両方とも完全取得され、取得処理の失敗は発生していない。
+
 ここに取得失敗、再試行、入力サイズとSHA-256、抽出結果、混合結果、Token化結果、使用したコマンドを発生順に追記する。失敗したコマンドも削除しない。
 
 ## 学習中の記録
