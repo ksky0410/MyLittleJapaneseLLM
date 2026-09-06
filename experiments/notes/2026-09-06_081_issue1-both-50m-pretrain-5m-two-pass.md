@@ -34,6 +34,8 @@ Colab T4が利用できる場合は、`scripts/colab_bootstrap_081.py`から同�
 
 開始前にGit commit、設定hash、入力hash、bundle hash、Colab session状態を記録します。学習中は100 step間隔のmetricsと生成文を保存し、1,000 step以上ノート更新を空けません。途中停止、OOM、warning、空応答もそのまま記録します。
 
+Colab T4の新規session `exp081-both-50m-pretrain-5m-two-pass`は作成に成功し、bundle uploadと入力hash検証が完了しました。step 1はtrain loss 8.895750、validation loss 8.819675、PPL 6766.06、learning rate 6.0e-7、経過2.71秒でした。step 100はtrain loss 6.931328、validation loss 7.205592、PPL 1346.94、learning rate 6.0e-5、経過11.96秒、step 200はvalidation loss 6.941548、PPL 1034.37、learning rate 1.2e-4、経過22.05秒でした。step 300はvalidation loss 6.646078、PPL 769.76、learning rate 1.8e-4、経過33.20秒、step 400はtrain loss 5.919453、validation loss 6.347234、PPL 570.91、learning rate 2.4e-4、経過44.40秒でした。NaN、OOM、shape errorは発生しておらず、学習は継続中です。
+
 ## 実験終了後の結果と解釈
 
 080と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価し、validation loss、EOS、平均生成長、全体・長さ別F1、生成の自然さを比較します。結果が改善しなくても、重複学習の過学習やsource別の弱点を次の実験へ引き継ぎます。
