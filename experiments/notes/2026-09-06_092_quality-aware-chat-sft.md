@@ -26,6 +26,8 @@
 
 学習を開始できた場合は、100 stepごとのmetricsと固定生成、少なくとも1,000 stepごとの解釈を追記します。OOM、NaN、shape error、途中停止、生成の挨拶偏重も削除せず記録します。
 
+2026-09-06 14:03 JST、`colab sessions`で既存セッションがないことを確認した後、`colab new --session exp092-quality-aware-sft --gpu T4`を実行しました。Colab APIのassignmentがHTTP 503 `Service Unavailable`で失敗し、GPUセッションは作成されませんでした。したがって、092の学習step、loss、生成結果はまだありません。bundleは作成済みで、再試行時には同じ分割片と同じSHA-256を使います。
+
 ## 実験終了後の結果と解釈
 
 学習未実施の場合は、ColabのHTTP status、session状態、bundle hashを記録します。学習できた場合は、最終・最良validation loss、perplexity、chat F1、最良checkpoint、学習時間、最大メモリ、生成サンプルの保存場所を追記し、086・087と比較します。
