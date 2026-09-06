@@ -66,4 +66,8 @@ seed 11901、shard 5・6のweight 1:1、target 20,000,000 tokensで決定的に�
 
 ## 学習中の記録
 
+### 2026-09-07：step 1〜1,000
+
+Exp114 raw bestからRunpod A40上で追加事前学習を開始した。step 1のFineWeb validation lossは2.777793、step 500は2.777494、step 1,000は2.777021だった。step 1,000時点で初期値から0.000771改善し、learning rateは4.969e-6、経過時間は67.14秒である。初期checkpointを読み込んだ直後のlossはExp114 bestの2.777802とほぼ一致しており、NaN、OOM、shape errorは発生していない。
+
 学習開始後は少なくとも1,000 step以内ごとにvalidation loss、perplexity、learning rate、経過時間、GPUメモリ、固定prompt生成、警告、設定変更を追記する。崩れた生成も含め、すべてのsample TXTをGitHubへ保存する。
