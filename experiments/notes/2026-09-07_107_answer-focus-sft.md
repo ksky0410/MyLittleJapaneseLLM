@@ -78,6 +78,10 @@ Runpod上で予定コマンドを起動したが、`/workspace/exp100/scripts/tr
 
 MLX版の `scripts/train_sft.py` を追加転送して再実行したが、A40のCUDA環境にはMLXがないため、`ModuleNotFoundError: No module named 'mlx'` でstep 0に停止した。MLX版はApple Silicon用であり、Runpodでは既存のPyTorch CUDA版 `scripts/train_sft_torch.py`（SHA-256 `bc78ec94a7f74399d049ce4d1f6a22b446437a90b8e855bf64233b935267974e`）を使う必要がある。重みとデータは変更されていない。
 
+### 起動試行3：2026-09-07
+
+PyTorch CUDA版へ切り替えて起動したが、Runpod側にrehearsal用の `artifacts/tokens/mixed-ja-80-10-10-v2-train.bin` が存在せず、学習開始前に `FileNotFoundError` で停止した。stepは0で、checkpointとSFTデータは変更されていない。ローカルのtoken列は5.1MB、SHA-256 `d74a1820f09582f40538a42d34d8e3057261329dccd00df109991f36f8df8090` であり、Runpodの空き容量は約14GBあるため、このファイルを転送して同じ条件で再実行する。
+
 ## 実験終了後の記録
 
 学習終了直後に、実際の条件、最終validation loss、最良checkpoint SHA-256、学習時間、ピークGPUメモリ、4領域loss、一般会話と医療会話の生成評価、162問の正解数を追記する。実験105・106と比較し、次に変える条件は一つか二つに絞る。
