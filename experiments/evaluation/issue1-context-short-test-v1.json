@@ -1,0 +1,221 @@
+{
+  "format": "chat-eval-selection-v2-issue1-context",
+  "input": "/Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl",
+  "input_sha256": "65f534a8e63acf056bcbcbc7c827d62ff7dedfd383be382cc299c056dec90ce5",
+  "tokenizer": "/Users/koseki/projects/small_llm/artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model",
+  "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+  "seed": 9501,
+  "per_source": 2,
+  "candidate_rules": [
+    {
+      "category": "casual-agreement",
+      "reference_prompt": "それな",
+      "match_type": "surface",
+      "pattern": "^それな[ー〜～！？!?。、…笑ｗw\\s]*$"
+    },
+    {
+      "category": "casual-reaction",
+      "reference_prompt": "やば",
+      "match_type": "surface",
+      "pattern": "^やば(?:い|すぎ|っ|す|いね|いです)?[ー〜～！？!?。、…笑ｗw\\s]*$"
+    },
+    {
+      "category": "discourse-marker",
+      "reference_prompt": "なんかさ",
+      "match_type": "surface",
+      "pattern": "^なんかさ(?:[、,。！？!?…〜～\\s].*)?$"
+    },
+    {
+      "category": "disagreement",
+      "reference_prompt": "いやそれは",
+      "match_type": "surface",
+      "pattern": "^いやそれは(?:[、,。！？!?…〜～\\s].*)?$"
+    },
+    {
+      "category": "parting",
+      "reference_prompt": "おつかれ",
+      "match_type": "surface",
+      "pattern": "^おつかれ(?:さま)?(?:です|でした)?[ー〜～！？!?。、…笑ｗw\\s]*$"
+    },
+    {
+      "category": "today-activity",
+      "reference_prompt": "今日なにしてた？",
+      "match_type": "surface",
+      "pattern": "^今日(?:は|、)?(?:なに|何)(?:を)?して(?:た|ました|いた)(?:か)?[ー〜～！？!?。、…笑ｗw\\s]*$"
+    },
+    {
+      "category": "tomorrow-free",
+      "reference_prompt": "明日ひま？",
+      "match_type": "surface",
+      "pattern": "^明日(?:は)?[、,\\s]*(?:ひま|暇)(?:ですか)?[ー〜～！？!?。、…笑ｗw\\s]*$"
+    },
+    {
+      "category": "today-activity-intent",
+      "reference_prompt": "今日の活動質問",
+      "match_type": "semantic",
+      "pattern": "^今日.{0,12}(?:なに|何).{0,12}(?:して|した|予定).{0,8}$"
+    },
+    {
+      "category": "tomorrow-plan-intent",
+      "reference_prompt": "明日の予定質問",
+      "match_type": "semantic",
+      "pattern": "^明日.{0,12}(?:予定|何する|何をする|暇|ひま).{0,8}$"
+    }
+  ],
+  "candidate_counts": {
+    "mrmp:casual-reaction": {
+      "available": 3,
+      "selected": 2,
+      "selected_indices": [
+        {
+          "record_index": 1242,
+          "target_index": 37
+        },
+        {
+          "record_index": 1000,
+          "target_index": 34
+        }
+      ]
+    },
+    "mrmp:today-activity-intent": {
+      "available": 1,
+      "selected": 1,
+      "selected_indices": [
+        {
+          "record_index": 599,
+          "target_index": 82
+        }
+      ]
+    },
+    "real-persona-chat:today-activity-intent": {
+      "available": 55,
+      "selected": 2,
+      "selected_indices": [
+        {
+          "record_index": 1105,
+          "target_index": 3
+        },
+        {
+          "record_index": 1451,
+          "target_index": 3
+        }
+      ]
+    },
+    "real-persona-chat:tomorrow-plan-intent": {
+      "available": 7,
+      "selected": 2,
+      "selected_indices": [
+        {
+          "record_index": 1219,
+          "target_index": 11
+        },
+        {
+          "record_index": 1266,
+          "target_index": 4
+        }
+      ]
+    }
+  },
+  "selected_example_count": 7,
+  "unique_conversation_count": 7,
+  "examples": [
+    {
+      "record_index": 1000,
+      "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B11202.json",
+      "target_index": 34,
+      "target_speaker": "ポテト",
+      "source": "mrmp",
+      "category": "casual-reaction",
+      "match_type": "surface",
+      "reference_prompt": "やば",
+      "reference": "逃げられないやつ",
+      "input": "やばい",
+      "history_token_count": 551,
+      "history_truncated": true
+    },
+    {
+      "record_index": 1242,
+      "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B12904.json",
+      "target_index": 37,
+      "target_speaker": "いるか",
+      "source": "mrmp",
+      "category": "casual-reaction",
+      "match_type": "surface",
+      "reference_prompt": "やば",
+      "reference": "クッション蹴ってるお母さん・・・",
+      "input": "やばいです",
+      "history_token_count": 611,
+      "history_truncated": true
+    },
+    {
+      "record_index": 599,
+      "conversation_id": "mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B14102.json",
+      "target_index": 82,
+      "target_speaker": "じゃがいも",
+      "source": "mrmp",
+      "category": "today-activity-intent",
+      "match_type": "semantic",
+      "reference_prompt": "今日の活動質問",
+      "reference": "外食してました！",
+      "input": "今日は夕飯は何を食べましたか？",
+      "history_token_count": 1650,
+      "history_truncated": true
+    },
+    {
+      "record_index": 1105,
+      "conversation_id": "real-persona-chat:real_persona_chat/dialogues/01636.json",
+      "target_index": 3,
+      "target_speaker": "AY",
+      "source": "real-persona-chat",
+      "category": "today-activity-intent",
+      "match_type": "semantic",
+      "reference_prompt": "今日の活動質問",
+      "reference": "今日はカツ丼でしたー！",
+      "input": "今日の晩ごはんは何をたべられました？",
+      "history_token_count": 73,
+      "history_truncated": false
+    },
+    {
+      "record_index": 1451,
+      "conversation_id": "real-persona-chat:real_persona_chat/dialogues/00416.json",
+      "target_index": 3,
+      "target_speaker": "AG",
+      "source": "real-persona-chat",
+      "category": "today-activity-intent",
+      "match_type": "semantic",
+      "reference_prompt": "今日の活動質問",
+      "reference": "今日の夕飯は、パンガシウスでした。",
+      "input": "今日の夕飯は何でした？",
+      "history_token_count": 56,
+      "history_truncated": false
+    },
+    {
+      "record_index": 1219,
+      "conversation_id": "real-persona-chat:real_persona_chat/dialogues/09639.json",
+      "target_index": 11,
+      "target_speaker": "HI",
+      "source": "real-persona-chat",
+      "category": "tomorrow-plan-intent",
+      "match_type": "semantic",
+      "reference_prompt": "明日の予定質問",
+      "reference": "明日はちょっとCDでも探しに行こうかなと",
+      "input": "明日の予定は？",
+      "history_token_count": 186,
+      "history_truncated": false
+    },
+    {
+      "record_index": 1266,
+      "conversation_id": "real-persona-chat:real_persona_chat/dialogues/12695.json",
+      "target_index": 4,
+      "target_speaker": "AW",
+      "source": "real-persona-chat",
+      "category": "tomorrow-plan-intent",
+      "match_type": "semantic",
+      "reference_prompt": "明日の予定質問",
+      "reference": "実はもうすぐ誕生日なので食事に行く予定です",
+      "input": "明日からまた3連休ですが何か予定はありますか",
+      "history_token_count": 65,
+      "history_truncated": false
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+# Held-out chat dataset evaluation
+format: heldout-chat-dataset-evaluation-torch-v1
+input: /Users/koseki/projects/small_llm/artifacts/corpus/conversation-v1/test.jsonl
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-functional-v1-mps-10k/best.pt
+checkpoint_step: 10000
+seed: 42
+max_examples: None
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+selection: /Users/koseki/projects/small_llm/experiments/evaluation/issue1-context-short-test-v1.json
+
+## stratum summary
+unstratified: count=7 eos=7 mean_generated_tokens=8.00 mean_overlap_f1=0.2219
+
+## example 001: mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B11202.json turn 34
+speaker: ポテト
+prompt: <|startofconversation|><|speaker:ポテト|>こんにちは！<eos:3><|speaker:たまご|>こんにちは<eos:3><|speaker:つみれ|>こんにちは<eos:3><|speaker:ポテト|>寒さ対策で何かやっていることありますか？<eos:3><|speaker:ポテト|>私は、電子レンジであたためるゆたんぽが気になってます！<eos:3><|speaker:つみれ|>厚着するくらいです<eos:3><|speaker:つみれ|>@ポテト 湯たんぽ！<eos:3><|speaker:たまご|>あんまり寒さ対策をしてないですー<eos:3><|speaker:ポテト|>@つみれ 厚着で・・・しのげますか・・・？？？？？？<eos:3><|speaker:たまご|>湯たんぽあったかそう<eos:3><|speaker:ポテト|>@たまご 寒いの大丈夫な人ですか？<eos:3><|speaker:たまご|>結構強いです<eos:3><|speaker:つみれ|>@ポテト 昔ほどは寒くないので。<eos:3><|speaker:たまご|>半袖でまだ寝てます<eos:3><|speaker:ポテト|>いいなぁ・・・<eos:3><|speaker:ポテト|>え<eos:3><|speaker:ポテト|>半袖？<eos:3><|speaker:つみれ|>@たまご やめて<eos:3><|speaker:ポテト|>南半球にお住まいかな？？<eos:3><|speaker:たまご|>やめます<eos:3><|speaker:ポテト|>季節違う？<eos:3><|speaker:たまご|>長袖着ます<eos:3><|speaker:つみれ|>頭の中夏なんでしょうね<eos:3><|speaker:たまご|>毛布があったかいのです<eos:3><|speaker:ポテト|>バレましたね・・・つみれさんに・・・<eos:3><|speaker:ポテト|>@つみれ やばい笑<eos:3><|speaker:つみれ|>イカれた息子です<eos:3><|speaker:ポテト|>たまごさん逃げて・・・！<eos:3><|speaker:たまご|>逃げます<eos:3><|speaker:ポテト|>でも半袖は心配になる<eos:3><|speaker:たまご|>布団かけると暑くて<eos:3><|speaker:つみれ|>毛布でぐるぐる巻にしてやります<eos:3><|speaker:たまご|>こわ<eos:3><|speaker:ポテト|>やばい<eos:3><|speaker:ポテト|>
+reference: 逃げられないやつ
+completion:
+そう!
+
+## example 002: mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B12904.json turn 37
+speaker: いるか
+prompt: <|startofconversation|><|speaker:いるか|>こんばんは～<eos:3><|speaker:つみれ|>こんばんは<eos:3><|speaker:たまご|>こんばんは<eos:3><|speaker:いるか|>ストレス発散って何かしてますか？<eos:3><|speaker:いるか|>おススメ教えてほしいです！<eos:3><|speaker:たまご|>カラオケとか良いです！<eos:3><|speaker:いるか|>@たまご 確かに！カラオケ！<eos:3><|speaker:つみれ|>カラオケいいね！<eos:3><|speaker:たまご|>感動系をみるとか<eos:3><|speaker:たまご|>歌うの気持ちいいです<eos:3><|speaker:いるか|>泣いてデトックス的なやつですね！<eos:3><|speaker:たまご|>そうですー<eos:3><|speaker:たまご|>あとサウナ！<eos:3><|speaker:いるか|>あと、大きな声出すの良いですよね！<eos:3><|speaker:いるか|>サウナ！<eos:3><|speaker:たまご|>@つみれ なにかある？<eos:3><|speaker:たまご|>サウナもたまに行きます<eos:3><|speaker:いるか|>@つみれ つみれさんのも聞きたいです！<eos:3><|speaker:つみれ|>買い物しちゃうので。。。<eos:3><|speaker:つみれ|>よく無いパターンのやつです<eos:3><|speaker:いるか|>かいもの・・・わかります・・・！<eos:3><|speaker:つみれ|>あと、食べちゃう<eos:3><|speaker:いるか|>めちゃくちゃわかります<eos:3><|speaker:たまご|>爆食良いー<eos:3><|speaker:つみれ|>洋服とかついつい買っちゃうし<eos:3><|speaker:たまご|>たまにしてしまう<eos:3><|speaker:いるか|>何か体とお財布に良い発散がしたい・・・<eos:3><|speaker:いるか|>@つみれ あぁ～～～～<eos:3><|speaker:たまご|>キックボクシングとか<eos:3><|speaker:いるか|>@たまご キックボクシング！<eos:3><|speaker:つみれ|>@いるか そうなんですよ、お財布に優しいやつ<eos:3><|speaker:たまご|>サンドバッグ殴ってると良い<eos:3><|speaker:いるか|>お家のクッション使うしか・・・<eos:3><|speaker:いるか|>でも、傍から見たらヤバくないですか？<eos:3><|speaker:たまご|>たしかに<eos:3><|speaker:つみれ|>怖い<eos:3><|speaker:たまご|>やばいです<eos:3><|speaker:いるか|>
+reference: クッション蹴ってるお母さん・・・
+completion:
+あるみたいです!
+
+## example 003: mrmp:multi_relational_multi_party_chat_corpus/dialogues/B_family/B14102.json turn 82
+speaker: じゃがいも
+prompt: <|startofconversation|><|speaker:くじら|>こんばんは<eos:3><|speaker:くま|>こんばんは<eos:3><|speaker:じゃがいも|>こんばんはです<eos:3><|speaker:くじら|>昨日ご飯食べる時にドジをしてしまって<eos:3><|speaker:じゃがいも|>あらあら<eos:3><|speaker:くま|>ほう<eos:3><|speaker:じゃがいも|>なんかあったんですか？<eos:3><|speaker:くじら|>キャベツにドレッシングをかけるはずがご飯にかけてしまいました<eos:3><|speaker:じゃがいも|>疲れてらっしゃるそれは<eos:3><|speaker:くま|>@くじら それはそれは、、、<eos:3><|speaker:くま|>何ドレッシングですか？<eos:3><|speaker:じゃがいも|>@くじら つい笑ってしまいましたが、何ドレッシングですか？<eos:3><|speaker:くじら|>ちょっとかけただけですんだので良かったんですが<eos:3><|speaker:じゃがいも|>同じことを笑<eos:3><|speaker:じゃがいも|>危ない危ない<eos:3><|speaker:くじら|>ごまどれです<eos:3><|speaker:くま|>ゴマならギリいけますね<eos:3><|speaker:くま|>シーザーとかよりはいいかも<eos:3><|speaker:じゃがいも|>ごまなら！<eos:3><|speaker:じゃがいも|>セーフですセーフ<eos:3><|speaker:くま|>@じゃがいも 好きなドレッシングはありますか？<eos:3><|speaker:じゃがいも|>@くま 私ですか笑<eos:3><|speaker:くじら|>主人にも問題ないと言われました<eos:3><|speaker:じゃがいも|>シーザーサラダですね<eos:3><|speaker:じゃがいも|>良かったです！<eos:3><|speaker:くじら|>好きなのはピエトロのドレッシングとか<eos:3><|speaker:くま|>@くじら 全然セーフです<eos:3><|speaker:じゃがいも|>@くじら まぁそれでなんか言ってきたら私はキレますね、くまに<eos:3><|speaker:くま|>@じゃがいも シーザー派か<eos:3><|speaker:じゃがいも|>@くじら ぴ、ぴえとろ、、、？<eos:3><|speaker:じゃがいも|>ピエトロってなんですか、メーカー？<eos:3><|speaker:くま|>@くじら ピエトロわからない、、、<eos:3><|speaker:くじら|>ピエトロはメーカーですね<eos:3><|speaker:くま|>うちは安いやつしか使わないからなあ<eos:3><|speaker:じゃがいも|>@くじら 無知でごめんなさい<eos:3><|speaker:じゃがいも|>どんな味ですか？<eos:3><|speaker:じゃがいも|>@くま 本当に安いやつしか買わないよね笑<eos:3><|speaker:くじら|>オニオンと醤油みたいな<eos:3><|speaker:じゃがいも|>それすら賞味期限切れてるよ<eos:3><|speaker:じゃがいも|>@くじら 美味しいやつです！<eos:3><|speaker:くま|>@じゃがいも スーパーのオリジナルのやつね<eos:3><|speaker:くじら|>私も滅多に買わないです高いのは<eos:3><|speaker:くま|>@くじら おいしそう！<eos:3><|speaker:じゃがいも|>うわぁ、それは美味しいやつです。今度買ってみますね<eos:3><|speaker:くま|>たまに使うのがいい感じですかね<eos:3><|speaker:くじら|>おすすめです。<eos:3><|speaker:じゃがいも|>話戻りますけど<eos:3><|speaker:くま|>メモしとかなきゃ<eos:3><|speaker:じゃがいも|>私は歯磨き粉で顔洗ったことはありますよ<eos:3><|speaker:くじら|>それは痛くなかったですか？<eos:3><|speaker:くま|>@じゃがいも やばいこと言ってる<eos:3><|speaker:じゃがいも|>爽快な目覚めなので、年に1回くらいはおすすめです<eos:3><|speaker:くま|>眠い時にはいいのか？<eos:3><|speaker:くじら|>スースーしますよね<eos:3><|speaker:じゃがいも|>@くじら ペーストのみだったんですが、ヒリヒリして気づきました<eos:3><|speaker:じゃがいも|>泡立たないな...？と<eos:3><|speaker:くじら|>それはお肌にダメージが<eos:3><|speaker:じゃがいも|>@くじら ごく稀にこういうことあるんですよねぇ<eos:3><|speaker:くま|>そのレベルのドジはパット思いつかないなあ<eos:3><|speaker:じゃがいも|>@くま 言い方悪いぞ笑<eos:3><|speaker:くま|>@じゃがいも 失礼いたしました<eos:3><|speaker:じゃがいも|>@くじら お仕事疲れということで自分の中で消化しました<eos:3><|speaker:くじら|>@くま あまりドジはないんですね。羨ましい<eos:3><|speaker:じゃがいも|>@くじら 我旦那ながら思ったよりちゃんとしてます<eos:3><|speaker:じゃがいも|>言った約束はよく忘れます笑<eos:3><|speaker:くま|>@くじら 物忘れは多い気がします、、、<eos:3><|speaker:じゃがいも|>@くま 自分でわかっててよろしい<eos:3><|speaker:くじら|>忘れる時ありますよ。家でも<eos:3><|speaker:じゃがいも|>@くじら あら<eos:3><|speaker:じゃがいも|>まぁ人間ですからね<eos:3><|speaker:じゃがいも|>@くま 今後は気をつけてください<eos:3><|speaker:くま|>忘れるのはしょっちゅうですね<eos:3><|speaker:くじら|>そんなの言ってた？とかよく主人に言われます<eos:3><|speaker:じゃがいも|>私はそれ以上に忘れやすいけどね<eos:3><|speaker:じゃがいも|>@くじら あー、みんな疲れてらっしゃるのか<eos:3><|speaker:くま|>@じゃがいも 二人とも忘れてることありそう<eos:3><|speaker:くじら|>忙しいと抜けることありますから<eos:3><|speaker:じゃがいも|>そういうことにしましょう、みんな平和<eos:3><|speaker:くま|>@くじら ですねえ<eos:3><|speaker:じゃがいも|>世界平和<eos:3><|speaker:くま|>@じゃがいも 壮大だな<eos:3><|speaker:くじら|>今日は夕飯は何を食べましたか？<eos:3><|speaker:じゃがいも|>
+reference: 外食してました！
+completion:
+ええ
+
+## example 004: real-persona-chat:real_persona_chat/dialogues/01636.json turn 3
+speaker: AY
+prompt: <|startofconversation|><|speaker:CV|>こんばんは！よろしくお願いいたします。<eos:3><|speaker:AY|>こんばんは！こちらこそよろしくお願いします。<eos:3><|speaker:CV|>今日の晩ごはんは何をたべられました？<eos:3><|speaker:AY|>
+reference: 今日はカツ丼でしたー！
+completion:
+まだです!
+
+## example 005: real-persona-chat:real_persona_chat/dialogues/00416.json turn 3
+speaker: AG
+prompt: <|startofconversation|><|speaker:AC|>こんばんは！<eos:3><|speaker:AG|>こんばんはー！<eos:3><|speaker:AC|>今日の夕飯は何でした？<eos:3><|speaker:AG|>
+reference: 今日の夕飯は、パンガシウスでした。
+completion:
+何してました?
+
+## example 006: real-persona-chat:real_persona_chat/dialogues/09639.json turn 11
+speaker: HI
+prompt: <|startofconversation|><|speaker:BA|>こんばんは<eos:3><|speaker:HI|>こんばんはー<eos:3><|speaker:BA|>今日は何しました？<eos:3><|speaker:HI|>今日は心臓検診受けてきましたよ<eos:3><|speaker:BA|>どうしたんですか？<eos:3><|speaker:HI|>本来あった日に休んじゃって、その分受けてきた感じです<eos:3><|speaker:BA|>あ、健康診断的な？<eos:3><|speaker:HI|>そんな感じです。<eos:3><|speaker:BA|>なんともないといいですね<eos:3><|speaker:HI|>そうですねー。なんともないことを祈ってます<eos:3><|speaker:BA|>明日の予定は？<eos:3><|speaker:HI|>
+reference: 明日はちょっとCDでも探しに行こうかなと
+completion:
+明日の夕食と同じですけど、今日はまだです
+
+## example 007: real-persona-chat:real_persona_chat/dialogues/12695.json turn 4
+speaker: AW
+prompt: <|startofconversation|><|speaker:AW|>こんにちは<eos:3><|speaker:FT|>よろしくお願いします<eos:3><|speaker:AW|>よろしくお願いします<eos:3><|speaker:FT|>明日からまた3連休ですが何か予定はありますか<eos:3><|speaker:AW|>
+reference: 実はもうすぐ誕生日なので食事に行く予定です
+completion:
+今週に1日で3時間くらいだったんですが、結構気できます。
