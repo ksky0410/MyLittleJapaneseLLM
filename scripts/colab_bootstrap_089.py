@@ -38,12 +38,13 @@ def main() -> None:
         with tarfile.open(BUNDLE, "r:gz") as archive:
             archive.extractall(PROJECT, filter="data")
     required = {
-        CONFIG: "",
-        INITIAL: "",
+        CONFIG: "669fddbfb2fbba31cdbc79f90d1afae5cb0185c830cd293c9d38afc5043dfa07",
+        INITIAL: "1e09a7386a630133503c12052f7701216d505cb3bca8765cade38c879ba5e8cb",
+        "artifacts/checkpoints/issue1-both-50m-pretrain-5m-5k/best.json": "4b6b56ad60730cc75a938dd8ef99aba6e713e03852043e8fe9175ef5d5c2813b",
         TRAIN_TOKENS: "54eb3fab617c94bda59899db4f78e6ac65665606219414a710e40cc8ccb8603c",
         VAL_TOKENS: "c4698596cbcd1c2f06507f9f2d4c3876cc59e2e081d448823ae97e36edb62db4",
         TOKENIZER: "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
-        TRAIN_SCRIPT: "",
+        TRAIN_SCRIPT: "a4e926bbd6e93a544b3cceabf17ae0b5836d92396b95c3e4eb37a3992b3510df",
     }
     missing: list[str] = []
     mismatches: dict[str, dict[str, str]] = {}
