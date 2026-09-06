@@ -99,10 +99,42 @@ step 6,000のvalidation lossは2.766638、step 6,250は2.762123、step 6,500は2
 
 step 6,750のvalidation lossは2.757589、step 7,000は2.756483、step 7,250は2.754919だった。step 7,250で最良値を更新し、実験113の最良2.756807を0.001888下回った。step 7,250時点のlearning rateは2.4086e-6、経過時間は596.77秒だった。
 
+### 2026-09-07：step 7,500〜8,000
+
+step 7,500、7,750を経て、最終step 8,000のvalidation lossは2.754026、perplexityは15.7057となった。最終的な最良checkpointはstep 8,000であり、実験113の最良validation loss 2.756807を0.002781下回った。学習時間は657.43秒、summaryに記録された全体時間は658.16秒、A40でのpeak allocated memoryは1,490,586,112 bytesだった。NaN、OOM、shape errorは発生せず、8,000 stepを完走した。
+
+固定prompt `こんにちは！` の途中生成はstep 0、4,000、8,000のいずれでも、入力をほぼそのまま短く返す状態だった。これは学習が停止していたという意味ではなく、固定promptが単純すぎて改善を観察する診断として弱いことを示す。途中生成の全33ファイルは `artifacts/samples/issue1-fineweb-shards34-answer-focus-sft-runpod-8k/` に保存した。
+
 ## 実験終了後の記録
 
-ここに最良checkpoint、学習時間、domain loss、一般会話48例、医療162例、実験113・114との比較、仮説の判定、次の一手を追記する。checkpoint本体はGitHubへ追加せず、metadata・SHA-256・生成文・評価全文を保存する。
+### 評価結果
+
+学習完了後、最初の評価投入はSSH timeoutで失敗したが、checkpointや学習プロセスには影響しなかった。失敗を記録したうえで同じコマンドを再試行し、Runpod A40上でdomain loss、一般会話48例、医療162例を最後まで評価した。評価結果は `artifacts/evaluations/exp115/`、評価ログは `experiments/results/exp115/evaluation.log` に保存した。
+
+FineWeb2のvalidation lossは2.903494、generalは4.047548、conversationは2.007362、medicalは1.876458だった。実験113と比べるとgeneralは4.052437からわずかに改善し、conversationは2.007372からほぼ同じ、medicalは1.875708からわずかに悪化した。追加したshard 3・4でrawのFineWeb2 lossは大きく下がったが、SFT後の日本語ドメインloss全体が同じ割合で改善したわけではない。
+
+一般会話48例では48例すべてがEOSに到達し、平均生成長は9.458 tokens、token overlap F1は0.265719だった。実験113の平均9.104 tokens、F1 0.254858から、平均長とF1がともに改善した。短い相槌だけでなく、「そうなんですね。私は2週間待機です。」のように文脈に沿おうとする出力もあった一方、「そうなんですね。それか、私みたいに見ました。」のように、文法は成立していても会話として不自然な付け足しが残った。
+
+医療QA162例では159例がEOSに到達し、平均生成長は28.580 tokens、token overlap F1は0.264921だった。正解選択肢を抽出できた例は162例中162例だったが、正解と一致したのは26例、16.05%にとどまった。実験113の33例、20.37%を下回った。たとえば正解の理由を一文だけ返せる例がある一方、選択肢を誤ったまま「家族歴 家族歴」と繰り返したり、医学用語らしい断片をつないだ長い無関係な説明を生成したりする例も残っている。したがって、validation lossが改善したことだけから、医療知識や説明の正確性が改善したとは判断できない。
+
+今回の仮説は部分的に支持された。追加20M tokens後に同じSFTを行うと、SFT validation lossと一般会話F1は小さく改善したため、追加事前学習が会話能力に全く無効だったわけではない。しかし、医療QAの完全一致は悪化し、FineWeb2の追加だけでは知識の正確性や説明品質が保証されないことも確認した。特に、raw checkpointの評価で会話・医療の形式が崩れ、SFTによって形式は回復するものの、追加データが医療QAへ直接効いた証拠は得られなかった。
+
+今回使用した最良checkpointの重みはGitHubへ追加せず、次のSHA-256で再現対象を固定した。
+
+- 最良checkpoint `best.pt`：`e0c317ff57d8199a04c05f4751742367183701c1472b2c297a156f40e19beb5a`
+- `best.json`：`34264ef26d0695c061439f2bfbe596852dee3418d1523e1bee1ddceb8b6ae80d`
+- `summary.json`：`7a24c3b7171ffce6a8e6fe23b69a56ef4467cbc769bb354c8474922913a861fa`
+- `metrics.jsonl`：`7bb5499a6e522c571fd880e96a21a6e97d1dc247653bb36035277af11f39eb0f`
+- domain評価JSON：`293f165c38626070524e499fbb836b6996d54f2c054cff7c98b283ba76f792c4`
+- 一般会話評価JSON：`ab8c917712416c758d77f3a63a70c40c96695c4b8b884485efd2179eda0b7bbb`
+- 医療評価JSON：`63cf8202988cddc938f3c21a76dfb3bf0d3f684253d6f3b78c0ba8016d848747`
+- 学習ログ：`89f1811d68add691371b2669c4eb5f69249373f21914c09a9da497f2378ebbfc`
+- 評価ログ：`a24a864e8004e4ef765ec4a5c6b01e224884a6991669da084b3686329bdb425a`
+
+次は、さらにFineWeb2を一括で足すのではなく、追加事前学習の効果とSFTデータの効果を分離できる実験を行う。具体的には、exp115のbest checkpointを起点に、一般会話データを増やしつつ、医療QAについては正解選択肢だけでなく、正解理由を短く正確に説明する例を一定割合で含めたSFT条件を作る。同時に、回答を短く切るanswer-focus条件と、理由を十分に生成させる条件を同じcheckpointから比較し、自然な会話と正確な回答の両方を測る。
 
 ### 評価開始時の接続失敗
 
 学習完了後の評価をRunpodへ投入する最初のSSH接続がtimeoutとなり、`artifacts/evaluations/exp115`は作成されなかった。checkpointや学習結果には影響せず、Runpod上に評価プロセスが起動していないことを確認した。接続を再試行して同じ評価コマンドを実行する。
+
+その後、SSHを再試行して評価を開始し、domain・一般会話・医療QAの全評価が完了した。最初の接続失敗は再現性やcheckpointの内容に影響していない。
