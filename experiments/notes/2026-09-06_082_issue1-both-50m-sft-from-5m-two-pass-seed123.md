@@ -46,6 +46,14 @@ step 2,400ではvalidation loss 3.301048、2,500では3.298435、2,600では3.29
 
 078と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価します。081基盤の改善がSFT後にも残るか、またはSFTが会話データへ過適応して一般・医療文書を忘れるかを比較します。
 
+### 学習結果
+
+依存ファイルの補完と1 stepデバッグを終えた後、本番3,000 stepをColab T4で完走しました。PyTorchは2.11.0+cu128、CUDAは12.8、AMPは有効、GPUはTesla T4です。学習時間は362.63秒、peak allocated memoryは1,491,208,704 bytesでした。最良checkpointは最終step 3,000で、train lossは3.108686、SFT train lossは3.264034、validation lossは3.275936、validation perplexityは26.468001でした。SFT trainは64,423例、validationは49,045例、rehearsal ratioは0.20、EOS loss weightは0.50、long response oversamplingは0.0です。蒸留データや強い教師モデルの出力は使っていません。
+
+best checkpointのSHA-256は`8a202d58ebe8d069dd5094ba2a99d59892510d92a31e419427334259e6eefaaf`です。Colabから回収したbest checkpoint archiveのSHA-256は`ce1a05852f3b6eb43ec1e8ca049b74d1fff10f3daaf19eeacd111fedf24323b0`、manifestのSHA-256は`d563fe1006be6c2d1b36e8fae3efd7289335d055ab2a666a33a005a2d7f3fe62`、lightweight archiveのSHA-256は`1549cf5f1fe8ba004e6bc926ff99d78db5a26ab1953905656c99f7b177d0681c`です。checkpoint・metrics・summary・100 step間隔の生成文は`artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/`と`artifacts/samples/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/`へ回収しました。
+
+固定prompt「こんにちは！」への生成は、step 0では短い未完了応答、step 1,500では「お昼の日はお腹かせていきます!」という不自然な文、step 3,000では「こんばんは!」でした。学習後は会話形式とEOS直後の空応答を避ける挙動が見られましたが、自然な内容生成はまだ弱く、chat-testと領域別lossで定量比較する必要があります。
+
 ## 次に試すこと
 
 082で改善した場合は、081基盤を標準モデル候補として、SFTのデータ品質、EOS扱い、会話source比率を調べます。改善しない場合は、事前学習からSFTへの切り替え時のlearning rate、rehearsal ratio、SFTデータの重複を切り分けます。どちらの場合も、蒸留を主線にせず、自前データと反復学習で自然な日本語を伸ばします。

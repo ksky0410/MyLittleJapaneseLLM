@@ -1,0 +1,48 @@
+{
+  "experiment": "082",
+  "condition": "issue1-both-50m-sft-from-5m-two-pass-seed123-3k",
+  "lightweight_files": 40,
+  "lightweight_archive": "/content/exp082-lightweight.tar.gz",
+  "archive_bytes": 6772,
+  "archive_sha256": "1549cf5f1fe8ba004e6bc926ff99d78db5a26ab1953905656c99f7b177d0681c",
+  "best_checkpoint_archive": "/content/exp082-best-checkpoint.tar",
+  "best_checkpoint_archive_bytes": 200878080,
+  "best_checkpoint_archive_sha256": "ce1a05852f3b6eb43ec1e8ca049b74d1fff10f3daaf19eeacd111fedf24323b0",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/best.pt",
+      "bytes": 200872334,
+      "sha256": "8a202d58ebe8d069dd5094ba2a99d59892510d92a31e419427334259e6eefaaf"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_000500.pt",
+      "bytes": 200882813,
+      "sha256": "79f85e9beaa1b376e7526c4f456972377223550b614fb92664a2c73a1cd618b2"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_001000.pt",
+      "bytes": 200882813,
+      "sha256": "98a74c700d8ec7489bd893d9bf975306e97d18bb177762008e38f5ce1fb57449"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_001500.pt",
+      "bytes": 200882813,
+      "sha256": "ff56e62b1db8bda45934753c5a5b410e25b417baa0d91719f5e8784274eb00d4"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_002000.pt",
+      "bytes": 200882813,
+      "sha256": "f240e721f5535df1051bf3f31ddbb5c59022226666b68ddb0d7e0b8a0ae76d10"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_002500.pt",
+      "bytes": 200882813,
+      "sha256": "f925121fdab261a3fd6e30e5353632d0818b3e81a1c74ebabdaec6dfbda57471"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/step_003000.pt",
+      "bytes": 200882813,
+      "sha256": "53245466f664b707ec0e75349fb24635ed2270dad2c1dd50db934b39ab25f82d"
+    }
+  ]
+}
