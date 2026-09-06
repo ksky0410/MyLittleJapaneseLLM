@@ -12,7 +12,24 @@
 
 ## 再現条件
 
-ここに実験開始時のGit commit、Tokenizer hash、RPC/MRMP train JSONLのhash、選別コマンド、出力NPZとmanifestのhashを追記します。出力は`artifacts/sft/issue1-quality-aware-770k-each-v1/train.npz`とし、validation・評価セットは086と同じものを使います。
+実験開始時点のGit commitは`559231e`です。選別器`f67b317eae1e5b1715a17d136d71d29f61425aa8d29a0fed4f52b76f1b2675c6`、Tokenizer`5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4`、RPC train JSONL`aba75dbbba72b2d1839c11cdc96e36ea5b87e4f3a8351175a1259dc21a3bb610`、MRMP train JSONL`93a85f6be0d300980f1c9bcc6cb65845ff7671cd0243390feee6df0a816e9c1e`です。各sourceのtarget response token予算は770,975、context lengthは256、seedは9101、質問履歴の目標比率は50%、定型挨拶の上限は2%、初回発話の上限は5%です。出力は`artifacts/sft/issue1-quality-aware-770k-each-v1/train.npz`とし、validation・評価セットは086と同じものを使います。
+
+実行コマンドは次のとおりです。
+
+```bash
+uv run python scripts/prepare_quality_chat_sft.py \
+  --tokenizer artifacts/tokenizer/mixed-ja-80-10-10-v2-unigram.model \
+  --input rpc=artifacts/corpus/conversation-sft-sources-v1/rpc \
+  --input mrmp=artifacts/corpus/conversation-sft-sources-v1/mrmp \
+  --output artifacts/sft/issue1-quality-aware-770k-each-v1/train.npz \
+  --manifest artifacts/sft/issue1-quality-aware-770k-each-v1/manifest.json \
+  --context-length 256 \
+  --target-response-tokens 770975 \
+  --seed 9101 \
+  --question-token-fraction 0.5 \
+  --max-greeting-token-fraction 0.02 \
+  --max-first-turn-token-fraction 0.05
+```
 
 ## 実験中の記録
 
