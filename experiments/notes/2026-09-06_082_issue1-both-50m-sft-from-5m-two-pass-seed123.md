@@ -44,7 +44,34 @@ step 2,400ではvalidation loss 3.301048、2,500では3.298435、2,600では3.29
 
 ## 実験終了後の結果と解釈
 
-078と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価します。081基盤の改善がSFT後にも残るか、またはSFTが会話データへ過適応して一般・医療文書を忘れるかを比較します。
+078と同じCPU・同じ5領域・同じ48例のchat-test・同じgeneration seed 42で評価します。081基盤の改善がSFT後にも残るか、またはSFTが会話データへ過適応して一般・医療文書を忘れるかを比較します。評価コマンドは次のとおりです。
+
+```bash
+uv run python scripts/evaluate_torch.py domains \
+  --config configs/issue1-both-50m-sft-from-5m-two-pass-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-3k/best.pt \
+  --device cpu \
+  --domain general=artifacts/tokens/mixed-ja-80-10-10-v2-general-val.bin \
+  --domain conversation=artifacts/tokens/mixed-ja-80-10-10-v2-conversation-val.bin \
+  --domain medical=artifacts/tokens/mixed-ja-80-10-10-v2-medical-val.bin \
+  --domain RPC=artifacts/tokens/issue1-real-persona-chat-validation.bin \
+  --domain MRMP=artifacts/tokens/issue1-mrmp-validation.bin \
+  --eval-batches 20 \
+  --output artifacts/evaluations/issue1-both-50m-sft-from-5m-two-pass-seed123-3k-domains.json
+
+uv run python scripts/evaluate_torch.py chat \
+  --config configs/issue1-both-sft-from-5m-two-pass-seed123-3k.toml \
+  --checkpoint artifacts/checkpoints/issue1-both-sft-from-5m-two-pass-seed123-3k/best.pt \
+  --selection experiments/evaluation/chat-test-v1.json \
+  --input artifacts/corpus/conversation-v1/test.jsonl \
+  --device cpu --max-new-tokens 64 --seed 42 \
+  --output artifacts/evaluations/issue1-both-sft-from-5m-two-pass-seed123-3k-chat-test-v1.json \
+  --text-output artifacts/evaluations/issue1-both-sft-from-5m-two-pass-seed123-3k-chat-test-v1.txt
+
+uv run python scripts/create_chat_review_template.py \
+  --evaluation artifacts/evaluations/issue1-both-sft-from-5m-two-pass-seed123-3k-chat-test-v1.json \
+  --output artifacts/evaluations/issue1-both-sft-from-5m-two-pass-seed123-3k-chat-review.json
+```
 
 ### 学習結果
 
