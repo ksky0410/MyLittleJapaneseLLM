@@ -1,0 +1,2 @@
+{"step": 1, "train_loss": 8.772271156311035, "validation_loss": 8.833635807037354, "validation_perplexity": 6861.187474902384, "learning_rate": 1.5e-07, "elapsed_seconds": 6.082452124916017}
+{"step": 500, "train_loss": 6.511046409606934, "validation_loss": 6.331719875335693, "validation_perplexity": 562.1225436567373, "learning_rate": 7.5e-05, "elapsed_seconds": 432.32944416697137}
