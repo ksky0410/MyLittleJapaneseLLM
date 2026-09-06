@@ -1,0 +1,67 @@
+# Chat prompt evaluation
+format: torch-chat-prompt-evaluation-v1
+prompt_file: /Users/koseki/projects/small_llm/experiments/prompts/issue-1-chat-v1.json
+checkpoint: /Users/koseki/projects/small_llm/artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each-long025/best.pt
+checkpoint_step: 9900
+config: /Users/koseki/projects/small_llm/configs/issue1-both-50m-sft-from-5m-two-pass-seed123-10k-770k-each-long025.toml
+seed: 42
+max_new_tokens: 64
+temperature: 0.8
+top_k: 40
+
+## category summary
+short-reply: count=2 empty=0 eos=1 mean_completion_tokens=35.50
+backchannel: count=1 empty=0 eos=1 mean_completion_tokens=7.00
+short-turn: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+discourse-marker: count=1 empty=0 eos=1 mean_completion_tokens=63.00
+disagreement: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+parting: count=1 empty=0 eos=0 mean_completion_tokens=64.00
+invitation: count=1 empty=1 eos=1 mean_completion_tokens=1.00
+
+## casual-01 [short-reply]
+prompt: まじで
+rendered_prompt: まじで
+completion:
+まっているのは大きくことです。 でも長女のおかげな男性が ⁇ 味に違って、人を変えればいいかと思っています。  ⁇ 然としないと、男性に限らずも、当然たるかどうかは分からない、男性
+
+## casual-02 [backchannel]
+prompt: それな
+rendered_prompt: それな
+completion:
+んだろたん??
+
+## casual-03 [short-turn]
+prompt: 今日なにしてた？
+rendered_prompt: 今日なにしてた？
+completion:
+その後で今夜から起きてしまい、どうだろう。おれのような事を聞いたらあいて、それで分からない。ただその分は三分あるまいと見える。私はこの間でも「それで」と答える。私はその日の夜間を見ると、まだその日の
+
+## casual-04 [short-reply]
+prompt: やば
+rendered_prompt: やば
+completion:
+しもよいですね。
+
+## casual-05 [discourse-marker]
+prompt: なんかさ
+rendered_prompt: なんかさ
+completion:
+っとうだと思ったら、つい先刻し、自分は少々気がついてる。その上で一番この世から何となく人間に似合わない。何故か生れたものはその一種の性質であった。私はそれの上に現実とを思わそうに聞いた。
+
+## casual-06 [disagreement]
+prompt: いやそれは
+rendered_prompt: いやそれは
+completion:
+、今ならその後もその点をしんどいくらいにしようかと、なんだか何とも思うが、いつの間にかおれの方にいるんだから、おれがそれに答えたり、私は誰かへ出掛けたりして、そこで妻を呼んで来てくれ
+
+## casual-07 [parting]
+prompt: おつかれ
+rendered_prompt: おつかれ
+completion:
+に行かれませんでした。私はそれに変って、それにその点は全く同じ事だと考えました。私はその点について何とかいります。私はただ、私を幸い、自分の身体に存在しているお嬢さんを、それがそういってKの方を見ました。私はただ私の宅を
+
+## casual-08 [invitation]
+prompt: 明日ひま？
+rendered_prompt: 明日ひま？
+completion:
+
