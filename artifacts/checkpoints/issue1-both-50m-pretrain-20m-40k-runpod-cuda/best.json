@@ -1,0 +1,56 @@
+{
+  "format_version": 1,
+  "backend": "pytorch-cuda",
+  "checkpoint_role": "best",
+  "checkpoint_step": 11500,
+  "checkpoint_interval": 5000,
+  "checkpoint_train_loss": 2.943345308303833,
+  "weights_file": "best.pt",
+  "weights_bytes": 200872334,
+  "weights_sha256": "ef8121fc16a3d2afa71ed2a8add536e35740ae7152a9c80e6c6fb44b2e8a912a",
+  "model": {
+    "vocab_size": 4096,
+    "dim": 576,
+    "layers": 12,
+    "heads": 9,
+    "context_length": 256,
+    "mlp_ratio": 4,
+    "position_embedding": "rope",
+    "norm_type": "layernorm",
+    "ffn_type": "swiglu"
+  },
+  "metrics": {
+    "step": 11500,
+    "train_loss": 2.943345308303833,
+    "validation_loss": 3.2478490471839905,
+    "validation_perplexity": 25.73492573093725,
+    "learning_rate": 0.0002604673070970607,
+    "elapsed_seconds": 445.9998068846762
+  },
+  "inputs": {
+    "config_sha256": "d77f6846603fa211a5cb22c1bf73ce719820c6f61a6013ee556e667dc17dbc2a",
+    "tokenizer_sha256": "5bde054fb91da54cbf56673a6d25b630399d95ec331049e5fa2af1a8d60731e4",
+    "train_tokens_sha256": "707561109835bed5bccd8126527debeb86e86f0e6daaa9abea4ea78ba63e54e6",
+    "val_tokens_sha256": "36d8d5c8bc92de1e168b8c3de9dd4ee975dec66f6b644b83bfbf9b239877161c",
+    "initial_checkpoint_sha256": "b465e0150b15c938e93f0b9075da0e77ed53249ecadfbcc090d30bb9d5d7c9b7"
+  },
+  "runtime": {
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "amp_enabled": true,
+    "gpu_name": "NVIDIA A40",
+    "gpu_capability": [
+      8,
+      6
+    ],
+    "gpu_total_memory_bytes": 47708110848,
+    "peak_memory_allocated_bytes": 1528083968,
+    "peak_memory_reserved_bytes": 1591738368
+  },
+  "training_intervals": {
+    "eval_interval": 500,
+    "sample_interval": 500,
+    "checkpoint_interval": 5000
+  }
+}

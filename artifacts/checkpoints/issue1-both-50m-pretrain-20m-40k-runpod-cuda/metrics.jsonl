@@ -3,3 +3,10 @@
 {"step": 6500, "train_loss": 2.986706018447876, "validation_loss": 3.4621435403823853, "validation_perplexity": 31.885250636699144, "learning_rate": 0.00029076885354096296, "elapsed_seconds": 102.39035914093256}
 {"step": 7000, "train_loss": 3.3478636741638184, "validation_loss": 3.4293466329574587, "validation_perplexity": 30.856475557926725, "learning_rate": 0.00028863388196693877, "elapsed_seconds": 136.29010565765202}
 {"step": 7500, "train_loss": 3.2172048091888428, "validation_loss": 3.392715609073639, "validation_perplexity": 29.746622884883116, "learning_rate": 0.0002862876839794832, "elapsed_seconds": 171.49763074330986}
+{"step": 8000, "train_loss": 3.051697015762329, "validation_loss": 3.367609679698944, "validation_perplexity": 29.009103070084873, "learning_rate": 0.00028373426801850133, "elapsed_seconds": 205.32884815335274}
+{"step": 8500, "train_loss": 3.250595808029175, "validation_loss": 3.33979651927948, "validation_perplexity": 28.21338524133259, "learning_rate": 0.00028097799655233, "elapsed_seconds": 240.70400993153453}
+{"step": 9000, "train_loss": 3.322580337524414, "validation_loss": 3.318388819694519, "validation_perplexity": 27.615820628959867, "learning_rate": 0.00027802357862453367, "elapsed_seconds": 276.0719904527068}
+{"step": 9500, "train_loss": 3.0845792293548584, "validation_loss": 3.303051257133484, "validation_perplexity": 27.195492893678185, "learning_rate": 0.00027487606180858295, "elapsed_seconds": 311.11916260421276}
+{"step": 10000, "train_loss": 2.804460048675537, "validation_loss": 3.2851505517959594, "validation_perplexity": 26.71300570314965, "learning_rate": 0.00027154082358415944, "elapsed_seconds": 346.56106783263385}
+{"step": 10500, "train_loss": 2.886193037033081, "validation_loss": 3.272616112232208, "validation_perplexity": 26.380262876507157, "learning_rate": 0.0002680235621498223, "elapsed_seconds": 382.055522557348}
+{"step": 11000, "train_loss": 2.9510812759399414, "validation_loss": 3.2528279542922975, "validation_perplexity": 25.86337704381443, "learning_rate": 0.00026433028668773145, "elapsed_seconds": 413.647176168859}
