@@ -100,6 +100,10 @@ step 6,000のFineWeb validation lossは2.780659、perplexityは16.1297、learnin
 
 step 6,500のFineWeb validation lossは2.780141、step 7,000は2.779356だった。step 7,000時点で開始時から0.016920改善し、learning rateは1.5200e-6、経過時間は451.40秒となった。低下幅は小さいが、validation lossは引き続き改善している。
 
+### 2026-09-07：step 7,500〜8,000
+
+step 7,500のFineWeb validation lossは2.779148、step 8,000は2.778823だった。step 8,000時点で開始時から0.017453改善し、learning rateは9.7489e-7、経過時間は516.35秒となった。学習率が1e-6を下回っても小幅な改善が続いている。
+
 ## 実験終了後の記録
 
 ここに最良checkpoint、FineWeb loss、学習時間、raw生成評価、実験111との比較、仮説との一致・不一致、SFT再適用を行うかどうか、次に試す変更を追記する。checkpoint本体はGitへ追加せず、metadataとSHA-256だけを記録する。
