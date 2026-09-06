@@ -96,3 +96,11 @@ step 14,750のvalidation lossは2.747659、step 15,000は2.747452だった。ste
 ### 2026-09-07：step 15,250〜15,750
 
 step 15,250のvalidation lossは2.747539、step 15,500は2.747322、step 15,750は2.747276だった。step 15,750で現時点の最良値を更新し、exp115のbestから0.006750改善した。step 15,750のlearning rateは2.011e-7、経過時間は630.08秒だった。終盤に小さな改善が続いているが、改善幅は非常に小さい。NaN、OOM、shape errorは発生していない。
+
+### 2026-09-07：step 16,000、学習完了
+
+step 16,000のvalidation lossは2.747612、perplexityは15.6053だった。最良checkpointはstep 15,750で、validation lossは2.747276、perplexityは15.6001、重みSHA-256は `eaa3b779778be238ba5bbdfaae28bdabceb7e3c996971b5b20d1326c08870406` である。追加8,000 stepによって、exp115のbest 2.754026から0.006750改善した。学習時間は650.33秒、summaryに記録された全体時間は650.72秒、A40のpeak allocated memoryは1,489,078,784 bytesだった。NaN、OOM、shape errorなく完走した。
+
+step 16,000までの全33本の生成文はRunpod上に保存されている。初期promptを`今日は天気がいいですね。`へ変更したため、exp115の固定promptとは直接比較せず、評価セットの生成結果を主比較に使う。
+
+学習完了後、exp115と同じ評価器でbest checkpointを評価する。評価完了後に、step 15,750のbestとstep 16,000の周期checkpointの生成差も確認する。
