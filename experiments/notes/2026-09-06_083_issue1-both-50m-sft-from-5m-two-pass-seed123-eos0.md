@@ -42,6 +42,10 @@ step 1,900のvalidation lossは3.551040、2,000は3.550312、2,100は3.508189、
 
 step 2,500のvalidation lossは3.527650、2,600は3.538727、2,700は3.510081、2,800は3.531154、2,900は3.538751、最終step 3,000は3.523709でした。最終perplexityは33.909980、経過時間は350.88秒です。監視用のColab CLIはstep 2,300付近で応答待ちtimeoutとなりましたが、Colab sessionは存続しており、metricsの再downloadで学習完走を確認しました。timeoutは学習失敗ではありません。082の最終validation loss 3.275936との差は+0.247773で、EOS weight 0.0はvalidation性能を明確に悪化させました。
 
+Colab packageの軽量archiveは40ファイル、SHA-256は`3ccbe100f4b34bad026d260fed3330fada94760237677eb9c02d2927984e9c60`、best checkpoint archiveは`2a201493f66e300705f1f00b5c8e98f947fbdf01d0fd7a16c2ba4385be682d9e`、manifestは`17075316c82464f8254aaca02cd44fa8ae465a17833f61ebb8394ea61d93713b`です。best weightはstep 2,100、validation loss 3.508188581466675、perplexity 33.38773381450272、elapsed 247.78秒、SHA-256は`6a79b40ed1ccc00706dd0859d36d5edce490ef5b1faca8acf2c8c09b7fee0c85`です。peak allocated memoryは1,491,208,704 bytesでした。
+
+step 1,500の固定生成は「こんにちわー!わがんは!???!いいえ。あなたは??????????????????? ??? ??!??? ?!?? なんですよ!!?」で、出力が長くなった代わりに文字崩れが増えました。step 3,000は「こんにちはー!よろしくお願いします!よろしくお願いします!」で、繰り返しが目立ちます。EOSを抑えるだけでは自然な日本語にならず、終了記号を含めた学習信号が品質に必要という反証になっています。
+
 ## 実験終了後の結果と解釈
 
 082と同じCPU・同じ5領域・同じ48例chat-test・同じgeneration seed 42で評価します。領域loss、平均生成Token数、EOS到達数、short・medium・long F1を比較し、EOS loss weight 0.0が自然な日本語を改善したかを判断します。

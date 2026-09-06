@@ -1,0 +1,48 @@
+{
+  "experiment": "083",
+  "condition": "issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k",
+  "lightweight_files": 40,
+  "lightweight_archive": "/content/exp083-lightweight.tar.gz",
+  "archive_bytes": 7045,
+  "archive_sha256": "3ccbe100f4b34bad026d260fed3330fada94760237677eb9c02d2927984e9c60",
+  "best_checkpoint_archive": "/content/exp083-best-checkpoint.tar",
+  "best_checkpoint_archive_bytes": 200878080,
+  "best_checkpoint_archive_sha256": "2a201493f66e300705f1f00b5c8e98f947fbdf01d0fd7a16c2ba4385be682d9e",
+  "checkpoints": [
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/best.pt",
+      "bytes": 200872334,
+      "sha256": "6a79b40ed1ccc00706dd0859d36d5edce490ef5b1faca8acf2c8c09b7fee0c85"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_000500.pt",
+      "bytes": 200882813,
+      "sha256": "6eb2b7d1490b4fa081864e2fceb81bd8b6a9e73d4f3cf44e573e67cf2e4ac8d8"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_001000.pt",
+      "bytes": 200882813,
+      "sha256": "3a79244c866ba68a7fb163a687b3135ed47e5959cffccdd08a79b3e4008cad4f"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_001500.pt",
+      "bytes": 200882813,
+      "sha256": "925a485cf21023ac00e6736ab18549b41d64a7f40f6980f57a1eefff98feda16"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_002000.pt",
+      "bytes": 200882813,
+      "sha256": "a441e250f6a481eaa345b9a2745d91a6765634cfaed067dcebca3ac996d7a686"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_002500.pt",
+      "bytes": 200882813,
+      "sha256": "ca0d1d4e23f908b5001283c3f09c67642dfa0bcbe535fb05123510461b6d051a"
+    },
+    {
+      "path": "artifacts/checkpoints/issue1-both-50m-sft-from-5m-two-pass-seed123-eos0-3k/step_003000.pt",
+      "bytes": 200882813,
+      "sha256": "7298c2fefbe4e20731066b8c79e1e2e5306c8e0eb5342c7bfaffe933aff7174f"
+    }
+  ]
+}
